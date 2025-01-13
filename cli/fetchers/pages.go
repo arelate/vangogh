@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/arelate/southern_light/gog_integration"
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/kevlar_dolo"
@@ -14,9 +14,9 @@ import (
 	"strconv"
 )
 
-func NewIndexSetter(pt vangogh_local_data.ProductType, ids []string) (dolo.IndexSetter, error) {
+func NewIndexSetter(pt vangogh_integration.ProductType, ids []string) (dolo.IndexSetter, error) {
 
-	localDir, err := vangogh_local_data.AbsLocalProductTypeDir(pt)
+	localDir, err := vangogh_integration.AbsLocalProductTypeDir(pt)
 	if err != nil {
 		return nil, err
 	}
@@ -33,12 +33,12 @@ func NewIndexSetter(pt vangogh_local_data.ProductType, ids []string) (dolo.Index
 // To do that it downloads the first page, decodes that to get TotalPages,
 // then constructs a slice of URLs and page ids to download all the remaining
 // pages from 2nd to TotalPages using index setter.
-func Pages(pt vangogh_local_data.ProductType, since int64, httpClient *http.Client, tpw nod.TotalProgressWriter) error {
+func Pages(pt vangogh_integration.ProductType, since int64, httpClient *http.Client, tpw nod.TotalProgressWriter) error {
 
 	gfp := nod.Begin(" getting the first %s...", pt)
 	defer gfp.End()
 
-	up, err := vangogh_local_data.NewUrlProvider(pt, nil)
+	up, err := vangogh_integration.NewUrlProvider(pt, nil)
 	if err != nil {
 		return gfp.EndWithError(err)
 	}
@@ -80,7 +80,7 @@ func Pages(pt vangogh_local_data.ProductType, since int64, httpClient *http.Clie
 		return err
 	}
 
-	if vangogh_local_data.IsFastPageFetchProduct(pt) && !iua {
+	if vangogh_integration.IsFastPageFetchProduct(pt) && !iua {
 		gfp.EndWithResult("first page unchanged, skipping the rest")
 		return nil
 	}

@@ -1,9 +1,9 @@
 package rest
 
 import (
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_pages"
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
 	"net/http"
 	"strconv"
@@ -57,16 +57,16 @@ func GetSearch(w http.ResponseWriter, r *http.Request) {
 
 	if len(query) > 0 {
 
-		sort := q.Get(vangogh_local_data.SortProperty)
+		sort := q.Get(vangogh_integration.SortProperty)
 		if sort == "" {
-			sort = vangogh_local_data.TitleProperty
+			sort = vangogh_integration.TitleProperty
 		}
-		desc := q.Get(vangogh_local_data.DescendingProperty) == "true"
+		desc := q.Get(vangogh_integration.DescendingProperty) == "true"
 
 		found := rdx.Match(q)
 
 		var err error
-		ids, err = rdx.Sort(found, desc, sort, vangogh_local_data.TitleProperty, vangogh_local_data.ProductTypeProperty)
+		ids, err = rdx.Sort(found, desc, sort, vangogh_integration.TitleProperty, vangogh_integration.ProductTypeProperty)
 		if err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 			return

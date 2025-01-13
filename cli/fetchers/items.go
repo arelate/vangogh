@@ -2,7 +2,7 @@ package fetchers
 
 import (
 	"fmt"
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/nod"
 	"net/http"
@@ -12,23 +12,23 @@ import (
 // Items fetches all individual data items (details, api-products-v1/v2) using provided ids
 func Items(
 	ids []string,
-	pt vangogh_local_data.ProductType,
+	pt vangogh_integration.ProductType,
 	httpClient *http.Client) error {
 
 	ia := nod.NewProgress(" fetching %s...", pt)
 	defer ia.End()
 
-	if !vangogh_local_data.IsGetItemsSupported(pt) {
+	if !vangogh_integration.IsGetItemsSupported(pt) {
 		return ia.EndWithError(fmt.Errorf("getting %s is not supported", pt))
 	}
 
 	ia.TotalInt(len(ids))
 
-	rdx, err := vangogh_local_data.NewReduxReader(
-		vangogh_local_data.SteamAppIdProperty,
-		vangogh_local_data.PCGWPageIdProperty,
-		vangogh_local_data.HLTBBuildIdProperty,
-		vangogh_local_data.HLTBIdProperty)
+	rdx, err := vangogh_integration.NewReduxReader(
+		vangogh_integration.SteamAppIdProperty,
+		vangogh_integration.PCGWPageIdProperty,
+		vangogh_integration.HLTBBuildIdProperty,
+		vangogh_integration.HLTBIdProperty)
 	if err != nil {
 		return err
 	}
@@ -36,7 +36,7 @@ func Items(
 	//since we know how many ids need to be fetched, allocate URLs and idStrs to that number
 	urls, idStr := make([]*url.URL, len(ids)), make([]string, len(ids))
 
-	up, err := vangogh_local_data.NewUrlProvider(pt, rdx)
+	up, err := vangogh_integration.NewUrlProvider(pt, rdx)
 	if err != nil {
 		return ia.EndWithError(err)
 	}

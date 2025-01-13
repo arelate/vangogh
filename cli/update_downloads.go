@@ -1,8 +1,8 @@
 package cli
 
 import (
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/itemizations"
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
 	"golang.org/x/exp/maps"
 	"net/url"
@@ -10,19 +10,19 @@ import (
 
 func UpdateDownloadsHandler(u *url.URL) error {
 
-	since, err := vangogh_local_data.SinceFromUrl(u)
+	since, err := vangogh_integration.SinceFromUrl(u)
 	if err != nil {
 		return err
 	}
 
 	return UpdateDownloads(
 		nil,
-		vangogh_local_data.OperatingSystemsFromUrl(u),
-		vangogh_local_data.ValuesFromUrl(u, vangogh_local_data.LanguageCodeProperty),
-		vangogh_local_data.DownloadTypesFromUrl(u),
-		vangogh_local_data.FlagFromUrl(u, "no-patches"),
+		vangogh_integration.OperatingSystemsFromUrl(u),
+		vangogh_integration.ValuesFromUrl(u, vangogh_integration.LanguageCodeProperty),
+		vangogh_integration.DownloadTypesFromUrl(u),
+		vangogh_integration.FlagFromUrl(u, "no-patches"),
 		since,
-		vangogh_local_data.FlagFromUrl(u, "updates-only"))
+		vangogh_integration.FlagFromUrl(u, "updates-only"))
 }
 
 func itemizeUpdatedAccountProducts(since int64) ([]string, error) {
@@ -60,7 +60,7 @@ func itemizeUpdatedAccountProducts(since int64) ([]string, error) {
 
 	//Additionally add modified details in case the sync was interrupted and
 	//account-products doesn't have .IsNew or .Updates > 0 items
-	modifiedDetails, err := itemizations.Modified(since, vangogh_local_data.Details)
+	modifiedDetails, err := itemizations.Modified(since, vangogh_integration.Details)
 	if err != nil {
 		return nil, err
 	}
@@ -74,9 +74,9 @@ func itemizeUpdatedAccountProducts(since int64) ([]string, error) {
 
 func UpdateDownloads(
 	ids []string,
-	operatingSystems []vangogh_local_data.OperatingSystem,
+	operatingSystems []vangogh_integration.OperatingSystem,
 	langCodes []string,
-	downloadTypes []vangogh_local_data.DownloadType,
+	downloadTypes []vangogh_integration.DownloadType,
 	noPatches bool,
 	since int64,
 	updatesOnly bool) error {
@@ -100,7 +100,7 @@ func UpdateDownloads(
 	//filter updAccountProductIds to products that have already been downloaded
 	//note that this would exclude, for example, pre-order products automatic downloads
 	if updatesOnly {
-		rdx, err := vangogh_local_data.NewReduxReader(vangogh_local_data.SlugProperty)
+		rdx, err := vangogh_integration.NewReduxReader(vangogh_integration.SlugProperty)
 		if err != nil {
 			return uda.EndWithError(err)
 		}
@@ -108,7 +108,7 @@ func UpdateDownloads(
 		updatesOnlyIds := make([]string, 0, len(ids))
 
 		for _, id := range ids {
-			ok, err := vangogh_local_data.IsProductDownloaded(id, rdx)
+			ok, err := vangogh_integration.IsProductDownloaded(id, rdx)
 			if err != nil {
 				return uda.EndWithError(err)
 			}

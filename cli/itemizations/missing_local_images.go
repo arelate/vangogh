@@ -1,18 +1,18 @@
 package itemizations
 
 import (
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 )
 
 type imageReduxGetter struct {
-	imageType vangogh_local_data.ImageType
+	imageType vangogh_integration.ImageType
 	rdx       kevlar.ReadableRedux
 }
 
 func NewImageReduxGetter(
-	it vangogh_local_data.ImageType,
+	it vangogh_integration.ImageType,
 	rdx kevlar.ReadableRedux) *imageReduxGetter {
 	return &imageReduxGetter{
 		imageType: it,
@@ -21,19 +21,19 @@ func NewImageReduxGetter(
 }
 
 func (ieg *imageReduxGetter) GetImageIds(id string) ([]string, bool) {
-	return ieg.rdx.GetAllValues(vangogh_local_data.PropertyFromImageType(ieg.imageType), id)
+	return ieg.rdx.GetAllValues(vangogh_integration.PropertyFromImageType(ieg.imageType), id)
 }
 
 func MissingLocalImages(
-	it vangogh_local_data.ImageType,
+	it vangogh_integration.ImageType,
 	rdx kevlar.ReadableRedux,
 	localImageIds map[string]bool) (map[string]bool, error) {
 
-	all := rdx.Keys(vangogh_local_data.PropertyFromImageType(it))
+	all := rdx.Keys(vangogh_integration.PropertyFromImageType(it))
 
 	if localImageIds == nil {
 		var err error
-		if localImageIds, err = vangogh_local_data.LocalImageIds(); err != nil {
+		if localImageIds, err = vangogh_integration.LocalImageIds(); err != nil {
 			return map[string]bool{}, err
 		}
 	}

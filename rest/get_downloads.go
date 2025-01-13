@@ -1,8 +1,8 @@
 package rest
 
 import (
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_pages"
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"net/http"
@@ -32,12 +32,12 @@ func GetDownloads(w http.ResponseWriter, r *http.Request) {
 }
 
 func getDownloads(id string,
-	operatingSystems []vangogh_local_data.OperatingSystem,
+	operatingSystems []vangogh_integration.OperatingSystem,
 	langCodes []string,
 	noPatches bool,
-	rdx kevlar.ReadableRedux) (vangogh_local_data.DownloadsList, error) {
+	rdx kevlar.ReadableRedux) (vangogh_integration.DownloadsList, error) {
 
-	vrDetails, err := vangogh_local_data.NewProductReader(vangogh_local_data.Details)
+	vrDetails, err := vangogh_integration.NewProductReader(vangogh_integration.Details)
 	if err != nil {
 		return nil, err
 	}
@@ -56,12 +56,12 @@ func getDownloads(id string,
 	// in this case we can remove basic product metadata (title, slug, etc) and no downloads
 
 	if !hasDetails {
-		if pt, ok := rdx.GetLastVal(vangogh_local_data.ProductTypeProperty, id); ok {
+		if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); ok {
 			switch pt {
 			case "PACK":
-				return relatedGamesDownloads(id, vangogh_local_data.IncludesGamesProperty, operatingSystems, langCodes, noPatches, rdx)
+				return relatedGamesDownloads(id, vangogh_integration.IncludesGamesProperty, operatingSystems, langCodes, noPatches, rdx)
 			case "DLC":
-				return relatedGamesDownloads(id, vangogh_local_data.RequiresGamesProperty, operatingSystems, langCodes, noPatches, rdx)
+				return relatedGamesDownloads(id, vangogh_integration.RequiresGamesProperty, operatingSystems, langCodes, noPatches, rdx)
 			}
 		}
 		return nil, nil
@@ -75,10 +75,10 @@ func getDownloads(id string,
 		return nil, err
 	}
 
-	dl := make(vangogh_local_data.DownloadsList, 0)
+	dl := make(vangogh_integration.DownloadsList, 0)
 
 	if det != nil {
-		dl, err = vangogh_local_data.FromDetails(det, rdx)
+		dl, err = vangogh_integration.FromDetails(det, rdx)
 		if err != nil {
 			return nil, err
 		}
@@ -86,19 +86,19 @@ func getDownloads(id string,
 
 	return dl.Only(operatingSystems,
 		langCodes,
-		[]vangogh_local_data.DownloadType{vangogh_local_data.AnyDownloadType},
+		[]vangogh_integration.DownloadType{vangogh_integration.AnyDownloadType},
 		noPatches), nil
 }
 
 func relatedGamesDownloads(id, property string,
-	operatingSystems []vangogh_local_data.OperatingSystem,
+	operatingSystems []vangogh_integration.OperatingSystem,
 	langCodes []string,
 	noPatches bool,
-	rdx kevlar.ReadableRedux) (vangogh_local_data.DownloadsList, error) {
+	rdx kevlar.ReadableRedux) (vangogh_integration.DownloadsList, error) {
 	if err := rdx.MustHave(property); err != nil {
 		return nil, err
 	}
-	var relatedDownloadsList vangogh_local_data.DownloadsList
+	var relatedDownloadsList vangogh_integration.DownloadsList
 	if relatedIds, ok := rdx.GetAllValues(property, id); ok {
 
 		for _, relatedId := range relatedIds {

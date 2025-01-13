@@ -1,8 +1,8 @@
 package compton_fragments
 
 import (
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/kevlar"
 	"slices"
 )
@@ -19,12 +19,12 @@ func FormatQuery(q map[string][]string, rdx kevlar.ReadableRedux) map[string][]s
 				fq[p] = append(fq[p], compton_data.BinaryTitles[val])
 			} else {
 				switch p {
-				case vangogh_local_data.TypesProperty:
+				case vangogh_integration.TypesProperty:
 					fq[p] = append(fq[p], compton_data.TypesTitles[val])
-				case vangogh_local_data.OperatingSystemsProperty:
+				case vangogh_integration.OperatingSystemsProperty:
 					fq[p] = append(fq[p], compton_data.OperatingSystemTitles[val])
-				case vangogh_local_data.TagIdProperty:
-					if tn, sure := rdx.GetLastVal(vangogh_local_data.TagNameProperty, val); sure {
+				case vangogh_integration.TagIdProperty:
+					if tn, sure := rdx.GetLastVal(vangogh_integration.TagNameProperty, val); sure {
 						fq[p] = append(fq[p], tn)
 					} else {
 						fq[p] = append(fq[p], val)

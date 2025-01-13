@@ -2,7 +2,7 @@ package cli
 
 import (
 	"fmt"
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/coost"
 	"github.com/boggydigital/nod"
 	"net/url"
@@ -17,15 +17,15 @@ const (
 )
 
 func TagHandler(u *url.URL) error {
-	ids, err := vangogh_local_data.IdsFromUrl(u)
+	ids, err := vangogh_integration.IdsFromUrl(u)
 	if err != nil {
 		return err
 	}
 
 	return Tag(
 		ids,
-		vangogh_local_data.ValueFromUrl(u, "operation"),
-		vangogh_local_data.ValueFromUrl(u, "tag-name"))
+		vangogh_integration.ValueFromUrl(u, "operation"),
+		vangogh_integration.ValueFromUrl(u, "tag-name"))
 }
 
 func Tag(ids []string, operation, tagName string) error {
@@ -40,13 +40,13 @@ func Tag(ids []string, operation, tagName string) error {
 	tagId := ""
 
 	if operation != createOp {
-		tagId, err = vangogh_local_data.TagIdByName(tagName)
+		tagId, err = vangogh_integration.TagIdByName(tagName)
 		if err != nil {
 			return err
 		}
 	}
 
-	acp, err := vangogh_local_data.AbsCookiePath()
+	acp, err := vangogh_integration.AbsCookiePath()
 	if err != nil {
 		return ta.EndWithError(err)
 	}
@@ -61,13 +61,13 @@ func Tag(ids []string, operation, tagName string) error {
 
 	switch operation {
 	case createOp:
-		return vangogh_local_data.CreateTag(hc, tagName)
+		return vangogh_integration.CreateTag(hc, tagName)
 	case deleteOp:
-		return vangogh_local_data.DeleteTag(hc, tagName, tagId)
+		return vangogh_integration.DeleteTag(hc, tagName, tagId)
 	case addOp:
-		return vangogh_local_data.AddTags(hc, ids, []string{tagId}, toa)
+		return vangogh_integration.AddTags(hc, ids, []string{tagId}, toa)
 	case removeOp:
-		return vangogh_local_data.RemoveTags(hc, ids, []string{tagId}, toa)
+		return vangogh_integration.RemoveTags(hc, ids, []string{tagId}, toa)
 	default:
 		return ta.EndWithError(fmt.Errorf("unknown tag operation %s", operation))
 	}

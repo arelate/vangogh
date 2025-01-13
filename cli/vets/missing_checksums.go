@@ -4,7 +4,7 @@ import (
 	"crypto/md5"
 	"encoding/xml"
 	"fmt"
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/nod"
 	"os"
@@ -12,7 +12,7 @@ import (
 )
 
 func MissingChecksums(
-	operatingSystems []vangogh_local_data.OperatingSystem,
+	operatingSystems []vangogh_integration.OperatingSystem,
 	langCodes []string,
 	noPatches bool,
 	fix bool) error {
@@ -20,20 +20,20 @@ func MissingChecksums(
 	mca := nod.NewProgress("checking for missing checksums...")
 	defer mca.End()
 
-	rdx, err := vangogh_local_data.NewReduxWriter(
-		vangogh_local_data.LocalManualUrlProperty,
-		vangogh_local_data.ManualUrlStatusProperty,
-		vangogh_local_data.ManualUrlValidationResultProperty,
-		vangogh_local_data.ManualUrlGeneratedChecksumProperty,
-		vangogh_local_data.NativeLanguageNameProperty,
-		vangogh_local_data.ProductTypeProperty)
+	rdx, err := vangogh_integration.NewReduxWriter(
+		vangogh_integration.LocalManualUrlProperty,
+		vangogh_integration.ManualUrlStatusProperty,
+		vangogh_integration.ManualUrlValidationResultProperty,
+		vangogh_integration.ManualUrlGeneratedChecksumProperty,
+		vangogh_integration.NativeLanguageNameProperty,
+		vangogh_integration.ProductTypeProperty)
 	if err != nil {
 		return mca.EndWithError(err)
 	}
 
 	manualUrlsMissingChecksums := make([]string, 0)
 
-	vrDetails, err := vangogh_local_data.NewProductReader(vangogh_local_data.Details)
+	vrDetails, err := vangogh_integration.NewProductReader(vangogh_integration.Details)
 	if err != nil {
 		return mca.EndWithError(err)
 	}
@@ -51,7 +51,7 @@ func MissingChecksums(
 		// crash below attempting to read vrDetails for missing product. That's totally ok, since
 		// DLC and PACK product types get validation status from cascading, so as we fix GAME
 		// product types and perform cascade - we'll eventually get correct status for all cascaded types
-		if pt, ok := rdx.GetLastVal(vangogh_local_data.ProductTypeProperty, id); ok && pt != "GAME" {
+		if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); ok && pt != "GAME" {
 			continue
 		}
 
@@ -60,25 +60,25 @@ func MissingChecksums(
 			return mca.EndWithError(err)
 		}
 
-		dls, err := vangogh_local_data.FromDetails(det, rdx)
+		dls, err := vangogh_integration.FromDetails(det, rdx)
 		if err != nil {
 			return mca.EndWithError(err)
 		}
 
 		dls = dls.Only(operatingSystems,
 			langCodes,
-			[]vangogh_local_data.DownloadType{vangogh_local_data.Installer, vangogh_local_data.DLC},
+			[]vangogh_integration.DownloadType{vangogh_integration.Installer, vangogh_integration.DLC},
 			noPatches)
 
 		for _, dl := range dls {
-			if muss, ok := rdx.GetLastVal(vangogh_local_data.ManualUrlStatusProperty, dl.ManualUrl); ok {
-				if vangogh_local_data.ParseManualUrlStatus(muss) != vangogh_local_data.ManualUrlValidated {
+			if muss, ok := rdx.GetLastVal(vangogh_integration.ManualUrlStatusProperty, dl.ManualUrl); ok {
+				if vangogh_integration.ParseManualUrlStatus(muss) != vangogh_integration.ManualUrlValidated {
 					continue
 				}
 			}
 
-			if vrs, ok := rdx.GetLastVal(vangogh_local_data.ManualUrlValidationResultProperty, dl.ManualUrl); ok {
-				if vangogh_local_data.ParseValidationResult(vrs) == vangogh_local_data.ValidatedMissingChecksum {
+			if vrs, ok := rdx.GetLastVal(vangogh_integration.ManualUrlValidationResultProperty, dl.ManualUrl); ok {
+				if vangogh_integration.ParseValidationResult(vrs) == vangogh_integration.ValidatedMissingChecksum {
 					manualUrlsMissingChecksums = append(manualUrlsMissingChecksums, dl.ManualUrl)
 				}
 			}
@@ -91,12 +91,12 @@ func MissingChecksums(
 
 	for _, manualUrl := range manualUrlsMissingChecksums {
 
-		relFile, ok := rdx.GetLastVal(vangogh_local_data.LocalManualUrlProperty, manualUrl)
+		relFile, ok := rdx.GetLastVal(vangogh_integration.LocalManualUrlProperty, manualUrl)
 		if !ok {
 			continue
 		}
 
-		absChecksumFile, err := vangogh_local_data.AbsLocalChecksumPath(relFile)
+		absChecksumFile, err := vangogh_integration.AbsLocalChecksumPath(relFile)
 		if err != nil {
 			return mca.EndWithError(err)
 		}
@@ -110,7 +110,7 @@ func MissingChecksums(
 				return mca.EndWithError(err)
 			}
 
-			if err := rdx.AddValues(vangogh_local_data.ManualUrlGeneratedChecksumProperty, manualUrl, vangogh_local_data.TrueValue); err != nil {
+			if err := rdx.AddValues(vangogh_integration.ManualUrlGeneratedChecksumProperty, manualUrl, vangogh_integration.TrueValue); err != nil {
 				return mca.EndWithError(err)
 			}
 
@@ -131,7 +131,7 @@ func generateChecksumForFile(relFile string) error {
 		return gca.EndWithError(err)
 	}
 
-	absChecksumPath, err := vangogh_local_data.AbsLocalChecksumPath(relFile)
+	absChecksumPath, err := vangogh_integration.AbsLocalChecksumPath(relFile)
 	if err != nil {
 		return gca.EndWithError(err)
 	}
@@ -158,13 +158,13 @@ func generateChecksumForFile(relFile string) error {
 	return nil
 }
 
-func generateChecksumData(relFile string) (*vangogh_local_data.ValidationFile, error) {
+func generateChecksumData(relFile string) (*vangogh_integration.ValidationFile, error) {
 	_, fname := filepath.Split(relFile)
 
 	fa := nod.NewProgress(" %s", fname)
 	defer fa.End()
 
-	absFile, err := vangogh_local_data.AbsDownloadDirFromRel(relFile)
+	absFile, err := vangogh_integration.AbsDownloadDirFromRel(relFile)
 	if err != nil {
 		return nil, fa.EndWithError(err)
 	}
@@ -189,7 +189,7 @@ func generateChecksumData(relFile string) (*vangogh_local_data.ValidationFile, e
 
 	inputFileMD5 := fmt.Sprintf("%x", h.Sum(nil))
 
-	vf := &vangogh_local_data.ValidationFile{
+	vf := &vangogh_integration.ValidationFile{
 		XMLName:   xml.Name{},
 		Name:      fname,
 		Available: 1,

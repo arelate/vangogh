@@ -1,7 +1,7 @@
 package vets
 
 import (
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"os"
@@ -13,11 +13,11 @@ func FilesInRecycleBin(fix bool) error {
 	srba := nod.Begin("checking files in recycle bin...")
 	defer srba.End()
 
-	recycleBinFiles, err := vangogh_local_data.RecycleBinFiles()
+	recycleBinFiles, err := vangogh_integration.RecycleBinFiles()
 	if err != nil {
 		return srba.EndWithError(err)
 	}
-	recycleBinDirs, err := vangogh_local_data.RecycleBinDirs()
+	recycleBinDirs, err := vangogh_integration.RecycleBinDirs()
 	if err != nil {
 		return srba.EndWithError(err)
 	}
@@ -30,7 +30,7 @@ func FilesInRecycleBin(fix bool) error {
 
 		if fix {
 			rfa := nod.NewProgress(" emptying recycle bin...")
-			rbdp, err := pathways.GetAbsDir(vangogh_local_data.RecycleBin)
+			rbdp, err := pathways.GetAbsDir(vangogh_integration.RecycleBin)
 			if err != nil {
 				return rfa.EndWithError(err)
 			}
@@ -50,7 +50,7 @@ func FilesInRecycleBin(fix bool) error {
 				dirLens[dir] = len(dir)
 			}
 
-			sortedDirs := vangogh_local_data.SortStrIntMap(dirLens, true)
+			sortedDirs := vangogh_integration.SortStrIntMap(dirLens, true)
 
 			rda := nod.NewProgress(" removing leftover directories...")
 			rda.TotalInt(len(sortedDirs))

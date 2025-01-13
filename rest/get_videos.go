@@ -1,8 +1,8 @@
 package rest
 
 import (
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_pages"
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
 	"net/http"
 	"slices"
@@ -20,7 +20,7 @@ func GetVideos(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 
 	var videoIds []string
-	if vids, ok := rdx.GetAllValues(vangogh_local_data.VideoIdProperty, id); ok {
+	if vids, ok := rdx.GetAllValues(vangogh_integration.VideoIdProperty, id); ok {
 		videoIds = vids
 	}
 	slices.Sort(videoIds)
@@ -30,10 +30,10 @@ func GetVideos(w http.ResponseWriter, r *http.Request) {
 
 	for _, vid := range videoIds {
 
-		if vtp, ok := rdx.GetLastVal(vangogh_local_data.VideoTitleProperty, vid); ok {
+		if vtp, ok := rdx.GetLastVal(vangogh_integration.VideoTitleProperty, vid); ok {
 			videoTitles[vid] = vtp
 		}
-		if vdp, ok := rdx.GetLastVal(vangogh_local_data.VideoDurationProperty, vid); ok {
+		if vdp, ok := rdx.GetLastVal(vangogh_integration.VideoDurationProperty, vid); ok {
 			videoDurations[vid] = vdp
 		}
 	}

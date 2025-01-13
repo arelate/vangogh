@@ -2,7 +2,7 @@ package rest
 
 import (
 	"fmt"
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/middleware"
 	"github.com/boggydigital/nod"
 	"net/http"
@@ -13,7 +13,7 @@ func GetAtom(w http.ResponseWriter, r *http.Request) {
 
 	// GET /atom
 
-	absAtomFeedPath, err := vangogh_local_data.AbsAtomFeedPath()
+	absAtomFeedPath, err := vangogh_integration.AbsAtomFeedPath()
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return

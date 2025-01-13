@@ -3,7 +3,7 @@ package rest
 import (
 	"encoding/json"
 	"encoding/xml"
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"net/http"
@@ -46,36 +46,36 @@ func GetMetadata(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func getProductMetadata(id string, dls vangogh_local_data.DownloadsList, rdx kevlar.ReadableRedux) (*vangogh_local_data.TheoMetadata, error) {
-	tm := &vangogh_local_data.TheoMetadata{Id: id}
-	if title, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, id); ok {
+func getProductMetadata(id string, dls vangogh_integration.DownloadsList, rdx kevlar.ReadableRedux) (*vangogh_integration.TheoMetadata, error) {
+	tm := &vangogh_integration.TheoMetadata{Id: id}
+	if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
 		tm.Title = title
 	}
-	if slug, ok := rdx.GetLastVal(vangogh_local_data.SlugProperty, id); ok {
+	if slug, ok := rdx.GetLastVal(vangogh_integration.SlugProperty, id); ok {
 		tm.Slug = slug
 	}
 
-	if image, ok := rdx.GetLastVal(vangogh_local_data.ImageProperty, id); ok {
+	if image, ok := rdx.GetLastVal(vangogh_integration.ImageProperty, id); ok {
 		tm.Images.Image = image
 	}
-	if verticalImage, ok := rdx.GetLastVal(vangogh_local_data.VerticalImageProperty, id); ok {
+	if verticalImage, ok := rdx.GetLastVal(vangogh_integration.VerticalImageProperty, id); ok {
 		tm.Images.VerticalImage = verticalImage
 	}
-	if hero, ok := rdx.GetLastVal(vangogh_local_data.HeroProperty, id); ok {
+	if hero, ok := rdx.GetLastVal(vangogh_integration.HeroProperty, id); ok {
 		tm.Images.Hero = hero
 	}
-	if logo, ok := rdx.GetLastVal(vangogh_local_data.LogoProperty, id); ok {
+	if logo, ok := rdx.GetLastVal(vangogh_integration.LogoProperty, id); ok {
 		tm.Images.Logo = logo
 	}
-	if icon, ok := rdx.GetLastVal(vangogh_local_data.IconProperty, id); ok {
+	if icon, ok := rdx.GetLastVal(vangogh_integration.IconProperty, id); ok {
 		tm.Images.Icon = icon
 	}
-	if iconSquare, ok := rdx.GetLastVal(vangogh_local_data.IconSquareProperty, id); ok {
+	if iconSquare, ok := rdx.GetLastVal(vangogh_integration.IconSquareProperty, id); ok {
 		tm.Images.IconSquare = iconSquare
 	}
 
 	for _, dl := range dls {
-		link := vangogh_local_data.TheoDownloadLink{
+		link := vangogh_integration.TheoDownloadLink{
 			ManualUrl:      dl.ManualUrl,
 			Name:           dl.Name,
 			OS:             dl.OS.String(),
@@ -85,11 +85,11 @@ func getProductMetadata(id string, dls vangogh_local_data.DownloadsList, rdx kev
 			EstimatedBytes: dl.EstimatedBytes,
 		}
 
-		if dl.Type == vangogh_local_data.DLC {
+		if dl.Type == vangogh_integration.DLC {
 			link.Name = dl.ProductTitle
 		}
 
-		if relLocalDownloadPath, ok := rdx.GetLastVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl); ok {
+		if relLocalDownloadPath, ok := rdx.GetLastVal(vangogh_integration.LocalManualUrlProperty, dl.ManualUrl); ok {
 			_, filename := filepath.Split(relLocalDownloadPath)
 			link.LocalFilename = filename
 
@@ -98,16 +98,16 @@ func getProductMetadata(id string, dls vangogh_local_data.DownloadsList, rdx kev
 			}
 		}
 
-		if muss, ok := rdx.GetLastVal(vangogh_local_data.ManualUrlStatusProperty, dl.ManualUrl); ok && muss != "" {
+		if muss, ok := rdx.GetLastVal(vangogh_integration.ManualUrlStatusProperty, dl.ManualUrl); ok && muss != "" {
 			link.Status = muss
 		} else {
-			link.Status = vangogh_local_data.ManualUrlStatusUnknown.String()
+			link.Status = vangogh_integration.ManualUrlStatusUnknown.String()
 		}
 
-		if vrs, ok := rdx.GetLastVal(vangogh_local_data.ManualUrlValidationResultProperty, dl.ManualUrl); ok && vrs != "" {
+		if vrs, ok := rdx.GetLastVal(vangogh_integration.ManualUrlValidationResultProperty, dl.ManualUrl); ok && vrs != "" {
 			link.ValidationResult = vrs
 		} else {
-			link.ValidationResult = vangogh_local_data.ValidationResultUnknown.String()
+			link.ValidationResult = vangogh_integration.ValidationResultUnknown.String()
 		}
 
 		tm.DownloadLinks = append(tm.DownloadLinks, link)
@@ -118,7 +118,7 @@ func getProductMetadata(id string, dls vangogh_local_data.DownloadsList, rdx kev
 
 func getMd5Checksum(relLocalDownloadPath string) (string, error) {
 
-	absChecksumPath, err := vangogh_local_data.AbsLocalChecksumPath(relLocalDownloadPath)
+	absChecksumPath, err := vangogh_integration.AbsLocalChecksumPath(relLocalDownloadPath)
 	if err != nil {
 		return "", err
 	}
@@ -129,7 +129,7 @@ func getMd5Checksum(relLocalDownloadPath string) (string, error) {
 	}
 	defer chkFile.Close()
 
-	var chkData vangogh_local_data.ValidationFile
+	var chkData vangogh_integration.ValidationFile
 	if err := xml.NewDecoder(chkFile).Decode(&chkData); err != nil {
 		return "", err
 	}

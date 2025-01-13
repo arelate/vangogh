@@ -2,7 +2,7 @@ package cli
 
 import (
 	"fmt"
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"golang.org/x/exp/maps"
 	"net/url"
@@ -10,12 +10,12 @@ import (
 )
 
 func ListHandler(u *url.URL) error {
-	ids, err := vangogh_local_data.IdsFromUrl(u)
+	ids, err := vangogh_integration.IdsFromUrl(u)
 	if err != nil {
 		return err
 	}
 
-	since, err := vangogh_local_data.SinceFromUrl(u)
+	since, err := vangogh_integration.SinceFromUrl(u)
 	if err != nil {
 		return err
 	}
@@ -23,8 +23,8 @@ func ListHandler(u *url.URL) error {
 	return List(
 		ids,
 		since,
-		vangogh_local_data.ProductTypeFromUrl(u),
-		vangogh_local_data.PropertiesFromUrl(u))
+		vangogh_integration.ProductTypeFromUrl(u),
+		vangogh_integration.PropertiesFromUrl(u))
 }
 
 // List prints products of a certain product type.
@@ -33,13 +33,13 @@ func ListHandler(u *url.URL) error {
 func List(
 	ids []string,
 	modifiedSince int64,
-	pt vangogh_local_data.ProductType,
+	pt vangogh_integration.ProductType,
 	properties []string) error {
 
 	la := nod.Begin("listing %s...", pt)
 	defer la.End()
 
-	if !vangogh_local_data.IsValidProductType(pt) {
+	if !vangogh_integration.IsValidProductType(pt) {
 		return la.EndWithError(fmt.Errorf("can't list invalid product type %s", pt))
 	}
 
@@ -50,14 +50,14 @@ func List(
 
 	//if no properties have been provided - print ID, Title
 	if len(propSet) == 0 {
-		propSet[vangogh_local_data.IdProperty] = true
-		propSet[vangogh_local_data.TitleProperty] = true
+		propSet[vangogh_integration.IdProperty] = true
+		propSet[vangogh_integration.TitleProperty] = true
 	}
 
 	//if Title property has not been provided - add it.
 	//we'll always print the title.
 	//same goes for sort-by property
-	propSet[vangogh_local_data.TitleProperty] = true
+	propSet[vangogh_integration.TitleProperty] = true
 
 	//rules for collecting IDs to print:
 	//1. start with user provided IDs
@@ -66,7 +66,7 @@ func List(
 	//4. if no IDs have been collected and the request have not provided createdAfter or modifiedAfter:
 	// add all product IDs
 
-	vr, err := vangogh_local_data.NewProductReader(pt)
+	vr, err := vangogh_integration.NewProductReader(pt)
 	if err != nil {
 		return la.EndWithError(err)
 	}
@@ -93,10 +93,10 @@ func List(
 		ids = append(ids, keys...)
 	}
 
-	itp, err := vangogh_local_data.PropertyListsFromIdSet(
+	itp, err := vangogh_integration.PropertyListsFromIdSet(
 		ids,
 		nil,
-		vangogh_local_data.SupportedPropertiesOnly(pt, maps.Keys(propSet)),
+		vangogh_integration.SupportedPropertiesOnly(pt, maps.Keys(propSet)),
 		nil)
 
 	if err != nil {

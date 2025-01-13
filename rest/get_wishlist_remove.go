@@ -2,7 +2,7 @@ package rest
 
 import (
 	"github.com/arelate/southern_light/gog_integration"
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/coost"
 	"github.com/boggydigital/nod"
 	"net/http"
@@ -12,9 +12,9 @@ func GetWishlistRemove(w http.ResponseWriter, r *http.Request) {
 
 	// GET /wishlist/remove?id
 
-	id := r.URL.Query().Get(vangogh_local_data.IdProperty)
+	id := r.URL.Query().Get(vangogh_integration.IdProperty)
 
-	acp, err := vangogh_local_data.AbsCookiePath()
+	acp, err := vangogh_integration.AbsCookiePath()
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
@@ -26,7 +26,7 @@ func GetWishlistRemove(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if pids, err := vangogh_local_data.RemoveFromLocalWishlist([]string{id}, nil); err == nil {
+	if pids, err := vangogh_integration.RemoveFromLocalWishlist([]string{id}, nil); err == nil {
 		if err := gog_integration.RemoveFromWishlist(hc, pids...); err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 			return

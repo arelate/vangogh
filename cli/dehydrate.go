@@ -1,7 +1,7 @@
 package cli
 
 import (
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/issa"
 	"github.com/boggydigital/nod"
 	"net/url"
@@ -10,20 +10,20 @@ import (
 )
 
 func DehydrateHandler(u *url.URL) error {
-	ids, err := vangogh_local_data.IdsFromUrl(u)
+	ids, err := vangogh_integration.IdsFromUrl(u)
 	if err != nil {
 		return err
 	}
 
 	return Dehydrate(
 		ids,
-		vangogh_local_data.ImageTypesFromUrl(u),
-		vangogh_local_data.FlagFromUrl(u, "force"))
+		vangogh_integration.ImageTypesFromUrl(u),
+		vangogh_integration.FlagFromUrl(u, "force"))
 }
 
 func Dehydrate(
 	ids []string,
-	its []vangogh_local_data.ImageType,
+	its []vangogh_integration.ImageType,
 	force bool) error {
 
 	di := nod.NewProgress("dehydrating images...")
@@ -32,9 +32,9 @@ func Dehydrate(
 	properties := make([]string, 0, len(its)*2)
 	for _, it := range its {
 		properties = append(properties,
-			vangogh_local_data.ImageTypeDehydratedProperty(it),
-			vangogh_local_data.ImageTypeDehydratedModifiedProperty(it),
-			vangogh_local_data.ImageTypeRepColorProperty(it))
+			vangogh_integration.ImageTypeDehydratedProperty(it),
+			vangogh_integration.ImageTypeDehydratedModifiedProperty(it),
+			vangogh_integration.ImageTypeRepColorProperty(it))
 	}
 
 	rdx, err := imageTypesReduxAssets(properties, its)
@@ -44,13 +44,13 @@ func Dehydrate(
 
 	if len(ids) == 0 {
 		for _, it := range its {
-			if !vangogh_local_data.IsImageTypeDehydrationSupported(it) {
+			if !vangogh_integration.IsImageTypeDehydrationSupported(it) {
 				continue
 			}
 
-			asset := vangogh_local_data.PropertyFromImageType(it)
-			dehydratedProperty := vangogh_local_data.ImageTypeDehydratedProperty(it)
-			repColorProperty := vangogh_local_data.ImageTypeRepColorProperty(it)
+			asset := vangogh_integration.PropertyFromImageType(it)
+			dehydratedProperty := vangogh_integration.ImageTypeDehydratedProperty(it)
+			repColorProperty := vangogh_integration.ImageTypeRepColorProperty(it)
 
 			for _, id := range rdx.Keys(asset) {
 				if rdx.HasKey(dehydratedProperty, id) &&
@@ -67,11 +67,11 @@ func Dehydrate(
 
 	for _, it := range its {
 
-		if !vangogh_local_data.IsImageTypeDehydrationSupported(it) {
+		if !vangogh_integration.IsImageTypeDehydrationSupported(it) {
 			continue
 		}
 
-		asset := vangogh_local_data.PropertyFromImageType(it)
+		asset := vangogh_integration.PropertyFromImageType(it)
 
 		dehydratedImages := make(map[string][]string)
 		dehydratedImageModified := make(map[string][]string)
@@ -84,7 +84,7 @@ func Dehydrate(
 				continue
 			}
 
-			alip, err := vangogh_local_data.AbsLocalImagePath(imageId)
+			alip, err := vangogh_integration.AbsLocalImagePath(imageId)
 			if err != nil {
 				return di.EndWithError(err)
 			}
@@ -100,17 +100,17 @@ func Dehydrate(
 			di.Increment()
 		}
 
-		dehydratedProperty := vangogh_local_data.ImageTypeDehydratedProperty(it)
+		dehydratedProperty := vangogh_integration.ImageTypeDehydratedProperty(it)
 		if err := rdx.BatchReplaceValues(dehydratedProperty, dehydratedImages); err != nil {
 			return di.EndWithError(err)
 		}
 
-		dehydratedModifiedProperty := vangogh_local_data.ImageTypeDehydratedModifiedProperty(it)
+		dehydratedModifiedProperty := vangogh_integration.ImageTypeDehydratedModifiedProperty(it)
 		if err := rdx.BatchReplaceValues(dehydratedModifiedProperty, dehydratedImageModified); err != nil {
 			return di.EndWithError(err)
 		}
 
-		repColorProperty := vangogh_local_data.ImageTypeRepColorProperty(it)
+		repColorProperty := vangogh_integration.ImageTypeRepColorProperty(it)
 		if err := rdx.BatchReplaceValues(repColorProperty, repColors); err != nil {
 			return di.EndWithError(err)
 		}

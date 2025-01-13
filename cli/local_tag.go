@@ -1,21 +1,21 @@
 package cli
 
 import (
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"net/url"
 )
 
 func LocalTagHandler(u *url.URL) error {
-	ids, err := vangogh_local_data.IdsFromUrl(u)
+	ids, err := vangogh_integration.IdsFromUrl(u)
 	if err != nil {
 		return err
 	}
 
 	return LocalTag(
 		ids,
-		vangogh_local_data.ValueFromUrl(u, "operation"),
-		vangogh_local_data.ValueFromUrl(u, "tag-name"))
+		vangogh_integration.ValueFromUrl(u, "operation"),
+		vangogh_integration.ValueFromUrl(u, "tag-name"))
 }
 
 func LocalTag(ids []string, operation string, tagName string) error {
@@ -25,11 +25,11 @@ func LocalTag(ids []string, operation string, tagName string) error {
 
 	switch operation {
 	case "add":
-		if err := vangogh_local_data.AddLocalTags(ids, []string{tagName}, lta); err != nil {
+		if err := vangogh_integration.AddLocalTags(ids, []string{tagName}, lta); err != nil {
 			return err
 		}
 	case "remove":
-		if err := vangogh_local_data.RemoveLocalTags(ids, []string{tagName}, lta); err != nil {
+		if err := vangogh_integration.RemoveLocalTags(ids, []string{tagName}, lta); err != nil {
 			return err
 		}
 	}

@@ -2,8 +2,8 @@ package cli
 
 import (
 	"fmt"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/itemizations"
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
@@ -13,15 +13,15 @@ import (
 )
 
 func GetImagesHandler(u *url.URL) error {
-	ids, err := vangogh_local_data.IdsFromUrl(u)
+	ids, err := vangogh_integration.IdsFromUrl(u)
 	if err != nil {
 		return err
 	}
 
 	return GetImages(
 		ids,
-		vangogh_local_data.ImageTypesFromUrl(u),
-		vangogh_local_data.FlagFromUrl(u, "missing"))
+		vangogh_integration.ImageTypesFromUrl(u),
+		vangogh_integration.FlagFromUrl(u, "missing"))
 }
 
 // GetImages fetches remote images for a given type (box-art, screenshots, background, etc.).
@@ -29,7 +29,7 @@ func GetImagesHandler(u *url.URL) error {
 // but not present locally) images for a given type.
 func GetImages(
 	ids []string,
-	its []vangogh_local_data.ImageType,
+	its []vangogh_integration.ImageType,
 	missing bool) error {
 
 	gia := nod.NewProgress("getting images...")
@@ -41,10 +41,10 @@ func GetImages(
 	}
 
 	//for every product we'll collect image types missing for id and download only those
-	idMissingTypes := map[string][]vangogh_local_data.ImageType{}
+	idMissingTypes := map[string][]vangogh_integration.ImageType{}
 
 	if missing {
-		localImageSet, err := vangogh_local_data.LocalImageIds()
+		localImageSet, err := vangogh_integration.LocalImageIds()
 		if err != nil {
 			return gia.EndWithError(err)
 		}
@@ -61,7 +61,7 @@ func GetImages(
 			//2
 			for id := range missingImageIds {
 				if idMissingTypes[id] == nil {
-					idMissingTypes[id] = make([]vangogh_local_data.ImageType, 0)
+					idMissingTypes[id] = make([]vangogh_integration.ImageType, 0)
 				}
 				idMissingTypes[id] = append(idMissingTypes[id], it)
 			}
@@ -88,13 +88,13 @@ func GetImages(
 		//for every product collect all image URLs and all corresponding local filenames
 		//to pass to dolo.GetSet, that'll concurrently download all required product images
 
-		title, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, id)
+		title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
 		if !ok {
 			title = id
 		}
 
 		mita := nod.NewProgress("%s %s", id, title)
-		missingImageTypes := map[vangogh_local_data.ImageType]bool{}
+		missingImageTypes := map[vangogh_integration.ImageType]bool{}
 
 		//sensible assumption - we'll have at least as many URLs and filenames
 		//as types of images we're missing
@@ -103,14 +103,14 @@ func GetImages(
 
 		for _, it := range missingIts {
 
-			images, ok := rdx.GetAllValues(vangogh_local_data.PropertyFromImageType(it), id)
+			images, ok := rdx.GetAllValues(vangogh_integration.PropertyFromImageType(it), id)
 			if !ok || len(images) == 0 {
 				nod.Log("%s missing %s", id, it)
 				missingImageTypes[it] = true
 				continue
 			}
 
-			srcUrls, err := vangogh_local_data.ImagePropertyUrls(images, it)
+			srcUrls, err := vangogh_integration.ImagePropertyUrls(images, it)
 			if err != nil {
 				return mita.EndWithError(err)
 			}
@@ -118,7 +118,7 @@ func GetImages(
 			urls = append(urls, srcUrls...)
 
 			for _, srcUrl := range srcUrls {
-				dstDir, err := vangogh_local_data.AbsImagesDirByImageId(srcUrl.Path)
+				dstDir, err := vangogh_integration.AbsImagesDirByImageId(srcUrl.Path)
 				if err != nil {
 					return mita.EndWithError(err)
 				}
@@ -154,18 +154,18 @@ func GetImages(
 	return nil
 }
 
-func imageTypesReduxAssets(otherProperties []string, its []vangogh_local_data.ImageType) (kevlar.WriteableRedux, error) {
+func imageTypesReduxAssets(otherProperties []string, its []vangogh_integration.ImageType) (kevlar.WriteableRedux, error) {
 	for _, it := range its {
-		if !vangogh_local_data.IsValidImageType(it) {
+		if !vangogh_integration.IsValidImageType(it) {
 			return nil, fmt.Errorf("invalid image type %s", it)
 		}
 	}
 
 	propSet := make(map[string]bool)
-	propSet[vangogh_local_data.TitleProperty] = true
+	propSet[vangogh_integration.TitleProperty] = true
 
 	for _, it := range its {
-		propSet[vangogh_local_data.PropertyFromImageType(it)] = true
+		propSet[vangogh_integration.PropertyFromImageType(it)] = true
 	}
 
 	for _, p := range otherProperties {
@@ -177,5 +177,5 @@ func imageTypesReduxAssets(otherProperties []string, its []vangogh_local_data.Im
 		properties = append(properties, p)
 	}
 
-	return vangogh_local_data.NewReduxWriter(properties...)
+	return vangogh_integration.NewReduxWriter(properties...)
 }

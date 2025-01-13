@@ -1,7 +1,7 @@
 package rest
 
 import (
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"net/http"
 )
@@ -21,7 +21,7 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 
 	if manualUrl != "" {
 
-		relLocalFilePath, ok := rdx.GetLastVal(vangogh_local_data.LocalManualUrlProperty, manualUrl)
+		relLocalFilePath, ok := rdx.GetLastVal(vangogh_integration.LocalManualUrlProperty, manualUrl)
 		if !ok {
 			http.Error(w, nod.ErrorStr("no file for manual-url %s", manualUrl), http.StatusNotFound)
 			return

@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 )
 
@@ -41,9 +41,9 @@ func GetUpdates(w http.ResponseWriter, r *http.Request) {
 
 	paginate := false
 
-	for _, section := range rdx.Keys(vangogh_local_data.LastSyncUpdatesProperty) {
+	for _, section := range rdx.Keys(vangogh_integration.LastSyncUpdatesProperty) {
 
-		ids, _ := rdx.GetAllValues(vangogh_local_data.LastSyncUpdatesProperty, section)
+		ids, _ := rdx.GetAllValues(vangogh_integration.LastSyncUpdatesProperty, section)
 		updateTotals[section] = len(ids)
 		// limit number of items only if there are at least x2 the limit
 		// e.g. if the limit is 24, only start limiting if there are 49 or more items
@@ -67,7 +67,7 @@ func GetUpdates(w http.ResponseWriter, r *http.Request) {
 	sort.Strings(ids)
 
 	updated := "recently"
-	if scs, ok := rdx.GetLastVal(vangogh_local_data.SyncEventsProperty, vangogh_local_data.SyncCompleteKey); ok {
+	if scs, ok := rdx.GetLastVal(vangogh_integration.SyncEventsProperty, vangogh_integration.SyncCompleteKey); ok {
 		if sci, err := strconv.ParseInt(scs, 10, 64); err == nil {
 			updated = time.Unix(sci, 0).Format(time.RFC1123)
 		}

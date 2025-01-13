@@ -2,16 +2,16 @@ package reductions
 
 import (
 	"fmt"
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 )
 
 func TagNames() error {
 
-	tna := nod.Begin(" %s...", vangogh_local_data.TagNameProperty)
+	tna := nod.Begin(" %s...", vangogh_integration.TagNameProperty)
 	defer tna.End()
 
-	vrAccountPage, err := vangogh_local_data.NewProductReader(vangogh_local_data.AccountPage)
+	vrAccountPage, err := vangogh_integration.NewProductReader(vangogh_integration.AccountPage)
 	if err != nil {
 		return tna.EndWithError(err)
 	}
@@ -22,7 +22,7 @@ func TagNames() error {
 		return tna.EndWithError(err)
 	}
 	if !has {
-		err := fmt.Errorf("%s doesn't contain page %s", vangogh_local_data.AccountPage, fpId)
+		err := fmt.Errorf("%s doesn't contain page %s", vangogh_integration.AccountPage, fpId)
 		return tna.EndWithError(err)
 	}
 
@@ -31,7 +31,7 @@ func TagNames() error {
 		return tna.EndWithError(err)
 	}
 
-	tagNameEx, err := vangogh_local_data.NewReduxWriter(vangogh_local_data.TagNameProperty)
+	tagNameEx, err := vangogh_integration.NewReduxWriter(vangogh_integration.TagNameProperty)
 	if err != nil {
 		return tna.EndWithError(err)
 	}
@@ -42,7 +42,7 @@ func TagNames() error {
 		tagIdNames[tag.Id] = []string{tag.Name}
 	}
 
-	if err := tagNameEx.BatchReplaceValues(vangogh_local_data.TagNameProperty, tagIdNames); err != nil {
+	if err := tagNameEx.BatchReplaceValues(vangogh_integration.TagNameProperty, tagIdNames); err != nil {
 		return tna.EndWithError(err)
 	}
 

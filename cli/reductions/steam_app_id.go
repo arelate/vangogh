@@ -2,7 +2,7 @@ package reductions
 
 import (
 	"github.com/arelate/southern_light/steam_integration"
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"strconv"
 	"strings"
@@ -10,22 +10,22 @@ import (
 
 func SteamAppId(since int64) error {
 
-	saia := nod.NewProgress(" %s...", vangogh_local_data.SteamAppIdProperty)
+	saia := nod.NewProgress(" %s...", vangogh_integration.SteamAppIdProperty)
 	defer saia.End()
 
-	rdx, err := vangogh_local_data.NewReduxWriter(
-		vangogh_local_data.TitleProperty,
-		vangogh_local_data.SteamAppIdProperty)
+	rdx, err := vangogh_integration.NewReduxWriter(
+		vangogh_integration.TitleProperty,
+		vangogh_integration.SteamAppIdProperty)
 	if err != nil {
 		return saia.EndWithError(err)
 	}
 
-	vrSteamAppList, err := vangogh_local_data.NewProductReader(vangogh_local_data.SteamAppList)
+	vrSteamAppList, err := vangogh_integration.NewProductReader(vangogh_integration.SteamAppList)
 	if err != nil {
 		return saia.EndWithError(err)
 	}
 
-	vrCatalogProducts, err := vangogh_local_data.NewProductReader(vangogh_local_data.CatalogProducts)
+	vrCatalogProducts, err := vangogh_integration.NewProductReader(vangogh_integration.CatalogProducts)
 	if err != nil {
 		return saia.EndWithError(err)
 	}
@@ -46,7 +46,7 @@ func SteamAppId(since int64) error {
 	saia.TotalInt(len(updated))
 
 	for _, id := range updated {
-		title, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, id)
+		title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
 		if !ok {
 			saia.Increment()
 			continue
@@ -61,7 +61,7 @@ func SteamAppId(since int64) error {
 		saia.Increment()
 	}
 
-	if err := rdx.BatchReplaceValues(vangogh_local_data.SteamAppIdProperty, gogSteamAppId); err != nil {
+	if err := rdx.BatchReplaceValues(vangogh_integration.SteamAppIdProperty, gogSteamAppId); err != nil {
 		return saia.EndWithError(err)
 	}
 

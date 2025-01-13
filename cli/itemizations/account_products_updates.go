@@ -1,7 +1,7 @@
 package itemizations
 
 import (
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"golang.org/x/exp/maps"
 	"strconv"
@@ -9,11 +9,11 @@ import (
 
 func AccountProductsUpdates() ([]string, error) {
 
-	apua := nod.Begin(" finding %s updates...", vangogh_local_data.AccountProducts)
+	apua := nod.Begin(" finding %s updates...", vangogh_integration.AccountProducts)
 	defer apua.End()
 
 	updatesSet := make(map[string]bool)
-	vrAccountPages, err := vangogh_local_data.NewProductReader(vangogh_local_data.AccountPage)
+	vrAccountPages, err := vangogh_integration.NewProductReader(vangogh_integration.AccountPage)
 	if err != nil {
 		return nil, apua.EndWithError(err)
 	}
@@ -31,7 +31,7 @@ func AccountProductsUpdates() ([]string, error) {
 		for _, ap := range accountPage.Products {
 			if ap.Updates > 0 ||
 				ap.IsNew {
-				nod.Log("%s #%d Updates, isNew: %d, %v", vangogh_local_data.AccountProducts, ap.Id, ap.Updates, ap.IsNew)
+				nod.Log("%s #%d Updates, isNew: %d, %v", vangogh_integration.AccountProducts, ap.Id, ap.Updates, ap.IsNew)
 				updatesSet[strconv.Itoa(ap.Id)] = true
 			}
 		}

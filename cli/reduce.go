@@ -1,8 +1,8 @@
 package cli
 
 import (
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/reductions"
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
 	"golang.org/x/exp/maps"
 	"net/url"
@@ -11,17 +11,17 @@ import (
 
 func ReduceHandler(u *url.URL) error {
 	var since int64
-	if vangogh_local_data.FlagFromUrl(u, "since-hours-ago") {
+	if vangogh_integration.FlagFromUrl(u, "since-hours-ago") {
 		var err error
-		since, err = vangogh_local_data.SinceFromUrl(u)
+		since, err = vangogh_integration.SinceFromUrl(u)
 		if err != nil {
 			return err
 		}
 	}
 	return Reduce(
 		since,
-		vangogh_local_data.PropertiesFromUrl(u),
-		vangogh_local_data.FlagFromUrl(u, "properties-only"))
+		vangogh_integration.PropertiesFromUrl(u),
+		vangogh_integration.FlagFromUrl(u, "properties-only"))
 }
 
 func Reduce(since int64, properties []string, propertiesOnly bool) error {
@@ -32,35 +32,35 @@ func Reduce(since int64, properties []string, propertiesOnly bool) error {
 	}
 
 	if len(properties) == 0 {
-		for _, rp := range vangogh_local_data.ReduxProperties() {
+		for _, rp := range vangogh_integration.ReduxProperties() {
 			propSet[rp] = true
 		}
 	}
 
 	if !propertiesOnly {
-		if propSet[vangogh_local_data.LanguageNameProperty] ||
-			propSet[vangogh_local_data.NativeLanguageNameProperty] {
+		if propSet[vangogh_integration.LanguageNameProperty] ||
+			propSet[vangogh_integration.NativeLanguageNameProperty] {
 			//required for language-* properties reduction below
-			propSet[vangogh_local_data.LanguageCodeProperty] = true
+			propSet[vangogh_integration.LanguageCodeProperty] = true
 		}
 	}
 
 	ra := nod.Begin("reducing properties...")
 	defer ra.End()
 
-	rdx, err := vangogh_local_data.NewReduxWriter(maps.Keys(propSet)...)
+	rdx, err := vangogh_integration.NewReduxWriter(maps.Keys(propSet)...)
 	if err != nil {
 		return ra.EndWithError(err)
 	}
 
-	for _, pt := range vangogh_local_data.LocalProducts() {
+	for _, pt := range vangogh_integration.LocalProducts() {
 
-		vr, err := vangogh_local_data.NewProductReader(pt)
+		vr, err := vangogh_integration.NewProductReader(pt)
 		if err != nil {
 			return ra.EndWithError(err)
 		}
 
-		missingProps := vangogh_local_data.SupportedPropertiesOnly(pt, maps.Keys(propSet))
+		missingProps := vangogh_integration.SupportedPropertiesOnly(pt, maps.Keys(propSet))
 
 		missingPropRedux := make(map[string]map[string][]string, 0)
 
@@ -91,7 +91,7 @@ func Reduce(since int64, properties []string, propertiesOnly bool) error {
 				continue
 			}
 
-			propValues, err := vangogh_local_data.GetProperties(id, vr, missingProps)
+			propValues, err := vangogh_integration.GetProperties(id, vr, missingProps)
 			if err != nil {
 				pta.Error(err)
 				continue

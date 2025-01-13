@@ -1,7 +1,7 @@
 package cli
 
 import (
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/backups"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
@@ -17,12 +17,12 @@ func Backup() error {
 	ba := nod.NewProgress("backing up local data...")
 	defer ba.End()
 
-	abp, err := pathways.GetAbsDir(vangogh_local_data.Backups)
+	abp, err := pathways.GetAbsDir(vangogh_integration.Backups)
 	if err != nil {
 		return ba.EndWithError(err)
 	}
 
-	amp, err := pathways.GetAbsDir(vangogh_local_data.Metadata)
+	amp, err := pathways.GetAbsDir(vangogh_integration.Metadata)
 	if err != nil {
 		return ba.EndWithError(err)
 	}

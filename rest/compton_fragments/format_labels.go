@@ -2,16 +2,16 @@ package compton_fragments
 
 import (
 	"fmt"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/kevlar"
 )
 
 func FormatLabels(id string, rdx kevlar.ReadableRedux) []compton.FormattedLabel {
 	owned := false
-	if op, ok := rdx.GetLastVal(vangogh_local_data.OwnedProperty, id); ok {
-		owned = op == vangogh_local_data.TrueValue
+	if op, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok {
+		owned = op == vangogh_integration.TrueValue
 	}
 
 	fmtLabels := make([]compton.FormattedLabel, 0, len(compton_data.LabelProperties))
@@ -31,31 +31,31 @@ func formatLabel(id, property string, owned bool, rdx kevlar.ReadableRedux) comp
 
 	fmtLabel.Title, _ = rdx.GetLastVal(property, id)
 	switch property {
-	case vangogh_local_data.OwnedProperty:
-		if pvr, ok := rdx.GetLastVal(vangogh_local_data.ProductValidationResultProperty, id); ok {
+	case vangogh_integration.OwnedProperty:
+		if pvr, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
 			fmtLabel.Class = pvr
 		}
 		fallthrough
-	case vangogh_local_data.WishlistedProperty:
+	case vangogh_integration.WishlistedProperty:
 		fallthrough
-	case vangogh_local_data.PreOrderProperty:
+	case vangogh_integration.PreOrderProperty:
 		fallthrough
-	case vangogh_local_data.ComingSoonProperty:
+	case vangogh_integration.ComingSoonProperty:
 		fallthrough
-	case vangogh_local_data.InDevelopmentProperty:
+	case vangogh_integration.InDevelopmentProperty:
 		fallthrough
-	case vangogh_local_data.IsFreeProperty:
+	case vangogh_integration.IsFreeProperty:
 		if fmtLabel.Title == "true" {
 			fmtLabel.Title = compton_data.LabelTitles[property]
 			break
 		}
 		fmtLabel.Title = ""
-	case vangogh_local_data.ProductTypeProperty:
+	case vangogh_integration.ProductTypeProperty:
 		if fmtLabel.Title == "GAME" {
 			fmtLabel.Title = ""
 			break
 		}
-	case vangogh_local_data.DiscountPercentageProperty:
+	case vangogh_integration.DiscountPercentageProperty:
 		if owned {
 			fmtLabel.Title = ""
 			break
@@ -65,17 +65,17 @@ func formatLabel(id, property string, owned bool, rdx kevlar.ReadableRedux) comp
 			break
 		}
 		fmtLabel.Title = ""
-	case vangogh_local_data.TagIdProperty:
-		if tagName, ok := rdx.GetLastVal(vangogh_local_data.TagNameProperty, fmtLabel.Title); ok {
+	case vangogh_integration.TagIdProperty:
+		if tagName, ok := rdx.GetLastVal(vangogh_integration.TagNameProperty, fmtLabel.Title); ok {
 			fmtLabel.Title = tagName
 			break
 		}
-	case vangogh_local_data.DehydratedImageProperty:
+	case vangogh_integration.DehydratedImageProperty:
 		fallthrough
-	case vangogh_local_data.DehydratedVerticalImageProperty:
+	case vangogh_integration.DehydratedVerticalImageProperty:
 		fmtLabel.Title = property
-	case vangogh_local_data.StoreTagsProperty:
-		if rdx.HasValue(vangogh_local_data.StoreTagsProperty, id, "Good Old Game") {
+	case vangogh_integration.StoreTagsProperty:
+		if rdx.HasValue(vangogh_integration.StoreTagsProperty, id, "Good Old Game") {
 			fmtLabel.Title = "GOG"
 			fmtLabel.Class = "good-old-game"
 		} else {

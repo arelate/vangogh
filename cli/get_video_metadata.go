@@ -1,7 +1,7 @@
 package cli
 
 import (
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/yet_urls/youtube_urls"
@@ -12,15 +12,15 @@ import (
 const limitVideoRequests = 1000
 
 func GetVideoMetadataHandler(u *url.URL) error {
-	ids, err := vangogh_local_data.IdsFromUrl(u)
+	ids, err := vangogh_integration.IdsFromUrl(u)
 	if err != nil {
 		return err
 	}
 
 	return GetVideoMetadata(
 		ids,
-		vangogh_local_data.FlagFromUrl(u, "missing"),
-		vangogh_local_data.FlagFromUrl(u, "force"))
+		vangogh_integration.FlagFromUrl(u, "missing"),
+		vangogh_integration.FlagFromUrl(u, "force"))
 }
 
 func GetVideoMetadata(ids []string, missing, force bool) error {
@@ -35,12 +35,12 @@ func GetVideoMetadata(ids []string, missing, force bool) error {
 
 	videoIds := make([]string, 0, len(ids))
 	for _, id := range ids {
-		if vip, ok := rdx.GetAllValues(vangogh_local_data.VideoIdProperty, id); ok {
+		if vip, ok := rdx.GetAllValues(vangogh_integration.VideoIdProperty, id); ok {
 			for _, vid := range vip {
-				if rdx.HasKey(vangogh_local_data.VideoTitleProperty, vid) && !force {
+				if rdx.HasKey(vangogh_integration.VideoTitleProperty, vid) && !force {
 					continue
 				}
-				if rdx.HasKey(vangogh_local_data.VideoErrorProperty, vid) && !force {
+				if rdx.HasKey(vangogh_integration.VideoErrorProperty, vid) && !force {
 					continue
 				}
 				videoIds = append(videoIds, vid)
@@ -49,13 +49,13 @@ func GetVideoMetadata(ids []string, missing, force bool) error {
 	}
 
 	if missing {
-		for _, id := range rdx.Keys(vangogh_local_data.VideoIdProperty) {
-			if vip, ok := rdx.GetAllValues(vangogh_local_data.VideoIdProperty, id); ok {
+		for _, id := range rdx.Keys(vangogh_integration.VideoIdProperty) {
+			if vip, ok := rdx.GetAllValues(vangogh_integration.VideoIdProperty, id); ok {
 				for _, vid := range vip {
-					if rdx.HasKey(vangogh_local_data.VideoErrorProperty, vid) && !force {
+					if rdx.HasKey(vangogh_integration.VideoErrorProperty, vid) && !force {
 						continue
 					}
-					if !rdx.HasKey(vangogh_local_data.VideoTitleProperty, vid) {
+					if !rdx.HasKey(vangogh_integration.VideoTitleProperty, vid) {
 						videoIds = append(videoIds, vid)
 					}
 				}
@@ -90,15 +90,15 @@ func GetVideoMetadata(ids []string, missing, force bool) error {
 		gvma.Increment()
 	}
 
-	if err := rdx.BatchAddValues(vangogh_local_data.VideoTitleProperty, videoTitles); err != nil {
+	if err := rdx.BatchAddValues(vangogh_integration.VideoTitleProperty, videoTitles); err != nil {
 		return gvma.EndWithError(err)
 	}
 
-	if err := rdx.BatchAddValues(vangogh_local_data.VideoDurationProperty, videoDurations); err != nil {
+	if err := rdx.BatchAddValues(vangogh_integration.VideoDurationProperty, videoDurations); err != nil {
 		return gvma.EndWithError(err)
 	}
 
-	if err := rdx.BatchAddValues(vangogh_local_data.VideoErrorProperty, videoErrors); err != nil {
+	if err := rdx.BatchAddValues(vangogh_integration.VideoErrorProperty, videoErrors); err != nil {
 		return gvma.EndWithError(err)
 	}
 
@@ -110,9 +110,9 @@ func GetVideoMetadata(ids []string, missing, force bool) error {
 func videoReduxAssets() (kevlar.WriteableRedux, error) {
 
 	propSet := make(map[string]bool)
-	propSet[vangogh_local_data.TitleProperty] = true
+	propSet[vangogh_integration.TitleProperty] = true
 
-	for _, vp := range vangogh_local_data.VideoProperties() {
+	for _, vp := range vangogh_integration.VideoProperties() {
 		propSet[vp] = true
 	}
 
@@ -121,5 +121,5 @@ func videoReduxAssets() (kevlar.WriteableRedux, error) {
 		properties = append(properties, p)
 	}
 
-	return vangogh_local_data.NewReduxWriter(properties...)
+	return vangogh_integration.NewReduxWriter(properties...)
 }

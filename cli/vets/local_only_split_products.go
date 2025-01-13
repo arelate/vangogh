@@ -2,7 +2,7 @@ package vets
 
 import (
 	"fmt"
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"golang.org/x/exp/maps"
 )
@@ -12,14 +12,14 @@ func LocalOnlySplitProducts(fix bool) error {
 	sloa := nod.Begin("checking for local only split products...")
 	defer sloa.End()
 
-	rdx, err := vangogh_local_data.NewReduxReader(vangogh_local_data.TitleProperty)
+	rdx, err := vangogh_integration.NewReduxReader(vangogh_integration.TitleProperty)
 	if err != nil {
 		return sloa.EndWithError(err)
 	}
 
-	for _, pagedPt := range vangogh_local_data.GOGPagedProducts() {
+	for _, pagedPt := range vangogh_integration.GOGPagedProducts() {
 
-		splitPt := vangogh_local_data.SplitProductType(pagedPt)
+		splitPt := vangogh_integration.SplitProductType(pagedPt)
 
 		pa := nod.Begin(" checking %s not present in %s...", splitPt, pagedPt)
 
@@ -30,10 +30,10 @@ func LocalOnlySplitProducts(fix bool) error {
 
 		if len(localOnlyProducts) > 0 {
 
-			summary, err := vangogh_local_data.PropertyListsFromIdSet(
+			summary, err := vangogh_integration.PropertyListsFromIdSet(
 				maps.Keys(localOnlyProducts),
 				nil,
-				[]string{vangogh_local_data.TitleProperty},
+				[]string{vangogh_integration.TitleProperty},
 				rdx)
 
 			if err != nil {
@@ -46,7 +46,7 @@ func LocalOnlySplitProducts(fix bool) error {
 			if fix {
 				fa := nod.Begin(" removing local only %s...", splitPt)
 
-				kv, err := vangogh_local_data.NewProductReader(splitPt)
+				kv, err := vangogh_integration.NewProductReader(splitPt)
 				if err != nil {
 					return fa.EndWithError(err)
 				}

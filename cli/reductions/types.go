@@ -1,20 +1,20 @@
 package reductions
 
 import (
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 )
 
 func Types() error {
 
-	ta := nod.Begin(" %s...", vangogh_local_data.TypesProperty)
+	ta := nod.Begin(" %s...", vangogh_integration.TypesProperty)
 	defer ta.End()
 
 	idsTypes := make(map[string][]string)
 
-	for _, pt := range vangogh_local_data.LocalProducts() {
+	for _, pt := range vangogh_integration.LocalProducts() {
 
-		vr, err := vangogh_local_data.NewProductReader(pt)
+		vr, err := vangogh_integration.NewProductReader(pt)
 		if err != nil {
 			return ta.EndWithError(err)
 		}
@@ -34,12 +34,12 @@ func Types() error {
 		}
 	}
 
-	typesEx, err := vangogh_local_data.NewReduxWriter(vangogh_local_data.TypesProperty)
+	typesEx, err := vangogh_integration.NewReduxWriter(vangogh_integration.TypesProperty)
 	if err != nil {
 		return ta.EndWithError(err)
 	}
 
-	if err := typesEx.BatchReplaceValues(vangogh_local_data.TypesProperty, idsTypes); err != nil {
+	if err := typesEx.BatchReplaceValues(vangogh_integration.TypesProperty, idsTypes); err != nil {
 		return ta.EndWithError(err)
 	}
 

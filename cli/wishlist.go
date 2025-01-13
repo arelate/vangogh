@@ -2,7 +2,7 @@ package cli
 
 import (
 	"github.com/arelate/southern_light/gog_integration"
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/coost"
 	"github.com/boggydigital/nod"
 	"net/url"
@@ -10,8 +10,8 @@ import (
 
 func WishlistHandler(u *url.URL) error {
 	return Wishlist(
-		vangogh_local_data.ValuesFromUrl(u, "add"),
-		vangogh_local_data.ValuesFromUrl(u, "remove"))
+		vangogh_integration.ValuesFromUrl(u, "add"),
+		vangogh_integration.ValuesFromUrl(u, "remove"))
 }
 
 func Wishlist(addProductIds, removeProductIds []string) error {
@@ -19,7 +19,7 @@ func Wishlist(addProductIds, removeProductIds []string) error {
 	wa := nod.Begin("performing requested wishlist operations...")
 	defer wa.End()
 
-	acp, err := vangogh_local_data.AbsCookiePath()
+	acp, err := vangogh_integration.AbsCookiePath()
 	if err != nil {
 		return wa.EndWithError(err)
 	}
@@ -61,7 +61,7 @@ func wishlistAdd(
 	waa := nod.NewProgress(" adding product(s) to local wishlist...")
 	defer waa.End()
 
-	pids, err := vangogh_local_data.AddToLocalWishlist(ids, waa)
+	pids, err := vangogh_integration.AddToLocalWishlist(ids, waa)
 	if err != nil {
 		waa.EndWithError(err)
 	} else {
@@ -77,7 +77,7 @@ func wishlistRemove(
 	wra := nod.NewProgress(" removing product(s) from local wishlist...")
 	defer wra.End()
 
-	pids, err := vangogh_local_data.RemoveFromLocalWishlist(ids, wra)
+	pids, err := vangogh_integration.RemoveFromLocalWishlist(ids, wra)
 	if err != nil {
 		wra.EndWithError(err)
 	} else {

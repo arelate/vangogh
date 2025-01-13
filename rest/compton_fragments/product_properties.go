@@ -2,8 +2,8 @@ package compton_fragments
 
 import (
 	"fmt"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
@@ -27,7 +27,7 @@ func ProductProperties(r compton.Registrar, id string, rdx kevlar.ReadableRedux)
 
 	for _, property := range compton_data.ProductProperties {
 
-		if property == vangogh_local_data.OperatingSystemsProperty {
+		if property == vangogh_integration.OperatingSystemsProperty {
 			if tv := operatingSystemsTitleValues(r, id, rdx); tv != nil {
 				grid.Append(tv)
 				continue
@@ -63,16 +63,16 @@ func formatProperty(id, property string, rdx kevlar.ReadableRedux) formattedProp
 	}
 
 	owned := false
-	if op, ok := rdx.GetLastVal(vangogh_local_data.OwnedProperty, id); ok {
-		owned = op == vangogh_local_data.TrueValue
+	if op, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok {
+		owned = op == vangogh_integration.TrueValue
 	}
 	isFree := false
-	if ifp, ok := rdx.GetLastVal(vangogh_local_data.IsFreeProperty, id); ok {
-		isFree = ifp == vangogh_local_data.TrueValue
+	if ifp, ok := rdx.GetLastVal(vangogh_integration.IsFreeProperty, id); ok {
+		isFree = ifp == vangogh_integration.TrueValue
 	}
 	isDiscounted := false
-	if idp, ok := rdx.GetLastVal(vangogh_local_data.IsDiscountedProperty, id); ok {
-		isDiscounted = idp == vangogh_local_data.TrueValue
+	if idp, ok := rdx.GetLastVal(vangogh_integration.IsDiscountedProperty, id); ok {
+		isDiscounted = idp == vangogh_integration.TrueValue
 	}
 
 	values, _ := rdx.GetAllValues(property, id)
@@ -83,44 +83,44 @@ func formatProperty(id, property string, rdx kevlar.ReadableRedux) formattedProp
 
 	for _, value := range values {
 		switch property {
-		case vangogh_local_data.WishlistedProperty:
+		case vangogh_integration.WishlistedProperty:
 			if owned {
 				break
 			}
 			title := "No"
-			if value == vangogh_local_data.TrueValue {
+			if value == vangogh_integration.TrueValue {
 				title = "Yes"
 			}
 			fmtProperty.values[title] = searchHref(property, value)
-		case vangogh_local_data.IncludesGamesProperty:
+		case vangogh_integration.IncludesGamesProperty:
 			fallthrough
-		case vangogh_local_data.IsIncludedByGamesProperty:
+		case vangogh_integration.IsIncludedByGamesProperty:
 			fallthrough
-		case vangogh_local_data.RequiresGamesProperty:
+		case vangogh_integration.RequiresGamesProperty:
 			fallthrough
-		case vangogh_local_data.IsRequiredByGamesProperty:
+		case vangogh_integration.IsRequiredByGamesProperty:
 			refTitle := value
-			if rtp, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, value); ok {
+			if rtp, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, value); ok {
 				refTitle = rtp
 			}
 			fmtProperty.values[refTitle] = "/product?id=" + value
-		case vangogh_local_data.GOGOrderDateProperty:
+		case vangogh_integration.GOGOrderDateProperty:
 			jtd := justTheDate(value)
 			fmtProperty.values[jtd] = searchHref(property, jtd)
-		case vangogh_local_data.LanguageCodeProperty:
+		case vangogh_integration.LanguageCodeProperty:
 			fmtProperty.values[compton_data.FormatLanguage(value)] = searchHref(property, value)
-		case vangogh_local_data.RatingProperty:
+		case vangogh_integration.RatingProperty:
 			fmtProperty.values[fmtGOGRating(value)] = noHref()
-		case vangogh_local_data.TagIdProperty:
+		case vangogh_integration.TagIdProperty:
 			tagName := value
-			if tnp, ok := rdx.GetLastVal(vangogh_local_data.TagNameProperty, value); ok {
+			if tnp, ok := rdx.GetLastVal(vangogh_integration.TagNameProperty, value); ok {
 				tagName = tnp
 			}
 			fmtProperty.values[tagName] = searchHref(property, value)
-		case vangogh_local_data.PriceProperty:
+		case vangogh_integration.PriceProperty:
 			if !isFree {
 				if isDiscounted && !owned {
-					if bpp, ok := rdx.GetLastVal(vangogh_local_data.BasePriceProperty, id); ok {
+					if bpp, ok := rdx.GetLastVal(vangogh_integration.BasePriceProperty, id); ok {
 						fmtProperty.values["Base: "+bpp] = noHref()
 					}
 					fmtProperty.values["Sale: "+value] = noHref()
@@ -128,24 +128,24 @@ func formatProperty(id, property string, rdx kevlar.ReadableRedux) formattedProp
 					fmtProperty.values[value] = noHref()
 				}
 			}
-		case vangogh_local_data.HLTBHoursToCompleteMainProperty:
+		case vangogh_integration.HLTBHoursToCompleteMainProperty:
 			fallthrough
-		case vangogh_local_data.HLTBHoursToCompletePlusProperty:
+		case vangogh_integration.HLTBHoursToCompletePlusProperty:
 			fallthrough
-		case vangogh_local_data.HLTBHoursToComplete100Property:
+		case vangogh_integration.HLTBHoursToComplete100Property:
 			ct := strings.TrimLeft(value, "0") + " hrs"
 			fmtProperty.values[ct] = noHref()
-		case vangogh_local_data.HLTBReviewScoreProperty:
+		case vangogh_integration.HLTBReviewScoreProperty:
 			if value != "0" {
 				fmtProperty.values[fmtHLTBRating(value)] = noHref()
 			}
-		case vangogh_local_data.DiscountPercentageProperty:
+		case vangogh_integration.DiscountPercentageProperty:
 			fmtProperty.values[value] = noHref()
-		case vangogh_local_data.PublishersProperty:
+		case vangogh_integration.PublishersProperty:
 			fallthrough
-		case vangogh_local_data.DevelopersProperty:
+		case vangogh_integration.DevelopersProperty:
 			fmtProperty.values[value] = grdSortedSearchHref(property, value)
-		case vangogh_local_data.EnginesBuildsProperty:
+		case vangogh_integration.EnginesBuildsProperty:
 			fmtProperty.values[value] = noHref()
 
 		default:
@@ -155,32 +155,32 @@ func formatProperty(id, property string, rdx kevlar.ReadableRedux) formattedProp
 
 	// format actions, class
 	switch property {
-	case vangogh_local_data.OwnedProperty:
-		//if res, ok := rdx.GetLastVal(vangogh_local_data.ValidationResultProperty, id); ok {
+	case vangogh_integration.OwnedProperty:
+		//if res, ok := rdx.GetLastVal(vangogh_integration.ValidationResultProperty, id); ok {
 		//	fmtProperty.class = res
 		//}
-	case vangogh_local_data.WishlistedProperty:
+	case vangogh_integration.WishlistedProperty:
 		if !owned {
 			switch firstValue {
-			case vangogh_local_data.TrueValue:
+			case vangogh_integration.TrueValue:
 				fmtProperty.actions["Remove"] = "/wishlist/remove?id=" + id
-			case vangogh_local_data.FalseValue:
+			case vangogh_integration.FalseValue:
 				fmtProperty.actions["Add"] = "/wishlist/add?id=" + id
 			}
 		}
-	case vangogh_local_data.TagIdProperty:
+	case vangogh_integration.TagIdProperty:
 		if owned {
 			fmtProperty.actions["Edit"] = "/tags/edit?id=" + id
 		}
-	case vangogh_local_data.LocalTagsProperty:
+	case vangogh_integration.LocalTagsProperty:
 		fmtProperty.actions["Edit"] = "/local-tags/edit?id=" + id
-	case vangogh_local_data.SteamReviewScoreDescProperty:
+	case vangogh_integration.SteamReviewScoreDescProperty:
 		fmtProperty.class = reviewClass(firstValue)
-	case vangogh_local_data.RatingProperty:
+	case vangogh_integration.RatingProperty:
 		fmtProperty.class = reviewClass(fmtGOGRating(firstValue))
-	case vangogh_local_data.HLTBReviewScoreProperty:
+	case vangogh_integration.HLTBReviewScoreProperty:
 		fmtProperty.class = reviewClass(fmtHLTBRating(firstValue))
-	case vangogh_local_data.SteamDeckAppCompatibilityCategoryProperty:
+	case vangogh_integration.SteamDeckAppCompatibilityCategoryProperty:
 		fmtProperty.class = firstValue
 		if firstValue != "" {
 			fmtProperty.actions["&darr;"] = "#Steam Deck"
@@ -191,13 +191,13 @@ func formatProperty(id, property string, rdx kevlar.ReadableRedux) formattedProp
 }
 
 func operatingSystemsTitleValues(r compton.Registrar, id string, rdx kevlar.ReadableRedux) compton.Element {
-	property := vangogh_local_data.OperatingSystemsProperty
+	property := vangogh_integration.OperatingSystemsProperty
 	propertyTitle := compton_data.PropertyTitles[property]
 	tv := compton.TitleValues(r, propertyTitle)
 	row := compton.FlexItems(r, direction.Row).JustifyContent(align.Start)
 	tv.Append(row)
 	if values, ok := rdx.GetAllValues(property, id); ok {
-		for _, os := range vangogh_local_data.ParseManyOperatingSystems(values) {
+		for _, os := range vangogh_integration.ParseManyOperatingSystems(values) {
 			osLink := compton.A(searchHref(property, os.String()))
 			osLink.SetAttribute("target", "_top")
 			osLink.Append(compton.SvgUse(r, compton_data.OperatingSystemSymbols[os]))

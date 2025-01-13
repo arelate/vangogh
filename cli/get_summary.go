@@ -2,7 +2,7 @@ package cli
 
 import (
 	"fmt"
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"net/url"
 )
@@ -16,19 +16,19 @@ func GetSummary() error {
 	sa := nod.Begin("last sync summary:")
 	defer sa.End()
 
-	rdx, err := vangogh_local_data.NewReduxReader(
-		vangogh_local_data.LastSyncUpdatesProperty,
-		vangogh_local_data.TitleProperty)
+	rdx, err := vangogh_integration.NewReduxReader(
+		vangogh_integration.LastSyncUpdatesProperty,
+		vangogh_integration.TitleProperty)
 	if err != nil {
 		return sa.EndWithError(err)
 	}
 
 	summary := make(map[string][]string)
 
-	for _, section := range rdx.Keys(vangogh_local_data.LastSyncUpdatesProperty) {
-		ids, _ := rdx.GetAllValues(vangogh_local_data.LastSyncUpdatesProperty, section)
+	for _, section := range rdx.Keys(vangogh_integration.LastSyncUpdatesProperty) {
+		ids, _ := rdx.GetAllValues(vangogh_integration.LastSyncUpdatesProperty, section)
 		for _, id := range ids {
-			if title, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, id); ok {
+			if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
 				summary[section] = append(summary[section], fmt.Sprintf("%s %s", id, title))
 			}
 		}

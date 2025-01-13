@@ -1,7 +1,7 @@
 package rest
 
 import (
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/middleware"
 	"github.com/boggydigital/nod"
 	"net/http"
@@ -75,29 +75,29 @@ func searchRoutes() map[string]string {
 	routes["filter"] = searchPath
 
 	q := make(url.Values)
-	q.Set(vangogh_local_data.TypesProperty, vangogh_local_data.AccountProducts.String())
-	q.Set(vangogh_local_data.SortProperty, vangogh_local_data.GOGOrderDateProperty)
-	q.Set(vangogh_local_data.DescendingProperty, vangogh_local_data.TrueValue)
+	q.Set(vangogh_integration.TypesProperty, vangogh_integration.AccountProducts.String())
+	q.Set(vangogh_integration.SortProperty, vangogh_integration.GOGOrderDateProperty)
+	q.Set(vangogh_integration.DescendingProperty, vangogh_integration.TrueValue)
 	routes["owned"] = searchPath + "?" + q.Encode()
 
 	q = make(url.Values)
-	q.Set(vangogh_local_data.WishlistedProperty, vangogh_local_data.TrueValue)
-	q.Set(vangogh_local_data.SortProperty, vangogh_local_data.GOGReleaseDateProperty)
-	q.Set(vangogh_local_data.DescendingProperty, vangogh_local_data.TrueValue)
+	q.Set(vangogh_integration.WishlistedProperty, vangogh_integration.TrueValue)
+	q.Set(vangogh_integration.SortProperty, vangogh_integration.GOGReleaseDateProperty)
+	q.Set(vangogh_integration.DescendingProperty, vangogh_integration.TrueValue)
 	routes["wishlist"] = searchPath + "?" + q.Encode()
 
 	q = make(url.Values)
-	q.Set(vangogh_local_data.TypesProperty, vangogh_local_data.CatalogProducts.String())
-	q.Set(vangogh_local_data.OwnedProperty, vangogh_local_data.FalseValue)
-	q.Set(vangogh_local_data.IsDiscountedProperty, vangogh_local_data.TrueValue)
-	q.Set(vangogh_local_data.SortProperty, vangogh_local_data.DiscountPercentageProperty)
-	q.Set(vangogh_local_data.DescendingProperty, vangogh_local_data.TrueValue)
+	q.Set(vangogh_integration.TypesProperty, vangogh_integration.CatalogProducts.String())
+	q.Set(vangogh_integration.OwnedProperty, vangogh_integration.FalseValue)
+	q.Set(vangogh_integration.IsDiscountedProperty, vangogh_integration.TrueValue)
+	q.Set(vangogh_integration.SortProperty, vangogh_integration.DiscountPercentageProperty)
+	q.Set(vangogh_integration.DescendingProperty, vangogh_integration.TrueValue)
 	routes["sale"] = searchPath + "?" + q.Encode()
 
 	q = make(url.Values)
-	q.Set(vangogh_local_data.TypesProperty, vangogh_local_data.CatalogProducts.String())
-	q.Set(vangogh_local_data.SortProperty, vangogh_local_data.GOGReleaseDateProperty)
-	q.Set(vangogh_local_data.DescendingProperty, vangogh_local_data.TrueValue)
+	q.Set(vangogh_integration.TypesProperty, vangogh_integration.CatalogProducts.String())
+	q.Set(vangogh_integration.SortProperty, vangogh_integration.GOGReleaseDateProperty)
+	q.Set(vangogh_integration.DescendingProperty, vangogh_integration.TrueValue)
 	routes["all"] = searchPath + "?" + q.Encode()
 
 	return routes

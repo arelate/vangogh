@@ -2,21 +2,21 @@ package vets
 
 import (
 	"fmt"
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"strconv"
 )
 
-func findLocalOnlySplitProducts(pagedPt vangogh_local_data.ProductType) (map[string]bool, error) {
+func findLocalOnlySplitProducts(pagedPt vangogh_integration.ProductType) (map[string]bool, error) {
 
 	idSet := make(map[string]bool)
 
-	if !vangogh_local_data.IsGOGPagedProduct(pagedPt) {
+	if !vangogh_integration.IsGOGPagedProduct(pagedPt) {
 		return idSet, fmt.Errorf("%s is not a paged type", pagedPt)
 	}
 
 	pagedIds := make(map[string]bool)
 
-	vrPaged, err := vangogh_local_data.NewProductReader(pagedPt)
+	vrPaged, err := vangogh_integration.NewProductReader(pagedPt)
 	if err != nil {
 		return nil, err
 	}
@@ -36,8 +36,8 @@ func findLocalOnlySplitProducts(pagedPt vangogh_local_data.ProductType) (map[str
 		}
 	}
 
-	splitPt := vangogh_local_data.SplitProductType(pagedPt)
-	vrSplit, err := vangogh_local_data.NewProductReader(splitPt)
+	splitPt := vangogh_integration.SplitProductType(pagedPt)
+	vrSplit, err := vangogh_integration.NewProductReader(splitPt)
 	if err != nil {
 		return nil, err
 	}

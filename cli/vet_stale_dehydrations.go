@@ -1,7 +1,7 @@
 package cli
 
 import (
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"os"
 	"strconv"
@@ -12,14 +12,14 @@ import (
 func StaleDehydrations(fix bool) error {
 
 	if err := staleDehydrationsImageType(
-		vangogh_local_data.ImageProperty,
-		vangogh_local_data.DehydratedImageModifiedProperty, fix); err != nil {
+		vangogh_integration.ImageProperty,
+		vangogh_integration.DehydratedImageModifiedProperty, fix); err != nil {
 		return err
 	}
 
 	if err := staleDehydrationsImageType(
-		vangogh_local_data.VerticalImageProperty,
-		vangogh_local_data.DehydratedVerticalImageModifiedProperty, fix); err != nil {
+		vangogh_integration.VerticalImageProperty,
+		vangogh_integration.DehydratedVerticalImageModifiedProperty, fix); err != nil {
 		return err
 	}
 
@@ -31,7 +31,7 @@ func staleDehydrationsImageType(imageProperty, dimProperty string, fix bool) err
 	sdia := nod.NewProgress("checking stale dehydrations for %s...", imageProperty)
 	defer sdia.End()
 
-	rdx, err := vangogh_local_data.NewReduxReader(imageProperty, dimProperty)
+	rdx, err := vangogh_integration.NewReduxReader(imageProperty, dimProperty)
 	if err != nil {
 		return err
 	}
@@ -43,7 +43,7 @@ func staleDehydrationsImageType(imageProperty, dimProperty string, fix bool) err
 
 	for _, id := range ids {
 		if imageId, ok := rdx.GetLastVal(imageProperty, id); ok {
-			imagePath, err := vangogh_local_data.AbsLocalImagePath(imageId)
+			imagePath, err := vangogh_integration.AbsLocalImagePath(imageId)
 			if err != nil {
 				return sdia.EndWithError(err)
 			}
@@ -67,8 +67,8 @@ func staleDehydrationsImageType(imageProperty, dimProperty string, fix bool) err
 	} else {
 		sdia.EndWithResult("found %d stale dehydrations", len(staleIds))
 		if fix {
-			imageType := vangogh_local_data.ImageTypeFromProperty(imageProperty)
-			return Dehydrate(staleIds, []vangogh_local_data.ImageType{imageType}, false)
+			imageType := vangogh_integration.ImageTypeFromProperty(imageProperty)
+			return Dehydrate(staleIds, []vangogh_integration.ImageType{imageType}, false)
 		}
 
 	}

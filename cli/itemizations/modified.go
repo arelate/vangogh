@@ -1,7 +1,7 @@
 package itemizations
 
 import (
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"golang.org/x/exp/maps"
@@ -9,7 +9,7 @@ import (
 
 func Modified(
 	since int64,
-	pt vangogh_local_data.ProductType) ([]string, error) {
+	pt vangogh_integration.ProductType) ([]string, error) {
 
 	ma := nod.Begin(" finding modified %s...", pt)
 	defer ma.End()
@@ -18,11 +18,11 @@ func Modified(
 
 	//licence products can only update through creation, and we've already handled
 	//newly created in itemizeMissing func
-	if pt == vangogh_local_data.LicenceProducts {
+	if pt == vangogh_integration.LicenceProducts {
 		return nil, nil
 	}
 
-	destUrl, err := vangogh_local_data.AbsLocalProductTypeDir(pt)
+	destUrl, err := vangogh_integration.AbsLocalProductTypeDir(pt)
 	if err != nil {
 		return nil, ma.EndWithError(err)
 	}

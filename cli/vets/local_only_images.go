@@ -1,7 +1,7 @@
 package vets
 
 import (
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"golang.org/x/exp/maps"
@@ -14,7 +14,7 @@ func LocalOnlyImages(fix bool) error {
 	defer loia.End()
 
 	ilia := nod.Begin(" itemizing local images...")
-	localImages, err := vangogh_local_data.LocalImageIds()
+	localImages, err := vangogh_integration.LocalImageIds()
 	if err != nil {
 		ilia.End()
 		return loia.EndWithError(err)
@@ -22,11 +22,11 @@ func LocalOnlyImages(fix bool) error {
 	ilia.EndWithResult("done")
 
 	propSet := make(map[string]bool)
-	for _, it := range vangogh_local_data.AllImageTypes() {
-		propSet[vangogh_local_data.PropertyFromImageType(it)] = true
+	for _, it := range vangogh_integration.AllImageTypes() {
+		propSet[vangogh_integration.PropertyFromImageType(it)] = true
 	}
 
-	rdx, err := vangogh_local_data.NewReduxReader(maps.Keys(propSet)...)
+	rdx, err := vangogh_integration.NewReduxReader(maps.Keys(propSet)...)
 	if err != nil {
 		return loia.EndWithError(err)
 	}
@@ -71,7 +71,7 @@ func LocalOnlyImages(fix bool) error {
 
 	loia.EndWithResult("found %d unexpected images", len(unexpectedImages))
 
-	aip, err := pathways.GetAbsDir(vangogh_local_data.Images)
+	aip, err := pathways.GetAbsDir(vangogh_integration.Images)
 	if err != nil {
 		return loia.EndWithError(err)
 	}
@@ -81,12 +81,12 @@ func LocalOnlyImages(fix bool) error {
 		floia.TotalInt(len(unexpectedImages))
 
 		for _, imageId := range unexpectedImages {
-			absLocalImagePath, err := vangogh_local_data.AbsLocalImagePath(imageId)
+			absLocalImagePath, err := vangogh_integration.AbsLocalImagePath(imageId)
 			if err != nil {
 				return floia.EndWithError(err)
 			}
 			nod.Log("removing local only imageId=%s file=%s", imageId, absLocalImagePath)
-			if err := vangogh_local_data.MoveToRecycleBin(aip, absLocalImagePath); err != nil && !os.IsNotExist(err) {
+			if err := vangogh_integration.MoveToRecycleBin(aip, absLocalImagePath); err != nil && !os.IsNotExist(err) {
 				return floia.EndWithError(err)
 			}
 			floia.Increment()

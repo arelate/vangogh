@@ -1,9 +1,9 @@
 package compton_pages
 
 import (
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
@@ -15,7 +15,7 @@ import (
 
 func Description(id string, rdx kevlar.ReadableRedux) compton.PageElement {
 	desc := ""
-	if dop, ok := rdx.GetLastVal(vangogh_local_data.DescriptionOverviewProperty, id); ok {
+	if dop, ok := rdx.GetLastVal(vangogh_integration.DescriptionOverviewProperty, id); ok {
 		desc = dop
 	}
 
@@ -43,7 +43,7 @@ func Description(id string, rdx kevlar.ReadableRedux) compton.PageElement {
 
 	featuresDiv := compton.Div()
 	featuresDiv.AddClass("description__features")
-	if dfp, ok := rdx.GetLastVal(vangogh_local_data.DescriptionFeaturesProperty, id); ok {
+	if dfp, ok := rdx.GetLastVal(vangogh_integration.DescriptionFeaturesProperty, id); ok {
 		featuresDiv.Append(compton.Text(implicitToExplicitList(dfp)))
 	}
 
@@ -54,7 +54,7 @@ func Description(id string, rdx kevlar.ReadableRedux) compton.PageElement {
 	descriptionDiv.Append(copyrightsDiv)
 
 	copyright := ""
-	if cp, ok := rdx.GetLastVal(vangogh_local_data.CopyrightsProperty, id); ok {
+	if cp, ok := rdx.GetLastVal(vangogh_integration.CopyrightsProperty, id); ok {
 		copyright = cp
 	}
 	if copyright != "" {
@@ -63,7 +63,7 @@ func Description(id string, rdx kevlar.ReadableRedux) compton.PageElement {
 	}
 
 	addtReqs := ""
-	if arp, ok := rdx.GetLastVal(vangogh_local_data.AdditionalRequirementsProperty, id); ok {
+	if arp, ok := rdx.GetLastVal(vangogh_integration.AdditionalRequirementsProperty, id); ok {
 		addtReqs = arp
 	}
 	if addtReqs != "" {
@@ -76,7 +76,7 @@ func Description(id string, rdx kevlar.ReadableRedux) compton.PageElement {
 
 func rewriteItemsLinks(desc string) string {
 
-	itemsUrls := vangogh_local_data.ExtractDescItems(desc)
+	itemsUrls := vangogh_integration.ExtractDescItems(desc)
 
 	for _, itemUrl := range itemsUrls {
 		if u, err := url.Parse(itemUrl); err != nil {
@@ -91,7 +91,7 @@ func rewriteItemsLinks(desc string) string {
 }
 
 func rewriteGameLinks(desc string) string {
-	gameLinks := vangogh_local_data.ExtractGameLinks(desc)
+	gameLinks := vangogh_integration.ExtractGameLinks(desc)
 
 	for _, gameLink := range gameLinks {
 		if u, err := url.Parse(gameLink); err != nil {

@@ -1,27 +1,27 @@
 package compton_data
 
-import "github.com/arelate/vangogh_local_data"
+import "github.com/arelate/southern_light/vangogh_integration"
 
 var ProductsProperties = []string{
-	vangogh_local_data.TitleProperty,
+	vangogh_integration.TitleProperty,
 
-	vangogh_local_data.DehydratedVerticalImageProperty,
-	vangogh_local_data.VerticalImageProperty,
+	vangogh_integration.DehydratedVerticalImageProperty,
+	vangogh_integration.VerticalImageProperty,
 
-	vangogh_local_data.OwnedProperty,
-	//vangogh_local_data.ValidationResultProperty,
-	vangogh_local_data.ProductTypeProperty,
-	vangogh_local_data.WishlistedProperty,
-	vangogh_local_data.ComingSoonProperty,
-	vangogh_local_data.PreOrderProperty,
-	vangogh_local_data.InDevelopmentProperty,
-	vangogh_local_data.TagIdProperty,
-	vangogh_local_data.LocalTagsProperty,
-	vangogh_local_data.IsFreeProperty,
-	vangogh_local_data.IsDiscountedProperty,
-	vangogh_local_data.DiscountPercentageProperty,
+	vangogh_integration.OwnedProperty,
+	//vangogh_integration.ValidationResultProperty,
+	vangogh_integration.ProductTypeProperty,
+	vangogh_integration.WishlistedProperty,
+	vangogh_integration.ComingSoonProperty,
+	vangogh_integration.PreOrderProperty,
+	vangogh_integration.InDevelopmentProperty,
+	vangogh_integration.TagIdProperty,
+	vangogh_integration.LocalTagsProperty,
+	vangogh_integration.IsFreeProperty,
+	vangogh_integration.IsDiscountedProperty,
+	vangogh_integration.DiscountPercentageProperty,
 
-	vangogh_local_data.OperatingSystemsProperty,
-	vangogh_local_data.DevelopersProperty,
-	vangogh_local_data.PublishersProperty,
+	vangogh_integration.OperatingSystemsProperty,
+	vangogh_integration.DevelopersProperty,
+	vangogh_integration.PublishersProperty,
 }

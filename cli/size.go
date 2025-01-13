@@ -1,33 +1,33 @@
 package cli
 
 import (
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/itemizations"
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
 	"net/url"
 )
 
 func SizeHandler(u *url.URL) error {
-	ids, err := vangogh_local_data.IdsFromUrl(u)
+	ids, err := vangogh_integration.IdsFromUrl(u)
 	if err != nil {
 		return err
 	}
 
 	return Size(
 		ids,
-		vangogh_local_data.OperatingSystemsFromUrl(u),
-		vangogh_local_data.ValuesFromUrl(u, vangogh_local_data.LanguageCodeProperty),
-		vangogh_local_data.DownloadTypesFromUrl(u),
-		vangogh_local_data.FlagFromUrl(u, "no-patches"),
-		vangogh_local_data.FlagFromUrl(u, "missing"),
-		vangogh_local_data.FlagFromUrl(u, "all"))
+		vangogh_integration.OperatingSystemsFromUrl(u),
+		vangogh_integration.ValuesFromUrl(u, vangogh_integration.LanguageCodeProperty),
+		vangogh_integration.DownloadTypesFromUrl(u),
+		vangogh_integration.FlagFromUrl(u, "no-patches"),
+		vangogh_integration.FlagFromUrl(u, "missing"),
+		vangogh_integration.FlagFromUrl(u, "all"))
 }
 
 func Size(
 	ids []string,
-	operatingSystems []vangogh_local_data.OperatingSystem,
+	operatingSystems []vangogh_integration.OperatingSystem,
 	langCodes []string,
-	downloadTypes []vangogh_local_data.DownloadType,
+	downloadTypes []vangogh_integration.DownloadType,
 	noPatches bool,
 	missing bool,
 	all bool) error {
@@ -35,13 +35,13 @@ func Size(
 	sa := nod.NewProgress("estimating downloads size...")
 	defer sa.End()
 
-	vangogh_local_data.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
+	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
 
-	rdx, err := vangogh_local_data.NewReduxReader(
-		vangogh_local_data.LocalManualUrlProperty,
-		vangogh_local_data.NativeLanguageNameProperty,
-		vangogh_local_data.SlugProperty,
-		vangogh_local_data.DownloadStatusErrorProperty)
+	rdx, err := vangogh_integration.NewReduxReader(
+		vangogh_integration.LocalManualUrlProperty,
+		vangogh_integration.NativeLanguageNameProperty,
+		vangogh_integration.SlugProperty,
+		vangogh_integration.DownloadStatusErrorProperty)
 	if err != nil {
 		return sa.EndWithError(err)
 	}
@@ -66,7 +66,7 @@ func Size(
 	}
 
 	if all {
-		vrDetails, err := vangogh_local_data.NewProductReader(vangogh_local_data.Details)
+		vrDetails, err := vangogh_integration.NewProductReader(vangogh_integration.Details)
 		if err != nil {
 			return sa.EndWithError(err)
 		}
@@ -87,7 +87,7 @@ func Size(
 
 	sa.TotalInt(len(ids))
 
-	if err := vangogh_local_data.MapDownloads(
+	if err := vangogh_integration.MapDownloads(
 		ids,
 		rdx,
 		operatingSystems,
@@ -105,12 +105,12 @@ func Size(
 }
 
 type sizeDelegate struct {
-	dlList vangogh_local_data.DownloadsList
+	dlList vangogh_integration.DownloadsList
 }
 
-func (sd *sizeDelegate) Process(_, _ string, list vangogh_local_data.DownloadsList) error {
+func (sd *sizeDelegate) Process(_, _ string, list vangogh_integration.DownloadsList) error {
 	if sd.dlList == nil {
-		sd.dlList = make(vangogh_local_data.DownloadsList, 0)
+		sd.dlList = make(vangogh_integration.DownloadsList, 0)
 	}
 	sd.dlList = append(sd.dlList, list...)
 	return nil

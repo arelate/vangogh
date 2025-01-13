@@ -3,9 +3,9 @@ package compton_pages
 import (
 	"fmt"
 	"github.com/arelate/southern_light/steam_integration"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
@@ -35,14 +35,14 @@ var displayTypeColors = map[string]color.Color{
 }
 
 func SteamDeck(id string, dacr *steam_integration.DeckAppCompatibilityReport, rdx kevlar.ReadableRedux) compton.PageElement {
-	title, _ := rdx.GetLastVal(vangogh_local_data.TitleProperty, id)
+	title, _ := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
 
 	s := compton_fragments.ProductSection(compton_data.SteamDeckSection)
 
 	pageStack := compton.FlexItems(s, direction.Column)
 	s.Append(pageStack)
 
-	if category, ok := rdx.GetLastVal(vangogh_local_data.SteamDeckAppCompatibilityCategoryProperty, id); ok {
+	if category, ok := rdx.GetLastVal(vangogh_integration.SteamDeckAppCompatibilityCategoryProperty, id); ok {
 		message := fmt.Sprintf(messageByCategory[category], title)
 		divMessage := compton.DivText(message)
 		divMessage.AddClass("message")

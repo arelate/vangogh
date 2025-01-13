@@ -2,10 +2,10 @@ package compton_pages
 
 import (
 	_ "embed"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/arelate/vangogh/rest/compton_styles"
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
@@ -32,7 +32,7 @@ var (
 
 func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.PageElement {
 
-	title, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, id)
+	title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
 	if !ok {
 		return nil
 	}
@@ -88,8 +88,8 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.
 
 	for _, p := range properties {
 		switch p {
-		case vangogh_local_data.OperatingSystemsProperty:
-			osValues := vangogh_local_data.ParseManyOperatingSystems(values[p])
+		case vangogh_integration.OperatingSystemsProperty:
+			osValues := vangogh_integration.ParseManyOperatingSystems(values[p])
 			for _, os := range compton_data.OSOrder {
 				if slices.Contains(osValues, os) {
 					osSymbols = append(osSymbols, compton_data.OperatingSystemSymbols[os])
@@ -125,13 +125,13 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.
 
 	/* Theo commands */
 
-	if owned, ok := rdx.GetLastVal(vangogh_local_data.OwnedProperty, id); ok && owned == vangogh_local_data.TrueValue {
-		var os []vangogh_local_data.OperatingSystem
-		if vals, ok := rdx.GetAllValues(vangogh_local_data.OperatingSystemsProperty, id); ok {
-			os = vangogh_local_data.ParseManyOperatingSystems(vals)
+	if owned, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && owned == vangogh_integration.TrueValue {
+		var os []vangogh_integration.OperatingSystem
+		if vals, ok := rdx.GetAllValues(vangogh_integration.OperatingSystemsProperty, id); ok {
+			os = vangogh_integration.ParseManyOperatingSystems(vals)
 		}
 
-		if slices.Contains(os, vangogh_local_data.MacOS) {
+		if slices.Contains(os, vangogh_integration.MacOS) {
 			pageStack.Append(theoCommand(p, theoInstallTemplate, id))
 			pageStack.Append(theoCommand(p, theoUninstallTemplate, id))
 		} else {

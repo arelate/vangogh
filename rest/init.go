@@ -2,7 +2,7 @@ package rest
 
 import (
 	"crypto/sha256"
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/middleware"
 )
@@ -15,7 +15,7 @@ const (
 )
 
 var (
-	operatingSystems []vangogh_local_data.OperatingSystem
+	operatingSystems []vangogh_integration.OperatingSystem
 	langCodes        []string
 	noPatches        bool
 
@@ -23,7 +23,7 @@ var (
 )
 
 func SetDefaultDownloadsFilters(
-	os []vangogh_local_data.OperatingSystem,
+	os []vangogh_integration.OperatingSystem,
 	lc []string,
 	np bool) {
 	operatingSystems = os
@@ -42,9 +42,9 @@ func SetPassword(role, p string) {
 func Init() error {
 
 	var err error
-	properties := vangogh_local_data.AllProperties()
+	properties := vangogh_integration.AllProperties()
 	//used by get_downloads
-	properties = append(properties, vangogh_local_data.NativeLanguageNameProperty)
-	rdx, err = vangogh_local_data.NewReduxReader(properties...)
+	properties = append(properties, vangogh_integration.NativeLanguageNameProperty)
+	rdx, err = vangogh_integration.NewReduxReader(properties...)
 	return err
 }

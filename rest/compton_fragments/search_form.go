@@ -2,8 +2,8 @@ package compton_fragments
 
 import (
 	"fmt"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/direction"
@@ -47,9 +47,9 @@ var binDatalist = map[string]string{
 	"false": "No",
 }
 
-var typesDigest = []vangogh_local_data.ProductType{
-	vangogh_local_data.AccountProducts,
-	vangogh_local_data.CatalogProducts,
+var typesDigest = []vangogh_integration.ProductType{
+	vangogh_integration.AccountProducts,
+	vangogh_integration.CatalogProducts,
 }
 
 func stringerDatalist[T fmt.Stringer](items []T) map[string]string {
@@ -66,22 +66,22 @@ func typesDatalist() map[string]string {
 }
 
 func operatingSystemsDatalist() map[string]string {
-	return stringerDatalist([]vangogh_local_data.OperatingSystem{
-		vangogh_local_data.Windows,
-		vangogh_local_data.MacOS,
-		vangogh_local_data.Linux})
+	return stringerDatalist([]vangogh_integration.OperatingSystem{
+		vangogh_integration.Windows,
+		vangogh_integration.MacOS,
+		vangogh_integration.Linux})
 }
 
 var sortProperties = []string{
-	vangogh_local_data.GlobalReleaseDateProperty,
-	vangogh_local_data.GOGReleaseDateProperty,
-	vangogh_local_data.GOGOrderDateProperty,
-	vangogh_local_data.TitleProperty,
-	vangogh_local_data.RatingProperty,
-	vangogh_local_data.DiscountPercentageProperty,
-	vangogh_local_data.HLTBHoursToCompleteMainProperty,
-	vangogh_local_data.HLTBHoursToCompletePlusProperty,
-	vangogh_local_data.HLTBHoursToComplete100Property}
+	vangogh_integration.GlobalReleaseDateProperty,
+	vangogh_integration.GOGReleaseDateProperty,
+	vangogh_integration.GOGOrderDateProperty,
+	vangogh_integration.TitleProperty,
+	vangogh_integration.RatingProperty,
+	vangogh_integration.DiscountPercentageProperty,
+	vangogh_integration.HLTBHoursToCompleteMainProperty,
+	vangogh_integration.HLTBHoursToCompletePlusProperty,
+	vangogh_integration.HLTBHoursToComplete100Property}
 
 func propertiesDatalist(properties []string) map[string]string {
 	dl := make(map[string]string)
@@ -113,8 +113,8 @@ func languagesDatalist() map[string]string {
 
 func tagsDatalist(rdx kevlar.ReadableRedux) map[string]string {
 	dl := make(map[string]string)
-	for _, tagId := range rdx.Keys(vangogh_local_data.TagNameProperty) {
-		if tagName, ok := rdx.GetLastVal(vangogh_local_data.TagNameProperty, tagId); ok {
+	for _, tagId := range rdx.Keys(vangogh_integration.TagNameProperty) {
+		if tagName, ok := rdx.GetLastVal(vangogh_integration.TagNameProperty, tagId); ok {
 			dl[tagId] = tagName
 		}
 	}
@@ -153,19 +153,19 @@ func searchInputs(r compton.Registrar, query map[string][]string, container comp
 			listId = "bin-list"
 		} else if slices.Contains(compton_data.DigestProperties, property) {
 			switch property {
-			case vangogh_local_data.TypesProperty:
+			case vangogh_integration.TypesProperty:
 				datalist = typesDatalist()
-			case vangogh_local_data.OperatingSystemsProperty:
+			case vangogh_integration.OperatingSystemsProperty:
 				datalist = operatingSystemsDatalist()
-			case vangogh_local_data.SortProperty:
+			case vangogh_integration.SortProperty:
 				datalist = sortDatalist()
-			case vangogh_local_data.ProductTypeProperty:
+			case vangogh_integration.ProductTypeProperty:
 				datalist = productTypesDatalist()
-			case vangogh_local_data.SteamDeckAppCompatibilityCategoryProperty:
+			case vangogh_integration.SteamDeckAppCompatibilityCategoryProperty:
 				datalist = steamDeckDatalist()
-			case vangogh_local_data.LanguageCodeProperty:
+			case vangogh_integration.LanguageCodeProperty:
 				datalist = languagesDatalist()
-			case vangogh_local_data.TagIdProperty:
+			case vangogh_integration.TagIdProperty:
 				datalist = tagsDatalist(rdx)
 			default:
 				datalist = propertyValuesDatalist(property, rdx)

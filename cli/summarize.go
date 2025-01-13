@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"golang.org/x/exp/maps"
 )
@@ -23,7 +23,7 @@ const (
 
 func SummarizeHandler(u *url.URL) error {
 
-	since, err := vangogh_local_data.SinceFromUrl(u)
+	since, err := vangogh_integration.SinceFromUrl(u)
 	if err != nil {
 		return err
 	}
@@ -36,7 +36,7 @@ func Summarize(since int64) error {
 	sa := nod.Begin("summarizing updates...")
 	defer sa.End()
 
-	updates, err := vangogh_local_data.Updates(since)
+	updates, err := vangogh_integration.Updates(since)
 	if err != nil {
 		return sa.EndWithError(err)
 	}
@@ -45,10 +45,10 @@ func Summarize(since int64) error {
 		return nil
 	}
 
-	rdx, err := vangogh_local_data.NewReduxWriter(
-		vangogh_local_data.LastSyncUpdatesProperty,
-		vangogh_local_data.TitleProperty,
-		vangogh_local_data.GOGReleaseDateProperty)
+	rdx, err := vangogh_integration.NewReduxWriter(
+		vangogh_integration.LastSyncUpdatesProperty,
+		vangogh_integration.TitleProperty,
+		vangogh_integration.GOGReleaseDateProperty)
 	if err != nil {
 		return sa.EndWithError(err)
 	}
@@ -58,8 +58,8 @@ func Summarize(since int64) error {
 	//set new values for each section
 	for section, ids := range updates {
 		sortedIds, err := rdx.Sort(maps.Keys(ids),
-			vangogh_local_data.DefaultDesc,
-			vangogh_local_data.DefaultSort)
+			vangogh_integration.DefaultDesc,
+			vangogh_integration.DefaultSort)
 		if err != nil {
 			return sa.EndWithError(err)
 		}
@@ -67,7 +67,7 @@ func Summarize(since int64) error {
 	}
 
 	//clean sections filled earlier that don't exist anymore
-	for _, section := range rdx.Keys(vangogh_local_data.LastSyncUpdatesProperty) {
+	for _, section := range rdx.Keys(vangogh_integration.LastSyncUpdatesProperty) {
 		if _, ok := updates[section]; ok {
 			continue
 		}
@@ -80,7 +80,7 @@ func Summarize(since int64) error {
 		}
 	}
 
-	if err := rdx.BatchReplaceValues(vangogh_local_data.LastSyncUpdatesProperty, summary); err != nil {
+	if err := rdx.BatchReplaceValues(vangogh_integration.LastSyncUpdatesProperty, summary); err != nil {
 		sa.EndWithError(err)
 	}
 
@@ -99,27 +99,27 @@ func Summarize(since int64) error {
 
 func releasedToday(rdx kevlar.ReadableRedux) ([]string, error) {
 
-	if err := rdx.MustHave(vangogh_local_data.GOGReleaseDateProperty); err != nil {
+	if err := rdx.MustHave(vangogh_integration.GOGReleaseDateProperty); err != nil {
 		return nil, err
 	}
 
 	ids := make([]string, 0)
 	today := time.Now().Format("2006.01.02")
 
-	for _, id := range rdx.Keys(vangogh_local_data.GOGReleaseDateProperty) {
-		if rt, ok := rdx.GetLastVal(vangogh_local_data.GOGReleaseDateProperty, id); ok {
+	for _, id := range rdx.Keys(vangogh_integration.GOGReleaseDateProperty) {
+		if rt, ok := rdx.GetLastVal(vangogh_integration.GOGReleaseDateProperty, id); ok {
 			if rt == today {
 				ids = append(ids, id)
 			}
 		}
 	}
 
-	return rdx.Sort(ids, vangogh_local_data.DefaultDesc, vangogh_local_data.DefaultSort)
+	return rdx.Sort(ids, vangogh_integration.DefaultDesc, vangogh_integration.DefaultSort)
 }
 
 func publishAtom(rdx kevlar.ReadableRedux, summary map[string][]string) error {
 
-	afp, err := vangogh_local_data.AbsAtomFeedPath()
+	afp, err := vangogh_integration.AbsAtomFeedPath()
 	if err != nil {
 		return err
 	}
@@ -148,7 +148,7 @@ func NewAtomFeedContent(rdx kevlar.ReadableRedux, summary map[string][]string) s
 		sb.WriteString("<h1>" + section + "</h1>")
 		sb.WriteString("<ul>")
 		for _, id := range summary[section] {
-			if title, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, id); ok {
+			if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
 				sb.WriteString(fmt.Sprintf("<li>%s (%s)</li>", title, id))
 			} else {
 				sb.WriteString("<li>" + id + "</li>")

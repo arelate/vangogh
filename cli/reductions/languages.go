@@ -1,7 +1,7 @@
 package reductions
 
 import (
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"golang.org/x/exp/maps"
@@ -9,18 +9,18 @@ import (
 
 func GetLanguageCodes(rdx kevlar.ReadableRedux) (map[string]bool, error) {
 
-	lca := nod.Begin(" %s...", vangogh_local_data.LanguageCodeProperty)
+	lca := nod.Begin(" %s...", vangogh_integration.LanguageCodeProperty)
 	defer lca.EndWithResult("done")
 
 	langCodeSet := make(map[string]bool)
 
-	if err := rdx.MustHave(vangogh_local_data.LanguageCodeProperty); err != nil {
+	if err := rdx.MustHave(vangogh_integration.LanguageCodeProperty); err != nil {
 		return langCodeSet, lca.EndWithError(err)
 	}
 
 	//digest distinct languages codes
-	for _, id := range rdx.Keys(vangogh_local_data.LanguageCodeProperty) {
-		idCodes, ok := rdx.GetAllValues(vangogh_local_data.LanguageCodeProperty, id)
+	for _, id := range rdx.Keys(vangogh_integration.LanguageCodeProperty) {
+		idCodes, ok := rdx.GetAllValues(vangogh_integration.LanguageCodeProperty, id)
 		if !ok {
 			continue
 		}
@@ -60,12 +60,12 @@ func updateLanguageNames(languages map[string]string, missingNames map[string]bo
 }
 
 func LanguageNames(langCodeSet map[string]bool) error {
-	property := vangogh_local_data.LanguageNameProperty
+	property := vangogh_integration.LanguageNameProperty
 
 	lna := nod.Begin(" %s...", property)
 	defer lna.EndWithResult("done")
 
-	langNamesEx, err := vangogh_local_data.NewReduxWriter(property)
+	langNamesEx, err := vangogh_integration.NewReduxWriter(property)
 	if err != nil {
 		return lna.EndWithError(err)
 	}
@@ -83,7 +83,7 @@ func LanguageNames(langCodeSet map[string]bool) error {
 	names := make(map[string][]string, 0)
 
 	//iterate through api-products-v1 until we fill all native names
-	vrApiProductsV2, err := vangogh_local_data.NewProductReader(vangogh_local_data.ApiProductsV2)
+	vrApiProductsV2, err := vangogh_integration.NewProductReader(vangogh_integration.ApiProductsV2)
 	if err != nil {
 		return lna.EndWithError(err)
 	}
@@ -114,12 +114,12 @@ func LanguageNames(langCodeSet map[string]bool) error {
 }
 
 func NativeLanguageNames(langCodeSet map[string]bool) error {
-	property := vangogh_local_data.NativeLanguageNameProperty
+	property := vangogh_integration.NativeLanguageNameProperty
 
 	nlna := nod.Begin(" %s...", property)
 	defer nlna.End()
 
-	langNamesEx, err := vangogh_local_data.NewReduxWriter(property)
+	langNamesEx, err := vangogh_integration.NewReduxWriter(property)
 	if err != nil {
 		return nlna.EndWithError(err)
 	}
@@ -134,7 +134,7 @@ func NativeLanguageNames(langCodeSet map[string]bool) error {
 		return nil
 	}
 
-	vrApiProductsV1, err := vangogh_local_data.NewProductReader(vangogh_local_data.ApiProductsV1)
+	vrApiProductsV1, err := vangogh_integration.NewProductReader(vangogh_integration.ApiProductsV1)
 	if err != nil {
 		return nlna.EndWithError(err)
 	}

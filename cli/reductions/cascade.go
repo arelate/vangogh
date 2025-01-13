@@ -1,16 +1,16 @@
 package reductions
 
 import (
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 )
 
 var cascadingProperties = []string{
-	vangogh_local_data.GOGOrderDateProperty,
-	vangogh_local_data.GOGReleaseDateProperty,
-	vangogh_local_data.SteamAppIdProperty,
-	vangogh_local_data.VerticalImageProperty,
-	vangogh_local_data.RatingProperty,
+	vangogh_integration.GOGOrderDateProperty,
+	vangogh_integration.GOGReleaseDateProperty,
+	vangogh_integration.SteamAppIdProperty,
+	vangogh_integration.VerticalImageProperty,
+	vangogh_integration.RatingProperty,
 }
 
 // Cascade is a method to assign reductions to products that don't have them,
@@ -23,21 +23,21 @@ func Cascade() error {
 	ca := nod.NewProgress("cascading supported properties...")
 	defer ca.End()
 
-	rdx, err := vangogh_local_data.NewReduxWriter(vangogh_local_data.ReduxProperties()...)
+	rdx, err := vangogh_integration.NewReduxWriter(vangogh_integration.ReduxProperties()...)
 	if err != nil {
 		return ca.EndWithError(err)
 	}
 
-	if err := rdx.MustHave(vangogh_local_data.IncludesGamesProperty); err != nil {
+	if err := rdx.MustHave(vangogh_integration.IncludesGamesProperty); err != nil {
 		return ca.EndWithError(err)
 	}
 
-	ids := rdx.Keys(vangogh_local_data.IncludesGamesProperty)
+	ids := rdx.Keys(vangogh_integration.IncludesGamesProperty)
 
 	ca.TotalInt(len(ids))
 
 	for _, id := range ids {
-		includesIds, ok := rdx.GetAllValues(vangogh_local_data.IncludesGamesProperty, id)
+		includesIds, ok := rdx.GetAllValues(vangogh_integration.IncludesGamesProperty, id)
 		if !ok {
 			ca.Increment()
 			continue

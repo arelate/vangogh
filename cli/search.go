@@ -1,7 +1,7 @@
 package cli
 
 import (
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"golang.org/x/exp/maps"
 	"net/url"
@@ -11,8 +11,8 @@ import (
 func SearchHandler(u *url.URL) error {
 	query := make(map[string][]string)
 
-	for _, prop := range vangogh_local_data.ReduxProperties() {
-		if values := vangogh_local_data.ValuesFromUrl(u, prop); len(values) > 0 {
+	for _, prop := range vangogh_integration.ReduxProperties() {
+		if values := vangogh_integration.ValuesFromUrl(u, prop); len(values) > 0 {
 			query[prop] = values
 		}
 	}
@@ -29,12 +29,12 @@ func Search(query map[string][]string) error {
 	//prepare a list of all properties to load redux for and
 	//always start with a `title` property since it is printed for all matched item
 	//(even if the match is for another property)
-	propSet := map[string]bool{vangogh_local_data.TitleProperty: true}
+	propSet := map[string]bool{vangogh_integration.TitleProperty: true}
 	for qp := range query {
 		propSet[qp] = true
 	}
 
-	rdx, err := vangogh_local_data.NewReduxReader(maps.Keys(propSet)...)
+	rdx, err := vangogh_integration.NewReduxReader(maps.Keys(propSet)...)
 	if err != nil {
 		return sa.EndWithError(err)
 	}
@@ -50,8 +50,8 @@ func Search(query map[string][]string) error {
 		for _, t := range terms {
 			lowerCaseTerms = append(lowerCaseTerms, strings.ToLower(t))
 		}
-		//if vangogh_local_data.IsPropertyAggregate(prop) {
-		//	for _, ep := range vangogh_local_data.DetailAggregateProperty(prop) {
+		//if vangogh_integration.IsPropertyAggregate(prop) {
+		//	for _, ep := range vangogh_integration.DetailAggregateProperty(prop) {
 		//		propertyFilter[ep] = lowerCaseTerms
 		//	}
 		//} else {
@@ -65,13 +65,13 @@ func Search(query map[string][]string) error {
 	}
 
 	//similarly for propertyFilter (see comment above) - expand all properties to display
-	//expandedPropsMap := vangogh_local_data.DetailAllAggregateProperties(maps.Keys(propSet)...)
+	//expandedPropsMap := vangogh_integration.DetailAllAggregateProperties(maps.Keys(propSet)...)
 	//expandedProps := make([]string, 0, len(expandedPropsMap))
 	//for p := range expandedPropsMap {
 	//	expandedProps = append(expandedProps, p)
 	//}
 
-	itp, err := vangogh_local_data.PropertyListsFromIdSet(
+	itp, err := vangogh_integration.PropertyListsFromIdSet(
 		results,
 		propertyFilter,
 		maps.Keys(propSet),

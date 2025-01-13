@@ -1,8 +1,8 @@
 package cli
 
 import (
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/vets"
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
 	"net/url"
 )
@@ -36,29 +36,29 @@ type vetOptions struct {
 func initVetOptions(u *url.URL) *vetOptions {
 
 	vo := &vetOptions{
-		localOnlyData:               vangogh_local_data.FlagFromUrl(u, VetLocalOnlyData),
-		localOnlyImages:             vangogh_local_data.FlagFromUrl(u, VetLocalOnlyImages),
-		recycleBin:                  vangogh_local_data.FlagFromUrl(u, VetRecycleBin),
-		invalidData:                 vangogh_local_data.FlagFromUrl(u, VetInvalidData),
-		unresolvedManualUrls:        vangogh_local_data.FlagFromUrl(u, VetUnresolvedManualUrls),
-		invalidUnresolvedManualUrls: vangogh_local_data.FlagFromUrl(u, VetInvalidResolvedManualUrls),
-		missingChecksums:            vangogh_local_data.FlagFromUrl(u, VetMissingChecksums),
-		staleDehydrations:           vangogh_local_data.FlagFromUrl(u, VetStaleDehydrations),
-		oldLogs:                     vangogh_local_data.FlagFromUrl(u, VetOldLogs),
-		wishlistedOwned:             vangogh_local_data.FlagFromUrl(u, VetWishlistedOwned),
+		localOnlyData:               vangogh_integration.FlagFromUrl(u, VetLocalOnlyData),
+		localOnlyImages:             vangogh_integration.FlagFromUrl(u, VetLocalOnlyImages),
+		recycleBin:                  vangogh_integration.FlagFromUrl(u, VetRecycleBin),
+		invalidData:                 vangogh_integration.FlagFromUrl(u, VetInvalidData),
+		unresolvedManualUrls:        vangogh_integration.FlagFromUrl(u, VetUnresolvedManualUrls),
+		invalidUnresolvedManualUrls: vangogh_integration.FlagFromUrl(u, VetInvalidResolvedManualUrls),
+		missingChecksums:            vangogh_integration.FlagFromUrl(u, VetMissingChecksums),
+		staleDehydrations:           vangogh_integration.FlagFromUrl(u, VetStaleDehydrations),
+		oldLogs:                     vangogh_integration.FlagFromUrl(u, VetOldLogs),
+		wishlistedOwned:             vangogh_integration.FlagFromUrl(u, VetWishlistedOwned),
 	}
 
-	if vangogh_local_data.FlagFromUrl(u, "all") {
-		vo.localOnlyData = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetLocalOnlyData))
-		vo.localOnlyImages = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetLocalOnlyImages))
-		vo.recycleBin = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetRecycleBin))
-		vo.invalidData = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetInvalidData))
-		vo.unresolvedManualUrls = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetUnresolvedManualUrls))
-		vo.invalidUnresolvedManualUrls = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetInvalidResolvedManualUrls))
-		vo.missingChecksums = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetMissingChecksums))
-		vo.staleDehydrations = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetStaleDehydrations))
-		vo.oldLogs = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetOldLogs))
-		vo.wishlistedOwned = !vangogh_local_data.FlagFromUrl(u, NegOpt(VetWishlistedOwned))
+	if vangogh_integration.FlagFromUrl(u, "all") {
+		vo.localOnlyData = !vangogh_integration.FlagFromUrl(u, NegOpt(VetLocalOnlyData))
+		vo.localOnlyImages = !vangogh_integration.FlagFromUrl(u, NegOpt(VetLocalOnlyImages))
+		vo.recycleBin = !vangogh_integration.FlagFromUrl(u, NegOpt(VetRecycleBin))
+		vo.invalidData = !vangogh_integration.FlagFromUrl(u, NegOpt(VetInvalidData))
+		vo.unresolvedManualUrls = !vangogh_integration.FlagFromUrl(u, NegOpt(VetUnresolvedManualUrls))
+		vo.invalidUnresolvedManualUrls = !vangogh_integration.FlagFromUrl(u, NegOpt(VetInvalidResolvedManualUrls))
+		vo.missingChecksums = !vangogh_integration.FlagFromUrl(u, NegOpt(VetMissingChecksums))
+		vo.staleDehydrations = !vangogh_integration.FlagFromUrl(u, NegOpt(VetStaleDehydrations))
+		vo.oldLogs = !vangogh_integration.FlagFromUrl(u, NegOpt(VetOldLogs))
+		vo.wishlistedOwned = !vangogh_integration.FlagFromUrl(u, NegOpt(VetWishlistedOwned))
 	}
 
 	return vo
@@ -70,18 +70,18 @@ func VetHandler(u *url.URL) error {
 
 	return Vet(
 		vetOpts,
-		vangogh_local_data.OperatingSystemsFromUrl(u),
-		vangogh_local_data.ValuesFromUrl(u, vangogh_local_data.LanguageCodeProperty),
-		vangogh_local_data.DownloadTypesFromUrl(u),
-		vangogh_local_data.FlagFromUrl(u, "no-patches"),
-		vangogh_local_data.FlagFromUrl(u, "fix"))
+		vangogh_integration.OperatingSystemsFromUrl(u),
+		vangogh_integration.ValuesFromUrl(u, vangogh_integration.LanguageCodeProperty),
+		vangogh_integration.DownloadTypesFromUrl(u),
+		vangogh_integration.FlagFromUrl(u, "no-patches"),
+		vangogh_integration.FlagFromUrl(u, "fix"))
 }
 
 func Vet(
 	vetOpts *vetOptions,
-	operatingSystems []vangogh_local_data.OperatingSystem,
+	operatingSystems []vangogh_integration.OperatingSystem,
 	langCodes []string,
-	downloadTypes []vangogh_local_data.DownloadType,
+	downloadTypes []vangogh_integration.DownloadType,
 	noPatches bool,
 	fix bool) error {
 

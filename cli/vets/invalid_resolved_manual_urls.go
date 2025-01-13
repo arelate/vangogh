@@ -2,7 +2,7 @@ package vets
 
 import (
 	"fmt"
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"path"
@@ -13,19 +13,19 @@ func InvalidResolvedManualUrls(fix bool) error {
 	cirmu := nod.NewProgress("checking invalid resolved manual-urls...")
 	defer cirmu.End()
 
-	rdx, err := vangogh_local_data.NewReduxWriter(
-		vangogh_local_data.LocalManualUrlProperty)
+	rdx, err := vangogh_integration.NewReduxWriter(
+		vangogh_integration.LocalManualUrlProperty)
 	if err != nil {
 		return cirmu.EndWithError(err)
 	}
 
 	invalidResolvedUrls := make(map[string]bool)
 
-	keys := rdx.Keys(vangogh_local_data.LocalManualUrlProperty)
+	keys := rdx.Keys(vangogh_integration.LocalManualUrlProperty)
 	cirmu.TotalInt(len(keys))
 	for _, url := range keys {
 
-		local, ok := rdx.GetLastVal(vangogh_local_data.LocalManualUrlProperty, url)
+		local, ok := rdx.GetLastVal(vangogh_integration.LocalManualUrlProperty, url)
 		if !ok {
 			continue
 		}
@@ -54,26 +54,26 @@ func InvalidResolvedManualUrls(fix bool) error {
 			firmu.TotalInt(len(invalidResolvedUrls))
 		}
 
-		adp, err := pathways.GetAbsDir(vangogh_local_data.Downloads)
+		adp, err := pathways.GetAbsDir(vangogh_integration.Downloads)
 		if err != nil {
 			return cirmu.EndWithError(err)
 		}
 
 		for url := range invalidResolvedUrls {
-			local, _ := rdx.GetLastVal(vangogh_local_data.LocalManualUrlProperty, url)
+			local, _ := rdx.GetLastVal(vangogh_integration.LocalManualUrlProperty, url)
 			summary[url] = []string{local}
 			if fix {
 				// remove the entry from the redux
-				if err := rdx.CutValues(vangogh_local_data.LocalManualUrlProperty, url, local); err != nil {
+				if err := rdx.CutValues(vangogh_integration.LocalManualUrlProperty, url, local); err != nil {
 					cirmu.Error(err)
 				}
 
 				// move local file to the recycle bin
-				absLocalFilepath, err := vangogh_local_data.AbsDownloadDirFromRel(local)
+				absLocalFilepath, err := vangogh_integration.AbsDownloadDirFromRel(local)
 				if err != nil {
 					cirmu.Error(err)
 				}
-				if err := vangogh_local_data.MoveToRecycleBin(adp, absLocalFilepath); err != nil {
+				if err := vangogh_integration.MoveToRecycleBin(adp, absLocalFilepath); err != nil {
 					cirmu.Error(err)
 				}
 				if firmu != nil {

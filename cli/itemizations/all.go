@@ -1,16 +1,16 @@
 package itemizations
 
 import (
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 )
 
 func All(
 	ids []string,
 	missing, updated bool,
 	modifiedAfter int64,
-	pt vangogh_local_data.ProductType) ([]string, error) {
+	pt vangogh_integration.ProductType) ([]string, error) {
 
-	for _, mainPt := range vangogh_local_data.MainProductTypes(pt) {
+	for _, mainPt := range vangogh_integration.MainProductTypes(pt) {
 		if missing {
 			missingIds, err := missingDetail(pt, mainPt, modifiedAfter)
 			if err != nil {

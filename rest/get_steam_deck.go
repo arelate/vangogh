@@ -1,8 +1,8 @@
 package rest
 
 import (
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_pages"
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
 	"net/http"
 )
@@ -18,7 +18,7 @@ func GetSteamDeck(w http.ResponseWriter, r *http.Request) {
 
 	id := r.URL.Query().Get("id")
 
-	dacrReader, err := vangogh_local_data.NewProductReader(vangogh_local_data.SteamDeckCompatibilityReport)
+	dacrReader, err := vangogh_integration.NewProductReader(vangogh_integration.SteamDeckCompatibilityReport)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return

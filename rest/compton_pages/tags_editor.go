@@ -1,10 +1,10 @@
 package compton_pages
 
 import (
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/arelate/vangogh/rest/compton_styles"
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
@@ -50,7 +50,7 @@ func TagsEditor(
 
 	/* Product title */
 
-	productTitle, _ := rdx.GetLastVal(vangogh_local_data.TitleProperty, id)
+	productTitle, _ := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
 	productHeading := compton.HeadingText(productTitle, 1)
 	pageStack.Append(compton.FICenter(p, productHeading))
 
@@ -79,9 +79,9 @@ func TagsEditor(
 
 	action := ""
 	switch tagsProperty {
-	case vangogh_local_data.LocalTagsProperty:
+	case vangogh_integration.LocalTagsProperty:
 		action = "/local-tags/apply"
-	case vangogh_local_data.TagIdProperty:
+	case vangogh_integration.TagIdProperty:
 		action = "/tags/apply"
 	default:
 		panic("unknown tags property editor")
@@ -91,7 +91,7 @@ func TagsEditor(
 	swColumn := compton.FlexItems(p, direction.Column).AlignContent(align.Center)
 
 	idInput := compton.InputValue(p, input_types.Hidden, id)
-	idInput.SetName(vangogh_local_data.IdProperty)
+	idInput.SetName(vangogh_integration.IdProperty)
 	swColumn.Append(idInput)
 
 	conditionInput := compton.InputValue(p, input_types.Hidden, strconv.FormatBool(owned))

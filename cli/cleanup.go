@@ -3,7 +3,7 @@ package cli
 import (
 	"errors"
 	"fmt"
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
@@ -16,27 +16,27 @@ import (
 const spaceSavingsSummary = "est. disk space savings:"
 
 func CleanupHandler(u *url.URL) error {
-	ids, err := vangogh_local_data.IdsFromUrl(u)
+	ids, err := vangogh_integration.IdsFromUrl(u)
 	if err != nil {
 		return err
 	}
 
 	return Cleanup(
 		ids,
-		vangogh_local_data.OperatingSystemsFromUrl(u),
-		vangogh_local_data.ValuesFromUrl(u, vangogh_local_data.LanguageCodeProperty),
-		vangogh_local_data.DownloadTypesFromUrl(u),
-		vangogh_local_data.FlagFromUrl(u, "no-patches"),
-		vangogh_local_data.FlagFromUrl(u, "all"),
-		vangogh_local_data.FlagFromUrl(u, "test"),
-		vangogh_local_data.FlagFromUrl(u, "delete"))
+		vangogh_integration.OperatingSystemsFromUrl(u),
+		vangogh_integration.ValuesFromUrl(u, vangogh_integration.LanguageCodeProperty),
+		vangogh_integration.DownloadTypesFromUrl(u),
+		vangogh_integration.FlagFromUrl(u, "no-patches"),
+		vangogh_integration.FlagFromUrl(u, "all"),
+		vangogh_integration.FlagFromUrl(u, "test"),
+		vangogh_integration.FlagFromUrl(u, "delete"))
 }
 
 func Cleanup(
 	ids []string,
-	operatingSystems []vangogh_local_data.OperatingSystem,
+	operatingSystems []vangogh_integration.OperatingSystem,
 	langCodes []string,
-	downloadTypes []vangogh_local_data.DownloadType,
+	downloadTypes []vangogh_integration.DownloadType,
 	noPatches bool,
 	all, test, delete bool) error {
 
@@ -44,10 +44,10 @@ func Cleanup(
 		return errors.New("cleanup can be either test or delete, not both at the same time")
 	}
 
-	rdx, err := vangogh_local_data.NewReduxReader(
-		vangogh_local_data.SlugProperty,
-		vangogh_local_data.NativeLanguageNameProperty,
-		vangogh_local_data.LocalManualUrlProperty)
+	rdx, err := vangogh_integration.NewReduxReader(
+		vangogh_integration.SlugProperty,
+		vangogh_integration.NativeLanguageNameProperty,
+		vangogh_integration.LocalManualUrlProperty)
 	if err != nil {
 		return err
 	}
@@ -55,10 +55,10 @@ func Cleanup(
 	ca := nod.NewProgress("cleaning up...")
 	defer ca.End()
 
-	vangogh_local_data.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
+	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
 
 	if all {
-		vrDetails, err := vangogh_local_data.NewProductReader(vangogh_local_data.Details)
+		vrDetails, err := vangogh_integration.NewProductReader(vangogh_integration.Details)
 		if err != nil {
 			return err
 		}
@@ -77,7 +77,7 @@ func Cleanup(
 	}
 
 	// cleaning files in local download directory that no longer map to downloads
-	if err := vangogh_local_data.MapDownloads(
+	if err := vangogh_integration.MapDownloads(
 		ids,
 		rdx,
 		operatingSystems,
@@ -110,12 +110,12 @@ type cleanupDelegate struct {
 	totalBytes int64
 }
 
-func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_local_data.DownloadsList) error {
+func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_integration.DownloadsList) error {
 
 	csa := nod.QueueBegin(slug)
 	defer csa.End()
 
-	if err := cd.rdx.MustHave(vangogh_local_data.LocalManualUrlProperty); err != nil {
+	if err := cd.rdx.MustHave(vangogh_integration.LocalManualUrlProperty); err != nil {
 		return csa.EndWithError(err)
 	}
 
@@ -127,13 +127,13 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_local_dat
 	expectedSet := make(map[string]bool)
 
 	//pDir = s/slug
-	pDir, err := vangogh_local_data.RelProductDownloadsDir(slug)
+	pDir, err := vangogh_integration.RelProductDownloadsDir(slug)
 	if err != nil {
 		return csa.EndWithError(err)
 	}
 
 	for _, dl := range list {
-		if localFilename, ok := cd.rdx.GetLastVal(vangogh_local_data.LocalManualUrlProperty, dl.ManualUrl); ok {
+		if localFilename, ok := cd.rdx.GetLastVal(vangogh_integration.LocalManualUrlProperty, dl.ManualUrl); ok {
 			//local filenames are saved as relative to root downloads folder (e.g. s/slug/local_filename)
 			//so filepath.Rel would trim to local_filename (or dlc/local_filename, extra/local_filename)
 			relFilename, err := filepath.Rel(pDir, localFilename)
@@ -145,7 +145,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_local_dat
 	}
 
 	//LocalSlugDownloads returns list of files relative to s/slug product directory
-	presentSet, err := vangogh_local_data.LocalSlugDownloads(slug)
+	presentSet, err := vangogh_integration.LocalSlugDownloads(slug)
 	if err != nil {
 		return csa.EndWithError(err)
 	}
@@ -171,7 +171,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_local_dat
 
 	for _, unexpectedFile := range unexpectedFiles {
 		//restore absolute from local_filename to s/slug/local_filename
-		absDownloadFilename, err := vangogh_local_data.AbsDownloadDirFromRel(filepath.Join(pDir, unexpectedFile))
+		absDownloadFilename, err := vangogh_integration.AbsDownloadDirFromRel(filepath.Join(pDir, unexpectedFile))
 		if err != nil {
 			return csa.EndWithError(err)
 		}
@@ -194,7 +194,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_local_dat
 			}
 		}
 
-		adp, err := pathways.GetAbsDir(vangogh_local_data.Downloads)
+		adp, err := pathways.GetAbsDir(vangogh_integration.Downloads)
 		if err != nil {
 			return csa.EndWithError(err)
 		}
@@ -211,14 +211,14 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_local_dat
 					return dft.EndWithError(err)
 				}
 			} else {
-				if err := vangogh_local_data.MoveToRecycleBin(adp, absDownloadFilename); err != nil {
+				if err := vangogh_integration.MoveToRecycleBin(adp, absDownloadFilename); err != nil {
 					return dft.EndWithError(err)
 				}
 			}
 		}
 		dft.End()
 
-		absChecksumFile, err := vangogh_local_data.AbsLocalChecksumPath(absDownloadFilename)
+		absChecksumFile, err := vangogh_integration.AbsLocalChecksumPath(absDownloadFilename)
 		if err != nil {
 			return csa.EndWithError(err)
 		}
@@ -230,7 +230,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_local_dat
 			return csa.EndWithError(err)
 		}
 
-		acp, err := pathways.GetAbsDir(vangogh_local_data.Checksums)
+		acp, err := pathways.GetAbsDir(vangogh_integration.Checksums)
 		if err != nil {
 			return csa.EndWithError(err)
 		}
@@ -242,7 +242,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_local_dat
 
 		cft := nod.Begin(" %s %s", prefix, relChecksumFile)
 		if !cd.test {
-			if err := vangogh_local_data.MoveToRecycleBin(acp, absChecksumFile); err != nil {
+			if err := vangogh_integration.MoveToRecycleBin(acp, absChecksumFile); err != nil {
 				return cft.EndWithError(err)
 			}
 		}

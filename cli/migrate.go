@@ -1,7 +1,7 @@
 package cli
 
 import (
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
@@ -20,7 +20,7 @@ func Migrate() error {
 		return ma.EndWithError(err)
 	}
 
-	amd, err := pathways.GetAbsDir(vangogh_local_data.Metadata)
+	amd, err := pathways.GetAbsDir(vangogh_integration.Metadata)
 	if err != nil {
 		return ma.EndWithError(err)
 	}

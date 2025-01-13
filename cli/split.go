@@ -3,24 +3,24 @@ package cli
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"sort"
 	"strconv"
 )
 
-func split(sourcePt vangogh_local_data.ProductType, timestamp int64) error {
+func split(sourcePt vangogh_integration.ProductType, timestamp int64) error {
 
-	splitPt := vangogh_local_data.SplitProductType(sourcePt)
-	if splitPt == vangogh_local_data.UnknownProductType {
+	splitPt := vangogh_integration.SplitProductType(sourcePt)
+	if splitPt == vangogh_integration.UnknownProductType {
 		return nil
 	}
 
 	spa := nod.NewProgress(" splitting %s...", sourcePt)
 	defer spa.End()
 
-	vrPaged, err := vangogh_local_data.NewProductReader(sourcePt)
+	vrPaged, err := vangogh_integration.NewProductReader(sourcePt)
 	if err != nil {
 		return spa.EndWithError(err)
 	}
@@ -63,7 +63,7 @@ func split(sourcePt vangogh_local_data.ProductType, timestamp int64) error {
 			return spa.EndWithError(err)
 		}
 
-		detailDstUrl, err := vangogh_local_data.AbsLocalProductTypeDir(splitPt)
+		detailDstUrl, err := vangogh_integration.AbsLocalProductTypeDir(splitPt)
 		if err != nil {
 			return spa.EndWithError(err)
 		}
@@ -75,7 +75,7 @@ func split(sourcePt vangogh_local_data.ProductType, timestamp int64) error {
 
 		products := productsGetter.GetProducts()
 
-		if sourcePt == vangogh_local_data.Licences {
+		if sourcePt == vangogh_integration.Licences {
 			spa.TotalInt(len(products))
 		}
 
@@ -87,12 +87,12 @@ func split(sourcePt vangogh_local_data.ProductType, timestamp int64) error {
 			if err := kvDetail.Set(strconv.Itoa(product.GetId()), buf); err != nil {
 				return spa.EndWithError(err)
 			}
-			if sourcePt == vangogh_local_data.Licences {
+			if sourcePt == vangogh_integration.Licences {
 				spa.Increment()
 			}
 		}
 
-		if sourcePt != vangogh_local_data.Licences {
+		if sourcePt != vangogh_integration.Licences {
 			spa.Increment()
 		}
 	}

@@ -1,9 +1,9 @@
 package compton_pages
 
 import (
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
@@ -15,7 +15,7 @@ const eagerLoadingScreenshots = 3
 
 func Screenshots(id string, rdx kevlar.ReadableRedux) compton.PageElement {
 
-	screenshots, _ := rdx.GetAllValues(vangogh_local_data.ScreenshotsProperty, id)
+	screenshots, _ := rdx.GetAllValues(vangogh_integration.ScreenshotsProperty, id)
 
 	s := compton_fragments.ProductSection(compton_data.ScreenshotsSection)
 

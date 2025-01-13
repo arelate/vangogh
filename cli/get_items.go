@@ -2,20 +2,20 @@ package cli
 
 import (
 	"fmt"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/itemizations"
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/nod"
 	"net/url"
 )
 
 func GetItemsHandler(u *url.URL) error {
-	since, err := vangogh_local_data.SinceFromUrl(u)
+	since, err := vangogh_integration.SinceFromUrl(u)
 	if err != nil {
 		return nil
 	}
 
-	ids, err := vangogh_local_data.IdsFromUrl(u)
+	ids, err := vangogh_integration.IdsFromUrl(u)
 	if err != nil {
 		return err
 	}
@@ -30,17 +30,17 @@ func GetItems(
 	gia := nod.NewProgress("getting description items...")
 	defer gia.End()
 
-	rdx, err := vangogh_local_data.NewReduxReader(
-		vangogh_local_data.TitleProperty,
-		vangogh_local_data.DescriptionOverviewProperty,
-		vangogh_local_data.DescriptionFeaturesProperty)
+	rdx, err := vangogh_integration.NewReduxReader(
+		vangogh_integration.TitleProperty,
+		vangogh_integration.DescriptionOverviewProperty,
+		vangogh_integration.DescriptionFeaturesProperty)
 	if err != nil {
 		return gia.EndWithError(err)
 	}
 
 	dl := dolo.DefaultClient
 
-	all, err := itemizations.All(ids, false, true, since, vangogh_local_data.ApiProductsV2)
+	all, err := itemizations.All(ids, false, true, since, vangogh_integration.ApiProductsV2)
 	if err != nil {
 		return gia.EndWithError(err)
 	}
@@ -49,7 +49,7 @@ func GetItems(
 
 	for _, id := range all {
 
-		title, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, id)
+		title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
 		if !ok {
 			gia.Log("%s has no title", id)
 			continue
@@ -57,14 +57,14 @@ func GetItems(
 
 		var items []string
 
-		descOverview, ok := rdx.GetLastVal(vangogh_local_data.DescriptionOverviewProperty, id)
+		descOverview, ok := rdx.GetLastVal(vangogh_integration.DescriptionOverviewProperty, id)
 		if ok {
-			items = vangogh_local_data.ExtractDescItems(descOverview)
+			items = vangogh_integration.ExtractDescItems(descOverview)
 		}
 
-		descFeatures, ok := rdx.GetLastVal(vangogh_local_data.DescriptionFeaturesProperty, id)
+		descFeatures, ok := rdx.GetLastVal(vangogh_integration.DescriptionFeaturesProperty, id)
 		if ok {
-			items = append(items, vangogh_local_data.ExtractDescItems(descFeatures)...)
+			items = append(items, vangogh_integration.ExtractDescItems(descFeatures)...)
 		}
 
 		if len(items) < 1 {
@@ -81,7 +81,7 @@ func GetItems(
 		for _, itemUrl := range items {
 			if u, err := url.Parse(itemUrl); err == nil {
 				urls = append(urls, u)
-				aip, err := vangogh_local_data.AbsItemPath(u.Path)
+				aip, err := vangogh_integration.AbsItemPath(u.Path)
 				if err != nil {
 					return gia.EndWithError(err)
 				}

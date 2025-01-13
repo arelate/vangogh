@@ -1,9 +1,9 @@
 package rest
 
 import (
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_pages"
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"net/http"
@@ -11,30 +11,30 @@ import (
 
 var (
 	propertiesSections = map[string]string{
-		vangogh_local_data.DescriptionOverviewProperty: compton_data.DescriptionSection,
-		vangogh_local_data.ChangelogProperty:           compton_data.ChangelogSection,
-		vangogh_local_data.ScreenshotsProperty:         compton_data.ScreenshotsSection,
-		vangogh_local_data.VideoIdProperty:             compton_data.VideosSection,
+		vangogh_integration.DescriptionOverviewProperty: compton_data.DescriptionSection,
+		vangogh_integration.ChangelogProperty:           compton_data.ChangelogSection,
+		vangogh_integration.ScreenshotsProperty:         compton_data.ScreenshotsSection,
+		vangogh_integration.VideoIdProperty:             compton_data.VideosSection,
 	}
 	propertiesSectionsOrder = []string{
-		vangogh_local_data.DescriptionOverviewProperty,
-		vangogh_local_data.ChangelogProperty,
-		vangogh_local_data.ScreenshotsProperty,
-		vangogh_local_data.VideoIdProperty,
+		vangogh_integration.DescriptionOverviewProperty,
+		vangogh_integration.ChangelogProperty,
+		vangogh_integration.ScreenshotsProperty,
+		vangogh_integration.VideoIdProperty,
 	}
 
-	dataTypesSections = map[vangogh_local_data.ProductType]string{
-		vangogh_local_data.SteamAppNews:                 compton_data.SteamNewsSection,
-		vangogh_local_data.SteamReviews:                 compton_data.SteamReviewsSection,
-		vangogh_local_data.SteamDeckCompatibilityReport: compton_data.SteamDeckSection,
-		//vangogh_local_data.Details:                      compton_data.DownloadsSection,
+	dataTypesSections = map[vangogh_integration.ProductType]string{
+		vangogh_integration.SteamAppNews:                 compton_data.SteamNewsSection,
+		vangogh_integration.SteamReviews:                 compton_data.SteamReviewsSection,
+		vangogh_integration.SteamDeckCompatibilityReport: compton_data.SteamDeckSection,
+		//vangogh_integration.Details:                      compton_data.DownloadsSection,
 	}
 
-	dataTypesSectionsOrder = []vangogh_local_data.ProductType{
-		vangogh_local_data.SteamAppNews,
-		vangogh_local_data.SteamReviews,
-		vangogh_local_data.SteamDeckCompatibilityReport,
-		//vangogh_local_data.Details,
+	dataTypesSectionsOrder = []vangogh_integration.ProductType{
+		vangogh_integration.SteamAppNews,
+		vangogh_integration.SteamReviews,
+		vangogh_integration.SteamDeckCompatibilityReport,
+		//vangogh_integration.Details,
 	}
 )
 
@@ -47,7 +47,7 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if r.URL.Query().Has(vangogh_local_data.SlugProperty) {
+	if r.URL.Query().Has(vangogh_integration.SlugProperty) {
 		if ids := rdx.Match(r.URL.Query(), kevlar.FullMatch); len(ids) > 0 {
 			for _, id := range ids {
 				http.Redirect(w, r, "/product?id="+id, http.StatusPermanentRedirect)
@@ -59,7 +59,7 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	id := r.URL.Query().Get(vangogh_local_data.IdProperty)
+	id := r.URL.Query().Get(vangogh_integration.IdProperty)
 
 	hasSections := make([]string, 0)
 	// every product is expected to have at least those sections
@@ -75,13 +75,13 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 
 	for _, dt := range dataTypesSectionsOrder {
 		if section, ok := dataTypesSections[dt]; ok {
-			if rdx.HasValue(vangogh_local_data.TypesProperty, id, dt.String()) {
+			if rdx.HasValue(vangogh_integration.TypesProperty, id, dt.String()) {
 				hasSections = append(hasSections, section)
 			}
 		}
 	}
 
-	if val, ok := rdx.GetLastVal(vangogh_local_data.OwnedProperty, id); ok && val == vangogh_local_data.TrueValue {
+	if val, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && val == vangogh_integration.TrueValue {
 		hasSections = append(hasSections, compton_data.DownloadsSection)
 	}
 

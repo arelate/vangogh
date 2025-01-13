@@ -2,7 +2,7 @@ package rest
 
 import (
 	"fmt"
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"net/http"
 	"os"
@@ -19,7 +19,7 @@ func GetLocalFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if absLocalFilePath, err := vangogh_local_data.AbsDownloadDirFromRel(localPath); err == nil && absLocalFilePath != "" {
+	if absLocalFilePath, err := vangogh_integration.AbsDownloadDirFromRel(localPath); err == nil && absLocalFilePath != "" {
 		if _, err := os.Stat(absLocalFilePath); err == nil {
 			_, filename := filepath.Split(absLocalFilePath)
 			w.Header().Set("Cache-Control", "max-age=31536000")

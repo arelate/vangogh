@@ -7,9 +7,9 @@ package main
 import (
 	"bytes"
 	_ "embed"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli"
 	"github.com/arelate/vangogh/clo_delegates"
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
@@ -36,9 +36,9 @@ func main() {
 	defer ns.End()
 
 	if err := pathways.Setup(dirsOverrideFilename,
-		vangogh_local_data.DefaultVangoghRootDir,
-		vangogh_local_data.RelToAbsDirs,
-		vangogh_local_data.AllAbsDirs...); err != nil {
+		vangogh_integration.DefaultVangoghRootDir,
+		vangogh_integration.RelToAbsDirs,
+		vangogh_integration.AllAbsDirs...); err != nil {
 		_ = ns.EndWithError(err)
 		os.Exit(1)
 	}

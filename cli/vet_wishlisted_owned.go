@@ -1,7 +1,7 @@
 package cli
 
 import (
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 )
 
@@ -10,9 +10,9 @@ func WishlistedOwned(fix bool) error {
 	woa := nod.Begin("checking wishlisted owned products...")
 	defer woa.End()
 
-	rdx, err := vangogh_local_data.NewReduxReader(
-		vangogh_local_data.WishlistedProperty,
-		vangogh_local_data.OwnedProperty)
+	rdx, err := vangogh_integration.NewReduxReader(
+		vangogh_integration.WishlistedProperty,
+		vangogh_integration.OwnedProperty)
 
 	if err != nil {
 		return woa.EndWithError(err)
@@ -20,12 +20,12 @@ func WishlistedOwned(fix bool) error {
 
 	woid := make([]string, 0)
 
-	for _, id := range rdx.Keys(vangogh_local_data.WishlistedProperty) {
+	for _, id := range rdx.Keys(vangogh_integration.WishlistedProperty) {
 		// only check actually wishlisted products, not just any wishlisted state
-		if rdx.HasValue(vangogh_local_data.WishlistedProperty, id, vangogh_local_data.FalseValue) {
+		if rdx.HasValue(vangogh_integration.WishlistedProperty, id, vangogh_integration.FalseValue) {
 			continue
 		}
-		if rdx.HasValue(vangogh_local_data.OwnedProperty, id, vangogh_local_data.TrueValue) {
+		if rdx.HasValue(vangogh_integration.OwnedProperty, id, vangogh_integration.TrueValue) {
 			woid = append(woid, id)
 		}
 	}

@@ -2,24 +2,24 @@ package reductions
 
 import (
 	"github.com/arelate/southern_light/gog_integration"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"strconv"
 	"time"
 
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
 )
 
 func Orders(modifiedAfter int64) error {
 
-	oa := nod.NewProgress(" %s...", vangogh_local_data.GOGOrderDateProperty)
+	oa := nod.NewProgress(" %s...", vangogh_integration.GOGOrderDateProperty)
 	defer oa.End()
 
-	rdx, err := vangogh_local_data.NewReduxWriter(vangogh_local_data.GOGOrderDateProperty)
+	rdx, err := vangogh_integration.NewReduxWriter(vangogh_integration.GOGOrderDateProperty)
 	if err != nil {
 		return oa.EndWithError(err)
 	}
 
-	vrOrders, err := vangogh_local_data.NewProductReader(vangogh_local_data.Orders)
+	vrOrders, err := vangogh_integration.NewProductReader(vangogh_integration.Orders)
 	if err != nil {
 		return oa.EndWithError(err)
 	}
@@ -66,7 +66,7 @@ func Orders(modifiedAfter int64) error {
 		oa.Increment()
 	}
 
-	if err := rdx.BatchReplaceValues(vangogh_local_data.GOGOrderDateProperty, gogOrderDates); err != nil {
+	if err := rdx.BatchReplaceValues(vangogh_integration.GOGOrderDateProperty, gogOrderDates); err != nil {
 		return oa.EndWithError(err)
 	}
 

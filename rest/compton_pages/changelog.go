@@ -1,9 +1,9 @@
 package compton_pages
 
 import (
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
@@ -14,7 +14,7 @@ import (
 func Changelog(id string, rdx kevlar.ReadableRedux) compton.PageElement {
 
 	// empty changelog is handled below, no need to check for existence here
-	changelog, _ := rdx.GetAllValues(vangogh_local_data.ChangelogProperty, id)
+	changelog, _ := rdx.GetAllValues(vangogh_integration.ChangelogProperty, id)
 
 	s := compton_fragments.ProductSection(compton_data.ChangelogSection)
 

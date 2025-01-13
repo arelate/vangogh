@@ -1,10 +1,10 @@
 package compton_data
 
-import "github.com/arelate/vangogh_local_data"
+import "github.com/arelate/southern_light/vangogh_integration"
 
-var OSOrder = []vangogh_local_data.OperatingSystem{
-	vangogh_local_data.Windows,
-	vangogh_local_data.MacOS,
-	vangogh_local_data.Linux,
-	vangogh_local_data.AnyOperatingSystem,
+var OSOrder = []vangogh_integration.OperatingSystem{
+	vangogh_integration.Windows,
+	vangogh_integration.MacOS,
+	vangogh_integration.Linux,
+	vangogh_integration.AnyOperatingSystem,
 }

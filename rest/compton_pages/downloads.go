@@ -2,9 +2,9 @@ package compton_pages
 
 import (
 	"fmt"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
@@ -18,58 +18,58 @@ import (
 )
 
 type DownloadVariant struct {
-	dlType   vangogh_local_data.DownloadType
+	dlType   vangogh_integration.DownloadType
 	version  string
 	langCode string
 }
 
-var downloadTypesStrings = map[vangogh_local_data.DownloadType]string{
-	vangogh_local_data.Installer: "Installer",
-	vangogh_local_data.DLC:       "DLC",
-	vangogh_local_data.Extra:     "Extra",
-	vangogh_local_data.Movie:     "Movie",
+var downloadTypesStrings = map[vangogh_integration.DownloadType]string{
+	vangogh_integration.Installer: "Installer",
+	vangogh_integration.DLC:       "DLC",
+	vangogh_integration.Extra:     "Extra",
+	vangogh_integration.Movie:     "Movie",
 }
 
-var downloadTypesColors = map[vangogh_local_data.DownloadType]color.Color{
-	vangogh_local_data.Installer: color.Purple,
-	vangogh_local_data.DLC:       color.Indigo,
-	vangogh_local_data.Extra:     color.Orange,
-	vangogh_local_data.Movie:     color.Red,
+var downloadTypesColors = map[vangogh_integration.DownloadType]color.Color{
+	vangogh_integration.Installer: color.Purple,
+	vangogh_integration.DLC:       color.Indigo,
+	vangogh_integration.Extra:     color.Orange,
+	vangogh_integration.Movie:     color.Red,
 }
 
-var validationResultsColors = map[vangogh_local_data.ValidationResult]color.Color{
-	vangogh_local_data.ValidationResultUnknown:        color.Gray,
-	vangogh_local_data.ValidatedSuccessfully:          color.Green,
-	vangogh_local_data.ValidatedWithGeneratedChecksum: color.Green,
-	vangogh_local_data.ValidatedUnresolvedManualUrl:   color.Teal,
-	vangogh_local_data.ValidatedMissingLocalFile:      color.Teal,
-	vangogh_local_data.ValidatedMissingChecksum:       color.Teal,
-	vangogh_local_data.ValidationError:                color.Orange,
-	vangogh_local_data.ValidatedChecksumMismatch:      color.Red,
+var validationResultsColors = map[vangogh_integration.ValidationResult]color.Color{
+	vangogh_integration.ValidationResultUnknown:        color.Gray,
+	vangogh_integration.ValidatedSuccessfully:          color.Green,
+	vangogh_integration.ValidatedWithGeneratedChecksum: color.Green,
+	vangogh_integration.ValidatedUnresolvedManualUrl:   color.Teal,
+	vangogh_integration.ValidatedMissingLocalFile:      color.Teal,
+	vangogh_integration.ValidatedMissingChecksum:       color.Teal,
+	vangogh_integration.ValidationError:                color.Orange,
+	vangogh_integration.ValidatedChecksumMismatch:      color.Red,
 }
 
-var validationResultsFontWeights = map[vangogh_local_data.ValidationResult]font_weight.Weight{
-	vangogh_local_data.ValidationResultUnknown:        font_weight.Normal,
-	vangogh_local_data.ValidatedSuccessfully:          font_weight.Bolder,
-	vangogh_local_data.ValidatedWithGeneratedChecksum: font_weight.Normal,
-	vangogh_local_data.ValidatedUnresolvedManualUrl:   font_weight.Normal,
-	vangogh_local_data.ValidatedMissingLocalFile:      font_weight.Normal,
-	vangogh_local_data.ValidatedMissingChecksum:       font_weight.Normal,
-	vangogh_local_data.ValidationError:                font_weight.Bolder,
-	vangogh_local_data.ValidatedChecksumMismatch:      font_weight.Bolder,
+var validationResultsFontWeights = map[vangogh_integration.ValidationResult]font_weight.Weight{
+	vangogh_integration.ValidationResultUnknown:        font_weight.Normal,
+	vangogh_integration.ValidatedSuccessfully:          font_weight.Bolder,
+	vangogh_integration.ValidatedWithGeneratedChecksum: font_weight.Normal,
+	vangogh_integration.ValidatedUnresolvedManualUrl:   font_weight.Normal,
+	vangogh_integration.ValidatedMissingLocalFile:      font_weight.Normal,
+	vangogh_integration.ValidatedMissingChecksum:       font_weight.Normal,
+	vangogh_integration.ValidationError:                font_weight.Bolder,
+	vangogh_integration.ValidatedChecksumMismatch:      font_weight.Bolder,
 }
 
 // Downloads will present available installers, DLCs in the following hierarchy:
 // - Operating system heading - Installers and DLCs (separately)
 // - title_values list of downloads by version
-func Downloads(id string, dls vangogh_local_data.DownloadsList, rdx kevlar.ReadableRedux) compton.PageElement {
+func Downloads(id string, dls vangogh_integration.DownloadsList, rdx kevlar.ReadableRedux) compton.PageElement {
 
 	s := compton_fragments.ProductSection(compton_data.DownloadsSection)
 
 	pageStack := compton.FlexItems(s, direction.Column)
 	s.Append(pageStack)
 
-	if owned, ok := rdx.GetLastVal(vangogh_local_data.OwnedProperty, id); ok && owned == vangogh_local_data.FalseValue {
+	if owned, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && owned == vangogh_integration.FalseValue {
 		ownershipRequiredNotice := compton.Fspan(s, "Downloads are available for owned products only").
 			ForegroundColor(color.Gray)
 		pageStack.Append(ownershipRequiredNotice)
@@ -121,11 +121,11 @@ func Downloads(id string, dls vangogh_local_data.DownloadsList, rdx kevlar.Reada
 	return s
 }
 
-func validationResults(r compton.Registrar, id string, dls vangogh_local_data.DownloadsList, rdx kevlar.ReadableRedux) compton.Element {
+func validationResults(r compton.Registrar, id string, dls vangogh_integration.DownloadsList, rdx kevlar.ReadableRedux) compton.Element {
 
 	hasInstallerDlcs := false
 	for _, dl := range dls {
-		if dl.Type != vangogh_local_data.Extra {
+		if dl.Type != vangogh_integration.Extra {
 			hasInstallerDlcs = true
 			break
 		}
@@ -136,31 +136,31 @@ func validationResults(r compton.Registrar, id string, dls vangogh_local_data.Do
 	}
 
 	pvrc := color.Gray
-	if pvrs, ok := rdx.GetLastVal(vangogh_local_data.ProductValidationResultProperty, id); ok {
-		pvr := vangogh_local_data.ParseValidationResult(pvrs)
+	if pvrs, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
+		pvr := vangogh_integration.ParseValidationResult(pvrs)
 		pvrc = validationResultsColors[pvr]
 	}
 
 	valRes := compton.Frow(r).FontSize(size.Small).
 		IconColor(compton.Circle, pvrc).
 		Heading("Installers, DLC")
-	results := make(map[vangogh_local_data.ValidationResult]int)
+	results := make(map[vangogh_integration.ValidationResult]int)
 
 	for _, dl := range dls {
 		// only display installers, DLCs validation summary
-		if dl.Type != vangogh_local_data.Installer && dl.Type != vangogh_local_data.DLC {
+		if dl.Type != vangogh_integration.Installer && dl.Type != vangogh_integration.DLC {
 			continue
 		}
-		vr := vangogh_local_data.ValidationResultUnknown
-		if muss, ok := rdx.GetLastVal(vangogh_local_data.ManualUrlStatusProperty, dl.ManualUrl); ok && vangogh_local_data.ParseManualUrlStatus(muss) == vangogh_local_data.ManualUrlValidated {
-			if vrs, sure := rdx.GetLastVal(vangogh_local_data.ManualUrlValidationResultProperty, dl.ManualUrl); sure {
-				vr = vangogh_local_data.ParseValidationResult(vrs)
+		vr := vangogh_integration.ValidationResultUnknown
+		if muss, ok := rdx.GetLastVal(vangogh_integration.ManualUrlStatusProperty, dl.ManualUrl); ok && vangogh_integration.ParseManualUrlStatus(muss) == vangogh_integration.ManualUrlValidated {
+			if vrs, sure := rdx.GetLastVal(vangogh_integration.ManualUrlValidationResultProperty, dl.ManualUrl); sure {
+				vr = vangogh_integration.ParseValidationResult(vrs)
 			}
 		}
 		results[vr] = results[vr] + 1
 	}
 
-	for _, vr := range vangogh_local_data.ValidationResultsOrder {
+	for _, vr := range vangogh_integration.ValidationResultsOrder {
 		if result, ok := results[vr]; ok && result > 0 {
 			valRes.PropVal(vr.HumanReadableString(), strconv.Itoa(result))
 		}
@@ -169,7 +169,7 @@ func validationResults(r compton.Registrar, id string, dls vangogh_local_data.Do
 	return compton.FICenter(r, valRes)
 }
 
-func operatingSystemHeading(r compton.Registrar, os vangogh_local_data.OperatingSystem) compton.Element {
+func operatingSystemHeading(r compton.Registrar, os vangogh_integration.OperatingSystem) compton.Element {
 	osRow := compton.FlexItems(r, direction.Row).
 		AlignItems(align.Center).
 		ColumnGap(size.Small)
@@ -182,7 +182,7 @@ func operatingSystemHeading(r compton.Registrar, os vangogh_local_data.Operating
 	osTitle := compton.H3()
 	osString := ""
 	switch os {
-	case vangogh_local_data.AnyOperatingSystem:
+	case vangogh_integration.AnyOperatingSystem:
 		osString = "Goodies"
 	default:
 		osString = os.String()
@@ -210,10 +210,10 @@ func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 }
 
 func downloadLinks(r compton.Registrar,
-	os vangogh_local_data.OperatingSystem,
+	os vangogh_integration.OperatingSystem,
 	productTitle string,
 	dv *DownloadVariant,
-	dls vangogh_local_data.DownloadsList,
+	dls vangogh_integration.DownloadsList,
 	rdx kevlar.ReadableRedux) compton.Element {
 
 	downloads := filterDownloads(os, dls, productTitle, dv)
@@ -243,7 +243,7 @@ func downloadLinks(r compton.Registrar,
 	return dsDownloadLinks
 }
 
-func downloadLink(r compton.Registrar, productTitle string, dl vangogh_local_data.Download, rdx kevlar.ReadableRedux) compton.Element {
+func downloadLink(r compton.Registrar, productTitle string, dl vangogh_integration.Download, rdx kevlar.ReadableRedux) compton.Element {
 
 	link := compton.A("/files?manual-url=" + dl.ManualUrl)
 	link.AddClass("download", dl.Type.String())
@@ -252,7 +252,7 @@ func downloadLink(r compton.Registrar, productTitle string, dl vangogh_local_dat
 		RowGap(size.Small)
 
 	name := dl.Name
-	if dl.Type == vangogh_local_data.DLC {
+	if dl.Type == vangogh_integration.DLC {
 		name = dl.ProductTitle
 	}
 
@@ -275,11 +275,11 @@ func downloadLink(r compton.Registrar, productTitle string, dl vangogh_local_dat
 
 	linkColumn.Append(linkTitle)
 
-	vr := vangogh_local_data.ValidationResultUnknown
+	vr := vangogh_integration.ValidationResultUnknown
 
-	if muss, ok := rdx.GetLastVal(vangogh_local_data.ManualUrlStatusProperty, dl.ManualUrl); ok && vangogh_local_data.ParseManualUrlStatus(muss) == vangogh_local_data.ManualUrlValidated {
-		if vrs, sure := rdx.GetLastVal(vangogh_local_data.ManualUrlValidationResultProperty, dl.ManualUrl); sure {
-			vr = vangogh_local_data.ParseValidationResult(vrs)
+	if muss, ok := rdx.GetLastVal(vangogh_integration.ManualUrlStatusProperty, dl.ManualUrl); ok && vangogh_integration.ParseManualUrlStatus(muss) == vangogh_integration.ManualUrlValidated {
+		if vrs, sure := rdx.GetLastVal(vangogh_integration.ManualUrlValidationResultProperty, dl.ManualUrl); sure {
+			vr = vangogh_integration.ParseValidationResult(vrs)
 		}
 	}
 
@@ -298,13 +298,13 @@ func downloadLink(r compton.Registrar, productTitle string, dl vangogh_local_dat
 	return link
 }
 
-func downloadsOperatingSystems(dls vangogh_local_data.DownloadsList) []vangogh_local_data.OperatingSystem {
-	dlOs := make(map[vangogh_local_data.OperatingSystem]any)
+func downloadsOperatingSystems(dls vangogh_integration.DownloadsList) []vangogh_integration.OperatingSystem {
+	dlOs := make(map[vangogh_integration.OperatingSystem]any)
 	for _, dl := range dls {
 		dlOs[dl.OS] = nil
 	}
 
-	oses := make([]vangogh_local_data.OperatingSystem, 0, len(dlOs))
+	oses := make([]vangogh_integration.OperatingSystem, 0, len(dlOs))
 	for _, os := range compton_data.OSOrder {
 		if _, ok := dlOs[os]; ok {
 			oses = append(oses, os)
@@ -328,7 +328,7 @@ func hasDownloadVariant(dvs []*DownloadVariant, other *DownloadVariant) bool {
 	return false
 }
 
-func getProductTitles(os vangogh_local_data.OperatingSystem, dls vangogh_local_data.DownloadsList) []string {
+func getProductTitles(os vangogh_integration.OperatingSystem, dls vangogh_integration.DownloadsList) []string {
 	titles := make([]string, 0)
 	for _, dl := range dls {
 		if dl.OS != os {
@@ -342,7 +342,7 @@ func getProductTitles(os vangogh_local_data.OperatingSystem, dls vangogh_local_d
 	return titles
 }
 
-func getDownloadVariants(os vangogh_local_data.OperatingSystem, title string, dls vangogh_local_data.DownloadsList) []*DownloadVariant {
+func getDownloadVariants(os vangogh_integration.OperatingSystem, title string, dls vangogh_integration.DownloadsList) []*DownloadVariant {
 
 	variants := make([]*DownloadVariant, 0)
 	for _, dl := range dls {
@@ -367,8 +367,8 @@ func getDownloadVariants(os vangogh_local_data.OperatingSystem, title string, dl
 	return variants
 }
 
-func filterDownloads(os vangogh_local_data.OperatingSystem, dls vangogh_local_data.DownloadsList, productTitle string, dv *DownloadVariant) []vangogh_local_data.Download {
-	downloads := make([]vangogh_local_data.Download, 0)
+func filterDownloads(os vangogh_integration.OperatingSystem, dls vangogh_integration.DownloadsList, productTitle string, dv *DownloadVariant) []vangogh_integration.Download {
+	downloads := make([]vangogh_integration.Download, 0)
 	for _, dl := range dls {
 		if dl.OS != os ||
 			dl.Type != dv.dlType ||

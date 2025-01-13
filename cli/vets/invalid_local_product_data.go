@@ -2,7 +2,7 @@ package vets
 
 import (
 	"fmt"
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 )
 
@@ -10,13 +10,13 @@ func InvalidLocalProductData(fix bool) error {
 	ilpa := nod.NewProgress("checking data for invalid products...")
 	defer ilpa.End()
 
-	invalidProducts := make(map[vangogh_local_data.ProductType][]string)
+	invalidProducts := make(map[vangogh_integration.ProductType][]string)
 
-	allProductTypes := make(map[vangogh_local_data.ProductType]bool)
+	allProductTypes := make(map[vangogh_integration.ProductType]bool)
 
-	pts := vangogh_local_data.GOGRemoteProducts()
-	pts = append(pts, vangogh_local_data.SteamRemoteProducts()...)
-	pts = append(pts, vangogh_local_data.LocalProducts()...)
+	pts := vangogh_integration.GOGRemoteProducts()
+	pts = append(pts, vangogh_integration.SteamRemoteProducts()...)
+	pts = append(pts, vangogh_integration.LocalProducts()...)
 
 	for _, pt := range pts {
 		allProductTypes[pt] = true
@@ -28,7 +28,7 @@ func InvalidLocalProductData(fix bool) error {
 
 	for pt := range allProductTypes {
 
-		if pt == vangogh_local_data.LicenceProducts {
+		if pt == vangogh_integration.LicenceProducts {
 			continue
 		}
 
@@ -36,7 +36,7 @@ func InvalidLocalProductData(fix bool) error {
 
 		pta := nod.NewProgress(" checking %s...", pt)
 
-		vr, err := vangogh_local_data.NewProductReader(pt)
+		vr, err := vangogh_integration.NewProductReader(pt)
 		if err != nil {
 			_ = pta.EndWithError(err)
 			continue
@@ -70,7 +70,7 @@ func InvalidLocalProductData(fix bool) error {
 	if !dataProblems {
 		ilpa.EndWithResult("data seems ok")
 	} else {
-		rdx, err := vangogh_local_data.NewReduxReader(vangogh_local_data.TitleProperty)
+		rdx, err := vangogh_integration.NewReduxReader(vangogh_integration.TitleProperty)
 		if err != nil {
 			return err
 		}
@@ -83,7 +83,7 @@ func InvalidLocalProductData(fix bool) error {
 			summary[ptStr] = make([]string, len(ids))
 			for i := 0; i < len(ids); i++ {
 				prodStr := ids[i]
-				if title, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, ids[i]); ok {
+				if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, ids[i]); ok {
 					prodStr = fmt.Sprintf("%s %s", prodStr, title)
 				}
 				summary[ptStr][i] = prodStr

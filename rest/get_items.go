@@ -2,7 +2,7 @@ package rest
 
 import (
 	"fmt"
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"net/http"
 	"path/filepath"
@@ -18,7 +18,7 @@ func GetItems(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if absLocalFilePath, err := vangogh_local_data.AbsItemPath(localPath); err == nil && absLocalFilePath != "" {
+	if absLocalFilePath, err := vangogh_integration.AbsItemPath(localPath); err == nil && absLocalFilePath != "" {
 		http.ServeFile(w, r, absLocalFilePath)
 	} else {
 		if err == nil {

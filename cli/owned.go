@@ -2,8 +2,8 @@ package cli
 
 import (
 	"fmt"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/reductions"
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/nod"
 	"golang.org/x/exp/maps"
 	"net/url"
@@ -16,7 +16,7 @@ const (
 )
 
 func OwnedHandler(u *url.URL) error {
-	ids, err := vangogh_local_data.IdsFromUrl(u)
+	ids, err := vangogh_integration.IdsFromUrl(u)
 	if err != nil {
 		return err
 	}
@@ -30,14 +30,14 @@ func Owned(ids []string) error {
 	defer oa.End()
 
 	propSet := map[string]bool{
-		vangogh_local_data.TitleProperty:             true,
-		vangogh_local_data.SlugProperty:              true,
-		vangogh_local_data.IncludesGamesProperty:     true,
-		vangogh_local_data.IsIncludedByGamesProperty: true,
-		vangogh_local_data.OwnedProperty:             true,
+		vangogh_integration.TitleProperty:             true,
+		vangogh_integration.SlugProperty:              true,
+		vangogh_integration.IncludesGamesProperty:     true,
+		vangogh_integration.IsIncludedByGamesProperty: true,
+		vangogh_integration.OwnedProperty:             true,
 	}
 
-	rdx, err := vangogh_local_data.NewReduxReader(maps.Keys(propSet)...)
+	rdx, err := vangogh_integration.NewReduxReader(maps.Keys(propSet)...)
 	if err != nil {
 		return oa.EndWithError(err)
 	}
@@ -50,7 +50,7 @@ func Owned(ids []string) error {
 	ownSummary := make(map[string][]string)
 	ownSummary[ownedSection] = make([]string, 0, len(owned))
 	for _, id := range owned {
-		if title, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, id); ok {
+		if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
 			ownSummary[ownedSection] = append(ownSummary[ownedSection], fmt.Sprintf("%s %s", id, title))
 		}
 	}
@@ -64,7 +64,7 @@ func Owned(ids []string) error {
 
 	ownSummary[notOwnedSection] = make([]string, 0, len(notOwned))
 	for id := range notOwned {
-		if title, ok := rdx.GetLastVal(vangogh_local_data.TitleProperty, id); ok {
+		if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
 			ownSummary[notOwnedSection] = append(ownSummary[notOwnedSection], fmt.Sprintf("%s %s", id, title))
 		}
 	}

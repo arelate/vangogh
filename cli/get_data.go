@@ -3,31 +3,31 @@ package cli
 import (
 	"fmt"
 	"github.com/arelate/southern_light/gog_integration"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetchers"
 	"github.com/arelate/vangogh/cli/itemizations"
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/coost"
 	"github.com/boggydigital/nod"
 	"net/url"
 )
 
 func GetDataHandler(u *url.URL) error {
-	ids, err := vangogh_local_data.IdsFromUrl(u)
+	ids, err := vangogh_integration.IdsFromUrl(u)
 	if err != nil {
 		return err
 	}
 
-	productType := vangogh_local_data.ProductTypeFromUrl(u)
+	productType := vangogh_integration.ProductTypeFromUrl(u)
 
-	skipIds := vangogh_local_data.ValuesFromUrl(u, "skip-id")
+	skipIds := vangogh_integration.ValuesFromUrl(u, "skip-id")
 
-	updated := vangogh_local_data.FlagFromUrl(u, "updated")
-	since, err := vangogh_local_data.SinceFromUrl(u)
+	updated := vangogh_integration.FlagFromUrl(u, "updated")
+	since, err := vangogh_integration.SinceFromUrl(u)
 	if err != nil {
 		return err
 	}
 
-	missing := vangogh_local_data.FlagFromUrl(u, "missing")
+	missing := vangogh_integration.FlagFromUrl(u, "missing")
 
 	return GetData(
 		ids,
@@ -42,7 +42,7 @@ func GetDataHandler(u *url.URL) error {
 func GetData(
 	ids []string,
 	skipIds []string,
-	pt vangogh_local_data.ProductType,
+	pt vangogh_integration.ProductType,
 	since int64,
 	missing bool,
 	updated bool) error {
@@ -50,12 +50,12 @@ func GetData(
 	gda := nod.NewProgress("getting %s data...", pt)
 	defer gda.End()
 
-	if !vangogh_local_data.IsValidProductType(pt) {
+	if !vangogh_integration.IsValidProductType(pt) {
 		gda.EndWithResult("%s is not a valid product type", pt)
 		return nil
 	}
 
-	acp, err := vangogh_local_data.AbsCookiePath()
+	acp, err := vangogh_integration.AbsCookiePath()
 	if err != nil {
 		return gda.EndWithError(err)
 	}
@@ -65,7 +65,7 @@ func GetData(
 		return gda.EndWithError(err)
 	}
 
-	if vangogh_local_data.IsProductRequiresAuth(pt) {
+	if vangogh_integration.IsProductRequiresAuth(pt) {
 		li, err := gog_integration.LoggedIn(hc)
 		if err != nil {
 			return gda.EndWithError(err)
@@ -76,14 +76,14 @@ func GetData(
 		}
 	}
 
-	if vangogh_local_data.IsGOGPagedProduct(pt) {
+	if vangogh_integration.IsGOGPagedProduct(pt) {
 		if err := fetchers.Pages(pt, since, hc, gda); err != nil {
 			return gda.EndWithError(err)
 		}
 		return split(pt, since)
 	}
 
-	if vangogh_local_data.IsArrayProduct(pt) {
+	if vangogh_integration.IsArrayProduct(pt) {
 		ids := []string{pt.String()}
 		if err := fetchers.Items(ids, pt, hc); err != nil {
 			return gda.EndWithError(err)

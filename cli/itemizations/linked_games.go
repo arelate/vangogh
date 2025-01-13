@@ -1,19 +1,19 @@
 package itemizations
 
 import (
-	"github.com/arelate/vangogh_local_data"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"golang.org/x/exp/maps"
 )
 
 func linkedGames(modifiedAfter int64) ([]string, error) {
 
-	lga := nod.Begin(" finding missing linked %s...", vangogh_local_data.ApiProductsV2)
+	lga := nod.Begin(" finding missing linked %s...", vangogh_integration.ApiProductsV2)
 	defer lga.End()
 
 	missingSet := make(map[string]bool)
 
-	vrApv2, err := vangogh_local_data.NewProductReader(vangogh_local_data.ApiProductsV2)
+	vrApv2, err := vangogh_integration.NewProductReader(vangogh_integration.ApiProductsV2)
 	if err != nil {
 		return nil, lga.EndWithError(err)
 	}
@@ -23,7 +23,7 @@ func linkedGames(modifiedAfter int64) ([]string, error) {
 		return nil, lga.EndWithError(err)
 	}
 	if len(modifiedApv2) > 0 {
-		nod.Log("modified %s: %v", vangogh_local_data.ApiProductsV2, modifiedApv2)
+		nod.Log("modified %s: %v", vangogh_integration.ApiProductsV2, modifiedApv2)
 	}
 
 	for _, id := range modifiedApv2 {
@@ -39,25 +39,25 @@ func linkedGames(modifiedAfter int64) ([]string, error) {
 
 		gig := apv2.GetIncludesGames()
 		if len(gig) > 0 {
-			nod.Log("%s #%s includes-games: %v", vangogh_local_data.ApiProductsV2, id, gig)
+			nod.Log("%s #%s includes-games: %v", vangogh_integration.ApiProductsV2, id, gig)
 		}
 		lgs := gig
 
 		giiig := apv2.GetIsIncludedInGames()
 		if len(giiig) > 0 {
-			nod.Log("%s #%s is-included-in-games: %v", vangogh_local_data.ApiProductsV2, id, giiig)
+			nod.Log("%s #%s is-included-in-games: %v", vangogh_integration.ApiProductsV2, id, giiig)
 		}
 		lgs = append(lgs, giiig...)
 
 		grg := apv2.GetRequiresGames()
 		if len(grg) > 0 {
-			nod.Log("%s #%s requires-games: %v", vangogh_local_data.ApiProductsV2, id, grg)
+			nod.Log("%s #%s requires-games: %v", vangogh_integration.ApiProductsV2, id, grg)
 		}
 		lgs = append(lgs, grg...)
 
 		girbg := apv2.GetIsRequiredByGames()
 		if len(girbg) > 0 {
-			nod.Log("%s #%s is-required-by-games: %v", vangogh_local_data.ApiProductsV2, id, girbg)
+			nod.Log("%s #%s is-required-by-games: %v", vangogh_integration.ApiProductsV2, id, girbg)
 		}
 		lgs = append(lgs, girbg...)
 

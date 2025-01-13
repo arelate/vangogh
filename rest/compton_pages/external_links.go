@@ -13,12 +13,12 @@ import (
 	"github.com/arelate/southern_light/protondb_integration"
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/southern_light/strategywiki_integration"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/southern_light/vndb_integration"
 	"github.com/arelate/southern_light/wikipedia_integration"
 	"github.com/arelate/southern_light/winehq_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
-	"github.com/arelate/vangogh_local_data"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/kevlar"
 	"net/url"
@@ -49,16 +49,16 @@ func externalLinks(id string, rdx kevlar.ReadableRedux) map[string][]string {
 	links := make(map[string][]string)
 
 	for _, p := range []string{
-		vangogh_local_data.StoreUrlProperty,
-		vangogh_local_data.ForumUrlProperty,
-		vangogh_local_data.SupportUrlProperty} {
+		vangogh_integration.StoreUrlProperty,
+		vangogh_integration.ForumUrlProperty,
+		vangogh_integration.SupportUrlProperty} {
 		if val, ok := rdx.GetLastVal(p, id); ok {
 			links[compton_data.GauginGOGLinksProperty] = append(links[compton_data.GauginGOGLinksProperty],
 				fmt.Sprintf("%s=%s", p, gogLink(val)))
 		}
 	}
 
-	if steamAppId, ok := rdx.GetLastVal(vangogh_local_data.SteamAppIdProperty, id); ok {
+	if steamAppId, ok := rdx.GetLastVal(vangogh_integration.SteamAppIdProperty, id); ok {
 		if appId, err := strconv.ParseUint(steamAppId, 10, 32); err == nil && appId > 0 {
 			uAppId := uint32(appId)
 			links[compton_data.GauginSteamLinksProperty] =
@@ -74,39 +74,39 @@ func externalLinks(id string, rdx kevlar.ReadableRedux) map[string][]string {
 		fmt.Sprintf("%s=%s", compton_data.GauginGOGDBUrlProperty, gogdb_integration.GOGDBUrl(id)))
 
 	otherLink(links,
-		vangogh_local_data.PCGWPageIdProperty,
+		vangogh_integration.PCGWPageIdProperty,
 		compton_data.GauginPCGamingWikiUrlProperty,
 		pcgw_integration.WikiUrl)
 	otherLink(links,
-		vangogh_local_data.HLTBIdProperty,
+		vangogh_integration.HLTBIdProperty,
 		compton_data.GauginHLTBUrlProperty,
 		hltb_integration.GameUrl)
 	otherLink(links,
-		vangogh_local_data.IGDBIdProperty,
+		vangogh_integration.IGDBIdProperty,
 		compton_data.GauginIGDBUrlProperty,
 		igdb_integration.GameUrl)
 	otherLink(links,
-		vangogh_local_data.StrategyWikiIdProperty,
+		vangogh_integration.StrategyWikiIdProperty,
 		compton_data.GauginStrategyWikiUrlProperty,
 		strategywiki_integration.WikiUrl)
 	otherLink(links,
-		vangogh_local_data.MobyGamesIdProperty,
+		vangogh_integration.MobyGamesIdProperty,
 		compton_data.GauginMobyGamesUrlProperty,
 		mobygames_integration.GameUrl)
 	otherLink(links,
-		vangogh_local_data.WikipediaIdProperty,
+		vangogh_integration.WikipediaIdProperty,
 		compton_data.GauginWikipediaUrlProperty,
 		wikipedia_integration.WikiUrl)
 	otherLink(links,
-		vangogh_local_data.WineHQIdProperty,
+		vangogh_integration.WineHQIdProperty,
 		compton_data.GauginWineHQUrlProperty,
 		winehq_integration.WineHQUrl)
 	otherLink(links,
-		vangogh_local_data.VNDBIdProperty,
+		vangogh_integration.VNDBIdProperty,
 		compton_data.GauginVNDBUrlProperty,
 		vndb_integration.ItemUrl)
 	otherLink(links,
-		vangogh_local_data.IGNWikiSlugProperty,
+		vangogh_integration.IGNWikiSlugProperty,
 		compton_data.GauginIGNWikiUrlProperty,
 		ign_integration.WikiUrl)
 

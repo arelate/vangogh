@@ -1,18 +1,18 @@
 package cli
 
 import (
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/reductions"
-	"github.com/arelate/vangogh_local_data"
 	"net/url"
 )
 
 func GetPurchasesHandler(u *url.URL) error {
-	since, err := vangogh_local_data.SinceFromUrl(u)
+	since, err := vangogh_integration.SinceFromUrl(u)
 	if err != nil {
 		return err
 	}
 
-	ids, err := vangogh_local_data.IdsFromUrl(u)
+	ids, err := vangogh_integration.IdsFromUrl(u)
 	if err != nil {
 		return err
 	}
@@ -20,27 +20,27 @@ func GetPurchasesHandler(u *url.URL) error {
 	return GetPurchases(
 		since,
 		ids,
-		vangogh_local_data.OperatingSystemsFromUrl(u),
-		vangogh_local_data.ValuesFromUrl(u, vangogh_local_data.LanguageCodeProperty),
-		vangogh_local_data.DownloadTypesFromUrl(u),
-		vangogh_local_data.FlagFromUrl(u, "no-patches"),
-		vangogh_local_data.FlagFromUrl(u, "force"))
+		vangogh_integration.OperatingSystemsFromUrl(u),
+		vangogh_integration.ValuesFromUrl(u, vangogh_integration.LanguageCodeProperty),
+		vangogh_integration.DownloadTypesFromUrl(u),
+		vangogh_integration.FlagFromUrl(u, "no-patches"),
+		vangogh_integration.FlagFromUrl(u, "force"))
 }
 
 func GetPurchases(
 	since int64,
 	ids []string,
-	operatingSystems []vangogh_local_data.OperatingSystem,
+	operatingSystems []vangogh_integration.OperatingSystem,
 	langCodes []string,
-	downloadTypes []vangogh_local_data.DownloadType,
+	downloadTypes []vangogh_integration.DownloadType,
 	noPatches bool,
 	force bool) error {
 
-	productTypes := []vangogh_local_data.ProductType{
-		vangogh_local_data.OrderPage, // required for Search > Owned
-		vangogh_local_data.Licences,  // required for ownership check
-		vangogh_local_data.AccountPage,
-		vangogh_local_data.Details,
+	productTypes := []vangogh_integration.ProductType{
+		vangogh_integration.OrderPage, // required for Search > Owned
+		vangogh_integration.Licences,  // required for ownership check
+		vangogh_integration.AccountPage,
+		vangogh_integration.Details,
 	}
 
 	for _, pt := range productTypes {
