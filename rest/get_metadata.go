@@ -73,6 +73,9 @@ func getProductMetadata(id string, dls vangogh_integration.DownloadsList, rdx ke
 	if iconSquare, ok := rdx.GetLastVal(vangogh_integration.IconSquareProperty, id); ok {
 		tm.Images.IconSquare = iconSquare
 	}
+	if background, ok := rdx.GetLastVal(vangogh_integration.BackgroundProperty, id); ok {
+		tm.Images.Background = background
+	}
 
 	for _, dl := range dls {
 		link := vangogh_integration.TheoDownloadLink{
