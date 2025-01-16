@@ -4,49 +4,49 @@
 
         &.owned {
             color: var(--c-highlight);
-            background-color: var(--c-gray);
+            --label-color: var(--c-gray);
         }
 
         &.owned.valid {
             color: var(--c-highlight);
-            background-color: var(--c-green);
+            --label-color: var(--c-green);
         }
 
         &.owned.valid-with-gen-checksum {
             color: var(--c-highlight);
-            background-color: var(--c-green);
+            --label-color: var(--c-green);
         }
 
         &.owned.unresolved-manual-url {
             color: var(--c-highlight);
-            background-color: var(--c-teal);
+            --label-color: var(--c-teal);
         }
 
         &.owned.missing-local-file {
             color: black;
-            background-color: var(--c-teal);
+            --label-color: var(--c-teal);
         }
 
         &.owned.missing-checksum {
             color: var(--c-highlight);
-            background-color: var(--c-teal);
+            --label-color: var(--c-teal);
         }
 
         &.owned.error {
             color: var(--c-highlight);
-            background-color: var(--c-orange);
+            --label-color: var(--c-orange);
         }
 
         &.owned.checksum-mismatch {
             color: var(--c-highlight);
-            background-color: var(--c-red);
+            --label-color: var(--c-red);
         }
 
         /* GAME, DLC, PACK */
 
         &.product-type {
             color: var(--c-highlight);
-            background-color: var(--c-foreground);
+            --label-color: var(--c-foreground);
         }
 
         /* Release timeline labels */
@@ -56,7 +56,7 @@
         &.pre-order,
         &.in-development {
             color: var(--c-highlight);
-            background-color: var(--c-teal);
+            --label-color: var(--c-teal);
         }
 
         /* Engine/Source-port labels */
@@ -64,7 +64,7 @@
         &.is-using-dosbox,
         &.is-using-scummvm {
             color: var(--c-highlight);
-            background-color: var(--c-color);
+            --label-color: var(--c-color);
         }
 
         /* User tags */
@@ -72,27 +72,25 @@
         &.tag,
         &.local-tags {
             color: var(--c-highlight);
-            background-color: var(--c-indigo);
+            --label-color: var(--c-indigo);
         }
 
         /* Sale/price lifecycle labels */
 
         &.wishlisted {
             color: var(--c-highlight);
-            background-color: var(--c-orange);
+            --label-color: var(--c-orange);
         }
 
         &.is-free,
         &.discount-percentage {
             color: var(--c-highlight);
-            background-color: var(--c-mint);
+            --label-color: var(--c-mint);
         }
 
         &.good-old-game {
-            color: var(--c-foreground);
-            border-style: solid;
-            border-width: var(--s-xxxs);
-            border-color:  var(--c-purple);
+            color: var(--c-highlight);
+            --label-color: var(--c-purple);
             --o: 0.85;
         }
     }
@@ -108,7 +106,10 @@
                 background-size: cover;
                 background-origin: border-box;
                 background-clip: border-area;
-                border-color: transparent;
+                border-color: transparent !important;
+                color: var(--c-foreground);
+                --label-color: transparent;
+                background-color: transparent;
             }
         }
     }
