@@ -93,23 +93,18 @@
             --label-color: var(--c-purple);
             --o: 0.85;
         }
-    }
-}
 
-/* TODO: move this above unconditionally, when background-clip: border-area is supported better */
-/* Currently this only works in Safari 18.2 */
-@supports (background-clip: border-area) {
-    @scope(.label) {
-        :scope {
+        /* TODO: move this above unconditionally, when background-clip: border-area is supported better */
+        @supports (background-clip: border-area) {
             &.good-old-game {
                 background-image: linear-gradient(90deg, var(--c-purple), var(--c-pink), var(--c-yellow), var(--c-cyan));
-                background-size: cover;
+                background-size: contain;
                 background-origin: border-box;
                 background-clip: border-area;
-                border-color: transparent !important;
                 color: var(--c-foreground);
+                /* disable standard label border-color color-mixing by mixing two transparent colors */
                 --label-color: transparent;
-                background-color: transparent;
+                --cm-clr: transparent;
             }
         }
     }
