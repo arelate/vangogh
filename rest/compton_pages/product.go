@@ -11,6 +11,7 @@ import (
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/input_types"
 	"github.com/boggydigital/compton/consts/size"
+	"github.com/boggydigital/issa"
 	"github.com/boggydigital/kevlar"
 	"golang.org/x/exp/slices"
 	"strings"
@@ -41,7 +42,9 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.
 	p.RegisterStyles(compton_styles.Styles, "product.css")
 
 	// tinting document background color to the representative product color
-	compton_fragments.SetTint(id, p, rdx)
+	if repColor, ok := rdx.GetLastVal(vangogh_integration.RepImageColorProperty, id); ok && repColor != issa.NeutralRepColor {
+		compton.SetTint(p, repColor)
+	}
 
 	/* App navigation */
 

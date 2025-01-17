@@ -6,6 +6,7 @@ import (
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/size"
+	"github.com/boggydigital/issa"
 	"github.com/boggydigital/kevlar"
 	"golang.org/x/exp/slices"
 	"strings"
@@ -37,7 +38,9 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx kevlar.Reada
 
 	pc := compton.Card(r, id)
 
-	SetTint(id, pc, rdx)
+	if repColor, ok := rdx.GetLastVal(vangogh_integration.RepImageColorProperty, id); ok && repColor != issa.NeutralRepColor {
+		compton.SetTint(pc, repColor)
+	}
 
 	if viSrc, ok := rdx.GetLastVal(vangogh_integration.VerticalImageProperty, id); ok {
 
@@ -53,6 +56,8 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx kevlar.Reada
 
 	if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
 		pc.AppendTitle(title)
+	} else {
+		return nil
 	}
 
 	if labels := compton.Labels(r, FormatLabels(id, rdx)...).

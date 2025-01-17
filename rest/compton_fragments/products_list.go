@@ -15,9 +15,10 @@ func ProductsList(r compton.Registrar, ids []string, from, to int, rdx kevlar.Re
 		id := ids[ii]
 		productLink := compton.A("/product?id=" + id)
 
-		productCard := ProductCard(r, id, ii-from < dehydratedCount, rdx)
-		productLink.Append(productCard)
-		productCards.Append(productLink)
+		if productCard := ProductCard(r, id, ii-from < dehydratedCount, rdx); productCard != nil {
+			productLink.Append(productCard)
+			productCards.Append(productLink)
+		}
 	}
 
 	return productCards

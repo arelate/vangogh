@@ -12,6 +12,7 @@ import (
 	"github.com/boggydigital/compton/consts/font_weight"
 	"github.com/boggydigital/compton/consts/input_types"
 	"github.com/boggydigital/compton/consts/size"
+	"github.com/boggydigital/issa"
 	"github.com/boggydigital/kevlar"
 	"golang.org/x/exp/maps"
 	"net/http"
@@ -34,7 +35,9 @@ func TagsEditor(
 	p.RegisterStyles(compton_styles.Styles, "tag-editors.css")
 
 	// tinting document background color to the representative product color
-	compton_fragments.SetTint(id, p, rdx)
+	if repColor, ok := rdx.GetLastVal(vangogh_integration.RepImageColorProperty, id); ok && repColor != issa.NeutralRepColor {
+		compton.SetTint(p, repColor)
+	}
 
 	/* App navigation */
 
