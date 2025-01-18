@@ -20,10 +20,10 @@ import (
 const colorBlendClass = "color-blend"
 
 const (
-	theoInstallTemplate        = "theo install {id}"
-	theoUninstallTemplate      = "theo uninstall {id}"
-	theoDownloadTemplate       = "theo download {id} -os windows && theo reveal-downloads {id}"
-	theoRemoveDownloadTemplate = "theo remove-download {id} -os windows"
+	theoInstallTemplate       = "theo install {id}"
+	theoUninstallTemplate     = "theo uninstall {id} -force"
+	theoWineInstallTemplate   = "theo wine-install {id}"
+	theoWineUninstallTemplate = "theo wine-uninstall {id} -force"
 )
 
 var (
@@ -138,8 +138,8 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.
 			pageStack.Append(theoCommand(p, theoInstallTemplate, id))
 			pageStack.Append(theoCommand(p, theoUninstallTemplate, id))
 		} else {
-			pageStack.Append(theoCommand(p, theoDownloadTemplate, id))
-			pageStack.Append(theoCommand(p, theoRemoveDownloadTemplate, id))
+			pageStack.Append(theoCommand(p, theoWineInstallTemplate, id))
+			pageStack.Append(theoCommand(p, theoWineUninstallTemplate, id))
 		}
 	}
 
