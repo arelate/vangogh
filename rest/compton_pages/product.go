@@ -26,11 +26,6 @@ const (
 	theoWineUninstallTemplate = "theo wine-uninstall {id} -force"
 )
 
-var (
-	//go:embed "scripts/check_theo.js"
-	scriptCheckTheo []byte
-)
-
 func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.PageElement {
 
 	title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
@@ -50,17 +45,20 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.
 
 	appNavLinks := compton_fragments.AppNavLinks(p, "")
 	appNavLinks.AddClass(colorBlendClass)
-	showToc := compton.InputValue(p, input_types.Button, "Sections")
+	showToc := compton.InputValue(p, input_types.Button, "&#x2935;")
 	showToc.AddClass(colorBlendClass)
-
-	pageStack.Append(compton.FICenter(p, appNavLinks, showToc))
 
 	/* Product details sections shortcuts */
 
 	productSectionsLinks := compton_fragments.ProductSectionsLinks(p, hasSections)
-	pageStack.Append(productSectionsLinks)
+
+	topLevelNavElements := []compton.Element{appNavLinks, showToc, productSectionsLinks}
+
+	//pageStack.Append()
 
 	pageStack.Append(compton.Attach(p, showToc, productSectionsLinks))
+
+	pageStack.Append(compton.FICenter(p, topLevelNavElements...))
 
 	/* Product poster */
 
