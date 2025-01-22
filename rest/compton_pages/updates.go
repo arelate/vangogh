@@ -34,8 +34,8 @@ func Updates(sections []string,
 		topLevelNav = append(topLevelNav, showAll)
 	}
 
-	if sectionNav := compton_fragments.SectionsLinks(p, sections, sectionTitles); sectionNav != nil {
-		showToc := compton.InputValue(p, input_types.Button, aprtcdUnicode)
+	if sectionNav := compton.SectionsLinks(p, sections, sectionTitles); sectionNav != nil {
+		showToc := compton.InputValue(p, input_types.Button, compton.SectionLinksTitle)
 		pageStack.Append(compton.Attach(p, showToc, sectionNav))
 
 		topLevelNav = append(topLevelNav, showToc, sectionNav)
