@@ -8,6 +8,7 @@ import (
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
+	"github.com/boggydigital/compton/consts/size"
 )
 
 func SteamReviews(id string, sar *steam_integration.AppReviews) compton.PageElement {
@@ -16,6 +17,11 @@ func SteamReviews(id string, sar *steam_integration.AppReviews) compton.PageElem
 
 	pageStack := compton.FlexItems(s, direction.Column)
 	s.Append(pageStack)
+
+	summaryRow := compton.Frow(s).FontSize(size.Small)
+	summaryRow.PropVal("Overall", sar.GetReviewScoreDesc())
+
+	pageStack.Append(compton.FICenter(s, summaryRow))
 
 	if len(sar.Reviews) == 0 {
 		fs := compton.Fspan(s, "Steam reviews are not available for this product").
