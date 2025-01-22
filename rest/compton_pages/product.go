@@ -19,6 +19,8 @@ import (
 
 const colorBlendClass = "color-blend"
 
+const aprtcdUnicode = "&#x2935;" // ARROW POINTING RIGHTWARDS THEN CURVING DOWNWARDS
+
 const (
 	theoInstallTemplate       = "theo install {id}"
 	theoUninstallTemplate     = "theo uninstall {id} -force"
@@ -45,20 +47,18 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.
 
 	appNavLinks := compton_fragments.AppNavLinks(p, "")
 	appNavLinks.AddClass(colorBlendClass)
-	showToc := compton.InputValue(p, input_types.Button, "&#x2935;")
+
+	showToc := compton.InputValue(p, input_types.Button, aprtcdUnicode)
 	showToc.AddClass(colorBlendClass)
 
 	/* Product details sections shortcuts */
 
-	productSectionsLinks := compton_fragments.ProductSectionsLinks(p, hasSections)
-
-	topLevelNavElements := []compton.Element{appNavLinks, showToc, productSectionsLinks}
-
-	//pageStack.Append()
-
+	productSectionsLinks := compton_fragments.SectionsLinks(p, hasSections, compton_data.SectionTitles)
 	pageStack.Append(compton.Attach(p, showToc, productSectionsLinks))
 
-	pageStack.Append(compton.FICenter(p, topLevelNavElements...))
+	topLevelNav := []compton.Element{appNavLinks, showToc, productSectionsLinks}
+
+	pageStack.Append(compton.FICenter(p, topLevelNav...))
 
 	/* Product poster */
 

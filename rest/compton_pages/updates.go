@@ -7,6 +7,7 @@ import (
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
+	"github.com/boggydigital/compton/consts/input_types"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/kevlar"
 )
@@ -23,30 +24,21 @@ func Updates(sections []string,
 	p.RegisterStyles(compton_styles.Styles, "product-card.css")
 	p.AppendSpeculationRules("/product?id=*")
 
-	/* Nav stack = App navigation + Updates sections shortcuts */
+	/* Nav stack = App navigation + Show all + (popup) Updates sections shortcuts */
 
-	appNavLinks := compton_fragments.AppNavLinks(p, current)
-
-	/* Ordered list of Updates sections */
-
-	order := make([]string, 0, len(sections))
-	sectionLinks := make(map[string]string)
-	for _, section := range sections {
-		st := sectionTitles[section]
-		sectionLinks[st] = "#" + st
-		order = append(order, st)
-	}
-
-	sectionTargets := compton.TextLinks(sectionLinks, "", order...)
-
-	sectionNav := compton.NavLinksTargets(p, sectionTargets...)
-
-	topLevelNav := []compton.Element{appNavLinks, sectionNav}
+	topLevelNav := []compton.Element{compton_fragments.AppNavLinks(p, current)}
 
 	var showAll compton.Element
 	if hasMoreItems(sections, updates, updateTotals) {
 		showAll = compton_fragments.Button(p, "Show all", "?show-all=true")
 		topLevelNav = append(topLevelNav, showAll)
+	}
+
+	if sectionNav := compton_fragments.SectionsLinks(p, sections, sectionTitles); sectionNav != nil {
+		showToc := compton.InputValue(p, input_types.Button, aprtcdUnicode)
+		pageStack.Append(compton.Attach(p, showToc, sectionNav))
+
+		topLevelNav = append(topLevelNav, showToc, sectionNav)
 	}
 
 	pageStack.Append(compton.FICenter(p, topLevelNav...))

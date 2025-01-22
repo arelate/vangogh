@@ -1,16 +1,15 @@
 package compton_fragments
 
 import (
-	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/boggydigital/compton"
 )
 
-func ProductSectionsLinks(r compton.Registrar, sections []string) compton.Element {
+func SectionsLinks(r compton.Registrar, sections []string, sectionTitles map[string]string) compton.Element {
 
 	sectionLinks := make(map[string]string)
 	sectionsOrder := make([]string, 0, len(sections))
 	for _, s := range sections {
-		title := compton_data.SectionTitles[s]
+		title := sectionTitles[s]
 		sectionLinks[title] = "#" + title
 		sectionsOrder = append(sectionsOrder, title)
 	}
@@ -18,7 +17,7 @@ func ProductSectionsLinks(r compton.Registrar, sections []string) compton.Elemen
 	targets := compton.TextLinks(sectionLinks, "", sectionsOrder...)
 
 	psl := compton.NavLinksTargets(r, targets...)
-	psl.SetId("product-section-links")
+	psl.SetId("section-links")
 
 	return psl
 
