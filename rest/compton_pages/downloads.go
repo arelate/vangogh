@@ -112,9 +112,9 @@ func Downloads(id string, dls vangogh_integration.DownloadsList, rdx kevlar.Read
 		}
 
 		if ii != len(dlOs)-1 {
-			thickHr := compton.Hr()
-			thickHr.AddClass("thick")
-			pageStack.Append(thickHr)
+			operatingSystemsHr := compton.Hr()
+			//thickHr.AddClass("thick")
+			pageStack.Append(operatingSystemsHr)
 		}
 	}
 
@@ -236,7 +236,9 @@ func downloadLinks(r compton.Registrar,
 			downloadsColumn.Append(link)
 		}
 		if ii != len(downloads)-1 {
-			downloadsColumn.Append(compton.Hr())
+			downloadLinksHr := compton.Hr()
+			downloadLinksHr.AddClass("subtle")
+			downloadsColumn.Append(downloadLinksHr)
 		}
 	}
 

@@ -15,6 +15,10 @@ a {
     }
 }
 
-hr.thick {
-    border-width: var(--s-xxs);
+hr.subtle {
+    border-color: var(--c-background)
 }
+
+/*hr.thick {*/
+/*    border-width: var(--s-xxs);*/
+/*}*/
