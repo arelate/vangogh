@@ -1,13 +1,3 @@
-html {
-    --cma: 10%
-}
-
-@media screen and (prefers-color-scheme:dark) {
-    html {
-        --cma: 10%;
-    }
-}
-
 issa-image.product-poster {
     & img {
         --w: 800px;
