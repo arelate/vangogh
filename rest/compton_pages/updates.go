@@ -21,6 +21,7 @@ func Updates(sections []string,
 	current := compton_data.AppNavUpdates
 	p, pageStack := compton_fragments.AppPage(current)
 	p.RegisterStyles(compton_styles.Styles, "product-card.css")
+	p.AppendSpeculationRules("/product?id=*")
 
 	/* Nav stack = App navigation + Updates sections shortcuts */
 
