@@ -40,15 +40,18 @@ func Updates(sections []string,
 	sectionTargets := compton.TextLinks(sectionLinks, "", order...)
 
 	sectionNav := compton.NavLinksTargets(p, sectionTargets...)
-	pageStack.Append(compton.FICenter(p, appNavLinks, sectionNav))
 
-	/* Show All... button */
+	topLevelNav := []compton.Element{appNavLinks, sectionNav}
 
 	var showAll compton.Element
 	if hasMoreItems(sections, updates, updateTotals) {
 		showAll = compton_fragments.Button(p, "Show all", "?show-all=true")
-		pageStack.Append(showAll)
+		topLevelNav = append(topLevelNav, showAll)
 	}
+
+	pageStack.Append(compton.FICenter(p, topLevelNav...))
+
+	/* Show All... button */
 
 	/* Updates sections */
 
