@@ -19,7 +19,6 @@ func SteamDeckCompatibility(r compton.Registrar, id string, rdx kevlar.ReadableR
 			BorderRadius(size.XXSmall)
 
 		var c color.Color
-
 		switch sdccp {
 		case "Verified":
 			c = color.Green
@@ -31,9 +30,7 @@ func SteamDeckCompatibility(r compton.Registrar, id string, rdx kevlar.ReadableR
 			c = color.Gray
 		}
 
-		sdc.BackgroundColor(c).ForegroundColor(color.Highlight)
-
-		return sdc
+		return sdc.BackgroundColor(c).ForegroundColor(color.Highlight)
 	}
 	return nil
 }
