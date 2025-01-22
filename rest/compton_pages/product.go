@@ -120,6 +120,12 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.
 		detailsSummary.SetId(sectionTitle)
 		detailsSummary.AddClassSummary(colorBlendClass)
 
+		if section == compton_data.SteamDeckSection {
+			if sdc := compton_fragments.SteamDeckCompatibility(p, id, rdx); sdc != nil {
+				detailsSummary.AppendSummary(sdc)
+			}
+		}
+
 		ifh := compton.IframeExpandHost(p, section, "/"+section+"?id="+id)
 		detailsSummary.Append(ifh)
 
