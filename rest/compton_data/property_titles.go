@@ -40,7 +40,7 @@ var PropertyTitles = map[string]string{
 	vangogh_integration.ProtonDBTierProperty:                      "ProtonDB Tier",
 	vangogh_integration.ProtonDBConfidenceProperty:                "ProtonDB Confidence",
 	vangogh_integration.SortProperty:                              "Sort",
-	vangogh_integration.DescendingProperty:                        "Descending",
+	vangogh_integration.DescendingProperty:                        "Desc",
 	vangogh_integration.GlobalReleaseDateProperty:                 "Global Release",
 	vangogh_integration.GOGReleaseDateProperty:                    "GOG.com Release",
 	vangogh_integration.GOGOrderDateProperty:                      "GOG.com Order",
