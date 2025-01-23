@@ -116,9 +116,14 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.
 		detailsSummary.SetId(sectionTitle)
 		detailsSummary.AddClassSummary(colorBlendClass)
 
-		if section == compton_data.SteamDeckSection {
+		switch section {
+		case compton_data.SteamDeckSection:
 			if sdc := compton_fragments.SteamDeckCompatibility(p, id, rdx); sdc != nil {
 				detailsSummary.AppendSummary(sdc)
+			}
+		case compton_data.SteamReviewsSection:
+			if srsd := compton_fragments.SteamReviewScoreDesc(p, id, rdx); srsd != nil {
+				detailsSummary.AppendSummary(srsd)
 			}
 		}
 
