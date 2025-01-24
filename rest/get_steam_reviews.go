@@ -26,7 +26,7 @@ func GetSteamReviews(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	p := compton_pages.SteamReviews(id, sar)
+	p := compton_pages.SteamReviews(sar)
 
 	if err := p.Write(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)

@@ -10,7 +10,7 @@ import (
 	"github.com/boggydigital/compton/consts/direction"
 )
 
-func SteamReviews(id string, sar *steam_integration.AppReviews) compton.PageElement {
+func SteamReviews(sar *steam_integration.AppReviews) compton.PageElement {
 
 	s := compton_fragments.ProductSection(compton_data.SteamReviewsSection)
 
