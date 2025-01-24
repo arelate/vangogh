@@ -28,7 +28,7 @@ func HandleFuncs() {
 		"GET /properties":     Log(http.HandlerFunc(GetProperties)),
 		"GET /external-links": Log(http.HandlerFunc(GetExternalLinks)),
 		"GET /description":    Log(http.HandlerFunc(GetDescription)),
-		"GET /downloads":      Log(http.HandlerFunc(GetDownloads)),
+		"GET /installers":     Log(http.HandlerFunc(GetInstallers)),
 		"GET /changelog":      Log(http.HandlerFunc(GetChangelog)),
 		"GET /screenshots":    Log(http.HandlerFunc(GetScreenshots)),
 		"GET /videos":         Log(http.HandlerFunc(GetVideos)),

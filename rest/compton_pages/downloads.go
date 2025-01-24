@@ -37,17 +37,6 @@ var downloadTypesColors = map[vangogh_integration.DownloadType]color.Color{
 	vangogh_integration.Movie:     color.Red,
 }
 
-var validationResultsColors = map[vangogh_integration.ValidationResult]color.Color{
-	vangogh_integration.ValidationResultUnknown:        color.Gray,
-	vangogh_integration.ValidatedSuccessfully:          color.Green,
-	vangogh_integration.ValidatedWithGeneratedChecksum: color.Green,
-	vangogh_integration.ValidatedUnresolvedManualUrl:   color.Teal,
-	vangogh_integration.ValidatedMissingLocalFile:      color.Teal,
-	vangogh_integration.ValidatedMissingChecksum:       color.Teal,
-	vangogh_integration.ValidationError:                color.Orange,
-	vangogh_integration.ValidatedChecksumMismatch:      color.Red,
-}
-
 var validationResultsFontWeights = map[vangogh_integration.ValidationResult]font_weight.Weight{
 	vangogh_integration.ValidationResultUnknown:        font_weight.Normal,
 	vangogh_integration.ValidatedSuccessfully:          font_weight.Bolder,
@@ -64,7 +53,7 @@ var validationResultsFontWeights = map[vangogh_integration.ValidationResult]font
 // - title_values list of downloads by version
 func Downloads(id string, dls vangogh_integration.DownloadsList, rdx kevlar.ReadableRedux) compton.PageElement {
 
-	s := compton_fragments.ProductSection(compton_data.DownloadsSection)
+	s := compton_fragments.ProductSection(compton_data.InstallersSection)
 
 	pageStack := compton.FlexItems(s, direction.Column)
 	s.Append(pageStack)
@@ -138,7 +127,7 @@ func validationResults(r compton.Registrar, id string, dls vangogh_integration.D
 	pvrc := color.Gray
 	if pvrs, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
 		pvr := vangogh_integration.ParseValidationResult(pvrs)
-		pvrc = validationResultsColors[pvr]
+		pvrc = compton_fragments.ValidationResultsColors[pvr]
 	}
 
 	valRes := compton.Frow(r).FontSize(size.Small).
@@ -287,7 +276,7 @@ func downloadLink(r compton.Registrar, productTitle string, dl vangogh_integrati
 
 	validationResult := compton.Fspan(r, vr.HumanReadableString()).
 		FontSize(size.Small).
-		ForegroundColor(validationResultsColors[vr]).
+		ForegroundColor(compton_fragments.ValidationResultsColors[vr]).
 		FontWeight(validationResultsFontWeights[vr])
 	linkColumn.Append(validationResult)
 

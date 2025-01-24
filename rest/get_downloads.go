@@ -8,9 +8,9 @@ import (
 	"net/http"
 )
 
-func GetDownloads(w http.ResponseWriter, r *http.Request) {
+func GetInstallers(w http.ResponseWriter, r *http.Request) {
 
-	// GET /downloads?id
+	// GET /installers?id
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)

@@ -27,7 +27,7 @@ var (
 		vangogh_integration.SteamAppNews:                 compton_data.SteamNewsSection,
 		vangogh_integration.SteamReviews:                 compton_data.SteamReviewsSection,
 		vangogh_integration.SteamDeckCompatibilityReport: compton_data.SteamDeckSection,
-		//vangogh_integration.Details:                      compton_data.DownloadsSection,
+		//vangogh_integration.Details:                      compton_data.InstallersSection,
 	}
 
 	dataTypesSectionsOrder = []vangogh_integration.ProductType{
@@ -82,7 +82,7 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if val, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && val == vangogh_integration.TrueValue {
-		hasSections = append(hasSections, compton_data.DownloadsSection)
+		hasSections = append(hasSections, compton_data.InstallersSection)
 	}
 
 	if productPage := compton_pages.Product(id, rdx, hasSections); productPage != nil {

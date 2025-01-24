@@ -125,6 +125,10 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.
 			if srsd := compton_fragments.SteamReviewScoreDesc(p, id, rdx); srsd != nil {
 				detailsSummary.AppendSummary(srsd)
 			}
+		case compton_data.InstallersSection:
+			if pvr := compton_fragments.ProductValidationResult(p, id, rdx); pvr != nil {
+				detailsSummary.AppendSummary(pvr)
+			}
 		}
 
 		ifh := compton.IframeExpandHost(p, section, "/"+section+"?id="+id)
