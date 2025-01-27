@@ -46,6 +46,13 @@ func SteamAppId(since int64) error {
 	saia.TotalInt(len(updated))
 
 	for _, id := range updated {
+
+		// existing Steam App Id would indicate that we've already matched GOG Id to Steam App Id using
+		// data sources: HLTB, PCGW, GamesDB and don't need to use potentially lossy mapping by name
+		if appIds, ok := rdx.GetAllValues(vangogh_integration.SteamAppIdProperty, id); ok && len(appIds) > 0 {
+			continue
+		}
+
 		title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
 		if !ok {
 			saia.Increment()
