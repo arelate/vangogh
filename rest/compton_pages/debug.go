@@ -1,7 +1,6 @@
 package compton_pages
 
 import (
-	"fmt"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_styles"
@@ -54,11 +53,15 @@ func Debug(id string) (compton.PageElement, error) {
 			continue
 		}
 
-		ptTitle := fmt.Sprintf("%s (%s)", compton_data.TypesTitles[pt.String()], pt.String())
-		summaryHeading := compton.DSTitle(p, ptTitle)
+		summaryHeading := compton.DSTitle(p, compton_data.TypesTitles[pt.String()])
 
 		ds := compton.DSLarge(p, summaryHeading, false).BackgroundColor(color.Highlight)
 		pageStack.Append(ds)
+
+		subtitleFspan := compton.Fspan(p, pt.String()).
+			FontSize(size.Small).
+			BackgroundColor(color.Background)
+		ds.AppendSummary(subtitleFspan)
 
 		iframe := compton.IframeExpandHost(p, pt.String(), "/debug-data?id="+id+"&product-type="+pt.String())
 		ds.Append(iframe)
@@ -94,7 +97,8 @@ func Debug(id string) (compton.PageElement, error) {
 
 			propertyHeading := compton.Fspan(p, property).FontSize(size.Normal)
 
-			open := !slices.Contains(vangogh_integration.LongTextProperties(), property)
+			open := !slices.Contains(vangogh_integration.LongTextProperties(), property) &&
+				!slices.Contains(vangogh_integration.DehydratedImagesProperties(), property)
 
 			ds := compton.DSSmall(p, propertyHeading, open)
 

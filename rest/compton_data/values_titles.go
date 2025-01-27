@@ -26,7 +26,7 @@ var TypesTitles = map[string]string{
 	vangogh_integration.ProtonDBSummary.String():              "ProtonDB Summary",
 	vangogh_integration.UserWishlistProducts.String():         "User Wishlist Products",
 	vangogh_integration.GamesDbProducts.String():              "Galaxy GamesDB Products",
-	vangogh_integration.SteamDeckCompatibilityReport.String(): "Steam Deck Compatibility Report",
+	vangogh_integration.SteamDeckCompatibilityReport.String(): "Steam Deck Compat Report",
 }
 
 var OperatingSystemTitles = map[string]string{
