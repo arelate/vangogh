@@ -70,7 +70,10 @@ func Debug(id string) (compton.PageElement, error) {
 		return nil, err
 	}
 
-	rdx, err := kevlar.NewReduxReader(reduxDir, vangogh_integration.ReduxProperties()...)
+	reduxProperties := vangogh_integration.ReduxProperties()
+	slices.Sort(reduxProperties)
+
+	rdx, err := kevlar.NewReduxReader(reduxDir, reduxProperties...)
 	if err != nil {
 		return nil, err
 	}
@@ -86,7 +89,7 @@ func Debug(id string) (compton.PageElement, error) {
 	reduxStack.AddClass("redux-data")
 	reduxDs.Append(compton.FICenter(p, reduxStack))
 
-	for _, property := range vangogh_integration.ReduxProperties() {
+	for _, property := range reduxProperties {
 		if values, ok := rdx.GetAllValues(property, id); ok {
 
 			propertyHeading := compton.Fspan(p, property).FontSize(size.Normal)
