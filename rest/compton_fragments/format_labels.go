@@ -40,8 +40,6 @@ func formatLabel(id, property string, owned bool, rdx kevlar.ReadableRedux) comp
 		fallthrough
 	case vangogh_integration.PreOrderProperty:
 		fallthrough
-	case vangogh_integration.ComingSoonProperty:
-		fallthrough
 	case vangogh_integration.InDevelopmentProperty:
 		fallthrough
 	case vangogh_integration.IsFreeProperty:
@@ -50,6 +48,13 @@ func formatLabel(id, property string, owned bool, rdx kevlar.ReadableRedux) comp
 			break
 		}
 		fmtLabel.Title = ""
+	case vangogh_integration.ComingSoonProperty:
+		if owned {
+			fmtLabel.Title = ""
+		} else if fmtLabel.Title == "true" {
+			fmtLabel.Title = compton_data.LabelTitles[property]
+			break
+		}
 	case vangogh_integration.ProductTypeProperty:
 		if fmtLabel.Title == "GAME" {
 			fmtLabel.Title = ""
