@@ -1,0 +1,15 @@
+pre {
+    max-width: var(--s-maxw);
+    font-weight: var(--fw-n);
+    font-family: monospace;
+    white-space: pre-wrap;
+}
+
+.redux-data {
+    max-width: var(--s-maxw);
+    word-break: break-all;
+}
+
+ul {
+    list-style: none;
+}
