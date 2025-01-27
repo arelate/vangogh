@@ -55,6 +55,7 @@ func formatLabel(id, property string, owned bool, rdx kevlar.ReadableRedux) comp
 			fmtLabel.Title = compton_data.LabelTitles[property]
 			break
 		}
+		fmtLabel.Title = ""
 	case vangogh_integration.ProductTypeProperty:
 		if fmtLabel.Title == "GAME" {
 			fmtLabel.Title = ""
