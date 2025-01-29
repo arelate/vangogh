@@ -28,7 +28,6 @@ var ProductProperties = []string{
 	vangogh_integration.ThemesProperty,
 	vangogh_integration.HLTBGenresProperty,
 	vangogh_integration.StoreTagsProperty,
-	vangogh_integration.SteamTagsProperty,
 	vangogh_integration.FeaturesProperty,
 	vangogh_integration.GameModesProperty,
 	vangogh_integration.LanguageCodeProperty,

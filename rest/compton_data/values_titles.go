@@ -22,10 +22,9 @@ var TypesTitles = map[string]string{
 	vangogh_integration.PCGWPageId.String():                   "PCGamingWiki PageId",
 	vangogh_integration.SteamAppNews.String():                 "Steam App News",
 	vangogh_integration.SteamReviews.String():                 "Steam Reviews",
-	vangogh_integration.SteamStorePage.String():               "Steam Store Page",
 	vangogh_integration.ProtonDBSummary.String():              "ProtonDB Summary",
 	vangogh_integration.UserWishlistProducts.String():         "User Wishlist Products",
-	vangogh_integration.GamesDbProducts.String():              "Galaxy GamesDB Products",
+	vangogh_integration.GamesDbGogProducts.String():           "GamesDB GOG Products",
 	vangogh_integration.SteamDeckCompatibilityReport.String(): "Steam Deck Compat Report",
 }
 

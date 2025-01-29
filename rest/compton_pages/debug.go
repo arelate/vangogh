@@ -42,11 +42,6 @@ func Debug(id string) (compton.PageElement, error) {
 
 	for _, pt := range localProducts {
 
-		// ignore HTML source
-		if pt == vangogh_integration.SteamStorePage {
-			continue
-		}
-
 		if ok, err := kvs[pt].Has(id); err != nil {
 			return nil, err
 		} else if !ok {

@@ -9,7 +9,6 @@ var PropertyTitles = map[string]string{
 	vangogh_integration.DescriptionOverviewProperty:               "Description",
 	vangogh_integration.TagIdProperty:                             "Account Tags",
 	vangogh_integration.LocalTagsProperty:                         "Local Tags",
-	vangogh_integration.SteamTagsProperty:                         "Steam Tags",
 	vangogh_integration.OperatingSystemsProperty:                  "OS",
 	vangogh_integration.DevelopersProperty:                        "Developers",
 	vangogh_integration.PublishersProperty:                        "Publishers",

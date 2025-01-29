@@ -20,7 +20,7 @@ func All(
 		}
 		if updated {
 			// don't update gamesdb-products on catalog-products updates
-			if pt == vangogh_integration.GamesDbProducts {
+			if pt == vangogh_integration.GamesDbGogProducts {
 				modifiedCatalogGameProductsIds, err := gamesDbCatalogGames(modifiedAfter, false)
 				if err != nil {
 					return nil, err

@@ -18,7 +18,6 @@ var SearchProperties = []string{
 	vangogh_integration.ThemesProperty,
 	vangogh_integration.HLTBGenresProperty,
 	vangogh_integration.StoreTagsProperty,
-	vangogh_integration.SteamTagsProperty,
 	vangogh_integration.SteamDeckAppCompatibilityCategoryProperty,
 	vangogh_integration.ProtonDBTierProperty,
 	vangogh_integration.ProtonDBConfidenceProperty,
