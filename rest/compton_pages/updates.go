@@ -47,7 +47,7 @@ func Updates(sections []string,
 
 	/* Updates sections */
 
-	for _, section := range sections {
+	for ii, section := range sections {
 
 		ids := updates[section]
 
@@ -55,7 +55,7 @@ func Updates(sections []string,
 
 		sectionHeading := compton.DSTitle(p, sectionTitle)
 
-		sectionDetailsToggle := compton.DSLarge(p, sectionHeading, true).
+		dsSection := compton.DSLarge(p, sectionHeading, true).
 			BackgroundColor(color.Highlight).
 			SummaryMarginBlockEnd(size.Normal).
 			DetailsMarginBlockEnd(size.Unset).
@@ -66,13 +66,14 @@ func Updates(sections []string,
 			compton_data.ManyItemsSinglePageTemplate,
 			compton_data.ManyItemsManyPagesTemplate)
 
-		sectionDetailsToggle.AppendSummary(cf.TitleElement(p, 0, len(ids), updateTotals[section]))
+		dsSection.AppendSummary(cf.TitleElement(p, 0, len(ids), updateTotals[section]))
 
-		sectionDetailsToggle.SetId(sectionTitle)
-		pageStack.Append(sectionDetailsToggle)
+		dsSection.SetId(sectionTitle)
+		dsSection.SetTabIndex(ii + 1)
+		pageStack.Append(dsSection)
 
 		sectionStack := compton.FlexItems(p, direction.Column)
-		sectionDetailsToggle.Append(sectionStack)
+		dsSection.Append(sectionStack)
 
 		productsList := compton_fragments.ProductsList(p, ids, 0, len(ids), rdx)
 		sectionStack.Append(productsList)

@@ -103,7 +103,7 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.
 
 	/* Product details sections */
 
-	for _, section := range hasSections {
+	for ii, section := range hasSections {
 
 		sectionTitle := compton_data.SectionTitles[section]
 		summaryHeading := compton.DSTitle(p, sectionTitle)
@@ -114,6 +114,7 @@ func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.
 			SummaryMarginBlockEnd(size.Normal).
 			DetailsMarginBlockEnd(size.Unset)
 		detailsSummary.SetId(sectionTitle)
+		detailsSummary.SetTabIndex(ii + 1)
 		detailsSummary.AddClassSummary(colorBlendClass)
 
 		switch section {
