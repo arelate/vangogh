@@ -133,12 +133,24 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 		return nil
 	}
 
-	// clear local manual URLs
+	manualUrls := make([]string, 0, len(list))
+	for _, dl := range list {
+		manualUrls = append(manualUrls, dl.ManualUrl)
+	}
+
+	// clear local manual URLs prior to downloading when forcing updates
+	// to avoid using stale manualUrls if something goes wrong - we either get all updated values
+	// or some values stay unresolved - indicating problem with the last download operation
+	if gdd.forceUpdate {
+		if err := gdd.rdx.CutKeys(vangogh_integration.LocalManualUrlProperty, manualUrls...); err != nil {
+			return sda.EndWithError(err)
+		}
+	}
 
 	// reset manual-urls status to queued prior to downloading
 	manualUrlsQueued := make(map[string][]string)
-	for _, dl := range list {
-		manualUrlsQueued[dl.ManualUrl] = []string{vangogh_integration.ManualUrlQueued.String()}
+	for _, manualUrl := range manualUrls {
+		manualUrlsQueued[manualUrl] = []string{vangogh_integration.ManualUrlQueued.String()}
 	}
 	if err := gdd.rdx.BatchAddValues(vangogh_integration.ManualUrlStatusProperty, manualUrlsQueued); err != nil {
 		return sda.EndWithError(err)
@@ -215,12 +227,6 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 			} else if !os.IsNotExist(err) {
 				return dmua.EndWithError(err)
 			}
-		}
-	} else {
-		// when forcing update - remove existing manualUrl -> localFilename mapping to avoid
-		// using potentially stale values
-		if err := gdd.rdx.CutKeys(vangogh_integration.LocalManualUrlProperty, dl.ManualUrl); err != nil {
-			return dmua.EndWithError(err)
 		}
 	}
 
