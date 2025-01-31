@@ -42,11 +42,6 @@ func getDownloads(id string,
 		return nil, err
 	}
 
-	hasDetails, err := vrDetails.Has(id)
-	if err != nil {
-		return nil, err
-	}
-
 	// if we don't have product details for the id this can mean two things:
 	// - id represents a PACK that includes individual products (owned, not owned)
 	// in this case we can iterate over included products and combine downloads for each one of them
@@ -55,7 +50,7 @@ func getDownloads(id string,
 	// - id represents a product that the user doesn't own
 	// in this case we can remove basic product metadata (title, slug, etc) and no downloads
 
-	if !hasDetails {
+	if !vrDetails.Has(id) {
 		if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); ok {
 			switch pt {
 			case "PACK":

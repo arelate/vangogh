@@ -21,11 +21,7 @@ func findLocalOnlySplitProducts(pagedPt vangogh_integration.ProductType) (map[st
 		return nil, err
 	}
 
-	keys, err := vrPaged.Keys()
-	if err != nil {
-		return nil, err
-	}
-	for _, id := range keys {
+	for id := range vrPaged.Keys() {
 		productGetter, err := vrPaged.ProductsGetter(id)
 		if err != nil {
 			return idSet, err
@@ -43,11 +39,7 @@ func findLocalOnlySplitProducts(pagedPt vangogh_integration.ProductType) (map[st
 	}
 
 	splitIdSet := make(map[string]bool)
-	keys, err = vrSplit.Keys()
-	if err != nil {
-		return nil, err
-	}
-	for _, sid := range keys {
+	for sid := range vrSplit.Keys() {
 		splitIdSet[sid] = true
 	}
 

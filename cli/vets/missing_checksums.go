@@ -38,14 +38,9 @@ func MissingChecksums(
 		return mca.EndWithError(err)
 	}
 
-	keys, err := vrDetails.Keys()
-	if err != nil {
-		return mca.EndWithError(err)
-	}
+	mca.TotalInt(vrDetails.Len())
 
-	mca.TotalInt(len(keys))
-
-	for _, id := range keys {
+	for id := range vrDetails.Keys() {
 
 		// skip DLC and PACK product types as they don't have Details for their ids and would
 		// crash below attempting to read vrDetails for missing product. That's totally ok, since

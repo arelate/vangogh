@@ -42,15 +42,9 @@ func InvalidLocalProductData(fix bool) error {
 			continue
 		}
 
-		allProducts, err := vr.Keys()
-		if err != nil {
-			_ = pta.EndWithError(err)
-			continue
-		}
+		pta.TotalInt(vr.Len())
 
-		pta.TotalInt(len(allProducts))
-
-		for _, id := range allProducts {
+		for id := range vr.Keys() {
 			prd, err := vr.ReadValue(id)
 			if err != nil || prd == nil {
 				invalidProducts[pt] = append(invalidProducts[pt], id)

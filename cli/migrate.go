@@ -16,16 +16,28 @@ func Migrate() error {
 	ma := nod.Begin("migrating data...")
 	defer ma.End()
 
-	if err := Backup(); err != nil {
-		return ma.EndWithError(err)
+	productTypes := vangogh_integration.LocalProducts()
+	productTypes = append(productTypes, vangogh_integration.GOGPagedProducts()...)
+	productTypes = append(productTypes, vangogh_integration.GOGArrayProducts()...)
+	productTypes = append(productTypes, vangogh_integration.SteamArrayProducts()...)
+
+	for _, pt := range productTypes {
+		absPtDir, err := vangogh_integration.AbsLocalProductTypeDir(pt)
+		if err != nil {
+			return ma.EndWithError(err)
+		}
+
+		if err := kevlar.Migrate(absPtDir); err != nil {
+			return ma.EndWithError(err)
+		}
 	}
 
-	amd, err := pathways.GetAbsDir(vangogh_integration.Metadata)
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {
 		return ma.EndWithError(err)
 	}
 
-	if err := kevlar.MigrateAll(amd); err != nil {
+	if err := kevlar.Migrate(reduxDir); err != nil {
 		return ma.EndWithError(err)
 	}
 

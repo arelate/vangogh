@@ -88,12 +88,7 @@ func LanguageNames(langCodeSet map[string]bool) error {
 		return lna.EndWithError(err)
 	}
 
-	keys, err := vrApiProductsV2.Keys()
-	if err != nil {
-		return lna.EndWithError(err)
-	}
-
-	for _, id := range keys {
+	for id := range vrApiProductsV2.Keys() {
 		apv2, err := vrApiProductsV2.ApiProductV2(id)
 		if err != nil {
 			return lna.EndWithError(err)
@@ -142,12 +137,7 @@ func NativeLanguageNames(langCodeSet map[string]bool) error {
 	missingNativeLangs = maps.Clone(langCodeSet)
 	nativeNames := make(map[string][]string, 0)
 
-	keys, err := vrApiProductsV1.Keys()
-	if err != nil {
-		return nlna.EndWithError(err)
-	}
-
-	for _, id := range keys {
+	for id := range vrApiProductsV1.Keys() {
 		apv1, err := vrApiProductsV1.ApiProductV1(id)
 		if err != nil {
 			return nlna.EndWithError(err)

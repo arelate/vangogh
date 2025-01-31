@@ -32,12 +32,7 @@ func CheckOwnership(ids []string, rdx kevlar.ReadableRedux) ([]string, error) {
 			continue
 		}
 
-		has, err := vrLicenceProducts.Has(id)
-		if err != nil {
-			return nil, err
-		}
-
-		if has {
+		if vrLicenceProducts.Has(id) {
 			ownedSet[id] = true
 			continue
 		}
@@ -48,10 +43,7 @@ func CheckOwnership(ids []string, rdx kevlar.ReadableRedux) ([]string, error) {
 		ownAllIncludedGames := len(includesGames) > 0
 		for _, igId := range includesGames {
 			val, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, igId)
-			has, err := vrLicenceProducts.Has(igId)
-			if err != nil {
-				return nil, err
-			}
+			has := vrLicenceProducts.Has(igId)
 
 			ownAllIncludedGames = ownAllIncludedGames && (has || (ok && val == "true"))
 			if !ownAllIncludedGames {
@@ -80,11 +72,7 @@ func isIncludedByIsOwned(id string, rdx kevlar.ReadableRedux, vrLicenceProducts 
 		return false
 	} else {
 		for _, aid := range iibg {
-			has, err := vrLicenceProducts.Has(aid)
-			if err != nil {
-				return false
-			}
-			if has {
+			if vrLicenceProducts.Has(aid) {
 				return true
 			}
 			if isIncludedByIsOwned(aid, rdx, vrLicenceProducts) {

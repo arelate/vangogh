@@ -67,16 +67,8 @@ func missingDetail(
 		return nil, mda.EndWithError(err)
 	}
 
-	keys, err := kvMain.Keys()
-	if err != nil {
-		return nil, mda.EndWithError(err)
-	}
-	for _, id := range keys {
-		has, err := kvDetail.Has(id)
-		if err != nil {
-			return nil, mda.EndWithError(err)
-		}
-		if !has {
+	for id := range kvMain.Keys() {
+		if !kvDetail.Has(id) {
 			nod.Log("adding missing %s: #%s", detailPt, id)
 			missingIdSet[id] = true
 		}

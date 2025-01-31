@@ -5,6 +5,7 @@ import (
 	"github.com/arelate/vangogh/cli/reductions"
 	"github.com/boggydigital/nod"
 	"golang.org/x/exp/maps"
+	"iter"
 	"net/url"
 	"strings"
 )
@@ -64,30 +65,18 @@ func Reduce(since int64, properties []string, propertiesOnly bool) error {
 
 		missingPropRedux := make(map[string]map[string][]string, 0)
 
-		var modifiedIds []string
+		var modifiedIds iter.Seq[string]
 		if since > 0 {
-			modifiedIds, err = vr.CreatedOrUpdatedAfter(since)
-			if err != nil {
-				return ra.EndWithError(err)
-			}
+			modifiedIds = vr.CreatedOrUpdatedAfter(since)
 		} else {
-			modifiedIds, err = vr.Keys()
-			if err != nil {
-				return ra.EndWithError(err)
-			}
+			modifiedIds = vr.Keys()
 		}
 
-		if len(modifiedIds) == 0 || len(missingProps) == 0 {
-			continue
-		}
+		pta := nod.Begin(" %s...", pt)
 
-		pta := nod.NewProgress(" %s...", pt)
-		pta.TotalInt(len(modifiedIds))
-
-		for _, id := range modifiedIds {
+		for id := range modifiedIds {
 
 			if len(missingProps) == 0 {
-				pta.Increment()
 				continue
 			}
 
@@ -105,8 +94,6 @@ func Reduce(since int64, properties []string, propertiesOnly bool) error {
 					missingPropRedux[prop][id] = trValues
 				}
 			}
-
-			pta.Increment()
 		}
 
 		for prop, redux := range missingPropRedux {

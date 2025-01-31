@@ -102,16 +102,11 @@ func allNotValidIds(rdx kevlar.ReadableRedux) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	keys, err := vrDetails.Keys()
-	if err != nil {
-		return nil, err
-	}
 
-	ids := make([]string, 0, len(keys))
+	ids := make([]string, 0, vrDetails.Len())
+	avia.TotalInt(vrDetails.Len())
 
-	avia.TotalInt(len(keys))
-
-	for _, id := range keys {
+	for id := range vrDetails.Keys() {
 
 		if pvrs, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
 			if pvr := vangogh_integration.ParseValidationResult(pvrs); pvr == vangogh_integration.ValidatedSuccessfully || pvr == vangogh_integration.ValidatedWithGeneratedChecksum {

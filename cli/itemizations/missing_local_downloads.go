@@ -39,11 +39,9 @@ func MissingLocalDownloads(
 
 	//1
 	var allIds []string
-	keys, err := vrDetails.Keys()
-	if err != nil {
-		return nil, mlda.EndWithError(err)
+	for id := range vrDetails.Keys() {
+		allIds = append(allIds, id)
 	}
-	allIds = append(allIds, keys...)
 
 	mlda.TotalInt(len(allIds))
 

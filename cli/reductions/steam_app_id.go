@@ -10,7 +10,7 @@ import (
 
 func SteamAppId(since int64) error {
 
-	saia := nod.NewProgress(" %s...", vangogh_integration.SteamAppIdProperty)
+	saia := nod.Begin(" %s...", vangogh_integration.SteamAppIdProperty)
 	defer saia.End()
 
 	rdx, err := vangogh_integration.NewReduxWriter(
@@ -38,14 +38,7 @@ func SteamAppId(since int64) error {
 	appMap := GetAppListResponseToMap(sal)
 	gogSteamAppId := make(map[string][]string)
 
-	updated, err := vrCatalogProducts.CreatedOrUpdatedAfter(since)
-	if err != nil {
-		return saia.EndWithError(err)
-	}
-
-	saia.TotalInt(len(updated))
-
-	for _, id := range updated {
+	for id := range vrCatalogProducts.CreatedOrUpdatedAfter(since) {
 
 		// existing Steam App Id would indicate that we've already matched GOG Id to Steam App Id using
 		// data sources: HLTB, PCGW, GamesDB and don't need to use potentially lossy mapping by name
@@ -55,7 +48,6 @@ func SteamAppId(since int64) error {
 
 		title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
 		if !ok {
-			saia.Increment()
 			continue
 		}
 
@@ -64,8 +56,6 @@ func SteamAppId(since int64) error {
 		if appId, ok := appMap[title]; ok {
 			gogSteamAppId[id] = []string{strconv.Itoa(int(appId))}
 		}
-
-		saia.Increment()
 	}
 
 	if err := rdx.BatchReplaceValues(vangogh_integration.SteamAppIdProperty, gogSteamAppId); err != nil {

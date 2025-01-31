@@ -70,12 +70,9 @@ func Size(
 		if err != nil {
 			return sa.EndWithError(err)
 		}
-		keys, err := vrDetails.Keys()
-		if err != nil {
-			return sa.EndWithError(err)
+		for id := range vrDetails.Keys() {
+			ids = append(ids, id)
 		}
-
-		ids = append(ids, keys...)
 	}
 
 	if len(ids) == 0 {

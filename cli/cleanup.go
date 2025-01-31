@@ -62,11 +62,9 @@ func Cleanup(
 		if err != nil {
 			return err
 		}
-		keys, err := vrDetails.Keys()
-		if err != nil {
-			return ca.EndWithError(err)
+		for id := range vrDetails.Keys() {
+			ids = append(ids, id)
 		}
-		ids = append(ids, keys...)
 	}
 
 	cd := &cleanupDelegate{

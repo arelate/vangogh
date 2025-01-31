@@ -32,11 +32,7 @@ func Modified(
 		return nil, ma.EndWithError(err)
 	}
 
-	updatedAfter, err := kv.CreatedOrUpdatedAfter(since)
-	if err != nil {
-		return nil, ma.EndWithError(err)
-	}
-	for _, mid := range updatedAfter {
+	for mid := range kv.CreatedOrUpdatedAfter(since) {
 		modSet[mid] = true
 	}
 

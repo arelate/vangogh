@@ -42,9 +42,7 @@ func Debug(id string) (compton.PageElement, error) {
 
 	for _, pt := range localProducts {
 
-		if ok, err := kvs[pt].Has(id); err != nil {
-			return nil, err
-		} else if !ok {
+		if !kvs[pt].Has(id) {
 			continue
 		}
 

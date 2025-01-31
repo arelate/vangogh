@@ -24,21 +24,9 @@ func RequiredAndIncluded(createdAfter int64) ([]string, error) {
 		return nil, raia.EndWithError(err)
 	}
 
-	newLicences, err := vrLicences.CreatedAfter(createdAfter)
-	if err != nil {
-		return nil, raia.EndWithError(err)
-	}
-	if len(newLicences) > 0 {
-		nod.Log("new %s: %v", vangogh_integration.LicenceProducts, newLicences)
-	}
-
-	for _, id := range newLicences {
+	for id := range vrLicences.CreatedAfter(createdAfter) {
 		// it's not guaranteed that a license would have an existing api-products-v2
-		has, err := vrApv2.Has(id)
-		if err != nil {
-			return nil, raia.EndWithError(err)
-		}
-		if !has {
+		if !vrApv2.Has(id) {
 			continue
 		}
 		//like in itemizeMissingIncludesGames, we can't use redux here,
@@ -71,11 +59,7 @@ func RequiredAndIncluded(createdAfter int64) ([]string, error) {
 	//newLicSet contains all product types at the moment, we need to filter to GAME types only,
 	//since other types won't have account-products / details data available remotely
 	for id := range newLicSet {
-		has, err := vrApv2.Has(id)
-		if err != nil {
-			return nil, raia.EndWithError(err)
-		}
-		if !has {
+		if !vrApv2.Has(id) {
 			delete(newLicSet, id)
 			continue
 		}

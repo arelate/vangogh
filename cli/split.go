@@ -25,9 +25,10 @@ func split(sourcePt vangogh_integration.ProductType, timestamp int64) error {
 		return spa.EndWithError(err)
 	}
 
-	modifiedIds, err := vrPaged.CreatedOrUpdatedAfter(timestamp)
-	if err != nil {
-		return spa.EndWithError(err)
+	modifiedIds := make([]string, 0)
+
+	for id := range vrPaged.CreatedOrUpdatedAfter(timestamp) {
+		modifiedIds = append(modifiedIds, id)
 	}
 
 	if len(modifiedIds) == 0 {

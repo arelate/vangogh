@@ -72,12 +72,9 @@ func List(
 	}
 
 	if modifiedSince > 0 {
-		updatedAfter, err := vr.CreatedOrUpdatedAfter(modifiedSince)
-		if err != nil {
-			return la.EndWithError(err)
+		for id := range vr.CreatedOrUpdatedAfter(modifiedSince) {
+			ids = append(ids, id)
 		}
-
-		ids = append(ids, updatedAfter...)
 
 		if len(ids) == 0 {
 			la.EndWithResult("no new or updated %s (%s) since %v\n", pt, time.Unix(modifiedSince, 0).Format(time.Kitchen))
@@ -86,11 +83,9 @@ func List(
 
 	if len(ids) == 0 &&
 		modifiedSince == 0 {
-		keys, err := vr.Keys()
-		if err != nil {
-			return la.EndWithError(err)
+		for id := range vr.Keys() {
+			ids = append(ids, id)
 		}
-		ids = append(ids, keys...)
 	}
 
 	itp, err := vangogh_integration.PropertyListsFromIdSet(

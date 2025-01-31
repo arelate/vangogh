@@ -18,12 +18,7 @@ func AccountProductsUpdates() ([]string, error) {
 		return nil, apua.EndWithError(err)
 	}
 
-	keys, err := vrAccountPages.Keys()
-	if err != nil {
-		return nil, apua.EndWithError(err)
-	}
-
-	for _, page := range keys {
+	for page := range vrAccountPages.Keys() {
 		accountPage, err := vrAccountPages.AccountPage(page)
 		if err != nil {
 			return nil, apua.EndWithError(err)

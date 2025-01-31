@@ -23,16 +23,9 @@ func gamesDbCatalogGames(since int64, missing bool) ([]string, error) {
 		return nil, mcga.EndWithError(err)
 	}
 
-	modifiedCatalogProducts, err := vrCatalogProducts.CreatedOrUpdatedAfter(since)
-	if err != nil {
-		return nil, mcga.EndWithError(err)
-	}
+	modifiedCatalogProducts := vrCatalogProducts.CreatedOrUpdatedAfter(since)
 
-	if len(modifiedCatalogProducts) > 0 {
-		nod.Log("modified %s: %v", vangogh_integration.CatalogProducts, modifiedCatalogProducts)
-	}
-
-	for _, id := range modifiedCatalogProducts {
+	for id := range modifiedCatalogProducts {
 
 		// have to use product reader and not reductions here, since redux wouldn't be ready
 		// while we're still getting data. Attempting to minimize the impact by only querying
@@ -47,10 +40,8 @@ func gamesDbCatalogGames(since int64, missing bool) ([]string, error) {
 		}
 
 		if missing {
-			if has, err := vrGamesDbProducts.Has(id); err == nil && has {
+			if vrGamesDbProducts.Has(id) {
 				continue
-			} else if err != nil {
-				return nil, mcga.EndWithError(err)
 			}
 		}
 

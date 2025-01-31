@@ -3,6 +3,7 @@ package reductions
 import (
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
+	"iter"
 	"strconv"
 	"time"
 
@@ -11,7 +12,7 @@ import (
 
 func Orders(modifiedAfter int64) error {
 
-	oa := nod.NewProgress(" %s...", vangogh_integration.GOGOrderDateProperty)
+	oa := nod.Begin(" %s...", vangogh_integration.GOGOrderDateProperty)
 	defer oa.End()
 
 	rdx, err := vangogh_integration.NewReduxWriter(vangogh_integration.GOGOrderDateProperty)
@@ -26,22 +27,14 @@ func Orders(modifiedAfter int64) error {
 
 	gogOrderDates := make(map[string][]string, 0)
 
-	var modifiedOrders []string
+	var modifiedOrders iter.Seq[string]
 	if modifiedAfter > 0 {
-		modifiedOrders, err = vrOrders.CreatedOrUpdatedAfter(modifiedAfter)
-		if err != nil {
-			return oa.EndWithError(err)
-		}
+		modifiedOrders = vrOrders.CreatedOrUpdatedAfter(modifiedAfter)
 	} else {
-		modifiedOrders, err = vrOrders.Keys()
-		if err != nil {
-			return oa.EndWithError(err)
-		}
+		modifiedOrders = vrOrders.Keys()
 	}
 
-	oa.TotalInt(len(modifiedOrders))
-
-	for _, orderId := range modifiedOrders {
+	for orderId := range modifiedOrders {
 		order, err := vrOrders.Order(orderId)
 		if err != nil {
 			return oa.EndWithError(err)
@@ -62,8 +55,6 @@ func Orders(modifiedAfter int64) error {
 		for _, orderProduct := range order.Products {
 			gogOrderDates[orderProduct.Id] = []string{orderDate.Format("2006.01.02 15:04:05")}
 		}
-
-		oa.Increment()
 	}
 
 	if err := rdx.BatchReplaceValues(vangogh_integration.GOGOrderDateProperty, gogOrderDates); err != nil {

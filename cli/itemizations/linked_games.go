@@ -18,15 +18,9 @@ func linkedGames(modifiedAfter int64) ([]string, error) {
 		return nil, lga.EndWithError(err)
 	}
 
-	modifiedApv2, err := vrApv2.CreatedOrUpdatedAfter(modifiedAfter)
-	if err != nil {
-		return nil, lga.EndWithError(err)
-	}
-	if len(modifiedApv2) > 0 {
-		nod.Log("modified %s: %v", vangogh_integration.ApiProductsV2, modifiedApv2)
-	}
+	modifiedApv2 := vrApv2.CreatedOrUpdatedAfter(modifiedAfter)
 
-	for _, id := range modifiedApv2 {
+	for id := range modifiedApv2 {
 
 		// have to use product reader and not reductions here, since redux wouldn't be ready
 		// while we're still getting data. Attempting to minimize the impact by only querying
@@ -62,10 +56,8 @@ func linkedGames(modifiedAfter int64) ([]string, error) {
 		lgs = append(lgs, girbg...)
 
 		for _, lid := range lgs {
-			if has, err := vrApv2.Has(lid); err == nil && !has {
+			if !vrApv2.Has(lid) {
 				missingSet[lid] = true
-			} else if err != nil {
-				return nil, lga.EndWithError(err)
 			}
 		}
 	}

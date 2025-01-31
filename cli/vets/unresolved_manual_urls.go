@@ -32,14 +32,11 @@ func UnresolvedManualUrls(
 		return cumu.EndWithError(err)
 	}
 
-	allDetails, err := vrDetails.Keys()
-	if err != nil {
-		return cumu.EndWithError(err)
-	}
 	unresolvedIds := make(map[string]bool)
 
-	cumu.TotalInt(len(allDetails))
-	for _, id := range allDetails {
+	cumu.TotalInt(vrDetails.Len())
+
+	for id := range vrDetails.Keys() {
 
 		det, err := vrDetails.Details(id)
 		if err != nil {
