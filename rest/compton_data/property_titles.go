@@ -66,6 +66,7 @@ var PropertyTitles = map[string]string{
 	vangogh_integration.SupportUrlProperty: "Support",
 
 	GauginSteamCommunityUrlProperty: "Community",
+	GauginSteamGuidesUrlProperty:    "Guides",
 
 	GauginGOGDBUrlProperty:        "GOGDB",
 	GauginIGDBUrlProperty:         "IGDB",

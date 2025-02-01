@@ -64,6 +64,9 @@ func externalLinks(id string, rdx kevlar.ReadableRedux) map[string][]string {
 			links[compton_data.GauginSteamLinksProperty] =
 				append(links[compton_data.GauginSteamLinksProperty],
 					fmt.Sprintf("%s=%s", compton_data.GauginSteamCommunityUrlProperty, steam_integration.SteamCommunityUrl(uAppId)))
+			links[compton_data.GauginSteamLinksProperty] =
+				append(links[compton_data.GauginSteamLinksProperty],
+					fmt.Sprintf("%s=%s", compton_data.GauginSteamGuidesUrlProperty, steam_integration.SteamGuidesUrl(uAppId)))
 			links[compton_data.GauginOtherLinksProperty] =
 				append(links[compton_data.GauginOtherLinksProperty],
 					fmt.Sprintf("%s=%s", compton_data.GauginProtonDBUrlProperty, protondb_integration.ProtonDBUrl(uAppId)))

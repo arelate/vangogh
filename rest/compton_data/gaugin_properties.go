@@ -5,6 +5,7 @@ const (
 	GauginSteamLinksProperty        = "steam-links"
 	GauginOtherLinksProperty        = "other-links"
 	GauginSteamCommunityUrlProperty = "steam-community-url"
+	GauginSteamGuidesUrlProperty    = "steam-guides-url"
 
 	GauginPCGamingWikiUrlProperty = "pcgamingwiki-url"
 	GauginGOGDBUrlProperty        = "gogdb-url"
