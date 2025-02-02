@@ -3,7 +3,7 @@ package reductions
 import (
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
-	"iter"
+	"github.com/boggydigital/kevlar"
 	"strconv"
 	"time"
 
@@ -27,14 +27,18 @@ func Orders(modifiedAfter int64) error {
 
 	gogOrderDates := make(map[string][]string, 0)
 
-	var modifiedOrders iter.Seq[string]
+	var modifiedOrders []string
 	if modifiedAfter > 0 {
-		modifiedOrders = vrOrders.CreatedOrUpdatedAfter(modifiedAfter)
+		for id := range vrOrders.Since(modifiedAfter, kevlar.Create, kevlar.Update) {
+			modifiedOrders = append(modifiedOrders, id)
+		}
 	} else {
-		modifiedOrders = vrOrders.Keys()
+		for id := range vrOrders.Keys() {
+			modifiedOrders = append(modifiedOrders, id)
+		}
 	}
 
-	for orderId := range modifiedOrders {
+	for _, orderId := range modifiedOrders {
 		order, err := vrOrders.Order(orderId)
 		if err != nil {
 			return oa.EndWithError(err)

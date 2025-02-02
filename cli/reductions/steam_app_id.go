@@ -3,6 +3,7 @@ package reductions
 import (
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"strconv"
 	"strings"
@@ -38,7 +39,7 @@ func SteamAppId(since int64) error {
 	appMap := GetAppListResponseToMap(sal)
 	gogSteamAppId := make(map[string][]string)
 
-	for id := range vrCatalogProducts.CreatedOrUpdatedAfter(since) {
+	for id := range vrCatalogProducts.Since(since, kevlar.Create, kevlar.Update) {
 
 		// existing Steam App Id would indicate that we've already matched GOG Id to Steam App Id using
 		// data sources: HLTB, PCGW, GamesDB and don't need to use potentially lossy mapping by name

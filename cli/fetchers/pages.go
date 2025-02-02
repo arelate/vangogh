@@ -21,7 +21,7 @@ func NewIndexSetter(pt vangogh_integration.ProductType, ids []string) (dolo.Inde
 		return nil, err
 	}
 
-	valueSet, err := kevlar.NewKeyValues(localDir, kevlar.JsonExt)
+	valueSet, err := kevlar.New(localDir, kevlar.JsonExt)
 	if err != nil {
 		return nil, err
 	}

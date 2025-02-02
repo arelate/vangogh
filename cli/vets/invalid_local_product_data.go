@@ -50,7 +50,7 @@ func InvalidLocalProductData(fix bool) error {
 				invalidProducts[pt] = append(invalidProducts[pt], id)
 				dataProblems = true
 				if fix {
-					if _, err := vr.Cut(id); err != nil {
+					if err = vr.Cut(id); err != nil {
 						return err
 					}
 				}

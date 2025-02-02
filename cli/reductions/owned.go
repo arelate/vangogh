@@ -2,13 +2,13 @@ package reductions
 
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/redux"
 	"golang.org/x/exp/maps"
 	"slices"
 )
 
-func CheckOwnership(ids []string, rdx kevlar.ReadableRedux) ([]string, error) {
+func CheckOwnership(ids []string, rdx redux.Readable) ([]string, error) {
 
 	ownedSet := make(map[string]bool)
 
@@ -67,7 +67,7 @@ func CheckOwnership(ids []string, rdx kevlar.ReadableRedux) ([]string, error) {
 	return maps.Keys(ownedSet), nil
 }
 
-func isIncludedByIsOwned(id string, rdx kevlar.ReadableRedux, vrLicenceProducts *vangogh_integration.ProductReader) bool {
+func isIncludedByIsOwned(id string, rdx redux.Readable, vrLicenceProducts *vangogh_integration.ProductReader) bool {
 	if iibg, ok := rdx.GetAllValues(vangogh_integration.IsIncludedByGamesProperty, id); !ok {
 		return false
 	} else {

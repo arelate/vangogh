@@ -4,7 +4,7 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
-	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/redux"
 )
 
 var ValidationResultsColors = map[vangogh_integration.ValidationResult]color.Color{
@@ -18,7 +18,7 @@ var ValidationResultsColors = map[vangogh_integration.ValidationResult]color.Col
 	vangogh_integration.ValidatedChecksumMismatch:      color.Red,
 }
 
-func ProductValidationResult(r compton.Registrar, id string, rdx kevlar.ReadableRedux) compton.Element {
+func ProductValidationResult(r compton.Registrar, id string, rdx redux.Readable) compton.Element {
 	pvrc := color.Gray
 	if pvrs, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
 		pvr := vangogh_integration.ParseValidationResult(pvrs)

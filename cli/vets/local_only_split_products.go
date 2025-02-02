@@ -51,7 +51,7 @@ func LocalOnlySplitProducts(fix bool) error {
 					return fa.EndWithError(err)
 				}
 				for _, id := range maps.Keys(localOnlyProducts) {
-					if _, err := kv.Cut(id); err != nil {
+					if err = kv.Cut(id); err != nil {
 						return fa.EndWithError(err)
 					}
 				}

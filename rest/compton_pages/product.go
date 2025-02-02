@@ -12,7 +12,7 @@ import (
 	"github.com/boggydigital/compton/consts/input_types"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/issa"
-	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/redux"
 	"golang.org/x/exp/slices"
 	"strings"
 )
@@ -26,7 +26,7 @@ const (
 	theoWineUninstallTemplate = "theo wine-uninstall {id} -force"
 )
 
-func Product(id string, rdx kevlar.ReadableRedux, hasSections []string) compton.PageElement {
+func Product(id string, rdx redux.Readable, hasSections []string) compton.PageElement {
 
 	title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
 	if !ok {

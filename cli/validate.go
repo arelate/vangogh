@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/dolo"
-	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/redux"
 	"golang.org/x/exp/slices"
 	"net/url"
 	"os"
@@ -93,7 +93,7 @@ func Validate(
 	return CascadeValidation()
 }
 
-func allNotValidIds(rdx kevlar.ReadableRedux) ([]string, error) {
+func allNotValidIds(rdx redux.Readable) ([]string, error) {
 
 	avia := nod.NewProgress("itemizing all not valid products...")
 	defer avia.EndWithResult("done")
@@ -134,7 +134,7 @@ func maybeAddTopic(summary map[string][]string,
 
 func validateManualUrl(
 	dl *vangogh_integration.Download,
-	rdx kevlar.ReadableRedux) (vangogh_integration.ValidationResult, error) {
+	rdx redux.Readable) (vangogh_integration.ValidationResult, error) {
 
 	if err := rdx.MustHave(vangogh_integration.LocalManualUrlProperty); err != nil {
 		return vangogh_integration.ValidationError, err
@@ -225,7 +225,7 @@ func validateManualUrl(
 }
 
 type validateDelegate struct {
-	rdx     kevlar.WriteableRedux
+	rdx     redux.Writeable
 	results map[vangogh_integration.ValidationResult]int
 }
 

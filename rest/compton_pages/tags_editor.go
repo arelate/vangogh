@@ -13,7 +13,7 @@ import (
 	"github.com/boggydigital/compton/consts/input_types"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/issa"
-	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/redux"
 	"golang.org/x/exp/maps"
 	"net/http"
 	"slices"
@@ -26,7 +26,7 @@ func TagsEditor(
 	tagsProperty string,
 	allValues map[string]string,
 	selected map[string]any,
-	rdx kevlar.ReadableRedux) compton.PageElement {
+	rdx redux.Readable) compton.PageElement {
 
 	tagsPropertyTitle := compton_data.PropertyTitles[tagsProperty]
 

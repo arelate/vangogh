@@ -10,6 +10,7 @@ import (
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/pathways"
+	"github.com/boggydigital/redux"
 	"slices"
 )
 
@@ -26,7 +27,7 @@ func Debug(id string) (compton.PageElement, error) {
 		if absPtDir, err := vangogh_integration.AbsLocalProductTypeDir(pt); err != nil {
 			return nil, err
 		} else {
-			if kvs[pt], err = kevlar.NewKeyValues(absPtDir, kevlar.JsonExt); err != nil {
+			if kvs[pt], err = kevlar.New(absPtDir, kevlar.JsonExt); err != nil {
 				return nil, err
 			}
 		}
@@ -69,7 +70,7 @@ func Debug(id string) (compton.PageElement, error) {
 	reduxProperties := vangogh_integration.ReduxProperties()
 	slices.Sort(reduxProperties)
 
-	rdx, err := kevlar.NewReduxReader(reduxDir, reduxProperties...)
+	rdx, err := redux.NewReader(reduxDir, reduxProperties...)
 	if err != nil {
 		return nil, err
 	}

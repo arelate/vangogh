@@ -57,12 +57,12 @@ func missingDetail(
 		return nil, mda.EndWithError(err)
 	}
 
-	kvMain, err := kevlar.NewKeyValues(mainDestUrl, kevlar.JsonExt)
+	kvMain, err := kevlar.New(mainDestUrl, kevlar.JsonExt)
 	if err != nil {
 		return nil, mda.EndWithError(err)
 	}
 
-	kvDetail, err := kevlar.NewKeyValues(detailDestUrl, kevlar.JsonExt)
+	kvDetail, err := kevlar.New(detailDestUrl, kevlar.JsonExt)
 	if err != nil {
 		return nil, mda.EndWithError(err)
 	}

@@ -2,6 +2,7 @@ package itemizations
 
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"golang.org/x/exp/maps"
 )
@@ -24,7 +25,7 @@ func RequiredAndIncluded(createdAfter int64) ([]string, error) {
 		return nil, raia.EndWithError(err)
 	}
 
-	for id := range vrLicences.CreatedAfter(createdAfter) {
+	for id := range vrLicences.Since(createdAfter, kevlar.Create) {
 		// it's not guaranteed that a license would have an existing api-products-v2
 		if !vrApv2.Has(id) {
 			continue

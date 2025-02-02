@@ -3,8 +3,8 @@ package rest
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_pages"
-	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/redux"
 	"net/http"
 )
 
@@ -35,7 +35,7 @@ func getDownloads(id string,
 	operatingSystems []vangogh_integration.OperatingSystem,
 	langCodes []string,
 	noPatches bool,
-	rdx kevlar.ReadableRedux) (vangogh_integration.DownloadsList, error) {
+	rdx redux.Readable) (vangogh_integration.DownloadsList, error) {
 
 	vrDetails, err := vangogh_integration.NewProductReader(vangogh_integration.Details)
 	if err != nil {
@@ -89,7 +89,7 @@ func relatedGamesDownloads(id, property string,
 	operatingSystems []vangogh_integration.OperatingSystem,
 	langCodes []string,
 	noPatches bool,
-	rdx kevlar.ReadableRedux) (vangogh_integration.DownloadsList, error) {
+	rdx redux.Readable) (vangogh_integration.DownloadsList, error) {
 	if err := rdx.MustHave(property); err != nil {
 		return nil, err
 	}

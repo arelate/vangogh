@@ -2,6 +2,7 @@ package itemizations
 
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"golang.org/x/exp/maps"
 )
@@ -23,7 +24,7 @@ func gamesDbCatalogGames(since int64, missing bool) ([]string, error) {
 		return nil, mcga.EndWithError(err)
 	}
 
-	modifiedCatalogProducts := vrCatalogProducts.CreatedOrUpdatedAfter(since)
+	modifiedCatalogProducts := vrCatalogProducts.Since(since, kevlar.Create, kevlar.Update)
 
 	for id := range modifiedCatalogProducts {
 

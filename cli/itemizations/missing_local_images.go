@@ -2,18 +2,18 @@ package itemizations
 
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/redux"
 )
 
 type imageReduxGetter struct {
 	imageType vangogh_integration.ImageType
-	rdx       kevlar.ReadableRedux
+	rdx       redux.Readable
 }
 
 func NewImageReduxGetter(
 	it vangogh_integration.ImageType,
-	rdx kevlar.ReadableRedux) *imageReduxGetter {
+	rdx redux.Readable) *imageReduxGetter {
 	return &imageReduxGetter{
 		imageType: it,
 		rdx:       rdx,
@@ -26,7 +26,7 @@ func (ieg *imageReduxGetter) GetImageIds(id string) ([]string, bool) {
 
 func MissingLocalImages(
 	it vangogh_integration.ImageType,
-	rdx kevlar.ReadableRedux,
+	rdx redux.Readable,
 	localImageIds map[string]bool) (map[string]bool, error) {
 
 	all := rdx.Keys(vangogh_integration.PropertyFromImageType(it))

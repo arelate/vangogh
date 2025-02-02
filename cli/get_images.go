@@ -5,8 +5,8 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/itemizations"
 	"github.com/boggydigital/dolo"
-	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/redux"
 	"net/url"
 	"path/filepath"
 	"strings"
@@ -154,7 +154,7 @@ func GetImages(
 	return nil
 }
 
-func imageTypesReduxAssets(otherProperties []string, its []vangogh_integration.ImageType) (kevlar.WriteableRedux, error) {
+func imageTypesReduxAssets(otherProperties []string, its []vangogh_integration.ImageType) (redux.Writeable, error) {
 	for _, it := range its {
 		if !vangogh_integration.IsValidImageType(it) {
 			return nil, fmt.Errorf("invalid image type %s", it)

@@ -3,12 +3,12 @@ package compton_fragments
 import (
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
-	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/redux"
 )
 
 const dehydratedCount = 3
 
-func ProductsList(r compton.Registrar, ids []string, from, to int, rdx kevlar.ReadableRedux) compton.Element {
+func ProductsList(r compton.Registrar, ids []string, from, to int, rdx redux.Readable) compton.Element {
 	productCards := compton.GridItems(r).JustifyContent(align.Center).GridTemplateRowsPixels(144)
 
 	for ii := from; ii < to; ii++ {

@@ -7,12 +7,12 @@ import (
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/issa"
-	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/redux"
 	"golang.org/x/exp/slices"
 	"strings"
 )
 
-func SummarizeProductProperties(id string, rdx kevlar.ReadableRedux) ([]string, map[string][]string) {
+func SummarizeProductProperties(id string, rdx redux.Readable) ([]string, map[string][]string) {
 	properties := make([]string, 0)
 	values := make(map[string][]string)
 
@@ -34,7 +34,7 @@ func SummarizeProductProperties(id string, rdx kevlar.ReadableRedux) ([]string, 
 	return properties, values
 }
 
-func ProductCard(r compton.Registrar, id string, hydrated bool, rdx kevlar.ReadableRedux) compton.Element {
+func ProductCard(r compton.Registrar, id string, hydrated bool, rdx redux.Readable) compton.Element {
 
 	pc := compton.Card(r, id)
 

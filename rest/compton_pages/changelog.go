@@ -8,10 +8,10 @@ import (
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
-	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/redux"
 )
 
-func Changelog(id string, rdx kevlar.ReadableRedux) compton.PageElement {
+func Changelog(id string, rdx redux.Readable) compton.PageElement {
 
 	// empty changelog is handled below, no need to check for existence here
 	changelog, _ := rdx.GetAllValues(vangogh_integration.ChangelogProperty, id)

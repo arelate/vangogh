@@ -4,10 +4,10 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/issa"
-	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/redux"
 )
 
-func ProductPoster(r compton.Registrar, id string, rdx kevlar.ReadableRedux) compton.Element {
+func ProductPoster(r compton.Registrar, id string, rdx redux.Readable) compton.Element {
 	if imgSrc, ok := rdx.GetLastVal(vangogh_integration.ImageProperty, id); ok {
 		var poster compton.Element
 		relImgSrc := "/image?id=" + imgSrc

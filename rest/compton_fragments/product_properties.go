@@ -9,7 +9,7 @@ import (
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/size"
-	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/redux"
 	"golang.org/x/exp/maps"
 	"slices"
 	"strconv"
@@ -22,7 +22,7 @@ type formattedProperty struct {
 	actions map[string]string
 }
 
-func ProductProperties(r compton.Registrar, id string, rdx kevlar.ReadableRedux) compton.Element {
+func ProductProperties(r compton.Registrar, id string, rdx redux.Readable) compton.Element {
 	grid := compton.GridItems(r).JustifyContent(align.Center)
 
 	for _, property := range compton_data.ProductProperties {
@@ -55,7 +55,7 @@ func noHref() string {
 	return ""
 }
 
-func formatProperty(id, property string, rdx kevlar.ReadableRedux) formattedProperty {
+func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 
 	fmtProperty := formattedProperty{
 		actions: make(map[string]string),
@@ -192,7 +192,7 @@ func formatProperty(id, property string, rdx kevlar.ReadableRedux) formattedProp
 	return fmtProperty
 }
 
-func operatingSystemsTitleValues(r compton.Registrar, id string, rdx kevlar.ReadableRedux) compton.Element {
+func operatingSystemsTitleValues(r compton.Registrar, id string, rdx redux.Readable) compton.Element {
 	property := vangogh_integration.OperatingSystemsProperty
 	propertyTitle := compton_data.PropertyTitles[property]
 	tv := compton.TitleValues(r, propertyTitle)

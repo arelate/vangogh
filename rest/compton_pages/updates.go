@@ -9,7 +9,7 @@ import (
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/input_types"
 	"github.com/boggydigital/compton/consts/size"
-	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/redux"
 )
 
 func Updates(sections []string,
@@ -17,7 +17,7 @@ func Updates(sections []string,
 	sectionTitles map[string]string,
 	updateTotals map[string]int,
 	updated string,
-	rdx kevlar.ReadableRedux) compton.PageElement {
+	rdx redux.Readable) compton.PageElement {
 
 	current := compton_data.AppNavUpdates
 	p, pageStack := compton_fragments.AppPage(current)

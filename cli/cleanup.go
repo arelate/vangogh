@@ -4,9 +4,9 @@ import (
 	"errors"
 	"fmt"
 	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
+	"github.com/boggydigital/redux"
 	"math"
 	"net/url"
 	"os"
@@ -101,7 +101,7 @@ func Cleanup(
 }
 
 type cleanupDelegate struct {
-	rdx        kevlar.ReadableRedux
+	rdx        redux.Readable
 	all        bool
 	test       bool
 	delete     bool

@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"golang.org/x/exp/maps"
 	"net/url"
@@ -72,7 +73,7 @@ func List(
 	}
 
 	if modifiedSince > 0 {
-		for id := range vr.CreatedOrUpdatedAfter(modifiedSince) {
+		for id := range vr.Since(modifiedSince, kevlar.Create, kevlar.Update) {
 			ids = append(ids, id)
 		}
 

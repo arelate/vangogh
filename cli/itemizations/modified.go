@@ -27,12 +27,12 @@ func Modified(
 		return nil, ma.EndWithError(err)
 	}
 
-	kv, err := kevlar.NewKeyValues(destUrl, kevlar.JsonExt)
+	kv, err := kevlar.New(destUrl, kevlar.JsonExt)
 	if err != nil {
 		return nil, ma.EndWithError(err)
 	}
 
-	for mid := range kv.CreatedOrUpdatedAfter(since) {
+	for mid := range kv.Since(since, kevlar.Create, kevlar.Update) {
 		modSet[mid] = true
 	}
 

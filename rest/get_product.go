@@ -4,8 +4,8 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_pages"
-	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/redux"
 	"net/http"
 )
 
@@ -48,7 +48,7 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.URL.Query().Has(vangogh_integration.SlugProperty) {
-		if ids := rdx.Match(r.URL.Query(), kevlar.FullMatch); len(ids) > 0 {
+		if ids := rdx.Match(r.URL.Query(), redux.FullMatch); len(ids) > 0 {
 			for _, id := range ids {
 				http.Redirect(w, r, "/product?id="+id, http.StatusPermanentRedirect)
 				return

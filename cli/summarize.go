@@ -3,7 +3,7 @@ package cli
 import (
 	"fmt"
 	"github.com/boggydigital/atomus"
-	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/redux"
 	"net/url"
 	"os"
 	"sort"
@@ -97,7 +97,7 @@ func Summarize(since int64) error {
 	return nil
 }
 
-func releasedToday(rdx kevlar.ReadableRedux) ([]string, error) {
+func releasedToday(rdx redux.Readable) ([]string, error) {
 
 	if err := rdx.MustHave(vangogh_integration.GOGReleaseDateProperty); err != nil {
 		return nil, err
@@ -117,7 +117,7 @@ func releasedToday(rdx kevlar.ReadableRedux) ([]string, error) {
 	return rdx.Sort(ids, vangogh_integration.DefaultDesc, vangogh_integration.DefaultSort)
 }
 
-func publishAtom(rdx kevlar.ReadableRedux, summary map[string][]string) error {
+func publishAtom(rdx redux.Readable, summary map[string][]string) error {
 
 	afp, err := vangogh_integration.AbsAtomFeedPath()
 	if err != nil {
@@ -135,7 +135,7 @@ func publishAtom(rdx kevlar.ReadableRedux, summary map[string][]string) error {
 	return af.Encode(atomFile)
 }
 
-func NewAtomFeedContent(rdx kevlar.ReadableRedux, summary map[string][]string) string {
+func NewAtomFeedContent(rdx redux.Readable, summary map[string][]string) string {
 	sb := strings.Builder{}
 
 	sections := maps.Keys(summary)

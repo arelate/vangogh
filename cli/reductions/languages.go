@@ -2,12 +2,12 @@ package reductions
 
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/redux"
 	"golang.org/x/exp/maps"
 )
 
-func GetLanguageCodes(rdx kevlar.ReadableRedux) (map[string]bool, error) {
+func GetLanguageCodes(rdx redux.Readable) (map[string]bool, error) {
 
 	lca := nod.Begin(" %s...", vangogh_integration.LanguageCodeProperty)
 	defer lca.EndWithResult("done")
@@ -34,7 +34,7 @@ func GetLanguageCodes(rdx kevlar.ReadableRedux) (map[string]bool, error) {
 
 func getMissingLanguageNames(
 	langCodeSet map[string]bool,
-	rdx kevlar.ReadableRedux,
+	rdx redux.Readable,
 	property string) (map[string]bool, error) {
 
 	missingLangs := maps.Clone(langCodeSet)

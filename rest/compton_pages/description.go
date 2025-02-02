@@ -7,13 +7,13 @@ import (
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
-	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/redux"
 	"net/url"
 	"path"
 	"strings"
 )
 
-func Description(id string, rdx kevlar.ReadableRedux) compton.PageElement {
+func Description(id string, rdx redux.Readable) compton.PageElement {
 	desc := ""
 	if dop, ok := rdx.GetLastVal(vangogh_integration.DescriptionOverviewProperty, id); ok {
 		desc = dop

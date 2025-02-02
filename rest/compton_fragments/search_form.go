@@ -9,14 +9,14 @@ import (
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/input_types"
 	"github.com/boggydigital/compton/consts/size"
-	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/redux"
 	"golang.org/x/exp/maps"
 	"golang.org/x/net/html/atom"
 	"slices"
 	"strings"
 )
 
-func SearchForm(r compton.Registrar, query map[string][]string, searchQuery *compton.FrowElement, rdx kevlar.ReadableRedux) compton.Element {
+func SearchForm(r compton.Registrar, query map[string][]string, searchQuery *compton.FrowElement, rdx redux.Readable) compton.Element {
 
 	form := compton.Form("/search", "GET")
 	formStack := compton.FlexItems(r, direction.Column)
@@ -111,7 +111,7 @@ func languagesDatalist() map[string]string {
 	return dl
 }
 
-func tagsDatalist(rdx kevlar.ReadableRedux) map[string]string {
+func tagsDatalist(rdx redux.Readable) map[string]string {
 	dl := make(map[string]string)
 	for _, tagId := range rdx.Keys(vangogh_integration.TagNameProperty) {
 		if tagName, ok := rdx.GetLastVal(vangogh_integration.TagNameProperty, tagId); ok {
@@ -121,7 +121,7 @@ func tagsDatalist(rdx kevlar.ReadableRedux) map[string]string {
 	return dl
 }
 
-func propertyValuesDatalist(property string, rdx kevlar.ReadableRedux) map[string]string {
+func propertyValuesDatalist(property string, rdx redux.Readable) map[string]string {
 	dl := make(map[string]string)
 	for _, id := range rdx.Keys(property) {
 		if vals, ok := rdx.GetAllValues(property, id); ok {
@@ -133,7 +133,7 @@ func propertyValuesDatalist(property string, rdx kevlar.ReadableRedux) map[strin
 	return dl
 }
 
-func searchInputs(r compton.Registrar, query map[string][]string, container compton.Element, rdx kevlar.ReadableRedux) {
+func searchInputs(r compton.Registrar, query map[string][]string, container compton.Element, rdx redux.Readable) {
 	for ii, property := range compton_data.SearchProperties {
 		title := compton_data.PropertyTitles[property]
 		value := strings.Join(query[property], ", ")

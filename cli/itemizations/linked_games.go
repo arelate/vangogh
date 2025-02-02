@@ -2,6 +2,7 @@ package itemizations
 
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"golang.org/x/exp/maps"
 )
@@ -18,7 +19,7 @@ func linkedGames(modifiedAfter int64) ([]string, error) {
 		return nil, lga.EndWithError(err)
 	}
 
-	modifiedApv2 := vrApv2.CreatedOrUpdatedAfter(modifiedAfter)
+	modifiedApv2 := vrApv2.Since(modifiedAfter, kevlar.Create, kevlar.Update)
 
 	for id := range modifiedApv2 {
 

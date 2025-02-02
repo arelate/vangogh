@@ -5,10 +5,10 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/boggydigital/compton"
-	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/redux"
 )
 
-func FormatLabels(id string, rdx kevlar.ReadableRedux) []compton.FormattedLabel {
+func FormatLabels(id string, rdx redux.Readable) []compton.FormattedLabel {
 	owned := false
 	if op, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok {
 		owned = op == vangogh_integration.TrueValue
@@ -23,7 +23,7 @@ func FormatLabels(id string, rdx kevlar.ReadableRedux) []compton.FormattedLabel 
 	return fmtLabels
 }
 
-func formatLabel(id, property string, owned bool, rdx kevlar.ReadableRedux) compton.FormattedLabel {
+func formatLabel(id, property string, owned bool, rdx redux.Readable) compton.FormattedLabel {
 
 	fmtLabel := compton.FormattedLabel{
 		Property: property,

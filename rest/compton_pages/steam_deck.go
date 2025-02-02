@@ -10,7 +10,7 @@ import (
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
-	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/redux"
 )
 
 var messageByCategory = map[string]string{
@@ -34,7 +34,7 @@ var displayTypeColors = map[string]color.Color{
 	"Unknown":     color.Gray,
 }
 
-func SteamDeck(id string, dacr *steam_integration.DeckAppCompatibilityReport, rdx kevlar.ReadableRedux) compton.PageElement {
+func SteamDeck(id string, dacr *steam_integration.DeckAppCompatibilityReport, rdx redux.Readable) compton.PageElement {
 	title, _ := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
 
 	s := compton_fragments.ProductSection(compton_data.SteamDeckSection)

@@ -18,7 +18,7 @@ func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageEleme
 		return nil, err
 	}
 
-	kv, err := kevlar.NewKeyValues(absPtDir, kevlar.JsonExt)
+	kv, err := kevlar.New(absPtDir, kevlar.JsonExt)
 	if err != nil {
 		return nil, err
 	}

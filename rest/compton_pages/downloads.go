@@ -11,7 +11,7 @@ import (
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/font_weight"
 	"github.com/boggydigital/compton/consts/size"
-	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/redux"
 	"slices"
 	"strconv"
 	"strings"
@@ -51,7 +51,7 @@ var validationResultsFontWeights = map[vangogh_integration.ValidationResult]font
 // Downloads will present available installers, DLCs in the following hierarchy:
 // - Operating system heading - Installers and DLCs (separately)
 // - title_values list of downloads by version
-func Downloads(id string, dls vangogh_integration.DownloadsList, rdx kevlar.ReadableRedux) compton.PageElement {
+func Downloads(id string, dls vangogh_integration.DownloadsList, rdx redux.Readable) compton.PageElement {
 
 	s := compton_fragments.ProductSection(compton_data.InstallersSection)
 
@@ -110,7 +110,7 @@ func Downloads(id string, dls vangogh_integration.DownloadsList, rdx kevlar.Read
 	return s
 }
 
-func validationResults(r compton.Registrar, id string, dls vangogh_integration.DownloadsList, rdx kevlar.ReadableRedux) compton.Element {
+func validationResults(r compton.Registrar, id string, dls vangogh_integration.DownloadsList, rdx redux.Readable) compton.Element {
 
 	hasInstallerDlcs := false
 	for _, dl := range dls {
@@ -203,7 +203,7 @@ func downloadLinks(r compton.Registrar,
 	productTitle string,
 	dv *DownloadVariant,
 	dls vangogh_integration.DownloadsList,
-	rdx kevlar.ReadableRedux) compton.Element {
+	rdx redux.Readable) compton.Element {
 
 	downloads := filterDownloads(os, dls, productTitle, dv)
 
@@ -234,7 +234,7 @@ func downloadLinks(r compton.Registrar,
 	return dsDownloadLinks
 }
 
-func downloadLink(r compton.Registrar, productTitle string, dl vangogh_integration.Download, rdx kevlar.ReadableRedux) compton.Element {
+func downloadLink(r compton.Registrar, productTitle string, dl vangogh_integration.Download, rdx redux.Readable) compton.Element {
 
 	link := compton.A("/files?manual-url=" + dl.ManualUrl)
 	link.AddClass("download", dl.Type.String())

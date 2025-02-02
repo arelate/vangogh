@@ -27,7 +27,7 @@ func split(sourcePt vangogh_integration.ProductType, timestamp int64) error {
 
 	modifiedIds := make([]string, 0)
 
-	for id := range vrPaged.CreatedOrUpdatedAfter(timestamp) {
+	for id := range vrPaged.Since(timestamp, kevlar.Create, kevlar.Update) {
 		modifiedIds = append(modifiedIds, id)
 	}
 
@@ -69,7 +69,7 @@ func split(sourcePt vangogh_integration.ProductType, timestamp int64) error {
 			return spa.EndWithError(err)
 		}
 
-		kvDetail, err := kevlar.NewKeyValues(detailDstUrl, kevlar.JsonExt)
+		kvDetail, err := kevlar.New(detailDstUrl, kevlar.JsonExt)
 		if err != nil {
 			return spa.EndWithError(err)
 		}

@@ -2,14 +2,14 @@ package itemizations
 
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/redux"
 	"os"
 	"path/filepath"
 )
 
 func MissingLocalDownloads(
-	rdx kevlar.ReadableRedux,
+	rdx redux.Readable,
 	operatingSystems []vangogh_integration.OperatingSystem,
 	downloadTypes []vangogh_integration.DownloadType,
 	langCodes []string,
@@ -64,7 +64,7 @@ func MissingLocalDownloads(
 }
 
 type missingDownloadsDelegate struct {
-	rdx        kevlar.ReadableRedux
+	rdx        redux.Readable
 	missingIds []string
 }
 

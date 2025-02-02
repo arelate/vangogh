@@ -8,12 +8,12 @@ import (
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
-	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/redux"
 )
 
 const eagerLoadingScreenshots = 3
 
-func Screenshots(id string, rdx kevlar.ReadableRedux) compton.PageElement {
+func Screenshots(id string, rdx redux.Readable) compton.PageElement {
 
 	screenshots, _ := rdx.GetAllValues(vangogh_integration.ScreenshotsProperty, id)
 

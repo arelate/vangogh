@@ -3,8 +3,8 @@ package rest
 import (
 	"crypto/sha256"
 	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/middleware"
+	"github.com/boggydigital/redux"
 )
 
 const (
@@ -19,7 +19,7 @@ var (
 	langCodes        []string
 	noPatches        bool
 
-	rdx kevlar.ReadableRedux
+	rdx redux.Readable
 )
 
 func SetDefaultDownloadsFilters(

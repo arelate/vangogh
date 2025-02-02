@@ -7,7 +7,7 @@ import (
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/size"
-	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/redux"
 	"golang.org/x/exp/maps"
 	"slices"
 	"strconv"
@@ -15,7 +15,7 @@ import (
 
 const filterSearchTitle = "Filter & search"
 
-func Search(query map[string][]string, ids []string, from, to int, rdx kevlar.ReadableRedux) compton.PageElement {
+func Search(query map[string][]string, ids []string, from, to int, rdx redux.Readable) compton.PageElement {
 
 	current := compton_data.AppNavSearch
 	p, pageStack := compton_fragments.AppPage(current)

@@ -7,9 +7,9 @@ import (
 	"github.com/arelate/vangogh/cli/itemizations"
 	"github.com/boggydigital/coost"
 	"github.com/boggydigital/dolo"
-	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
+	"github.com/boggydigital/redux"
 	"net/http"
 	"net/url"
 	"os"
@@ -120,7 +120,7 @@ func GetDownloads(
 }
 
 type getDownloadsDelegate struct {
-	rdx         kevlar.WriteableRedux
+	rdx         redux.Writeable
 	forceUpdate bool
 }
 

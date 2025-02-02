@@ -2,8 +2,8 @@ package cli
 
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/redux"
 	"net/url"
 )
 
@@ -54,7 +54,7 @@ func CascadeValidation() error {
 	return nil
 }
 
-func filterOwnedRelated(rdx kevlar.ReadableRedux, p, id string) []string {
+func filterOwnedRelated(rdx redux.Readable, p, id string) []string {
 	ownedRelated := make([]string, 0)
 	if related, ok := rdx.GetAllValues(p, id); ok {
 		for _, rid := range related {

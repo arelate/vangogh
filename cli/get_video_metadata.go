@@ -2,8 +2,8 @@ package cli
 
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/redux"
 	"github.com/boggydigital/yet_urls/youtube_urls"
 	"net/http"
 	"net/url"
@@ -107,7 +107,7 @@ func GetVideoMetadata(ids []string, missing, force bool) error {
 	return nil
 }
 
-func videoReduxAssets() (kevlar.WriteableRedux, error) {
+func videoReduxAssets() (redux.Writeable, error) {
 
 	propSet := make(map[string]bool)
 	propSet[vangogh_integration.TitleProperty] = true

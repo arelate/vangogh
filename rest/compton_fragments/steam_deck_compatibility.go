@@ -6,10 +6,10 @@ import (
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/font_weight"
 	"github.com/boggydigital/compton/consts/size"
-	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/redux"
 )
 
-func SteamDeckCompatibility(r compton.Registrar, id string, rdx kevlar.ReadableRedux) compton.Element {
+func SteamDeckCompatibility(r compton.Registrar, id string, rdx redux.Readable) compton.Element {
 	if sdccp, ok := rdx.GetLastVal(vangogh_integration.SteamDeckAppCompatibilityCategoryProperty, id); ok {
 		sdc := compton.Fspan(r, sdccp).
 			FontSize(size.Small).

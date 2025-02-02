@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/redux"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -46,7 +46,7 @@ func GetMetadata(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func getProductMetadata(id string, dls vangogh_integration.DownloadsList, rdx kevlar.ReadableRedux) (*vangogh_integration.TheoMetadata, error) {
+func getProductMetadata(id string, dls vangogh_integration.DownloadsList, rdx redux.Readable) (*vangogh_integration.TheoMetadata, error) {
 	tm := &vangogh_integration.TheoMetadata{Id: id}
 	if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
 		tm.Title = title

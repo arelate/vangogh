@@ -20,12 +20,12 @@ import (
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/boggydigital/compton"
-	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/redux"
 	"net/url"
 	"strconv"
 )
 
-func ExternalLinks(id string, rdx kevlar.ReadableRedux) compton.PageElement {
+func ExternalLinks(id string, rdx redux.Readable) compton.PageElement {
 	s := compton_fragments.ProductSection(compton_data.ExternalLinksSection)
 
 	if links := compton_fragments.ProductExternalLinks(s, externalLinks(id, rdx)); links != nil {
@@ -44,7 +44,7 @@ func gogLink(p string) string {
 	return u.String()
 }
 
-func externalLinks(id string, rdx kevlar.ReadableRedux) map[string][]string {
+func externalLinks(id string, rdx redux.Readable) map[string][]string {
 
 	links := make(map[string][]string)
 

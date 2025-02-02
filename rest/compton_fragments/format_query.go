@@ -3,11 +3,11 @@ package compton_fragments
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
-	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/redux"
 	"slices"
 )
 
-func FormatQuery(q map[string][]string, rdx kevlar.ReadableRedux) map[string][]string {
+func FormatQuery(q map[string][]string, rdx redux.Readable) map[string][]string {
 
 	fq := make(map[string][]string)
 

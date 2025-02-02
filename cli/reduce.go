@@ -3,9 +3,9 @@ package cli
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/reductions"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"golang.org/x/exp/maps"
-	"iter"
 	"net/url"
 	"strings"
 )
@@ -65,16 +65,20 @@ func Reduce(since int64, properties []string, propertiesOnly bool) error {
 
 		missingPropRedux := make(map[string]map[string][]string, 0)
 
-		var modifiedIds iter.Seq[string]
+		var modifiedIds []string
 		if since > 0 {
-			modifiedIds = vr.CreatedOrUpdatedAfter(since)
+			for id := range vr.Since(since, kevlar.Create, kevlar.Update) {
+				modifiedIds = append(modifiedIds, id)
+			}
 		} else {
-			modifiedIds = vr.Keys()
+			for id := range vr.Keys() {
+				modifiedIds = append(modifiedIds, id)
+			}
 		}
 
 		pta := nod.Begin(" %s...", pt)
 
-		for id := range modifiedIds {
+		for _, id := range modifiedIds {
 
 			if len(missingProps) == 0 {
 				continue
