@@ -9,7 +9,7 @@ import (
 const dehydratedCount = 3
 
 func ProductsList(r compton.Registrar, ids []string, from, to int, rdx redux.Readable) compton.Element {
-	productCards := compton.GridItems(r).JustifyContent(align.Center).GridTemplateRowsPixels(144)
+	productCards := compton.GridItems(r).JustifyContent(align.Center).GridTemplateRowsPixels(146.5)
 
 	for ii := from; ii < to; ii++ {
 		id := ids[ii]
