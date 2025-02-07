@@ -1,7 +1,6 @@
 module github.com/arelate/vangogh
 
 go 1.23.5
-
 require (
 	github.com/arelate/southern_light v0.1.93
 	github.com/boggydigital/atomus v0.1.10
@@ -11,7 +10,7 @@ require (
 	github.com/boggydigital/coost v0.3.9
 	github.com/boggydigital/dolo v0.2.20
 	github.com/boggydigital/issa v0.1.22
-	github.com/boggydigital/kevlar v0.6.5
+	github.com/boggydigital/kevlar v0.6.6
 	github.com/boggydigital/kevlar_dolo v0.1.10
 	github.com/boggydigital/middleware v0.1.16
 	github.com/boggydigital/nod v0.1.21
@@ -24,7 +23,7 @@ require (
 )
 
 require (
-	github.com/boggydigital/busan v0.1.0 // indirect
+	github.com/boggydigital/busan v0.1.1 // indirect
 	github.com/boggydigital/match_node v0.1.18 // indirect
 	golang.org/x/image v0.24.0 // indirect
 )
