@@ -1,7 +1,6 @@
 module github.com/arelate/vangogh
 
 go 1.23.5
-
 require (
 	github.com/arelate/southern_light v0.1.93
 	github.com/boggydigital/atomus v0.1.10
@@ -15,7 +14,7 @@ require (
 	github.com/boggydigital/kevlar_dolo v0.1.10
 	github.com/boggydigital/middleware v0.1.16
 	github.com/boggydigital/nod v0.1.21
-	github.com/boggydigital/pathways v0.1.14
+	github.com/boggydigital/pathways v0.1.15
 	github.com/boggydigital/redux v0.1.0
 	github.com/boggydigital/wits v0.2.3
 	github.com/boggydigital/yet_urls v0.1.55
