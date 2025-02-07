@@ -1,11 +1,10 @@
 package rest
 
 import (
-	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/boggydigital/middleware"
 	"github.com/boggydigital/nod"
 	"net/http"
-	"net/url"
 )
 
 var (
@@ -61,47 +60,11 @@ func HandleFuncs() {
 		"GET /": Redirect("/updates", http.StatusPermanentRedirect),
 	}
 
-	for route, path := range searchRoutes() {
+	for route, path := range compton_data.SearchScopes() {
 		patternHandlers["GET /products/"+route] = Redirect(path, http.StatusPermanentRedirect)
 	}
 
 	for p, h := range patternHandlers {
 		http.HandleFunc(p, h.ServeHTTP)
 	}
-}
-
-func searchRoutes() map[string]string {
-	routes := make(map[string]string)
-
-	searchPath := "/search"
-
-	routes["filter"] = searchPath
-
-	q := make(url.Values)
-	q.Set(vangogh_integration.TypesProperty, vangogh_integration.AccountProducts.String())
-	q.Set(vangogh_integration.SortProperty, vangogh_integration.GOGOrderDateProperty)
-	q.Set(vangogh_integration.DescendingProperty, vangogh_integration.TrueValue)
-	routes["owned"] = searchPath + "?" + q.Encode()
-
-	q = make(url.Values)
-	q.Set(vangogh_integration.WishlistedProperty, vangogh_integration.TrueValue)
-	q.Set(vangogh_integration.SortProperty, vangogh_integration.GOGReleaseDateProperty)
-	q.Set(vangogh_integration.DescendingProperty, vangogh_integration.TrueValue)
-	routes["wishlist"] = searchPath + "?" + q.Encode()
-
-	q = make(url.Values)
-	q.Set(vangogh_integration.TypesProperty, vangogh_integration.CatalogProducts.String())
-	q.Set(vangogh_integration.OwnedProperty, vangogh_integration.FalseValue)
-	q.Set(vangogh_integration.IsDiscountedProperty, vangogh_integration.TrueValue)
-	q.Set(vangogh_integration.SortProperty, vangogh_integration.DiscountPercentageProperty)
-	q.Set(vangogh_integration.DescendingProperty, vangogh_integration.TrueValue)
-	routes["sale"] = searchPath + "?" + q.Encode()
-
-	q = make(url.Values)
-	q.Set(vangogh_integration.TypesProperty, vangogh_integration.CatalogProducts.String())
-	q.Set(vangogh_integration.SortProperty, vangogh_integration.GOGReleaseDateProperty)
-	q.Set(vangogh_integration.DescendingProperty, vangogh_integration.TrueValue)
-	routes["all"] = searchPath + "?" + q.Encode()
-
-	return routes
 }

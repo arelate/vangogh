@@ -16,7 +16,7 @@ import (
 
 func NewIndexSetter(pt vangogh_integration.ProductType, ids []string) (dolo.IndexSetter, error) {
 
-	localDir, err := vangogh_integration.AbsLocalProductTypeDir(pt)
+	localDir, err := vangogh_integration.AbsProductTypeDir(pt)
 	if err != nil {
 		return nil, err
 	}

@@ -13,7 +13,7 @@ import (
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/issa"
 	"github.com/boggydigital/redux"
-	"golang.org/x/exp/slices"
+	"slices"
 	"strings"
 )
 
@@ -140,7 +140,7 @@ func Product(id string, rdx redux.Readable, hasSections []string) compton.PageEl
 
 	/* Theo commands */
 
-	if owned, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && owned == vangogh_integration.TrueValue {
+	if owned, ok := rdx.GetLastVal(vangogh_integration.LicencesProperty, id); ok && owned == vangogh_integration.TrueValue {
 		var os []vangogh_integration.OperatingSystem
 		if vals, ok := rdx.GetAllValues(vangogh_integration.OperatingSystemsProperty, id); ok {
 			os = vangogh_integration.ParseManyOperatingSystems(vals)

@@ -26,7 +26,7 @@ func GetLocalTagsEdit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	localTags := make(map[string]string)
-	for _, ltId := range rdx.Keys(vangogh_integration.LocalTagsProperty) {
+	for ltId := range rdx.Keys(vangogh_integration.LocalTagsProperty) {
 		if lts, ok := rdx.GetAllValues(vangogh_integration.LocalTagsProperty, ltId); ok {
 			for _, lt := range lts {
 				localTags[lt] = lt

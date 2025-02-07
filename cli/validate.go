@@ -8,10 +8,10 @@ import (
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/redux"
-	"golang.org/x/exp/slices"
 	"net/url"
 	"os"
 	"path/filepath"
+	"slices"
 )
 
 func ValidateHandler(u *url.URL) error {
@@ -44,7 +44,7 @@ func Validate(
 
 	rdx, err := vangogh_integration.NewReduxWriter(
 		vangogh_integration.SlugProperty,
-		vangogh_integration.NativeLanguageNameProperty,
+		//vangogh_integration.NativeLanguageNameProperty,
 		vangogh_integration.LocalManualUrlProperty,
 		vangogh_integration.ManualUrlStatusProperty,
 		vangogh_integration.ManualUrlValidationResultProperty,

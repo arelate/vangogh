@@ -39,7 +39,7 @@ func Size(
 
 	rdx, err := vangogh_integration.NewReduxReader(
 		vangogh_integration.LocalManualUrlProperty,
-		vangogh_integration.NativeLanguageNameProperty,
+		//vangogh_integration.NativeLanguageNameProperty,
 		vangogh_integration.SlugProperty,
 		vangogh_integration.DownloadStatusErrorProperty)
 	if err != nil {

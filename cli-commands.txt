@@ -28,13 +28,8 @@ dehydrate
     force
 
 get-data
-    id&
-    slug&
-    product-type*^={remote-product-types}
-    missing
-    updated
     since-hours-ago
-    skip-id&
+    force
 
 get-downloads
     id^&
@@ -139,6 +134,7 @@ sync
     download-type&$={download-types^}
     no-patches$
     debug$
+    force
     {sync-options^&}
 
 tag

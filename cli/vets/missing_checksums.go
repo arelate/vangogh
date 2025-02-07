@@ -25,7 +25,7 @@ func MissingChecksums(
 		vangogh_integration.ManualUrlStatusProperty,
 		vangogh_integration.ManualUrlValidationResultProperty,
 		vangogh_integration.ManualUrlGeneratedChecksumProperty,
-		vangogh_integration.NativeLanguageNameProperty,
+		//vangogh_integration.NativeLanguageNameProperty,
 		vangogh_integration.ProductTypeProperty)
 	if err != nil {
 		return mca.EndWithError(err)

@@ -10,7 +10,7 @@ import (
 
 func InvalidResolvedManualUrls(fix bool) error {
 
-	cirmu := nod.NewProgress("checking invalid resolved manual-urls...")
+	cirmu := nod.Begin("checking invalid resolved manual-urls...")
 	defer cirmu.End()
 
 	rdx, err := vangogh_integration.NewReduxWriter(
@@ -22,8 +22,8 @@ func InvalidResolvedManualUrls(fix bool) error {
 	invalidResolvedUrls := make(map[string]bool)
 
 	keys := rdx.Keys(vangogh_integration.LocalManualUrlProperty)
-	cirmu.TotalInt(len(keys))
-	for _, url := range keys {
+
+	for url := range keys {
 
 		local, ok := rdx.GetLastVal(vangogh_integration.LocalManualUrlProperty, url)
 		if !ok {
@@ -38,8 +38,6 @@ func InvalidResolvedManualUrls(fix bool) error {
 		}
 
 		invalidResolvedUrls[url] = true
-
-		cirmu.Increment()
 	}
 
 	if len(invalidResolvedUrls) == 0 {

@@ -1,0 +1,78 @@
+package gog_data
+
+import (
+	"encoding/json"
+	"github.com/arelate/southern_light/gog_integration"
+	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/nod"
+	"github.com/boggydigital/pathways"
+	"github.com/boggydigital/redux"
+	"slices"
+)
+
+func GetUserWishlist() error {
+	guwa := nod.Begin("getting %s...", vangogh_integration.UserWishlist)
+	defer guwa.EndWithResult("done")
+
+	userWishlistDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.UserWishlist)
+	if err != nil {
+		return guwa.EndWithError(err)
+	}
+
+	kvUserWishlist, err := kevlar.New(userWishlistDir, kevlar.JsonExt)
+	if err != nil {
+		return guwa.EndWithError(err)
+	}
+
+	if err = getGogAuthData(vangogh_integration.UserWishlist.String(),
+		gog_integration.UserWishlistUrl(),
+		kvUserWishlist); err != nil {
+		return guwa.EndWithError(err)
+
+	}
+
+	return reduceUserWishlist(kvUserWishlist)
+}
+
+func reduceUserWishlist(kvUserWishlist kevlar.KeyValues) error {
+
+	ruwa := nod.Begin(" reducing %s...", vangogh_integration.UserWishlist)
+	defer ruwa.EndWithResult("done")
+
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return ruwa.EndWithError(err)
+	}
+
+	key := vangogh_integration.UserWishlistProperty
+
+	rdx, err := redux.NewWriter(reduxDir, key)
+	if err != nil {
+		return ruwa.EndWithError(err)
+	}
+
+	rcUserWishlist, err := kvUserWishlist.Get(vangogh_integration.UserWishlist.String())
+	if err != nil {
+		return ruwa.EndWithError(err)
+	}
+	defer rcUserWishlist.Close()
+
+	var userWishlist gog_integration.UserWishlist
+	if err = json.NewDecoder(rcUserWishlist).Decode(&userWishlist); err != nil {
+		return ruwa.EndWithError(err)
+	}
+
+	userWishlistMap := make(map[string][]string, len(userWishlist.Wishlist))
+	for id, flag := range userWishlist.Wishlist {
+		if flag {
+			userWishlistMap[id] = []string{vangogh_integration.TrueValue}
+		}
+	}
+
+	if err = rdx.CutKeys(key, slices.Collect(rdx.Keys(key))...); err != nil {
+		return ruwa.EndWithError(err)
+	}
+
+	return rdx.BatchAddValues(key, userWishlistMap)
+}

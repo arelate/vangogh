@@ -21,7 +21,7 @@ func UnresolvedManualUrls(
 
 	rdx, err := vangogh_integration.NewReduxReader(
 		vangogh_integration.TitleProperty,
-		vangogh_integration.NativeLanguageNameProperty,
+		//vangogh_integration.NativeLanguageNameProperty,
 		vangogh_integration.LocalManualUrlProperty)
 	if err != nil {
 		return cumu.EndWithError(err)

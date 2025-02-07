@@ -8,10 +8,15 @@ var ProductsProperties = []string{
 	vangogh_integration.DehydratedVerticalImageProperty,
 	vangogh_integration.VerticalImageProperty,
 
-	vangogh_integration.OwnedProperty,
+	//vangogh_integration.OwnedProperty,
+	//vangogh_integration.WishlistedProperty,
+
+	vangogh_integration.LicencesProperty,
+	vangogh_integration.UserWishlistProperty,
+
 	//vangogh_integration.ValidationResultProperty,
+
 	vangogh_integration.ProductTypeProperty,
-	vangogh_integration.WishlistedProperty,
 	vangogh_integration.ComingSoonProperty,
 	vangogh_integration.PreOrderProperty,
 	vangogh_integration.InDevelopmentProperty,

@@ -67,7 +67,7 @@ func Summarize(since int64) error {
 	}
 
 	//clean sections filled earlier that don't exist anymore
-	for _, section := range rdx.Keys(vangogh_integration.LastSyncUpdatesProperty) {
+	for section := range rdx.Keys(vangogh_integration.LastSyncUpdatesProperty) {
 		if _, ok := updates[section]; ok {
 			continue
 		}
@@ -106,7 +106,7 @@ func releasedToday(rdx redux.Readable) ([]string, error) {
 	ids := make([]string, 0)
 	today := time.Now().Format("2006.01.02")
 
-	for _, id := range rdx.Keys(vangogh_integration.GOGReleaseDateProperty) {
+	for id := range rdx.Keys(vangogh_integration.GOGReleaseDateProperty) {
 		if rt, ok := rdx.GetLastVal(vangogh_integration.GOGReleaseDateProperty, id); ok {
 			if rt == today {
 				ids = append(ids, id)

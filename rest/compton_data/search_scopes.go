@@ -31,20 +31,20 @@ func SearchScopes() map[string]string {
 	queries[SearchNew] = ""
 
 	q := make(url.Values)
-	q.Set(vangogh_integration.OwnedProperty, vangogh_integration.TrueValue)
+	q.Set(vangogh_integration.LicencesProperty, vangogh_integration.TrueValue)
 	q.Set(vangogh_integration.SortProperty, vangogh_integration.GOGOrderDateProperty)
 	q.Set(vangogh_integration.DescendingProperty, vangogh_integration.TrueValue)
 	queries[SearchOwned] = q.Encode()
 
 	q = make(url.Values)
-	q.Set(vangogh_integration.WishlistedProperty, vangogh_integration.TrueValue)
+	q.Set(vangogh_integration.UserWishlistProperty, vangogh_integration.TrueValue)
 	q.Set(vangogh_integration.SortProperty, vangogh_integration.GOGReleaseDateProperty)
 	q.Set(vangogh_integration.DescendingProperty, vangogh_integration.TrueValue)
 	queries[SearchWishlist] = q.Encode()
 
 	q = make(url.Values)
 	q.Set(vangogh_integration.TypesProperty, vangogh_integration.CatalogProducts.String())
-	q.Set(vangogh_integration.OwnedProperty, vangogh_integration.FalseValue)
+	q.Set(vangogh_integration.LicencesProperty, vangogh_integration.FalseValue)
 	q.Set(vangogh_integration.IsDiscountedProperty, vangogh_integration.TrueValue)
 	q.Set(vangogh_integration.SortProperty, vangogh_integration.DiscountPercentageProperty)
 	q.Set(vangogh_integration.DescendingProperty, vangogh_integration.TrueValue)

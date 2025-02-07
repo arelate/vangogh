@@ -34,14 +34,16 @@ func LocalOnlyImages(fix bool) error {
 	ieia := nod.NewProgress(" itemizing expected images...")
 	totalProducts := 0
 	for p := range propSet {
-		totalProducts += len(rdx.Keys(p))
+		for range rdx.Keys(p) {
+			totalProducts++
+		}
 	}
 
 	ieia.TotalInt(totalProducts)
 
 	expectedImages := make(map[string]bool)
 	for p := range propSet {
-		for _, id := range rdx.Keys(p) {
+		for id := range rdx.Keys(p) {
 			imageIds, ok := rdx.GetAllValues(p, id)
 			if !ok {
 				ieia.Increment()

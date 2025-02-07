@@ -37,22 +37,22 @@ func missingDetail(
 
 	//licences give a signal when DLC has been purchased, this would add
 	//required (base) game details to the updates
-	if mainPt == vangogh_integration.LicenceProducts &&
-		detailPt == vangogh_integration.Details {
-		return RequiredAndIncluded(since)
-	}
+	//if mainPt == vangogh_integration.LicenceProducts &&
+	//	detailPt == vangogh_integration.Details {
+	//	return RequiredAndIncluded(since)
+	//}
 
 	mda := nod.Begin(" finding missing %s for %s...", detailPt, mainPt)
 	defer mda.End()
 
 	missingIdSet := make(map[string]bool)
 
-	mainDestUrl, err := vangogh_integration.AbsLocalProductTypeDir(mainPt)
+	mainDestUrl, err := vangogh_integration.AbsProductTypeDir(mainPt)
 	if err != nil {
 		return nil, mda.EndWithError(err)
 	}
 
-	detailDestUrl, err := vangogh_integration.AbsLocalProductTypeDir(detailPt)
+	detailDestUrl, err := vangogh_integration.AbsProductTypeDir(detailPt)
 	if err != nil {
 		return nil, mda.EndWithError(err)
 	}

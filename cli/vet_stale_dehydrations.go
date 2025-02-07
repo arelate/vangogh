@@ -38,10 +38,9 @@ func staleDehydrationsImageType(imageProperty, dimProperty string, fix bool) err
 
 	staleIds := make([]string, 0)
 
-	ids := rdx.Keys(imageProperty)
-	sdia.TotalInt(len(ids))
+	sdia.TotalInt(rdx.Len(imageProperty))
 
-	for _, id := range ids {
+	for id := range rdx.Keys(imageProperty) {
 		if imageId, ok := rdx.GetLastVal(imageProperty, id); ok {
 			imagePath, err := vangogh_integration.AbsLocalImagePath(imageId)
 			if err != nil {

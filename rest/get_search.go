@@ -6,6 +6,7 @@ import (
 	"github.com/arelate/vangogh/rest/compton_pages"
 	"github.com/boggydigital/nod"
 	"net/http"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -66,7 +67,7 @@ func GetSearch(w http.ResponseWriter, r *http.Request) {
 		found := rdx.Match(q)
 
 		var err error
-		ids, err = rdx.Sort(found, desc, sort, vangogh_integration.TitleProperty, vangogh_integration.ProductTypeProperty)
+		ids, err = rdx.Sort(slices.Collect(found), desc, sort, vangogh_integration.TitleProperty, vangogh_integration.ProductTypeProperty)
 		if err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 			return

@@ -27,14 +27,14 @@ func GetTagsEdit(w http.ResponseWriter, r *http.Request) {
 
 	tagNames := make(map[string]string)
 
-	for _, k := range rdx.Keys(vangogh_integration.TagNameProperty) {
+	for k := range rdx.Keys(vangogh_integration.TagNameProperty) {
 		if v, ok := rdx.GetAllValues(vangogh_integration.TagNameProperty, k); ok && len(v) > 0 {
 			tagNames[k] = v[0]
 		}
 	}
 
 	owned := false
-	if op, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && op == vangogh_integration.TrueValue {
+	if op, ok := rdx.GetLastVal(vangogh_integration.LicencesProperty, id); ok && op == vangogh_integration.TrueValue {
 		owned = true
 	}
 

@@ -13,7 +13,7 @@ import (
 
 func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageElement, error) {
 
-	absPtDir, err := vangogh_integration.AbsLocalProductTypeDir(pt)
+	absPtDir, err := vangogh_integration.AbsProductTypeDir(pt)
 	if err != nil {
 		return nil, err
 	}

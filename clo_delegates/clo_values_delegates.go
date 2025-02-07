@@ -1,8 +1,10 @@
 package clo_delegates
 
 import (
+	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli"
+	"slices"
 	"strings"
 )
 
@@ -64,19 +66,20 @@ func downloadTypes() []string {
 }
 
 func languageCodes() []string {
-	defaultLangCode := "en"
-	langCodes := []string{defaultLangCode}
-	rdx, err := vangogh_integration.NewReduxReader(vangogh_integration.LanguageNameProperty)
-	if err != nil {
-		return langCodes
-	}
-	for _, lc := range rdx.Keys(vangogh_integration.LanguageNameProperty) {
-		if lc == defaultLangCode {
-			continue
-		}
-		langCodes = append(langCodes, strings.ToLower(lc))
-	}
-	return langCodes
+	//defaultLangCode := "en"
+	//langCodes := []string{defaultLangCode}
+	//rdx, err := vangogh_integration.NewReduxReader(vangogh_integration.LanguageNameProperty)
+	//if err != nil {
+	//	return langCodes
+	//}
+	//for lc := range rdx.Keys(vangogh_integration.LanguageNameProperty) {
+	//	if lc == defaultLangCode {
+	//		continue
+	//	}
+	//	langCodes = append(langCodes, strings.ToLower(lc))
+	//}
+	//return langCodes
+	return slices.Collect(gog_integration.AllLanguageCodes())
 }
 
 func options(opts []string) []string {
@@ -91,7 +94,6 @@ func options(opts []string) []string {
 
 func syncOptions() []string {
 	return options([]string{
-		cli.SyncOptionData,
 		cli.SyncOptionItems,
 		cli.SyncOptionImages,
 		cli.SyncOptionScreenshots,
@@ -102,7 +104,6 @@ func syncOptions() []string {
 
 func vetOptions() []string {
 	return options([]string{
-		cli.VetLocalOnlyData,
 		cli.VetLocalOnlyImages,
 		cli.VetRecycleBin,
 		cli.VetInvalidData,
@@ -111,6 +112,5 @@ func vetOptions() []string {
 		cli.VetMissingChecksums,
 		cli.VetStaleDehydrations,
 		cli.VetOldLogs,
-		cli.VetWishlistedOwned,
 	})
 }

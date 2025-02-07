@@ -38,13 +38,13 @@ func Reduce(since int64, properties []string, propertiesOnly bool) error {
 		}
 	}
 
-	if !propertiesOnly {
-		if propSet[vangogh_integration.LanguageNameProperty] ||
-			propSet[vangogh_integration.NativeLanguageNameProperty] {
-			//required for language-* properties reduction below
-			propSet[vangogh_integration.LanguageCodeProperty] = true
-		}
-	}
+	//if !propertiesOnly {
+	//	if propSet[vangogh_integration.LanguageNameProperty] ||
+	//		propSet[vangogh_integration.NativeLanguageNameProperty] {
+	//		//required for language-* properties reduction below
+	//		propSet[vangogh_integration.LanguageCodeProperty] = true
+	//	}
+	//}
 
 	ra := nod.Begin("reducing properties...")
 	defer ra.End()
@@ -127,21 +127,21 @@ func Reduce(since int64, properties []string, propertiesOnly bool) error {
 	}
 
 	if !propertiesOnly {
-		//language-names are reduced separately from general pipeline,
-		//given we'll be filling the blanks from api-products-v2 using
-		//GetLanguages property that returns map[string]string
-		langCodeSet, err := reductions.GetLanguageCodes(rdx)
-		if err != nil {
-			return ra.EndWithError(err)
-		}
-
-		if err := reductions.LanguageNames(langCodeSet); err != nil {
-			return ra.EndWithError(err)
-		}
-
-		if err := reductions.NativeLanguageNames(langCodeSet); err != nil {
-			return ra.EndWithError(err)
-		}
+		////language-names are reduced separately from general pipeline,
+		////given we'll be filling the blanks from api-products-v2 using
+		////GetLanguages property that returns map[string]string
+		//langCodeSet, err := reductions.GetLanguageCodes(rdx)
+		//if err != nil {
+		//	return ra.EndWithError(err)
+		//}
+		//
+		//if err := reductions.LanguageNames(langCodeSet); err != nil {
+		//	return ra.EndWithError(err)
+		//}
+		//
+		//if err := reductions.NativeLanguageNames(langCodeSet); err != nil {
+		//	return ra.EndWithError(err)
+		//}
 
 		//tag-names are reduced separately from other types,
 		//given it is most convenient to reduce from account-pages

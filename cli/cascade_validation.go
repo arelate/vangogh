@@ -17,7 +17,7 @@ func CascadeValidation() error {
 	defer cva.End()
 
 	rdx, err := vangogh_integration.NewReduxWriter(
-		vangogh_integration.OwnedProperty,
+		//vangogh_integration.OwnedProperty,
 		vangogh_integration.IsRequiredByGamesProperty,
 		vangogh_integration.IsIncludedByGamesProperty,
 		vangogh_integration.ProductTypeProperty,
@@ -28,11 +28,9 @@ func CascadeValidation() error {
 
 	cascadedResults := make(map[string][]string)
 
-	ids := rdx.Keys(vangogh_integration.ProductValidationResultProperty)
+	cva.TotalInt(rdx.Len(vangogh_integration.ProductValidationResultProperty))
 
-	cva.TotalInt(len(ids))
-
-	for _, id := range ids {
+	for id := range rdx.Keys(vangogh_integration.ProductValidationResultProperty) {
 
 		vr, _ := rdx.GetAllValues(vangogh_integration.ProductValidationResultProperty, id)
 
@@ -58,7 +56,7 @@ func filterOwnedRelated(rdx redux.Readable, p, id string) []string {
 	ownedRelated := make([]string, 0)
 	if related, ok := rdx.GetAllValues(p, id); ok {
 		for _, rid := range related {
-			if own, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, rid); ok && own == vangogh_integration.TrueValue {
+			if own, ok := rdx.GetLastVal(vangogh_integration.LicencesProperty, rid); ok && own == vangogh_integration.TrueValue {
 				ownedRelated = append(ownedRelated, rid)
 			}
 		}

@@ -8,7 +8,6 @@ import (
 )
 
 const (
-	VetLocalOnlyData             = "local-only-data"
 	VetLocalOnlyImages           = "local-only-images"
 	VetRecycleBin                = "recycle-bin"
 	VetInvalidData               = "invalid-data"
@@ -17,11 +16,9 @@ const (
 	VetMissingChecksums          = "missing-checksums"
 	VetStaleDehydrations         = "stale-dehydrations"
 	VetOldLogs                   = "old-logs"
-	VetWishlistedOwned           = "wishlisted-owned"
 )
 
 type vetOptions struct {
-	localOnlyData               bool
 	localOnlyImages             bool
 	recycleBin                  bool
 	invalidData                 bool
@@ -30,13 +27,11 @@ type vetOptions struct {
 	staleDehydrations           bool
 	missingChecksums            bool
 	oldLogs                     bool
-	wishlistedOwned             bool
 }
 
 func initVetOptions(u *url.URL) *vetOptions {
 
 	vo := &vetOptions{
-		localOnlyData:               vangogh_integration.FlagFromUrl(u, VetLocalOnlyData),
 		localOnlyImages:             vangogh_integration.FlagFromUrl(u, VetLocalOnlyImages),
 		recycleBin:                  vangogh_integration.FlagFromUrl(u, VetRecycleBin),
 		invalidData:                 vangogh_integration.FlagFromUrl(u, VetInvalidData),
@@ -45,11 +40,9 @@ func initVetOptions(u *url.URL) *vetOptions {
 		missingChecksums:            vangogh_integration.FlagFromUrl(u, VetMissingChecksums),
 		staleDehydrations:           vangogh_integration.FlagFromUrl(u, VetStaleDehydrations),
 		oldLogs:                     vangogh_integration.FlagFromUrl(u, VetOldLogs),
-		wishlistedOwned:             vangogh_integration.FlagFromUrl(u, VetWishlistedOwned),
 	}
 
 	if vangogh_integration.FlagFromUrl(u, "all") {
-		vo.localOnlyData = !vangogh_integration.FlagFromUrl(u, NegOpt(VetLocalOnlyData))
 		vo.localOnlyImages = !vangogh_integration.FlagFromUrl(u, NegOpt(VetLocalOnlyImages))
 		vo.recycleBin = !vangogh_integration.FlagFromUrl(u, NegOpt(VetRecycleBin))
 		vo.invalidData = !vangogh_integration.FlagFromUrl(u, NegOpt(VetInvalidData))
@@ -58,7 +51,6 @@ func initVetOptions(u *url.URL) *vetOptions {
 		vo.missingChecksums = !vangogh_integration.FlagFromUrl(u, NegOpt(VetMissingChecksums))
 		vo.staleDehydrations = !vangogh_integration.FlagFromUrl(u, NegOpt(VetStaleDehydrations))
 		vo.oldLogs = !vangogh_integration.FlagFromUrl(u, NegOpt(VetOldLogs))
-		vo.wishlistedOwned = !vangogh_integration.FlagFromUrl(u, NegOpt(VetWishlistedOwned))
 	}
 
 	return vo
@@ -87,12 +79,6 @@ func Vet(
 
 	sda := nod.Begin("vetting local data...")
 	defer sda.End()
-
-	if vetOpts.localOnlyData {
-		if err := vets.LocalOnlySplitProducts(fix); err != nil {
-			return sda.EndWithError(err)
-		}
-	}
 
 	if vetOpts.localOnlyImages {
 		if err := vets.LocalOnlyImages(fix); err != nil {
@@ -138,12 +124,6 @@ func Vet(
 
 	if vetOpts.oldLogs {
 		if err := vets.CleanupOldLogs(fix); err != nil {
-			return sda.EndWithError(err)
-		}
-	}
-
-	if vetOpts.wishlistedOwned {
-		if err := WishlistedOwned(fix); err != nil {
 			return sda.EndWithError(err)
 		}
 	}

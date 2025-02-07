@@ -63,8 +63,8 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 	}
 
 	owned := false
-	if op, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok {
-		owned = op == vangogh_integration.TrueValue
+	if lp, ok := rdx.GetLastVal(vangogh_integration.LicencesProperty, id); ok {
+		owned = lp == vangogh_integration.TrueValue
 	}
 	isFree := false
 	if ifp, ok := rdx.GetLastVal(vangogh_integration.IsFreeProperty, id); ok {
@@ -83,7 +83,7 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 
 	for _, value := range values {
 		switch property {
-		case vangogh_integration.WishlistedProperty:
+		case vangogh_integration.UserWishlistProperty:
 			if owned {
 				break
 			}
@@ -158,11 +158,11 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 
 	// format actions, class
 	switch property {
-	case vangogh_integration.OwnedProperty:
+	case vangogh_integration.LicencesProperty:
 		//if res, ok := rdx.GetLastVal(vangogh_integration.ValidationResultProperty, id); ok {
 		//	fmtProperty.class = res
 		//}
-	case vangogh_integration.WishlistedProperty:
+	case vangogh_integration.UserWishlistProperty:
 		if !owned {
 			switch firstValue {
 			case vangogh_integration.TrueValue:

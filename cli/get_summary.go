@@ -25,7 +25,7 @@ func GetSummary() error {
 
 	summary := make(map[string][]string)
 
-	for _, section := range rdx.Keys(vangogh_integration.LastSyncUpdatesProperty) {
+	for section := range rdx.Keys(vangogh_integration.LastSyncUpdatesProperty) {
 		ids, _ := rdx.GetAllValues(vangogh_integration.LastSyncUpdatesProperty, section)
 		for _, id := range ids {
 			if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {

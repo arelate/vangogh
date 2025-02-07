@@ -52,7 +52,7 @@ func Dehydrate(
 			dehydratedProperty := vangogh_integration.ImageTypeDehydratedProperty(it)
 			repColorProperty := vangogh_integration.ImageTypeRepColorProperty(it)
 
-			for _, id := range rdx.Keys(asset) {
+			for id := range rdx.Keys(asset) {
 				if rdx.HasKey(dehydratedProperty, id) &&
 					rdx.HasKey(repColorProperty, id) &&
 					!force {

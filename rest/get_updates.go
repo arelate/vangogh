@@ -41,7 +41,7 @@ func GetUpdates(w http.ResponseWriter, r *http.Request) {
 
 	paginate := false
 
-	for _, section := range rdx.Keys(vangogh_integration.LastSyncUpdatesProperty) {
+	for section := range rdx.Keys(vangogh_integration.LastSyncUpdatesProperty) {
 
 		ids, _ := rdx.GetAllValues(vangogh_integration.LastSyncUpdatesProperty, section)
 		updateTotals[section] = len(ids)

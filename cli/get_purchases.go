@@ -44,7 +44,7 @@ func GetPurchases(
 	}
 
 	for _, pt := range productTypes {
-		if err := GetData(ids, nil, pt, since, false, false); err != nil {
+		if err := GetDataLegacy(ids, nil, pt, since, false, false); err != nil {
 			return err
 		}
 	}

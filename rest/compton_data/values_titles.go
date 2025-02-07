@@ -15,7 +15,6 @@ var TypesTitles = map[string]string{
 	vangogh_integration.Details.String():                      "Details",
 	vangogh_integration.HLTBData.String():                     "HowLongToBeat Data",
 	vangogh_integration.HLTBRootPage.String():                 "HowLongToBeat Root Page",
-	vangogh_integration.LicenceProducts.String():              "Licence Products",
 	vangogh_integration.Orders.String():                       "Orders",
 	vangogh_integration.PCGWEngine.String():                   "PCGamingWiki Engine",
 	vangogh_integration.PCGWExternalLinks.String():            "PCGamingWiki External Links",

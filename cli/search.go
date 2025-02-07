@@ -5,6 +5,7 @@ import (
 	"github.com/boggydigital/nod"
 	"golang.org/x/exp/maps"
 	"net/url"
+	"slices"
 	"strings"
 )
 
@@ -59,7 +60,7 @@ func Search(query map[string][]string) error {
 		//}
 	}
 
-	if len(results) == 0 {
+	if results == nil {
 		sa.EndWithResult("no products found")
 		return nil
 	}
@@ -72,7 +73,7 @@ func Search(query map[string][]string) error {
 	//}
 
 	itp, err := vangogh_integration.PropertyListsFromIdSet(
-		results,
+		slices.Collect(results),
 		propertyFilter,
 		maps.Keys(propSet),
 		rdx)

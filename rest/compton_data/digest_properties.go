@@ -16,8 +16,8 @@ var DigestProperties = []string{
 }
 
 var BinaryDigestProperties = []string{
-	vangogh_integration.WishlistedProperty,
-	vangogh_integration.OwnedProperty,
+	//vangogh_integration.WishlistedProperty,
+	//vangogh_integration.OwnedProperty,
 	vangogh_integration.IsFreeProperty,
 	vangogh_integration.IsDiscountedProperty,
 	vangogh_integration.PreOrderProperty,

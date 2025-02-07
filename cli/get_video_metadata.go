@@ -49,7 +49,7 @@ func GetVideoMetadata(ids []string, missing, force bool) error {
 	}
 
 	if missing {
-		for _, id := range rdx.Keys(vangogh_integration.VideoIdProperty) {
+		for id := range rdx.Keys(vangogh_integration.VideoIdProperty) {
 			if vip, ok := rdx.GetAllValues(vangogh_integration.VideoIdProperty, id); ok {
 				for _, vid := range vip {
 					if rdx.HasKey(vangogh_integration.VideoErrorProperty, vid) && !force {

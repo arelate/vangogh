@@ -10,8 +10,8 @@ import (
 
 func FormatLabels(id string, rdx redux.Readable) []compton.FormattedLabel {
 	owned := false
-	if op, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok {
-		owned = op == vangogh_integration.TrueValue
+	if lp, ok := rdx.GetLastVal(vangogh_integration.LicencesProperty, id); ok {
+		owned = lp == vangogh_integration.TrueValue
 	}
 
 	fmtLabels := make([]compton.FormattedLabel, 0, len(compton_data.LabelProperties))
@@ -31,12 +31,12 @@ func formatLabel(id, property string, owned bool, rdx redux.Readable) compton.Fo
 
 	fmtLabel.Title, _ = rdx.GetLastVal(property, id)
 	switch property {
-	case vangogh_integration.OwnedProperty:
+	case vangogh_integration.LicencesProperty:
 		if pvr, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
 			fmtLabel.Class = pvr
 		}
 		fallthrough
-	case vangogh_integration.WishlistedProperty:
+	case vangogh_integration.UserWishlistProperty:
 		fallthrough
 	case vangogh_integration.PreOrderProperty:
 		fallthrough

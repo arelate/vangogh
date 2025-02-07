@@ -34,7 +34,7 @@ func Owned(ids []string) error {
 		vangogh_integration.SlugProperty:              true,
 		vangogh_integration.IncludesGamesProperty:     true,
 		vangogh_integration.IsIncludedByGamesProperty: true,
-		vangogh_integration.OwnedProperty:             true,
+		//vangogh_integration.OwnedProperty:             true,
 	}
 
 	rdx, err := vangogh_integration.NewReduxReader(maps.Keys(propSet)...)

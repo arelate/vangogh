@@ -58,17 +58,12 @@ func GetDownloads(
 		return gda.EndWithError(err)
 	}
 
-	li, err := gog_integration.LoggedIn(hc)
-	if err != nil {
+	if err = gog_integration.IsLoggedIn(hc); err != nil {
 		return gda.EndWithError(err)
 	}
 
-	if !li {
-		return gda.EndWithError(fmt.Errorf("user is not logged in"))
-	}
-
 	rdx, err := vangogh_integration.NewReduxWriter(
-		vangogh_integration.NativeLanguageNameProperty,
+		//vangogh_integration.NativeLanguageNameProperty,
 		vangogh_integration.SlugProperty,
 		vangogh_integration.LocalManualUrlProperty,
 		vangogh_integration.ManualUrlStatusProperty,

@@ -24,7 +24,7 @@ func Debug(id string) (compton.PageElement, error) {
 	kvs := make(map[vangogh_integration.ProductType]kevlar.KeyValues, len(localProducts))
 
 	for _, pt := range localProducts {
-		if absPtDir, err := vangogh_integration.AbsLocalProductTypeDir(pt); err != nil {
+		if absPtDir, err := vangogh_integration.AbsProductTypeDir(pt); err != nil {
 			return nil, err
 		} else {
 			if kvs[pt], err = kevlar.New(absPtDir, kevlar.JsonExt); err != nil {

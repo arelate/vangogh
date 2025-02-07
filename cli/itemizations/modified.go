@@ -18,11 +18,11 @@ func Modified(
 
 	//licence products can only update through creation, and we've already handled
 	//newly created in itemizeMissing func
-	if pt == vangogh_integration.LicenceProducts {
-		return nil, nil
-	}
+	//if pt == vangogh_integration.LicenceProducts {
+	//	return nil, nil
+	//}
 
-	destUrl, err := vangogh_integration.AbsLocalProductTypeDir(pt)
+	destUrl, err := vangogh_integration.AbsProductTypeDir(pt)
 	if err != nil {
 		return nil, ma.EndWithError(err)
 	}

@@ -1,29 +1,21 @@
 package itemizations
 
 import (
-	"github.com/boggydigital/nod"
+	"iter"
 )
 
 func missingLocalFiles(
-	all []string,
+	all iter.Seq[string],
 	localSet map[string]bool,
 	getById func(id string) ([]string, bool),
-	exclude func(id string) bool,
-	tpw nod.TotalProgressWriter) (map[string]bool, error) {
+	exclude func(id string) bool) (map[string]bool, error) {
 
 	idSet := make(map[string]bool)
 	var err error
 
-	if tpw != nil {
-		tpw.TotalInt(len(all))
-	}
-
-	for _, id := range all {
+	for id := range all {
 		items, ok := getById(id)
 		if !ok || len(items) == 0 {
-			if tpw != nil {
-				tpw.Increment()
-			}
 			continue
 		}
 
@@ -35,10 +27,6 @@ func missingLocalFiles(
 				idSet[id] = true
 				break
 			}
-		}
-
-		if tpw != nil {
-			tpw.Increment()
 		}
 	}
 

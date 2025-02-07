@@ -46,7 +46,7 @@ func Cleanup(
 
 	rdx, err := vangogh_integration.NewReduxReader(
 		vangogh_integration.SlugProperty,
-		vangogh_integration.NativeLanguageNameProperty,
+		//vangogh_integration.NativeLanguageNameProperty,
 		vangogh_integration.LocalManualUrlProperty)
 	if err != nil {
 		return err

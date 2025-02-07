@@ -20,7 +20,7 @@ var cascadingProperties = []string{
 // to account-products that are linked as store-product.IncludesGames.
 func Cascade() error {
 
-	ca := nod.NewProgress("cascading supported properties...")
+	ca := nod.Begin("cascading supported properties...")
 	defer ca.End()
 
 	rdx, err := vangogh_integration.NewReduxWriter(vangogh_integration.ReduxProperties()...)
@@ -34,12 +34,9 @@ func Cascade() error {
 
 	ids := rdx.Keys(vangogh_integration.IncludesGamesProperty)
 
-	ca.TotalInt(len(ids))
-
-	for _, id := range ids {
+	for id := range ids {
 		includesIds, ok := rdx.GetAllValues(vangogh_integration.IncludesGamesProperty, id)
 		if !ok {
-			ca.Increment()
 			continue
 		}
 		for _, prop := range cascadingProperties {
@@ -55,7 +52,6 @@ func Cascade() error {
 				}
 			}
 		}
-		ca.Increment()
 	}
 
 	return nil

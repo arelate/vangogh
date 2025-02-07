@@ -36,7 +36,7 @@ func main() {
 	defer ns.End()
 
 	if err := pathways.Setup(dirsOverrideFilename,
-		vangogh_integration.DefaultVangoghRootDir,
+		vangogh_integration.DefaultRootDir,
 		vangogh_integration.RelToAbsDirs,
 		vangogh_integration.AllAbsDirs...); err != nil {
 		_ = ns.EndWithError(err)

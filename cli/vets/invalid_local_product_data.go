@@ -28,9 +28,9 @@ func InvalidLocalProductData(fix bool) error {
 
 	for pt := range allProductTypes {
 
-		if pt == vangogh_integration.LicenceProducts {
-			continue
-		}
+		//if pt == vangogh_integration.LicenceProducts {
+		//	continue
+		//}
 
 		invalidProducts[pt] = make([]string, 0)
 

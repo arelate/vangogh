@@ -14,7 +14,6 @@ import (
 )
 
 const (
-	SyncOptionData             = "data"
 	SyncOptionItems            = "items"
 	SyncOptionImages           = "images"
 	SyncOptionScreenshots      = "screenshots"
@@ -24,7 +23,6 @@ const (
 )
 
 type syncOptions struct {
-	data             bool
 	items            bool
 	images           bool
 	screenshots      bool
@@ -42,7 +40,6 @@ func NegOpt(option string) string {
 func initSyncOptions(u *url.URL) *syncOptions {
 
 	so := &syncOptions{
-		data:             vangogh_integration.FlagFromUrl(u, SyncOptionData),
 		items:            vangogh_integration.FlagFromUrl(u, SyncOptionItems),
 		images:           vangogh_integration.FlagFromUrl(u, SyncOptionImages),
 		screenshots:      vangogh_integration.FlagFromUrl(u, SyncOptionScreenshots),
@@ -51,7 +48,6 @@ func initSyncOptions(u *url.URL) *syncOptions {
 	}
 
 	if vangogh_integration.FlagFromUrl(u, "all") {
-		so.data = !vangogh_integration.FlagFromUrl(u, NegOpt(SyncOptionData))
 		so.items = !vangogh_integration.FlagFromUrl(u, NegOpt(SyncOptionItems))
 		so.images = !vangogh_integration.FlagFromUrl(u, NegOpt(SyncOptionImages))
 		so.screenshots = !vangogh_integration.FlagFromUrl(u, NegOpt(SyncOptionScreenshots))
@@ -72,6 +68,8 @@ func SyncHandler(u *url.URL) error {
 
 	debug := vangogh_integration.FlagFromUrl(u, "debug")
 
+	force := u.Query().Has("force")
+
 	return Sync(
 		since,
 		syncOpts,
@@ -79,7 +77,8 @@ func SyncHandler(u *url.URL) error {
 		vangogh_integration.ValuesFromUrl(u, vangogh_integration.LanguageCodeProperty),
 		vangogh_integration.DownloadTypesFromUrl(u),
 		vangogh_integration.FlagFromUrl(u, "no-patches"),
-		debug)
+		debug,
+		force)
 }
 
 func Sync(
@@ -89,7 +88,7 @@ func Sync(
 	langCodes []string,
 	downloadTypes []vangogh_integration.DownloadType,
 	noPatches bool,
-	debug bool) error {
+	debug, force bool) error {
 
 	if debug {
 		absLogsDir, err := pathways.GetAbsDir(vangogh_integration.Logs)
@@ -127,72 +126,8 @@ func Sync(
 	//- get other detail products (Steam data, HLTB data)
 	//- finally, reduce all properties
 
-	if syncOpts.data {
-
-		//get GOG.com, Steam array and paged data
-		pagedArrayData := append(
-			vangogh_integration.GOGArrayProducts(),
-			vangogh_integration.GOGPagedProducts()...)
-		pagedArrayData = append(pagedArrayData,
-			vangogh_integration.SteamArrayProducts()...)
-		pagedArrayData = append(pagedArrayData,
-			vangogh_integration.HLTBArrayProducts()...)
-
-		for _, pt := range pagedArrayData {
-			if err := GetData(nil, nil, pt, since, false, false); err != nil {
-				return sa.EndWithError(err)
-			}
-		}
-
-		detailData := vangogh_integration.GOGDetailProducts()
-		detailData = append(detailData, vangogh_integration.PCGWPageId)
-
-		//get GOG.com detail data, PCGamingWiki pageId, steamAppId
-		if err := getDetailData(detailData, since); err != nil {
-			return sa.EndWithError(err)
-		}
-
-		//reduce PCGamingWiki pageId
-		if err := Reduce(since, []string{vangogh_integration.PCGWPageIdProperty}, true); err != nil {
-			return sa.EndWithError(err)
-		}
-
-		//get PCGamingWiki externallinks, engine
-		//this needs to happen after reduce, since PCGW PageId - GOG.com ProductId
-		//connection is established at reduce from cargo data.
-		pcgwDetailProducts := []vangogh_integration.ProductType{
-			vangogh_integration.PCGWEngine,
-			vangogh_integration.PCGWExternalLinks,
-		}
-
-		if err := getDetailData(pcgwDetailProducts, since); err != nil {
-			return sa.EndWithError(err)
-		}
-
-		//reduce SteamAppId, HowLongToBeatId, IGDBId
-		if err := Reduce(since, []string{
-			vangogh_integration.SteamAppIdProperty,
-			vangogh_integration.HLTBBuildIdProperty,
-			vangogh_integration.HLTBIdProperty,
-			vangogh_integration.IGDBIdProperty}, true); err != nil {
-			return sa.EndWithError(err)
-		}
-
-		otherDetailProducts := vangogh_integration.SteamDetailProducts()
-		otherDetailProducts = append(otherDetailProducts, vangogh_integration.HLTBDetailProducts()...)
-
-		//get other detail products (Steam data, HLTB data)
-		//this needs to happen after reduce, since Steam AppId - GOG.com ProductId
-		//connection is established at reduce. And the earlier data set cannot be retrieved post reduce,
-		//since SteamAppList is fetched with initial data
-		if err := getDetailData(otherDetailProducts, since); err != nil {
-			return sa.EndWithError(err)
-		}
-
-		// finally, reduce all properties
-		if err := Reduce(since, vangogh_integration.ReduxProperties(), false); err != nil {
-			return sa.EndWithError(err)
-		}
+	if err := GetData(since, force); err != nil {
+		return sa.EndWithError(err)
 	}
 
 	// summarize sync updates now, since other updates are digital artifacts
@@ -311,7 +246,7 @@ func getDetailData(pts []vangogh_integration.ProductType, since int64) error {
 		}
 
 		skipIds := skipList[pt.String()]
-		if err := GetData(nil, skipIds, pt, since, true, true); err != nil {
+		if err := GetDataLegacy(nil, skipIds, pt, since, true, true); err != nil {
 			return err
 		}
 	}

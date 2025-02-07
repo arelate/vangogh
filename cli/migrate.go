@@ -22,7 +22,7 @@ func Migrate() error {
 	productTypes = append(productTypes, vangogh_integration.SteamArrayProducts()...)
 
 	for _, pt := range productTypes {
-		absPtDir, err := vangogh_integration.AbsLocalProductTypeDir(pt)
+		absPtDir, err := vangogh_integration.AbsProductTypeDir(pt)
 		if err != nil {
 			return ma.EndWithError(err)
 		}

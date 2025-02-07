@@ -8,7 +8,7 @@ import (
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/issa"
 	"github.com/boggydigital/redux"
-	"golang.org/x/exp/slices"
+	"slices"
 	"strings"
 )
 

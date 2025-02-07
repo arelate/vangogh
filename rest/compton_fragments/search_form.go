@@ -113,7 +113,7 @@ func languagesDatalist() map[string]string {
 
 func tagsDatalist(rdx redux.Readable) map[string]string {
 	dl := make(map[string]string)
-	for _, tagId := range rdx.Keys(vangogh_integration.TagNameProperty) {
+	for tagId := range rdx.Keys(vangogh_integration.TagNameProperty) {
 		if tagName, ok := rdx.GetLastVal(vangogh_integration.TagNameProperty, tagId); ok {
 			dl[tagId] = tagName
 		}
@@ -123,7 +123,7 @@ func tagsDatalist(rdx redux.Readable) map[string]string {
 
 func propertyValuesDatalist(property string, rdx redux.Readable) map[string]string {
 	dl := make(map[string]string)
-	for _, id := range rdx.Keys(property) {
+	for id := range rdx.Keys(property) {
 		if vals, ok := rdx.GetAllValues(property, id); ok {
 			for _, val := range vals {
 				dl[val] = val
