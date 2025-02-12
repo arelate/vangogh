@@ -34,11 +34,11 @@ func SummarizeHandler(u *url.URL) error {
 func Summarize(since int64) error {
 
 	sa := nod.Begin("summarizing updates...")
-	defer sa.End()
+	defer sa.EndWithResult("done")
 
 	updates, err := vangogh_integration.Updates(since)
 	if err != nil {
-		return sa.EndWithError(err)
+		return err
 	}
 
 	if len(updates) == 0 {
@@ -50,7 +50,7 @@ func Summarize(since int64) error {
 		vangogh_integration.TitleProperty,
 		vangogh_integration.GOGReleaseDateProperty)
 	if err != nil {
-		return sa.EndWithError(err)
+		return err
 	}
 
 	summary := make(map[string][]string)
@@ -61,7 +61,7 @@ func Summarize(since int64) error {
 			vangogh_integration.DefaultDesc,
 			vangogh_integration.DefaultSort)
 		if err != nil {
-			return sa.EndWithError(err)
+			return err
 		}
 		summary[section] = sortedIds
 	}
@@ -80,19 +80,16 @@ func Summarize(since int64) error {
 		}
 	}
 
-	if err := rdx.BatchReplaceValues(vangogh_integration.LastSyncUpdatesProperty, summary); err != nil {
-		sa.EndWithError(err)
+	if err = rdx.BatchReplaceValues(vangogh_integration.LastSyncUpdatesProperty, summary); err != nil {
+		return err
 	}
 
 	was := nod.Begin("publishing atom...")
-	defer was.End()
+	defer was.EndWithResult("done")
 
 	if err := publishAtom(rdx, summary); err != nil {
-		return was.EndWithError(err)
+		return err
 	}
-
-	was.EndWithResult("done")
-	sa.EndWithResult("done")
 
 	return nil
 }

@@ -14,7 +14,7 @@ func CascadeValidationHandler(u *url.URL) error {
 func CascadeValidation() error {
 
 	cva := nod.NewProgress("cascading validation...")
-	defer cva.End()
+	defer cva.EndWithResult("done")
 
 	rdx, err := vangogh_integration.NewReduxWriter(
 		//vangogh_integration.OwnedProperty,
@@ -46,7 +46,7 @@ func CascadeValidation() error {
 	}
 
 	if err := rdx.BatchReplaceValues(vangogh_integration.ProductValidationResultProperty, cascadedResults); err != nil {
-		return cva.EndWithError(err)
+		return err
 	}
 
 	return nil

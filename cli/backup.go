@@ -15,32 +15,28 @@ func BackupHandler(_ *url.URL) error {
 func Backup() error {
 
 	ba := nod.NewProgress("backing up local data...")
-	defer ba.End()
+	defer ba.EndWithResult("done")
 
 	abp, err := pathways.GetAbsDir(vangogh_integration.Backups)
 	if err != nil {
-		return ba.EndWithError(err)
+		return err
 	}
 
 	amp, err := pathways.GetAbsDir(vangogh_integration.Metadata)
 	if err != nil {
-		return ba.EndWithError(err)
+		return err
 	}
 
-	if err := backups.Compress(amp, abp); err != nil {
-		return ba.EndWithError(err)
+	if err = backups.Compress(amp, abp); err != nil {
+		return err
 	}
-
-	ba.EndWithResult("done")
 
 	ca := nod.NewProgress("cleaning up old backups...")
-	defer ca.End()
+	defer ca.EndWithResult("done")
 
-	if err := backups.Cleanup(abp, true, ca); err != nil {
-		return ca.EndWithError(err)
+	if err = backups.Cleanup(abp, true, ca); err != nil {
+		return err
 	}
-
-	ca.EndWithResult("done")
 
 	return nil
 }

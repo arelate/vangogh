@@ -12,11 +12,11 @@ func split(sourcePt vangogh_integration.ProductType, timestamp int64) error {
 	//}
 	//
 	//spa := nod.NewProgress(" splitting %s...", sourcePt)
-	//defer spa.End()
+	//defer spa.EndWithResult("done)
 	//
 	//vrPaged, err := vangogh_integration.NewProductReader(sourcePt)
 	//if err != nil {
-	//	return spa.EndWithError(err)
+	//	return err
 	//}
 	//
 	//modifiedIds := make([]string, 0)
@@ -55,17 +55,17 @@ func split(sourcePt vangogh_integration.ProductType, timestamp int64) error {
 	//	productsGetter, err := vrPaged.ProductsGetter(id)
 	//
 	//	if err != nil {
-	//		return spa.EndWithError(err)
+	//		return err
 	//	}
 	//
 	//	detailDstUrl, err := vangogh_integration.AbsProductTypeDir(splitPt)
 	//	if err != nil {
-	//		return spa.EndWithError(err)
+	//		return err
 	//	}
 	//
 	//	kvDetail, err := kevlar.New(detailDstUrl, kevlar.JsonExt)
 	//	if err != nil {
-	//		return spa.EndWithError(err)
+	//		return err
 	//	}
 	//
 	//	products := productsGetter.GetProducts()
@@ -77,10 +77,10 @@ func split(sourcePt vangogh_integration.ProductType, timestamp int64) error {
 	//	for _, product := range products {
 	//		buf := new(bytes.Buffer)
 	//		if err := json.NewEncoder(buf).Encode(product); err != nil {
-	//			return spa.EndWithError(err)
+	//			return err
 	//		}
 	//		if err := kvDetail.Set(strconv.Itoa(product.GetId()), buf); err != nil {
-	//			return spa.EndWithError(err)
+	//			return err
 	//		}
 	//		if sourcePt == vangogh_integration.Licences {
 	//			spa.Increment()

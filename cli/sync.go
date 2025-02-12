@@ -103,7 +103,7 @@ func Sync(
 	}
 
 	sa := nod.Begin("syncing source data...")
-	defer sa.End()
+	defer sa.EndWithResult("done")
 
 	syncStart := since
 	if syncStart == 0 {
@@ -127,19 +127,19 @@ func Sync(
 	//- finally, reduce all properties
 
 	if err := GetData(since, force); err != nil {
-		return sa.EndWithError(err)
+		return err
 	}
 
 	// summarize sync updates now, since other updates are digital artifacts
 	// and won't affect the summaries
 	if err := Summarize(syncStart); err != nil {
-		return sa.EndWithError(err)
+		return err
 	}
 
 	// get items (embedded into descriptions)
 	if syncOpts.items {
 		if err := GetItems(nil, since); err != nil {
-			return sa.EndWithError(err)
+			return err
 		}
 	}
 
@@ -153,17 +153,17 @@ func Sync(
 			imageTypes = append(imageTypes, it)
 		}
 		if err := GetImages(nil, imageTypes, true); err != nil {
-			return sa.EndWithError(err)
+			return err
 		}
 
 		if err := Dehydrate(nil, vangogh_integration.ImageTypesDehydration(), false); err != nil {
-			return sa.EndWithError(err)
+			return err
 		}
 	}
 
 	if syncOpts.videosMetadata {
 		if err := GetVideoMetadata(nil, true, false); err != nil {
-			return sa.EndWithError(err)
+			return err
 		}
 	}
 
@@ -172,7 +172,7 @@ func Sync(
 
 		ids, err := itemizeUpdatedAccountProducts(since)
 		if err != nil {
-			return sa.EndWithError(err)
+			return err
 		}
 
 		if err := UpdateDownloads(
@@ -183,7 +183,7 @@ func Sync(
 			noPatches,
 			since,
 			false); err != nil {
-			return sa.EndWithError(err)
+			return err
 		}
 
 		if err := validateUpdated(
@@ -193,13 +193,13 @@ func Sync(
 			langCodes,
 			downloadTypes,
 			noPatches); err != nil {
-			return sa.EndWithError(err)
+			return err
 		}
 	}
 
 	syncEventsRdx, err := vangogh_integration.NewReduxWriter(vangogh_integration.SyncEventsProperty)
 	if err != nil {
-		return sa.EndWithError(err)
+		return err
 	}
 
 	syncEvents[vangogh_integration.SyncCompleteKey] = []string{strconv.Itoa(int(time.Now().Unix()))}
@@ -207,15 +207,13 @@ func Sync(
 	if err := syncEventsRdx.BatchReplaceValues(
 		vangogh_integration.SyncEventsProperty,
 		syncEvents); err != nil {
-		return sa.EndWithError(err)
+		return err
 	}
 
 	// backing up data
 	if err := Backup(); err != nil {
-		return sa.EndWithError(err)
+		return err
 	}
-
-	sa.EndWithResult("done")
 
 	// print new, updated
 	return GetSummary()

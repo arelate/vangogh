@@ -83,13 +83,13 @@ func UpdateDownloads(
 	updatesOnly bool) error {
 
 	uda := nod.Begin("itemizing updated downloads...")
-	defer uda.End()
+	defer uda.EndWithResult("done")
 
 	if ids == nil {
 		var err error
 		ids, err = itemizeUpdatedAccountProducts(since)
 		if err != nil {
-			return uda.EndWithError(err)
+			return err
 		}
 	}
 
@@ -103,7 +103,7 @@ func UpdateDownloads(
 	if updatesOnly {
 		rdx, err := vangogh_integration.NewReduxReader(vangogh_integration.SlugProperty)
 		if err != nil {
-			return uda.EndWithError(err)
+			return err
 		}
 
 		updatesOnlyIds := make([]string, 0, len(ids))
@@ -113,7 +113,7 @@ func UpdateDownloads(
 			if slug, ok := rdx.GetLastVal(vangogh_integration.SlugProperty, id); ok {
 				pDir, err := vangogh_integration.AbsProductDownloadsDir(slug)
 				if err != nil {
-					return uda.EndWithError(err)
+					return err
 				}
 				if _, err := os.Stat(pDir); os.IsNotExist(err) {
 					continue
@@ -125,8 +125,6 @@ func UpdateDownloads(
 
 		ids = updatesOnlyIds
 	}
-
-	uda.EndWithResult("done")
 
 	return GetDownloads(
 		ids,

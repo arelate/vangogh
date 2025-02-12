@@ -43,7 +43,7 @@ func reduceCatalogPages(kvCatalogPages kevlar.KeyValues) error {
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {
-		return rcpa.EndWithError(err)
+		return err
 	}
 
 	catalogProductProperties := []string{
@@ -73,7 +73,7 @@ func reduceCatalogPages(kvCatalogPages kevlar.KeyValues) error {
 
 	rdx, err := redux.NewWriter(reduxDir, catalogProductProperties...)
 	if err != nil {
-		return rcpa.EndWithError(err)
+		return err
 	}
 
 	rcpa.TotalInt(kvCatalogPages.Len())
@@ -82,7 +82,7 @@ func reduceCatalogPages(kvCatalogPages kevlar.KeyValues) error {
 
 	for page := range kvCatalogPages.Keys() {
 		if err = reduceCatalogPage(page, kvCatalogPages, catalogPagesReductions); err != nil {
-			return rcpa.EndWithError(err)
+			return err
 		}
 
 		rcpa.Increment()

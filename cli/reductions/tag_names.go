@@ -9,28 +9,28 @@ import (
 func TagNames() error {
 
 	tna := nod.Begin(" %s...", vangogh_integration.TagNameProperty)
-	defer tna.End()
+	defer tna.EndWithResult("done")
 
 	vrAccountPage, err := vangogh_integration.NewProductReader(vangogh_integration.AccountPage)
 	if err != nil {
-		return tna.EndWithError(err)
+		return err
 	}
 
 	const fpId = "1"
 
 	if !vrAccountPage.Has(fpId) {
 		err := fmt.Errorf("%s doesn't contain page %s", vangogh_integration.AccountPage, fpId)
-		return tna.EndWithError(err)
+		return err
 	}
 
 	firstPage, err := vrAccountPage.AccountPage(fpId)
 	if err != nil {
-		return tna.EndWithError(err)
+		return err
 	}
 
 	tagNameEx, err := vangogh_integration.NewReduxWriter(vangogh_integration.TagNameProperty)
 	if err != nil {
-		return tna.EndWithError(err)
+		return err
 	}
 
 	tagIdNames := make(map[string][]string, 0)
@@ -39,11 +39,9 @@ func TagNames() error {
 		tagIdNames[tag.Id] = []string{tag.Name}
 	}
 
-	if err := tagNameEx.BatchReplaceValues(vangogh_integration.TagNameProperty, tagIdNames); err != nil {
-		return tna.EndWithError(err)
+	if err = tagNameEx.BatchReplaceValues(vangogh_integration.TagNameProperty, tagIdNames); err != nil {
+		return err
 	}
-
-	tna.EndWithResult("done")
 
 	return nil
 }

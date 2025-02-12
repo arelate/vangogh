@@ -27,7 +27,7 @@ func OwnedHandler(u *url.URL) error {
 func Owned(ids []string) error {
 
 	oa := nod.Begin("checking ownership...")
-	defer oa.End()
+	defer oa.EndWithResult("done")
 
 	propSet := map[string]bool{
 		vangogh_integration.TitleProperty:             true,
@@ -39,12 +39,12 @@ func Owned(ids []string) error {
 
 	rdx, err := vangogh_integration.NewReduxReader(maps.Keys(propSet)...)
 	if err != nil {
-		return oa.EndWithError(err)
+		return err
 	}
 
 	owned, err := reductions.CheckOwnership(ids, rdx)
 	if err != nil {
-		return oa.EndWithError(err)
+		return err
 	}
 
 	ownSummary := make(map[string][]string)

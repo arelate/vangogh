@@ -3,17 +3,17 @@ package reductions
 func Wishlisted() error {
 
 	//wa := nod.Begin(" %s...", vangogh_integration.UserWishlist)
-	//defer wa.End()
+	//defer wa.EndWithResult("done")
 	//
 	//vrCatalogProducts, err := vangogh_integration.NewProductReader(vangogh_integration.CatalogProducts)
 	//if err != nil {
-	//	return wa.EndWithError(err)
+	//	return err
 	//}
 	//
 	////using WishlistPage and not WishlistProduct for the remote source of truth
 	//vrUserWishlist, err := vangogh_integration.NewProductReader(vangogh_integration.UserWishlist)
 	//if err != nil {
-	//	return wa.EndWithError(err)
+	//	return err
 	//}
 	//
 	//wishlisted := map[string][]string{}
@@ -31,16 +31,16 @@ func Wishlisted() error {
 	//	wishlisted[id] = []string{"true"}
 	//}
 	//if err != nil {
-	//	return wa.EndWithError(err)
+	//	return err
 	//}
 	//
 	//wishlistedRdx, err := vangogh_integration.NewReduxWriter(vangogh_integration.WishlistedProperty)
 	//if err != nil {
-	//	return wa.EndWithError(err)
+	//	return err
 	//}
 	//
 	//if err := wishlistedRdx.BatchReplaceValues(vangogh_integration.WishlistedProperty, wishlisted); err != nil {
-	//	return wa.EndWithError(err)
+	//	return err
 	//}
 	//
 	//wa.EndWithResult("done")

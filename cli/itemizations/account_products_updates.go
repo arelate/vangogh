@@ -10,18 +10,18 @@ import (
 func AccountProductsUpdates() ([]string, error) {
 
 	apua := nod.Begin(" finding %s updates...", vangogh_integration.AccountProducts)
-	defer apua.End()
+	defer apua.EndWithResult("done")
 
 	updatesSet := make(map[string]bool)
 	vrAccountPages, err := vangogh_integration.NewProductReader(vangogh_integration.AccountPage)
 	if err != nil {
-		return nil, apua.EndWithError(err)
+		return nil, err
 	}
 
 	for page := range vrAccountPages.Keys() {
 		accountPage, err := vrAccountPages.AccountPage(page)
 		if err != nil {
-			return nil, apua.EndWithError(err)
+			return nil, err
 		}
 		for _, ap := range accountPage.Products {
 			if ap.Updates > 0 ||

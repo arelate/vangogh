@@ -33,7 +33,7 @@ func Size(
 	all bool) error {
 
 	sa := nod.NewProgress("estimating downloads size...")
-	defer sa.End()
+	defer sa.EndWithResult("done")
 
 	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
 
@@ -43,7 +43,7 @@ func Size(
 		vangogh_integration.SlugProperty,
 		vangogh_integration.DownloadStatusErrorProperty)
 	if err != nil {
-		return sa.EndWithError(err)
+		return err
 	}
 
 	if missing {
@@ -54,7 +54,7 @@ func Size(
 			langCodes,
 			noPatches)
 		if err != nil {
-			return sa.EndWithError(err)
+			return err
 		}
 
 		if len(missingIds) == 0 {
@@ -68,7 +68,7 @@ func Size(
 	if all {
 		vrDetails, err := vangogh_integration.NewProductReader(vangogh_integration.Details)
 		if err != nil {
-			return sa.EndWithError(err)
+			return err
 		}
 		for id := range vrDetails.Keys() {
 			ids = append(ids, id)

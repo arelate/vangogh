@@ -10,13 +10,13 @@ import (
 func linkedGames(modifiedAfter int64) ([]string, error) {
 
 	lga := nod.Begin(" finding missing linked %s...", vangogh_integration.ApiProductsV2)
-	defer lga.End()
+	defer lga.EndWithResult("done")
 
 	missingSet := make(map[string]bool)
 
 	vrApv2, err := vangogh_integration.NewProductReader(vangogh_integration.ApiProductsV2)
 	if err != nil {
-		return nil, lga.EndWithError(err)
+		return nil, err
 	}
 
 	modifiedApv2 := vrApv2.Since(modifiedAfter, kevlar.Create, kevlar.Update)
@@ -29,7 +29,7 @@ func linkedGames(modifiedAfter int64) ([]string, error) {
 		apv2, err := vrApv2.ApiProductV2(id)
 
 		if err != nil {
-			return nil, lga.EndWithError(err)
+			return nil, err
 		}
 
 		gig := apv2.GetIncludesGames()

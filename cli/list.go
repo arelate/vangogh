@@ -1,7 +1,7 @@
 package cli
 
 import (
-	"fmt"
+	"errors"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
@@ -38,10 +38,10 @@ func List(
 	properties []string) error {
 
 	la := nod.Begin("listing %s...", pt)
-	defer la.End()
+	defer la.EndWithResult("done")
 
 	if !vangogh_integration.IsValidProductType(pt) {
-		return la.EndWithError(fmt.Errorf("can't list invalid product type %s", pt))
+		return errors.New("can't list invalid product type " + pt.String())
 	}
 
 	propSet := make(map[string]bool)
@@ -69,7 +69,7 @@ func List(
 
 	vr, err := vangogh_integration.NewProductReader(pt)
 	if err != nil {
-		return la.EndWithError(err)
+		return err
 	}
 
 	if modifiedSince > 0 {
@@ -96,7 +96,7 @@ func List(
 		nil)
 
 	if err != nil {
-		return la.EndWithError(err)
+		return err
 	}
 
 	la.EndWithSummary("", itp)

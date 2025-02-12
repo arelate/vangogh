@@ -14,7 +14,7 @@ func HealthHandler(u *url.URL) error {
 func Health(u string) error {
 
 	ha := nod.Begin("checking health...")
-	defer ha.End()
+	defer ha.EndWithResult("done")
 
 	resp, err := http.Get(u)
 	if err != nil {

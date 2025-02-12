@@ -11,12 +11,12 @@ import (
 func InvalidResolvedManualUrls(fix bool) error {
 
 	cirmu := nod.Begin("checking invalid resolved manual-urls...")
-	defer cirmu.End()
+	defer cirmu.EndWithResult("done")
 
 	rdx, err := vangogh_integration.NewReduxWriter(
 		vangogh_integration.LocalManualUrlProperty)
 	if err != nil {
-		return cirmu.EndWithError(err)
+		return err
 	}
 
 	invalidResolvedUrls := make(map[string]bool)
@@ -54,7 +54,7 @@ func InvalidResolvedManualUrls(fix bool) error {
 
 		adp, err := pathways.GetAbsDir(vangogh_integration.Downloads)
 		if err != nil {
-			return cirmu.EndWithError(err)
+			return err
 		}
 
 		for url := range invalidResolvedUrls {
@@ -89,7 +89,7 @@ func InvalidResolvedManualUrls(fix bool) error {
 		heading := fmt.Sprintf(format, len(invalidResolvedUrls))
 
 		if err != nil {
-			return cirmu.EndWithError(err)
+			return err
 		}
 		cirmu.EndWithSummary(heading, summary)
 	}

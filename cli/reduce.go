@@ -47,18 +47,18 @@ func Reduce(since int64, properties []string, propertiesOnly bool) error {
 	//}
 
 	ra := nod.Begin("reducing properties...")
-	defer ra.End()
+	defer ra.EndWithResult("done")
 
 	rdx, err := vangogh_integration.NewReduxWriter(maps.Keys(propSet)...)
 	if err != nil {
-		return ra.EndWithError(err)
+		return err
 	}
 
 	for _, pt := range vangogh_integration.LocalProducts() {
 
 		vr, err := vangogh_integration.NewProductReader(pt)
 		if err != nil {
-			return ra.EndWithError(err)
+			return err
 		}
 
 		missingProps := vangogh_integration.SupportedPropertiesOnly(pt, maps.Keys(propSet))
@@ -115,7 +115,7 @@ func Reduce(since int64, properties []string, propertiesOnly bool) error {
 			//}
 
 			if err := rdx.BatchReplaceValues(prop, redux); err != nil {
-				return pta.EndWithError(err)
+				return err
 			}
 		}
 
@@ -123,7 +123,7 @@ func Reduce(since int64, properties []string, propertiesOnly bool) error {
 	}
 
 	if err := reductions.SteamAppId(since); err != nil {
-		return ra.EndWithError(err)
+		return err
 	}
 
 	if !propertiesOnly {
@@ -132,38 +132,38 @@ func Reduce(since int64, properties []string, propertiesOnly bool) error {
 		////GetLanguages property that returns map[string]string
 		//langCodeSet, err := reductions.GetLanguageCodes(rdx)
 		//if err != nil {
-		//	return ra.EndWithError(err)
+		//	return err
 		//}
 		//
 		//if err := reductions.LanguageNames(langCodeSet); err != nil {
-		//	return ra.EndWithError(err)
+		//	return err
 		//}
 		//
 		//if err := reductions.NativeLanguageNames(langCodeSet); err != nil {
-		//	return ra.EndWithError(err)
+		//	return err
 		//}
 
 		//tag-names are reduced separately from other types,
 		//given it is most convenient to reduce from account-pages
 		if err := reductions.TagNames(); err != nil {
-			return ra.EndWithError(err)
+			return err
 		}
 
 		//orders are reduced separately from other types
 		if err := reductions.Orders(since); err != nil {
-			return ra.EndWithError(err)
+			return err
 		}
 
 		if err := reductions.Types(); err != nil {
-			return ra.EndWithError(err)
+			return err
 		}
 
 		if err := reductions.Wishlisted(); err != nil {
-			return ra.EndWithError(err)
+			return err
 		}
 
 		if err := reductions.Owned(); err != nil {
-			return ra.EndWithError(err)
+			return err
 		}
 	}
 

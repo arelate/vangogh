@@ -47,7 +47,7 @@ func GetDataLegacy(
 	updated bool) error {
 
 	gda := nod.NewProgress("getting %s data...", pt)
-	defer gda.End()
+	defer gda.EndWithResult("done")
 
 	if !vangogh_integration.IsValidProductType(pt) {
 		gda.EndWithResult("%s is not a valid product type", pt)
@@ -56,24 +56,24 @@ func GetDataLegacy(
 
 	acp, err := vangogh_integration.AbsCookiePath()
 	if err != nil {
-		return gda.EndWithError(err)
+		return err
 	}
 
 	hc, err := coost.NewHttpClientFromFile(acp)
 	if err != nil {
-		return gda.EndWithError(err)
+		return err
 	}
 
 	if vangogh_integration.IsProductRequiresAuth(pt) {
 		err := gog_integration.IsLoggedIn(hc)
 		if err != nil {
-			return gda.EndWithError(err)
+			return err
 		}
 	}
 
 	if vangogh_integration.IsGOGPagedProduct(pt) {
 		if err := fetchers.Pages(pt, since, hc, gda); err != nil {
-			return gda.EndWithError(err)
+			return err
 		}
 		return split(pt, since)
 	}
@@ -81,14 +81,14 @@ func GetDataLegacy(
 	if vangogh_integration.IsArrayProduct(pt) {
 		ids := []string{pt.String()}
 		if err := fetchers.Items(ids, pt, hc); err != nil {
-			return gda.EndWithError(err)
+			return err
 		}
 		return split(pt, since)
 	}
 
 	ids, err = itemizations.All(ids, missing, updated, since, pt)
 	if err != nil {
-		return gda.EndWithError(err)
+		return err
 	}
 
 	skipIdSet := make(map[string]bool, len(skipIds))

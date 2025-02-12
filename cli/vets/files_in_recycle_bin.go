@@ -11,15 +11,15 @@ import (
 func FilesInRecycleBin(fix bool) error {
 
 	srba := nod.Begin("checking files in recycle bin...")
-	defer srba.End()
+	defer srba.EndWithResult("done")
 
 	recycleBinFiles, err := vangogh_integration.RecycleBinFiles()
 	if err != nil {
-		return srba.EndWithError(err)
+		return err
 	}
 	recycleBinDirs, err := vangogh_integration.RecycleBinDirs()
 	if err != nil {
-		return srba.EndWithError(err)
+		return err
 	}
 
 	if len(recycleBinFiles) == 0 && len(recycleBinDirs) == 0 {
@@ -32,12 +32,12 @@ func FilesInRecycleBin(fix bool) error {
 			rfa := nod.NewProgress(" emptying recycle bin...")
 			rbdp, err := pathways.GetAbsDir(vangogh_integration.RecycleBin)
 			if err != nil {
-				return rfa.EndWithError(err)
+				return err
 			}
 			rfa.TotalInt(len(recycleBinFiles))
 			for file := range recycleBinFiles {
 				if err := os.Remove(filepath.Join(rbdp, file)); err != nil {
-					return rfa.EndWithError(err)
+					return err
 				}
 				rfa.Increment()
 			}
@@ -57,7 +57,7 @@ func FilesInRecycleBin(fix bool) error {
 
 			for _, dir := range sortedDirs {
 				if err := os.Remove(dir); err != nil {
-					return rda.EndWithError(err)
+					return err
 				}
 				rda.Increment()
 			}

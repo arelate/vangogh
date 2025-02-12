@@ -53,7 +53,7 @@ func Cleanup(
 	}
 
 	ca := nod.NewProgress("cleaning up...")
-	defer ca.End()
+	defer ca.EndWithResult("done")
 
 	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
 
@@ -93,8 +93,6 @@ func Cleanup(
 			fmt.Sprintf("%.2fGB", float64(cd.totalBytes)/math.Pow(1000, 3)),
 		}
 		ca.EndWithSummary("cleanup summary:", summary)
-	} else {
-		ca.EndWithResult("done")
 	}
 
 	return nil
@@ -111,10 +109,10 @@ type cleanupDelegate struct {
 func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_integration.DownloadsList) error {
 
 	csa := nod.QueueBegin(slug)
-	defer csa.End()
+	defer csa.EndWithResult("done")
 
 	if err := cd.rdx.MustHave(vangogh_integration.LocalManualUrlProperty); err != nil {
-		return csa.EndWithError(err)
+		return err
 	}
 
 	//cleanup process:
@@ -127,7 +125,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_integrati
 	//pDir = s/slug
 	pDir, err := vangogh_integration.RelProductDownloadsDir(slug)
 	if err != nil {
-		return csa.EndWithError(err)
+		return err
 	}
 
 	for _, dl := range list {
@@ -136,7 +134,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_integrati
 			//so filepath.Rel would trim to local_filename (or dlc/local_filename, extra/local_filename)
 			relFilename, err := filepath.Rel(pDir, localFilename)
 			if err != nil {
-				return csa.EndWithError(err)
+				return err
 			}
 			expectedSet[relFilename] = true
 		}
@@ -145,7 +143,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_integrati
 	//LocalSlugDownloads returns list of files relative to s/slug product directory
 	presentSet, err := vangogh_integration.LocalSlugDownloads(slug)
 	if err != nil {
-		return csa.EndWithError(err)
+		return err
 	}
 
 	unexpectedFiles := make([]string, 0, len(presentSet))
@@ -171,14 +169,14 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_integrati
 		//restore absolute from local_filename to s/slug/local_filename
 		absDownloadFilename, err := vangogh_integration.AbsDownloadDirFromRel(filepath.Join(pDir, unexpectedFile))
 		if err != nil {
-			return csa.EndWithError(err)
+			return err
 		}
 		if stat, err := os.Stat(absDownloadFilename); err == nil {
 			cd.totalBytes += stat.Size()
 		} else if os.IsNotExist(err) {
 			continue
 		} else {
-			return csa.EndWithError(err)
+			return err
 		}
 
 		prefix := ""
@@ -194,57 +192,57 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_integrati
 
 		adp, err := pathways.GetAbsDir(vangogh_integration.Downloads)
 		if err != nil {
-			return csa.EndWithError(err)
+			return err
 		}
 
 		relDownloadFilename, err := filepath.Rel(adp, absDownloadFilename)
 		if err != nil {
-			return csa.EndWithError(err)
+			return err
 		}
 
 		dft := nod.Begin(" %s %s", prefix, relDownloadFilename)
 		if !cd.test {
 			if cd.delete {
 				if err := os.Remove(absDownloadFilename); err != nil {
-					return dft.EndWithError(err)
+					return err
 				}
 			} else {
 				if err := vangogh_integration.MoveToRecycleBin(adp, absDownloadFilename); err != nil {
-					return dft.EndWithError(err)
+					return err
 				}
 			}
 		}
-		dft.End()
+		dft.EndWithResult("done")
 
 		absChecksumFile, err := vangogh_integration.AbsLocalChecksumPath(absDownloadFilename)
 		if err != nil {
-			return csa.EndWithError(err)
+			return err
 		}
 		if stat, err := os.Stat(absChecksumFile); err == nil {
 			cd.totalBytes += stat.Size()
 		} else if os.IsNotExist(err) {
 			continue
 		} else {
-			return csa.EndWithError(err)
+			return err
 		}
 
 		acp, err := pathways.GetAbsDir(vangogh_integration.Checksums)
 		if err != nil {
-			return csa.EndWithError(err)
+			return err
 		}
 
 		relChecksumFile, err := filepath.Rel(acp, absChecksumFile)
 		if err != nil {
-			return csa.EndWithError(err)
+			return err
 		}
 
 		cft := nod.Begin(" %s %s", prefix, relChecksumFile)
 		if !cd.test {
 			if err := vangogh_integration.MoveToRecycleBin(acp, absChecksumFile); err != nil {
-				return cft.EndWithError(err)
+				return err
 			}
 		}
-		cft.End()
+		cft.EndWithResult("done")
 	}
 
 	return nil

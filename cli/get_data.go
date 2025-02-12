@@ -43,7 +43,7 @@ func GetData(since int64, force bool) error {
 	//
 	//for _, pt := range pagedArrayData {
 	//	if err := GetDataLegacy(nil, nil, pt, since, false, false); err != nil {
-	//		return sa.EndWithError(err)
+	//		return err
 	//	}
 	//}
 	//
@@ -52,12 +52,12 @@ func GetData(since int64, force bool) error {
 	//
 	////get GOG.com detail data, PCGamingWiki pageId, steamAppId
 	//if err := getDetailData(detailData, since); err != nil {
-	//	return sa.EndWithError(err)
+	//	return err
 	//}
 	//
 	////reduce PCGamingWiki pageId
 	//if err := Reduce(since, []string{vangogh_integration.PCGWPageIdProperty}, true); err != nil {
-	//	return sa.EndWithError(err)
+	//	return err
 	//}
 	//
 	////get PCGamingWiki externallinks, engine
@@ -69,7 +69,7 @@ func GetData(since int64, force bool) error {
 	//}
 	//
 	//if err := getDetailData(pcgwDetailProducts, since); err != nil {
-	//	return sa.EndWithError(err)
+	//	return err
 	//}
 	//
 	////reduce SteamAppId, HowLongToBeatId, IGDBId
@@ -78,7 +78,7 @@ func GetData(since int64, force bool) error {
 	//	vangogh_integration.HLTBBuildIdProperty,
 	//	vangogh_integration.HLTBIdProperty,
 	//	vangogh_integration.IGDBIdProperty}, true); err != nil {
-	//	return sa.EndWithError(err)
+	//	return err
 	//}
 	//
 	//otherDetailProducts := vangogh_integration.SteamDetailProducts()
@@ -89,12 +89,12 @@ func GetData(since int64, force bool) error {
 	////connection is established at reduce. And the earlier data set cannot be retrieved post reduce,
 	////since SteamAppList is fetched with initial data
 	//if err := getDetailData(otherDetailProducts, since); err != nil {
-	//	return sa.EndWithError(err)
+	//	return err
 	//}
 	//
 	//// finally, reduce all properties
 	//if err := Reduce(since, vangogh_integration.ReduxProperties(), false); err != nil {
-	//	return sa.EndWithError(err)
+	//	return err
 	//}
 	//
 	//if err := gog_data.GetLicences(); err != nil {

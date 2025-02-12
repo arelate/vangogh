@@ -78,53 +78,53 @@ func Vet(
 	fix bool) error {
 
 	sda := nod.Begin("vetting local data...")
-	defer sda.End()
+	defer sda.EndWithResult("done")
 
 	if vetOpts.localOnlyImages {
 		if err := vets.LocalOnlyImages(fix); err != nil {
-			return sda.EndWithError(err)
+			return err
 		}
 	}
 
 	if vetOpts.recycleBin {
 		if err := vets.FilesInRecycleBin(fix); err != nil {
-			return sda.EndWithError(err)
+			return err
 		}
 	}
 
 	if vetOpts.invalidData {
 		if err := vets.InvalidLocalProductData(fix); err != nil {
-			return sda.EndWithError(err)
+			return err
 		}
 	}
 
 	if vetOpts.unresolvedManualUrls {
 		if err := vets.UnresolvedManualUrls(operatingSystems, langCodes, downloadTypes, noPatches, fix); err != nil {
-			return sda.EndWithError(err)
+			return err
 		}
 	}
 
 	if vetOpts.invalidUnresolvedManualUrls {
 		if err := vets.InvalidResolvedManualUrls(fix); err != nil {
-			return sda.EndWithError(err)
+			return err
 		}
 	}
 
 	if vetOpts.missingChecksums {
 		if err := vets.MissingChecksums(operatingSystems, langCodes, noPatches, fix); err != nil {
-			return sda.EndWithError(err)
+			return err
 		}
 	}
 
 	if vetOpts.staleDehydrations {
 		if err := StaleDehydrations(fix); err != nil {
-			return sda.EndWithError(err)
+			return err
 		}
 	}
 
 	if vetOpts.oldLogs {
 		if err := vets.CleanupOldLogs(fix); err != nil {
-			return sda.EndWithError(err)
+			return err
 		}
 	}
 

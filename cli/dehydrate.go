@@ -27,7 +27,7 @@ func Dehydrate(
 	force bool) error {
 
 	di := nod.NewProgress("dehydrating images...")
-	defer di.End()
+	defer di.EndWithResult("done")
 
 	properties := make([]string, 0, len(its)*2)
 	for _, it := range its {
@@ -39,7 +39,7 @@ func Dehydrate(
 
 	rdx, err := imageTypesReduxAssets(properties, its)
 	if err != nil {
-		return di.EndWithError(err)
+		return err
 	}
 
 	if len(ids) == 0 {
@@ -86,7 +86,7 @@ func Dehydrate(
 
 			alip, err := vangogh_integration.AbsLocalImagePath(imageId)
 			if err != nil {
-				return di.EndWithError(err)
+				return err
 			}
 
 			if dhi, rc, err := issa.DehydrateImageRepColor(alip); err == nil {
@@ -102,21 +102,19 @@ func Dehydrate(
 
 		dehydratedProperty := vangogh_integration.ImageTypeDehydratedProperty(it)
 		if err := rdx.BatchReplaceValues(dehydratedProperty, dehydratedImages); err != nil {
-			return di.EndWithError(err)
+			return err
 		}
 
 		dehydratedModifiedProperty := vangogh_integration.ImageTypeDehydratedModifiedProperty(it)
 		if err := rdx.BatchReplaceValues(dehydratedModifiedProperty, dehydratedImageModified); err != nil {
-			return di.EndWithError(err)
+			return err
 		}
 
 		repColorProperty := vangogh_integration.ImageTypeRepColorProperty(it)
 		if err := rdx.BatchReplaceValues(repColorProperty, repColors); err != nil {
-			return di.EndWithError(err)
+			return err
 		}
 	}
-
-	di.EndWithResult("done")
 
 	return nil
 }

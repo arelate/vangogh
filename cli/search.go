@@ -25,7 +25,7 @@ func SearchHandler(u *url.URL) error {
 func Search(query map[string][]string) error {
 
 	sa := nod.Begin("searching...")
-	defer sa.End()
+	defer sa.EndWithResult("done")
 
 	//prepare a list of all properties to load redux for and
 	//always start with a `title` property since it is printed for all matched item
@@ -37,7 +37,7 @@ func Search(query map[string][]string) error {
 
 	rdx, err := vangogh_integration.NewReduxReader(maps.Keys(propSet)...)
 	if err != nil {
-		return sa.EndWithError(err)
+		return err
 	}
 
 	results := rdx.Match(query)
@@ -79,7 +79,7 @@ func Search(query map[string][]string) error {
 		rdx)
 
 	if err != nil {
-		return sa.EndWithError(err)
+		return err
 	}
 
 	sa.EndWithSummary("found products:", itp)

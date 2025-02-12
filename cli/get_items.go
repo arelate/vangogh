@@ -28,21 +28,21 @@ func GetItems(
 	since int64) error {
 
 	gia := nod.NewProgress("getting description items...")
-	defer gia.End()
+	defer gia.EndWithResult("done")
 
 	rdx, err := vangogh_integration.NewReduxReader(
 		vangogh_integration.TitleProperty,
 		vangogh_integration.DescriptionOverviewProperty,
 		vangogh_integration.DescriptionFeaturesProperty)
 	if err != nil {
-		return gia.EndWithError(err)
+		return err
 	}
 
 	dl := dolo.DefaultClient
 
 	all, err := itemizations.All(ids, false, true, since, vangogh_integration.ApiProductsV2)
 	if err != nil {
-		return gia.EndWithError(err)
+		return err
 	}
 
 	gia.TotalInt(len(all))
@@ -83,7 +83,7 @@ func GetItems(
 				urls = append(urls, u)
 				aip, err := vangogh_integration.AbsItemPath(u.Path)
 				if err != nil {
-					return gia.EndWithError(err)
+					return err
 				}
 				filenames = append(filenames, aip)
 			}
@@ -99,8 +99,6 @@ func GetItems(
 		dia.EndWithResult("done")
 		gia.Increment()
 	}
-
-	gia.EndWithResult("done")
 
 	return nil
 }

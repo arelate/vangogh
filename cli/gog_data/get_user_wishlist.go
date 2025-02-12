@@ -17,18 +17,18 @@ func GetUserWishlist() error {
 
 	userWishlistDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.UserWishlist)
 	if err != nil {
-		return guwa.EndWithError(err)
+		return err
 	}
 
 	kvUserWishlist, err := kevlar.New(userWishlistDir, kevlar.JsonExt)
 	if err != nil {
-		return guwa.EndWithError(err)
+		return err
 	}
 
 	if err = getGogAuthData(vangogh_integration.UserWishlist.String(),
 		gog_integration.UserWishlistUrl(),
 		kvUserWishlist); err != nil {
-		return guwa.EndWithError(err)
+		return err
 
 	}
 
@@ -42,25 +42,25 @@ func reduceUserWishlist(kvUserWishlist kevlar.KeyValues) error {
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {
-		return ruwa.EndWithError(err)
+		return err
 	}
 
 	key := vangogh_integration.UserWishlistProperty
 
 	rdx, err := redux.NewWriter(reduxDir, key)
 	if err != nil {
-		return ruwa.EndWithError(err)
+		return err
 	}
 
 	rcUserWishlist, err := kvUserWishlist.Get(vangogh_integration.UserWishlist.String())
 	if err != nil {
-		return ruwa.EndWithError(err)
+		return err
 	}
 	defer rcUserWishlist.Close()
 
 	var userWishlist gog_integration.UserWishlist
 	if err = json.NewDecoder(rcUserWishlist).Decode(&userWishlist); err != nil {
-		return ruwa.EndWithError(err)
+		return err
 	}
 
 	userWishlistMap := make(map[string][]string, len(userWishlist.Wishlist))
@@ -71,7 +71,7 @@ func reduceUserWishlist(kvUserWishlist kevlar.KeyValues) error {
 	}
 
 	if err = rdx.CutKeys(key, slices.Collect(rdx.Keys(key))...); err != nil {
-		return ruwa.EndWithError(err)
+		return err
 	}
 
 	return rdx.BatchAddValues(key, userWishlistMap)

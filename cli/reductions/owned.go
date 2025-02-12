@@ -86,7 +86,7 @@ func isIncludedByIsOwned(id string, rdx redux.Readable, vrLicenceProducts *vango
 func Owned() error {
 
 	//oa := nod.Begin(" %s...", vangogh_integration.OwnedProperty)
-	//defer oa.End()
+	//defer oa.EndWithResult("done")
 	//
 	//rdx, err := vangogh_integration.NewReduxWriter(
 	//	vangogh_integration.TitleProperty,
@@ -95,13 +95,13 @@ func Owned() error {
 	//	vangogh_integration.IncludesGamesProperty,
 	//	vangogh_integration.IsIncludedByGamesProperty)
 	//if err != nil {
-	//	return oa.EndWithError(err)
+	//	return err
 	//}
 	//
 	//ids := rdx.Keys(vangogh_integration.TitleProperty)
 	//owned, err := CheckOwnership(ids, rdx)
 	//if err != nil {
-	//	return oa.EndWithError(err)
+	//	return err
 	//}
 	//
 	//ownedRdx := make(map[string][]string)
@@ -115,10 +115,8 @@ func Owned() error {
 	//}
 	//
 	//if err := rdx.BatchReplaceValues(vangogh_integration.OwnedProperty, ownedRdx); err != nil {
-	//	return oa.EndWithError(err)
+	//	return err
 	//}
-	//
-	//oa.EndWithResult("done")
 
 	return nil
 }

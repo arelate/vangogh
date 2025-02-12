@@ -14,7 +14,7 @@ func MigrateHandler(_ *url.URL) error {
 
 func Migrate() error {
 	ma := nod.Begin("migrating data...")
-	defer ma.End()
+	defer ma.EndWithResult("done")
 
 	productTypes := vangogh_integration.LocalProducts()
 	productTypes = append(productTypes, vangogh_integration.GOGPagedProducts()...)
@@ -24,24 +24,22 @@ func Migrate() error {
 	for _, pt := range productTypes {
 		absPtDir, err := vangogh_integration.AbsProductTypeDir(pt)
 		if err != nil {
-			return ma.EndWithError(err)
+			return err
 		}
 
 		if err := kevlar.Migrate(absPtDir); err != nil {
-			return ma.EndWithError(err)
+			return err
 		}
 	}
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {
-		return ma.EndWithError(err)
+		return err
 	}
 
 	if err := kevlar.Migrate(reduxDir); err != nil {
-		return ma.EndWithError(err)
+		return err
 	}
-
-	ma.EndWithResult("done")
 
 	return nil
 }

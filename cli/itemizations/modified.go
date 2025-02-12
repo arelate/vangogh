@@ -12,7 +12,7 @@ func Modified(
 	pt vangogh_integration.ProductType) ([]string, error) {
 
 	ma := nod.Begin(" finding modified %s...", pt)
-	defer ma.End()
+	defer ma.EndWithResult("done")
 
 	modSet := make(map[string]bool)
 
@@ -24,12 +24,12 @@ func Modified(
 
 	destUrl, err := vangogh_integration.AbsProductTypeDir(pt)
 	if err != nil {
-		return nil, ma.EndWithError(err)
+		return nil, err
 	}
 
 	kv, err := kevlar.New(destUrl, kevlar.JsonExt)
 	if err != nil {
-		return nil, ma.EndWithError(err)
+		return nil, err
 	}
 
 	for mid := range kv.Since(since, kevlar.Create, kevlar.Update) {

@@ -3,16 +3,16 @@ package reductions
 func Orders(modifiedAfter int64) error {
 
 	//oa := nod.Begin(" %s...", vangogh_integration.GOGOrderDateProperty)
-	//defer oa.End()
+	//defer oa.EndWithResult("done)
 	//
 	//rdx, err := vangogh_integration.NewReduxWriter(vangogh_integration.GOGOrderDateProperty)
 	//if err != nil {
-	//	return oa.EndWithError(err)
+	//	return err
 	//}
 	//
 	//vrOrders, err := vangogh_integration.NewProductReader(vangogh_integration.Orders)
 	//if err != nil {
-	//	return oa.EndWithError(err)
+	//	return err
 	//}
 	//
 	//gogOrderDates := make(map[string][]string, 0)
@@ -31,7 +31,7 @@ func Orders(modifiedAfter int64) error {
 	//for _, orderId := range modifiedOrders {
 	//	order, err := vrOrders.Order(orderId)
 	//	if err != nil {
-	//		return oa.EndWithError(err)
+	//		return err
 	//	}
 	//
 	//	// only consider purchase orders, filter out gifts, refunds
@@ -41,7 +41,7 @@ func Orders(modifiedAfter int64) error {
 	//
 	//	orderTimestamp, err := strconv.ParseInt(orderId, 10, 64)
 	//	if err != nil {
-	//		return oa.EndWithError(err)
+	//		return err
 	//	}
 	//
 	//	orderDate := time.Unix(orderTimestamp, 0)
@@ -52,10 +52,8 @@ func Orders(modifiedAfter int64) error {
 	//}
 	//
 	//if err := rdx.BatchReplaceValues(vangogh_integration.GOGOrderDateProperty, gogOrderDates); err != nil {
-	//	return oa.EndWithError(err)
+	//	return err
 	//}
-	//
-	//oa.EndWithResult("done")
 
 	return nil
 }

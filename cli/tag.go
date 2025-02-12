@@ -1,7 +1,7 @@
 package cli
 
 import (
-	"fmt"
+	"errors"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/coost"
 	"github.com/boggydigital/nod"
@@ -31,7 +31,7 @@ func TagHandler(u *url.URL) error {
 func Tag(ids []string, operation, tagName string) error {
 
 	ta := nod.Begin("performing requested tag operation...")
-	defer ta.End()
+	defer ta.EndWithResult("done")
 
 	//matching default GOG.com capitalization for tags
 	tagName = strings.ToUpper(tagName)
@@ -48,16 +48,16 @@ func Tag(ids []string, operation, tagName string) error {
 
 	acp, err := vangogh_integration.AbsCookiePath()
 	if err != nil {
-		return ta.EndWithError(err)
+		return err
 	}
 
 	hc, err := coost.NewHttpClientFromFile(acp)
 	if err != nil {
-		return ta.EndWithError(err)
+		return err
 	}
 
 	toa := nod.NewProgress(" %s tag %s...", operation, tagName)
-	defer toa.End()
+	defer toa.EndWithResult("done")
 
 	switch operation {
 	case createOp:
@@ -69,6 +69,6 @@ func Tag(ids []string, operation, tagName string) error {
 	case removeOp:
 		return vangogh_integration.RemoveTags(hc, ids, []string{tagId}, toa)
 	default:
-		return ta.EndWithError(fmt.Errorf("unknown tag operation %s", operation))
+		return errors.New("unknown tag operation " + operation)
 	}
 }

@@ -16,10 +16,10 @@ func Items(
 	httpClient *http.Client) error {
 
 	ia := nod.NewProgress(" fetching %s...", pt)
-	defer ia.End()
+	defer ia.EndWithResult("done")
 
 	if !vangogh_integration.IsGetItemsSupported(pt) {
-		return ia.EndWithError(fmt.Errorf("getting %s is not supported", pt))
+		return fmt.Errorf("getting %s is not supported", pt)
 	}
 
 	ia.TotalInt(len(ids))
@@ -38,7 +38,7 @@ func Items(
 
 	up, err := vangogh_integration.NewUrlProvider(pt, rdx)
 	if err != nil {
-		return ia.EndWithError(err)
+		return err
 	}
 
 	for i := 0; i < len(ids); i++ {
@@ -47,7 +47,7 @@ func Items(
 
 	kis, err := NewIndexSetter(pt, idStr)
 	if err != nil {
-		return ia.EndWithError(err)
+		return err
 	}
 
 	dc := dolo.NewClient(httpClient, dolo.Defaults())
@@ -57,8 +57,6 @@ func Items(
 			ia.Error(fmt.Errorf("GetSet %s error: %s", urls[ui], e.Error()))
 		}
 	}
-
-	ia.EndWithResult("done")
 
 	return nil
 }

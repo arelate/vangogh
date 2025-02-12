@@ -8,7 +8,7 @@ import (
 func Types() error {
 
 	ta := nod.Begin(" %s...", vangogh_integration.TypesProperty)
-	defer ta.End()
+	defer ta.EndWithResult("done")
 
 	idsTypes := make(map[string][]string)
 
@@ -16,7 +16,7 @@ func Types() error {
 
 		vr, err := vangogh_integration.NewProductReader(pt)
 		if err != nil {
-			return ta.EndWithError(err)
+			return err
 		}
 
 		for id := range vr.Keys() {
@@ -31,14 +31,12 @@ func Types() error {
 
 	typesEx, err := vangogh_integration.NewReduxWriter(vangogh_integration.TypesProperty)
 	if err != nil {
-		return ta.EndWithError(err)
+		return err
 	}
 
 	if err := typesEx.BatchReplaceValues(vangogh_integration.TypesProperty, idsTypes); err != nil {
-		return ta.EndWithError(err)
+		return err
 	}
-
-	ta.EndWithResult("done")
 
 	return nil
 }

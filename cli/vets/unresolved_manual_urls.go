@@ -15,7 +15,7 @@ func UnresolvedManualUrls(
 	fix bool) error {
 
 	cumu := nod.NewProgress("checking unresolved manual-urls...")
-	defer cumu.End()
+	defer cumu.EndWithResult("done")
 
 	vangogh_integration.PrintParams(nil, operatingSystems, langCodes, downloadTypes, noPatches)
 
@@ -24,12 +24,12 @@ func UnresolvedManualUrls(
 		//vangogh_integration.NativeLanguageNameProperty,
 		vangogh_integration.LocalManualUrlProperty)
 	if err != nil {
-		return cumu.EndWithError(err)
+		return err
 	}
 
 	vrDetails, err := vangogh_integration.NewProductReader(vangogh_integration.Details)
 	if err != nil {
-		return cumu.EndWithError(err)
+		return err
 	}
 
 	unresolvedIds := make(map[string]bool)
@@ -79,7 +79,7 @@ func UnresolvedManualUrls(
 		}
 
 		if err != nil {
-			return cumu.EndWithError(err)
+			return err
 		}
 		cumu.EndWithSummary(heading, summary)
 	}

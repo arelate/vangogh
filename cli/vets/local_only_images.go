@@ -11,13 +11,13 @@ import (
 func LocalOnlyImages(fix bool) error {
 
 	loia := nod.Begin("checking for local only images...")
-	defer loia.End()
+	defer loia.EndWithResult("done")
 
 	ilia := nod.Begin(" itemizing local images...")
 	localImages, err := vangogh_integration.LocalImageIds()
 	if err != nil {
-		ilia.End()
-		return loia.EndWithError(err)
+		ilia.EndWithResult(err.Error())
+		return err
 	}
 	ilia.EndWithResult("done")
 
@@ -28,7 +28,7 @@ func LocalOnlyImages(fix bool) error {
 
 	rdx, err := vangogh_integration.NewReduxReader(maps.Keys(propSet)...)
 	if err != nil {
-		return loia.EndWithError(err)
+		return err
 	}
 
 	ieia := nod.NewProgress(" itemizing expected images...")
@@ -75,7 +75,7 @@ func LocalOnlyImages(fix bool) error {
 
 	aip, err := pathways.GetAbsDir(vangogh_integration.Images)
 	if err != nil {
-		return loia.EndWithError(err)
+		return err
 	}
 
 	if fix && len(unexpectedImages) > 0 {
@@ -85,11 +85,11 @@ func LocalOnlyImages(fix bool) error {
 		for _, imageId := range unexpectedImages {
 			absLocalImagePath, err := vangogh_integration.AbsLocalImagePath(imageId)
 			if err != nil {
-				return floia.EndWithError(err)
+				return err
 			}
 			nod.Log("removing local only imageId=%s file=%s", imageId, absLocalImagePath)
 			if err := vangogh_integration.MoveToRecycleBin(aip, absLocalImagePath); err != nil && !os.IsNotExist(err) {
-				return floia.EndWithError(err)
+				return err
 			}
 			floia.Increment()
 		}

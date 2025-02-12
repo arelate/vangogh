@@ -23,7 +23,7 @@ func InfoHandler(u *url.URL) error {
 func Info(ids []string, allText, images, videoId bool) error {
 
 	ia := nod.Begin("information:")
-	defer ia.End()
+	defer ia.EndWithResult("done")
 
 	propSet := map[string]bool{vangogh_integration.TypesProperty: true}
 
@@ -50,7 +50,7 @@ func Info(ids []string, allText, images, videoId bool) error {
 
 	rdx, err := vangogh_integration.NewReduxReader(maps.Keys(propSet)...)
 	if err != nil {
-		return ia.EndWithError(err)
+		return err
 	}
 
 	itp, err := vangogh_integration.PropertyListsFromIdSet(
@@ -60,7 +60,7 @@ func Info(ids []string, allText, images, videoId bool) error {
 		rdx)
 
 	if err != nil {
-		return ia.EndWithError(err)
+		return err
 	}
 
 	ia.EndWithSummary("", itp)

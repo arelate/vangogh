@@ -8,7 +8,7 @@ import (
 
 func InvalidLocalProductData(fix bool) error {
 	ilpa := nod.NewProgress("checking data for invalid products...")
-	defer ilpa.End()
+	defer ilpa.EndWithResult("done")
 
 	invalidProducts := make(map[vangogh_integration.ProductType][]string)
 
@@ -38,7 +38,7 @@ func InvalidLocalProductData(fix bool) error {
 
 		vr, err := vangogh_integration.NewProductReader(pt)
 		if err != nil {
-			_ = pta.EndWithError(err)
+			_ = err
 			continue
 		}
 

@@ -24,16 +24,16 @@ func GetApiProducts(since int64, force bool) error {
 
 	catalogAccountProductIds, err := getCatalogAccountProducts(since)
 	if err != nil {
-		return gapva.EndWithError(err)
+		return err
 	}
 
 	apiProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.ApiProductsV2)
 	if err != nil {
-		return gapva.EndWithError(err)
+		return err
 	}
 	kvApiProducts, err := kevlar.New(apiProductsDir, kevlar.JsonExt)
 	if err != nil {
-		return gapva.EndWithError(err)
+		return err
 	}
 
 	ids := make([]string, 0, len(catalogAccountProductIds))
@@ -201,7 +201,7 @@ func reduceApiProducts(kvApiProducts kevlar.KeyValues, ids ...string) error {
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {
-		return rapa.EndWithError(err)
+		return err
 	}
 
 	apiProductProperties := []string{
@@ -243,7 +243,7 @@ func reduceApiProducts(kvApiProducts kevlar.KeyValues, ids ...string) error {
 
 	rdx, err := redux.NewWriter(reduxDir, apiProductProperties...)
 	if err != nil {
-		return rapa.EndWithError(err)
+		return err
 	}
 
 	rapa.TotalInt(len(ids))
@@ -252,7 +252,7 @@ func reduceApiProducts(kvApiProducts kevlar.KeyValues, ids ...string) error {
 
 	for _, id := range ids {
 		if err = reduceApiProduct(id, kvApiProducts, apiProductReductions); err != nil {
-			return rapa.EndWithError(err)
+			return err
 		}
 
 		rapa.Increment()

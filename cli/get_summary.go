@@ -14,13 +14,13 @@ func GetSummaryHandler(u *url.URL) error {
 func GetSummary() error {
 
 	sa := nod.Begin("last sync summary:")
-	defer sa.End()
+	defer sa.EndWithResult("done")
 
 	rdx, err := vangogh_integration.NewReduxReader(
 		vangogh_integration.LastSyncUpdatesProperty,
 		vangogh_integration.TitleProperty)
 	if err != nil {
-		return sa.EndWithError(err)
+		return err
 	}
 
 	summary := make(map[string][]string)

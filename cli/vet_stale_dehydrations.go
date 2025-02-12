@@ -29,7 +29,7 @@ func StaleDehydrations(fix bool) error {
 func staleDehydrationsImageType(imageProperty, dimProperty string, fix bool) error {
 
 	sdia := nod.NewProgress("checking stale dehydrations for %s...", imageProperty)
-	defer sdia.End()
+	defer sdia.EndWithResult("done")
 
 	rdx, err := vangogh_integration.NewReduxReader(imageProperty, dimProperty)
 	if err != nil {
@@ -44,7 +44,7 @@ func staleDehydrationsImageType(imageProperty, dimProperty string, fix bool) err
 		if imageId, ok := rdx.GetLastVal(imageProperty, id); ok {
 			imagePath, err := vangogh_integration.AbsLocalImagePath(imageId)
 			if err != nil {
-				return sdia.EndWithError(err)
+				return err
 			}
 			if stat, err := os.Stat(imagePath); err == nil {
 				if dimStr, ok := rdx.GetLastVal(dimProperty, id); ok {

@@ -12,28 +12,28 @@ import (
 func SteamAppId(since int64) error {
 
 	saia := nod.Begin(" %s...", vangogh_integration.SteamAppIdProperty)
-	defer saia.End()
+	defer saia.EndWithResult("done")
 
 	rdx, err := vangogh_integration.NewReduxWriter(
 		vangogh_integration.TitleProperty,
 		vangogh_integration.SteamAppIdProperty)
 	if err != nil {
-		return saia.EndWithError(err)
+		return err
 	}
 
 	vrSteamAppList, err := vangogh_integration.NewProductReader(vangogh_integration.SteamAppList)
 	if err != nil {
-		return saia.EndWithError(err)
+		return err
 	}
 
 	vrCatalogProducts, err := vangogh_integration.NewProductReader(vangogh_integration.CatalogProducts)
 	if err != nil {
-		return saia.EndWithError(err)
+		return err
 	}
 
 	sal, err := vrSteamAppList.SteamAppList()
 	if err != nil {
-		return saia.EndWithError(err)
+		return err
 	}
 
 	appMap := GetAppListResponseToMap(sal)
@@ -60,10 +60,8 @@ func SteamAppId(since int64) error {
 	}
 
 	if err := rdx.BatchReplaceValues(vangogh_integration.SteamAppIdProperty, gogSteamAppId); err != nil {
-		return saia.EndWithError(err)
+		return err
 	}
-
-	saia.EndWithResult("done")
 
 	return nil
 }

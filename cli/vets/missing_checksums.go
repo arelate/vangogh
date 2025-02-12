@@ -18,7 +18,7 @@ func MissingChecksums(
 	fix bool) error {
 
 	mca := nod.NewProgress("checking for missing checksums...")
-	defer mca.End()
+	defer mca.EndWithResult("done")
 
 	rdx, err := vangogh_integration.NewReduxWriter(
 		vangogh_integration.LocalManualUrlProperty,
@@ -28,14 +28,14 @@ func MissingChecksums(
 		//vangogh_integration.NativeLanguageNameProperty,
 		vangogh_integration.ProductTypeProperty)
 	if err != nil {
-		return mca.EndWithError(err)
+		return err
 	}
 
 	manualUrlsMissingChecksums := make([]string, 0)
 
 	vrDetails, err := vangogh_integration.NewProductReader(vangogh_integration.Details)
 	if err != nil {
-		return mca.EndWithError(err)
+		return err
 	}
 
 	mca.TotalInt(vrDetails.Len())
@@ -52,12 +52,12 @@ func MissingChecksums(
 
 		det, err := vrDetails.Details(id)
 		if err != nil {
-			return mca.EndWithError(err)
+			return err
 		}
 
 		dls, err := vangogh_integration.FromDetails(det, rdx)
 		if err != nil {
-			return mca.EndWithError(err)
+			return err
 		}
 
 		dls = dls.Only(operatingSystems,
@@ -93,7 +93,7 @@ func MissingChecksums(
 
 		absChecksumFile, err := vangogh_integration.AbsLocalChecksumPath(relFile)
 		if err != nil {
-			return mca.EndWithError(err)
+			return err
 		}
 		if _, err := os.Stat(absChecksumFile); err == nil {
 			continue
@@ -102,11 +102,11 @@ func MissingChecksums(
 		if fix {
 
 			if err := generateChecksumForFile(relFile); err != nil {
-				return mca.EndWithError(err)
+				return err
 			}
 
 			if err := rdx.AddValues(vangogh_integration.ManualUrlGeneratedChecksumProperty, manualUrl, vangogh_integration.TrueValue); err != nil {
-				return mca.EndWithError(err)
+				return err
 			}
 
 		} else {
@@ -123,29 +123,29 @@ func generateChecksumForFile(relFile string) error {
 
 	vf, err := generateChecksumData(relFile)
 	if err != nil {
-		return gca.EndWithError(err)
+		return err
 	}
 
 	absChecksumPath, err := vangogh_integration.AbsLocalChecksumPath(relFile)
 	if err != nil {
-		return gca.EndWithError(err)
+		return err
 	}
 
 	absChecksumDir, _ := filepath.Split(absChecksumPath)
 	if _, err := os.Stat(absChecksumDir); os.IsNotExist(err) {
 		if err := os.MkdirAll(absChecksumDir, 0755); err != nil {
-			return gca.EndWithError(err)
+			return err
 		}
 	}
 
 	checksumFile, err := os.Create(absChecksumPath)
 	if err != nil {
-		return gca.EndWithError(err)
+		return err
 	}
 	defer checksumFile.Close()
 
 	if err := xml.NewEncoder(checksumFile).Encode(vf); err != nil {
-		return gca.EndWithError(err)
+		return err
 	}
 
 	gca.EndWithResult("done")
@@ -157,29 +157,29 @@ func generateChecksumData(relFile string) (*vangogh_integration.ValidationFile, 
 	_, fname := filepath.Split(relFile)
 
 	fa := nod.NewProgress(" %s", fname)
-	defer fa.End()
+	defer fa.EndWithResult("done")
 
 	absFile, err := vangogh_integration.AbsDownloadDirFromRel(relFile)
 	if err != nil {
-		return nil, fa.EndWithError(err)
+		return nil, err
 	}
 
 	inputFile, err := os.Open(absFile)
 	if err != nil {
-		return nil, fa.EndWithError(err)
+		return nil, err
 	}
 
 	h := md5.New()
 
 	stat, err := inputFile.Stat()
 	if err != nil {
-		return nil, fa.EndWithError(err)
+		return nil, err
 	}
 
 	fa.Total(uint64(stat.Size()))
 
 	if err := dolo.CopyWithProgress(h, inputFile, fa); err != nil {
-		return nil, fa.EndWithError(err)
+		return nil, err
 	}
 
 	inputFileMD5 := fmt.Sprintf("%x", h.Sum(nil))

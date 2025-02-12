@@ -33,11 +33,11 @@ func GetImages(
 	missing bool) error {
 
 	gia := nod.NewProgress("getting images...")
-	defer gia.End()
+	defer gia.EndWithResult("done")
 
 	rdx, err := imageTypesReduxAssets(nil, its)
 	if err != nil {
-		return gia.EndWithError(err)
+		return err
 	}
 
 	//for every product we'll collect image types missing for id and download only those
@@ -46,7 +46,7 @@ func GetImages(
 	if missing {
 		localImageSet, err := vangogh_integration.LocalImageIds()
 		if err != nil {
-			return gia.EndWithError(err)
+			return err
 		}
 		//to track image types missing for each product we do the following:
 		//1. for every image type requested to be downloaded - get product ids that don't have this image type locally
@@ -55,7 +55,7 @@ func GetImages(
 			//1
 			missingImageIds, err := itemizations.MissingLocalImages(it, rdx, localImageSet)
 			if err != nil {
-				return gia.EndWithError(err)
+				return err
 			}
 
 			//2
@@ -112,7 +112,7 @@ func GetImages(
 
 			srcUrls, err := vangogh_integration.ImagePropertyUrls(images, it)
 			if err != nil {
-				return mita.EndWithError(err)
+				return err
 			}
 
 			urls = append(urls, srcUrls...)
@@ -120,7 +120,7 @@ func GetImages(
 			for _, srcUrl := range srcUrls {
 				dstDir, err := vangogh_integration.AbsImagesDirByImageId(srcUrl.Path)
 				if err != nil {
-					return mita.EndWithError(err)
+					return err
 				}
 				filenames = append(filenames, filepath.Join(dstDir, srcUrl.Path))
 			}
@@ -148,8 +148,6 @@ func GetImages(
 		mita.EndWithResult(completionStatus)
 		gia.Increment()
 	}
-
-	gia.EndWithResult("done")
 
 	return nil
 }

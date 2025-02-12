@@ -26,11 +26,11 @@ func GetVideoMetadataHandler(u *url.URL) error {
 func GetVideoMetadata(ids []string, missing, force bool) error {
 
 	gvma := nod.NewProgress("getting video metadata...")
-	defer gvma.End()
+	defer gvma.EndWithResult("done")
 
 	rdx, err := videoReduxAssets()
 	if err != nil {
-		return gvma.EndWithError(err)
+		return err
 	}
 
 	videoIds := make([]string, 0, len(ids))
@@ -91,18 +91,16 @@ func GetVideoMetadata(ids []string, missing, force bool) error {
 	}
 
 	if err := rdx.BatchAddValues(vangogh_integration.VideoTitleProperty, videoTitles); err != nil {
-		return gvma.EndWithError(err)
+		return err
 	}
 
 	if err := rdx.BatchAddValues(vangogh_integration.VideoDurationProperty, videoDurations); err != nil {
-		return gvma.EndWithError(err)
+		return err
 	}
 
 	if err := rdx.BatchAddValues(vangogh_integration.VideoErrorProperty, videoErrors); err != nil {
-		return gvma.EndWithError(err)
+		return err
 	}
-
-	gvma.EndWithResult("done")
 
 	return nil
 }

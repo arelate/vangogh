@@ -9,7 +9,7 @@ import (
 
 func CleanupOldLogs(fix bool) error {
 	cla := nod.NewProgress("cleaning up old logs...")
-	defer cla.End()
+	defer cla.EndWithResult("done")
 
 	absLogsDir, err := pathways.GetAbsDir(vangogh_integration.Logs)
 	if err != nil {
@@ -17,10 +17,8 @@ func CleanupOldLogs(fix bool) error {
 	}
 
 	if err := backups.Cleanup(absLogsDir, fix, cla); err != nil {
-		return cla.EndWithError(err)
+		return err
 	}
-
-	cla.EndWithResult("done")
 
 	return nil
 }

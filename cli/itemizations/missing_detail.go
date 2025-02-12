@@ -43,28 +43,28 @@ func missingDetail(
 	//}
 
 	mda := nod.Begin(" finding missing %s for %s...", detailPt, mainPt)
-	defer mda.End()
+	defer mda.EndWithResult("done")
 
 	missingIdSet := make(map[string]bool)
 
 	mainDestUrl, err := vangogh_integration.AbsProductTypeDir(mainPt)
 	if err != nil {
-		return nil, mda.EndWithError(err)
+		return nil, err
 	}
 
 	detailDestUrl, err := vangogh_integration.AbsProductTypeDir(detailPt)
 	if err != nil {
-		return nil, mda.EndWithError(err)
+		return nil, err
 	}
 
 	kvMain, err := kevlar.New(mainDestUrl, kevlar.JsonExt)
 	if err != nil {
-		return nil, mda.EndWithError(err)
+		return nil, err
 	}
 
 	kvDetail, err := kevlar.New(detailDestUrl, kevlar.JsonExt)
 	if err != nil {
-		return nil, mda.EndWithError(err)
+		return nil, err
 	}
 
 	for id := range kvMain.Keys() {

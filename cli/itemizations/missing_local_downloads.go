@@ -24,17 +24,17 @@ func MissingLocalDownloads(
 	//4. check if any expected (resolved manualUrls) files are not present -> add to missingIds
 
 	mlda := nod.NewProgress(" itemizing missing local downloads")
-	defer mlda.End()
+	defer mlda.EndWithResult("done")
 
 	if err := rdx.MustHave(
 		vangogh_integration.LocalManualUrlProperty,
 		vangogh_integration.DownloadStatusErrorProperty); err != nil {
-		return nil, mlda.EndWithError(err)
+		return nil, err
 	}
 
 	vrDetails, err := vangogh_integration.NewProductReader(vangogh_integration.Details)
 	if err != nil {
-		return nil, mlda.EndWithError(err)
+		return nil, err
 	}
 
 	//1
@@ -57,7 +57,7 @@ func MissingLocalDownloads(
 		noPatches,
 		mdd,
 		mlda); err != nil {
-		return mdd.missingIds, mlda.EndWithError(err)
+		return mdd.missingIds, err
 	}
 
 	return mdd.missingIds, nil

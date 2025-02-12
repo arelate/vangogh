@@ -17,17 +17,17 @@ func GetAccountPages(force bool) error {
 
 	hc, err := gogAuthHttpClient()
 	if err != nil {
-		return gapa.EndWithError(err)
+		return err
 	}
 
 	accountPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.AccountPage)
 	if err != nil {
-		return gapa.EndWithError(err)
+		return err
 	}
 
 	kvAccountPages, err := kevlar.New(accountPagesDir, kevlar.JsonExt)
 	if err != nil {
-		return gapa.EndWithError(err)
+		return err
 	}
 
 	if err = getGogPages(gog_integration.AccountPageUrl, hc, kvAccountPages, gapa, force); err != nil {
@@ -44,7 +44,7 @@ func reduceAccountPages(kvAccountPages kevlar.KeyValues) error {
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {
-		return rapa.EndWithError(err)
+		return err
 	}
 
 	accountProductProperties := []string{
@@ -54,7 +54,7 @@ func reduceAccountPages(kvAccountPages kevlar.KeyValues) error {
 
 	rdx, err := redux.NewWriter(reduxDir, accountProductProperties...)
 	if err != nil {
-		return rapa.EndWithError(err)
+		return err
 	}
 
 	rapa.TotalInt(kvAccountPages.Len())
@@ -63,7 +63,7 @@ func reduceAccountPages(kvAccountPages kevlar.KeyValues) error {
 
 	for page := range kvAccountPages.Keys() {
 		if err = reduceAccountPage(page, kvAccountPages, accountPagesReductions); err != nil {
-			return rapa.EndWithError(err)
+			return err
 		}
 
 		rapa.Increment()

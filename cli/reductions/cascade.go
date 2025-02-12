@@ -21,15 +21,15 @@ var cascadingProperties = []string{
 func Cascade() error {
 
 	ca := nod.Begin("cascading supported properties...")
-	defer ca.End()
+	defer ca.EndWithResult("done")
 
 	rdx, err := vangogh_integration.NewReduxWriter(vangogh_integration.ReduxProperties()...)
 	if err != nil {
-		return ca.EndWithError(err)
+		return err
 	}
 
 	if err := rdx.MustHave(vangogh_integration.IncludesGamesProperty); err != nil {
-		return ca.EndWithError(err)
+		return err
 	}
 
 	ids := rdx.Keys(vangogh_integration.IncludesGamesProperty)
@@ -47,7 +47,7 @@ func Cascade() error {
 			for _, includesId := range includesIds {
 				if _, ok := rdx.GetAllValues(prop, includesId); !ok {
 					if err := rdx.ReplaceValues(prop, includesId, mainValues...); err != nil {
-						return ca.EndWithError(err)
+						return err
 					}
 				}
 			}

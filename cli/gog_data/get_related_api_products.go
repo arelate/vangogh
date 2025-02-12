@@ -25,16 +25,16 @@ func GetRelatedApiProducts(since int64, force bool) error {
 
 	apiProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.ApiProductsV2)
 	if err != nil {
-		return grapva.EndWithError(err)
+		return err
 	}
 	kvApiProducts, err := kevlar.New(apiProductsDir, kevlar.JsonExt)
 	if err != nil {
-		return grapva.EndWithError(err)
+		return err
 	}
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {
-		return grapva.EndWithError(err)
+		return err
 	}
 
 	relatedApiProductProperties := []string{
@@ -46,7 +46,7 @@ func GetRelatedApiProducts(since int64, force bool) error {
 
 	rdx, err := redux.NewWriter(reduxDir, relatedApiProductProperties...)
 	if err != nil {
-		return grapva.EndWithError(err)
+		return err
 	}
 
 	nrIds := make(map[string]any)

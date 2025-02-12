@@ -8,7 +8,7 @@ package reductions
 //	langCodeSet := make(map[string]bool)
 //
 //	if err := rdx.MustHave(vangogh_integration.LanguageCodeProperty); err != nil {
-//		return langCodeSet, lca.EndWithError(err)
+//		return langCodeSet, err
 //	}
 //
 //	//digest distinct languages codes
@@ -60,12 +60,12 @@ package reductions
 //
 //	langNamesEx, err := vangogh_integration.NewReduxWriter(property)
 //	if err != nil {
-//		return lna.EndWithError(err)
+//		return err
 //	}
 //
 //	missingLangs, err := getMissingLanguageNames(langCodeSet, langNamesEx, property)
 //	if err != nil {
-//		return lna.EndWithError(err)
+//		return err
 //	}
 //
 //	if len(missingLangs) == 0 {
@@ -78,13 +78,13 @@ package reductions
 //	//iterate through api-products-v1 until we fill all native names
 //	vrApiProductsV2, err := vangogh_integration.NewProductReader(vangogh_integration.ApiProductsV2)
 //	if err != nil {
-//		return lna.EndWithError(err)
+//		return err
 //	}
 //
 //	for id := range vrApiProductsV2.Keys() {
 //		apv2, err := vrApiProductsV2.ApiProductV2(id)
 //		if err != nil {
-//			return lna.EndWithError(err)
+//			return err
 //		}
 //
 //		updateLanguageNames(apv2.GetLanguages(), missingLangs, names)
@@ -95,7 +95,7 @@ package reductions
 //	}
 //
 //	if err := langNamesEx.BatchReplaceValues(property, names); err != nil {
-//		return lna.EndWithError(err)
+//		return err
 //	}
 //
 //	return nil
@@ -105,16 +105,16 @@ package reductions
 //	property := vangogh_integration.NativeLanguageNameProperty
 //
 //	nlna := nod.Begin(" %s...", property)
-//	defer nlna.End()
+//	defer nlna.EndWithResult("done")
 //
 //	langNamesEx, err := vangogh_integration.NewReduxWriter(property)
 //	if err != nil {
-//		return nlna.EndWithError(err)
+//		return err
 //	}
 //
 //	missingNativeLangs, err := getMissingLanguageNames(langCodeSet, langNamesEx, property)
 //	if err != nil {
-//		return nlna.EndWithError(err)
+//		return err
 //	}
 //
 //	if len(missingNativeLangs) == 0 {
@@ -124,7 +124,7 @@ package reductions
 //
 //	vrApiProductsV1, err := vangogh_integration.NewProductReader(vangogh_integration.ApiProductsV1)
 //	if err != nil {
-//		return nlna.EndWithError(err)
+//		return err
 //	}
 //
 //	missingNativeLangs = maps.Clone(langCodeSet)
@@ -133,7 +133,7 @@ package reductions
 //	for id := range vrApiProductsV1.Keys() {
 //		apv1, err := vrApiProductsV1.ApiProductV1(id)
 //		if err != nil {
-//			return nlna.EndWithError(err)
+//			return err
 //		}
 //
 //		updateLanguageNames(apv1.GetNativeLanguages(), missingNativeLangs, nativeNames)
@@ -144,10 +144,8 @@ package reductions
 //	}
 //
 //	if err := langNamesEx.BatchReplaceValues(property, nativeNames); err != nil {
-//		return nlna.EndWithError(err)
+//		return err
 //	}
-//
-//	nlna.EndWithResult("done")
 //
 //	return nil
 //}

@@ -33,13 +33,13 @@ func main() {
 	nod.EnableStdOutPresenter()
 
 	ns := nod.Begin("vangogh is serving your DRM-free needs")
-	defer ns.End()
+	defer ns.EndWithResult("done")
 
 	if err := pathways.Setup(dirsOverrideFilename,
 		vangogh_integration.DefaultRootDir,
 		vangogh_integration.RelToAbsDirs,
 		vangogh_integration.AllAbsDirs...); err != nil {
-		_ = ns.EndWithError(err)
+		_ = err
 		os.Exit(1)
 	}
 
@@ -48,7 +48,7 @@ func main() {
 		bytes.NewBuffer(cliHelp),
 		clo_delegates.Values)
 	if err != nil {
-		_ = ns.EndWithError(err)
+		_ = err
 		os.Exit(1)
 	}
 
@@ -85,12 +85,12 @@ func main() {
 	})
 
 	if err := defs.AssertCommandsHaveHandlers(); err != nil {
-		_ = ns.EndWithError(err)
+		_ = err
 		os.Exit(1)
 	}
 
 	if err := defs.Serve(os.Args[1:]); err != nil {
-		_ = ns.EndWithError(err)
+		_ = err
 		os.Exit(1)
 	}
 }

@@ -36,11 +36,11 @@ func NewIndexSetter(pt vangogh_integration.ProductType, ids []string) (dolo.Inde
 func Pages(pt vangogh_integration.ProductType, since int64, httpClient *http.Client, tpw nod.TotalProgressWriter) error {
 
 	gfp := nod.Begin(" getting the first %s...", pt)
-	defer gfp.End()
+	defer gfp.EndWithResult("done")
 
 	up, err := vangogh_integration.NewUrlProvider(pt, nil)
 	if err != nil {
-		return gfp.EndWithError(err)
+		return err
 	}
 
 	//we need to handle the first page of the paged product type get-data request
@@ -95,10 +95,8 @@ func Pages(pt vangogh_integration.ProductType, since int64, httpClient *http.Cli
 	//...and decode it using minimal data structure to get total pages amount
 	var tpp gog_integration.TotalPagesProxy
 	if err = json.NewDecoder(fpReadCloser).Decode(&tpp); err != nil {
-		return tpw.EndWithError(err)
+		return err
 	}
-
-	gfp.EndWithResult("done")
 
 	//now that we know how many pages we have in total - reinitialize URLs and ids to
 	//that number minus the first page we already got

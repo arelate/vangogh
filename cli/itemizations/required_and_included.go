@@ -4,18 +4,19 @@ package itemizations
 func RequiredAndIncluded(createdAfter int64) ([]string, error) {
 
 	//raia := nod.Begin(" finding new DLCs missing required base product...")
-	//defer raia.End()
+	//defer raia.EndWithResult("done")
+
 	//
 	//newLicSet := make(map[string]bool)
 	//
 	//vrLicences, err := vangogh_integration.NewProductReader(vangogh_integration.LicenceProducts)
 	//if err != nil {
-	//	return nil, raia.EndWithError(err)
+	//	return nil, err
 	//}
 	//
 	//vrApv2, err := vangogh_integration.NewProductReader(vangogh_integration.ApiProductsV2)
 	//if err != nil {
-	//	return nil, raia.EndWithError(err)
+	//	return nil, err
 	//}
 	//
 	//for id := range vrLicences.Since(createdAfter, kevlar.Create) {
@@ -29,7 +30,7 @@ func RequiredAndIncluded(createdAfter int64) ([]string, error) {
 	//	//for newly acquired licences.
 	//	apv2, err := vrApv2.ApiProductV2(id)
 	//	if err != nil {
-	//		return nil, raia.EndWithError(err)
+	//		return nil, err
 	//	}
 	//
 	//	grg := apv2.GetRequiresGames()
@@ -60,7 +61,7 @@ func RequiredAndIncluded(createdAfter int64) ([]string, error) {
 	//	}
 	//	apv2, err := vrApv2.ApiProductV2(id)
 	//	if err != nil {
-	//		return nil, raia.EndWithError(err)
+	//		return nil, err
 	//	}
 	//	if apv2.Embedded.ProductType != "GAME" {
 	//		delete(newLicSet, id)

@@ -17,17 +17,17 @@ func GetOrderPages(force bool) error {
 
 	hc, err := gogAuthHttpClient()
 	if err != nil {
-		return gopa.EndWithError(err)
+		return err
 	}
 
 	orderPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.OrderPage)
 	if err != nil {
-		return gopa.EndWithError(err)
+		return err
 	}
 
 	kvOrderPages, err := kevlar.New(orderPagesDir, kevlar.JsonExt)
 	if err != nil {
-		return gopa.EndWithError(err)
+		return err
 	}
 
 	if err = getGogPages(gog_integration.OrdersPageUrl, hc, kvOrderPages, gopa, force); err != nil {
@@ -44,14 +44,14 @@ func reduceOrderPages(kvOrderPages kevlar.KeyValues) error {
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {
-		return ropa.EndWithError(err)
+		return err
 	}
 
 	orderProperties := []string{vangogh_integration.GOGOrderDateProperty}
 
 	rdx, err := redux.NewWriter(reduxDir, orderProperties...)
 	if err != nil {
-		return ropa.EndWithError(err)
+		return err
 	}
 
 	ropa.TotalInt(kvOrderPages.Len())
@@ -60,7 +60,7 @@ func reduceOrderPages(kvOrderPages kevlar.KeyValues) error {
 
 	for page := range kvOrderPages.Keys() {
 		if err = reduceOrderPage(page, kvOrderPages, orderPagesReductions); err != nil {
-			return ropa.EndWithError(err)
+			return err
 		}
 
 		ropa.Increment()

@@ -38,7 +38,7 @@ func Validate(
 	allNotValid bool) error {
 
 	va := nod.NewProgress("validating...")
-	defer va.End()
+	defer va.EndWithResult("done")
 
 	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
 
@@ -57,7 +57,7 @@ func Validate(
 	if allNotValid {
 		ids, err = allNotValidIds(rdx)
 		if err != nil {
-			return va.EndWithError(err)
+			return err
 		}
 	}
 
@@ -155,7 +155,7 @@ func validateManualUrl(
 	//e.g. downloads/s/slug/local_filename
 	absLocalFile, err := vangogh_integration.AbsDownloadDirFromRel(localFile)
 	if err != nil {
-		return vangogh_integration.ValidationError, mua.EndWithError(err)
+		return vangogh_integration.ValidationError, err
 	}
 
 	if _, err := os.Stat(absLocalFile); os.IsNotExist(err) {
@@ -166,7 +166,7 @@ func validateManualUrl(
 
 	absChecksumFile, err := vangogh_integration.AbsLocalChecksumPath(absLocalFile)
 	if err != nil {
-		return vangogh_integration.ValidationError, mua.EndWithError(err)
+		return vangogh_integration.ValidationError, err
 	}
 
 	if _, err := os.Stat(absChecksumFile); os.IsNotExist(err) {
@@ -177,18 +177,18 @@ func validateManualUrl(
 
 	chkFile, err := os.Open(absChecksumFile)
 	if err != nil {
-		return vangogh_integration.ValidationError, mua.EndWithError(err)
+		return vangogh_integration.ValidationError, err
 	}
 	defer chkFile.Close()
 
 	var chkData vangogh_integration.ValidationFile
 	if err := xml.NewDecoder(chkFile).Decode(&chkData); err != nil {
-		return vangogh_integration.ValidationError, mua.EndWithError(err)
+		return vangogh_integration.ValidationError, err
 	}
 
 	sourceFile, err := os.Open(absLocalFile)
 	if err != nil {
-		return vangogh_integration.ValidationError, mua.EndWithError(err)
+		return vangogh_integration.ValidationError, err
 	}
 	defer sourceFile.Close()
 
@@ -196,7 +196,7 @@ func validateManualUrl(
 
 	stat, err := sourceFile.Stat()
 	if err != nil {
-		return vangogh_integration.ValidationError, mua.EndWithError(err)
+		return vangogh_integration.ValidationError, err
 	}
 
 	_, filename := filepath.Split(localFile)
@@ -205,7 +205,7 @@ func validateManualUrl(
 	vlfa.Total(uint64(stat.Size()))
 
 	if err := dolo.CopyWithProgress(h, sourceFile, vlfa); err != nil {
-		return vangogh_integration.ValidationError, mua.EndWithError(err)
+		return vangogh_integration.ValidationError, err
 	}
 
 	sourceFileMD5 := fmt.Sprintf("%x", h.Sum(nil))
@@ -241,7 +241,7 @@ func downloadsListIsExtrasOnly(dls vangogh_integration.DownloadsList) bool {
 func (vd *validateDelegate) Process(id, slug string, list vangogh_integration.DownloadsList) error {
 
 	sva := nod.Begin(slug)
-	defer sva.End()
+	defer sva.EndWithResult("done")
 
 	manualUrlsValidationResults := make(map[string][]string)
 
@@ -263,14 +263,14 @@ func (vd *validateDelegate) Process(id, slug string, list vangogh_integration.Do
 		vd.results[vr] = vd.results[vr] + 1
 
 		if err := vd.rdx.BatchReplaceValues(vangogh_integration.ManualUrlValidationResultProperty, manualUrlsValidationResults); err != nil {
-			return sva.EndWithError(err)
+			return err
 		}
 
 		if err := vd.rdx.ReplaceValues(
 			vangogh_integration.ManualUrlStatusProperty,
 			dl.ManualUrl,
 			vangogh_integration.ManualUrlValidated.String()); err != nil {
-			return sva.EndWithError(err)
+			return err
 		}
 	}
 
@@ -285,7 +285,7 @@ func (vd *validateDelegate) Process(id, slug string, list vangogh_integration.Do
 	}
 
 	if err := vd.rdx.ReplaceValues(vangogh_integration.ProductValidationResultProperty, id, productValidationResult.String()); err != nil {
-		return sva.EndWithError(err)
+		return err
 	}
 
 	sva.EndWithResult(productValidationResult.String())
