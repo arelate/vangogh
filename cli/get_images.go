@@ -33,7 +33,7 @@ func GetImages(
 	missing bool) error {
 
 	gia := nod.NewProgress("getting images...")
-	defer gia.EndWithResult("done")
+	defer gia.Done()
 
 	rdx, err := imageTypesReduxAssets(nil, its)
 	if err != nil {

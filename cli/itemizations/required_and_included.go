@@ -4,7 +4,7 @@ package itemizations
 func RequiredAndIncluded(createdAfter int64) ([]string, error) {
 
 	//raia := nod.Begin(" finding new DLCs missing required base product...")
-	//defer raia.EndWithResult("done")
+	//defer raia.Done()
 
 	//
 	//newLicSet := make(map[string]bool)

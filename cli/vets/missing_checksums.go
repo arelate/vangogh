@@ -18,7 +18,7 @@ func MissingChecksums(
 	fix bool) error {
 
 	mca := nod.NewProgress("checking for missing checksums...")
-	defer mca.EndWithResult("done")
+	defer mca.Done()
 
 	rdx, err := vangogh_integration.NewReduxWriter(
 		vangogh_integration.LocalManualUrlProperty,
@@ -148,7 +148,7 @@ func generateChecksumForFile(relFile string) error {
 		return err
 	}
 
-	gca.EndWithResult("done")
+	gca.Done()
 
 	return nil
 }
@@ -157,7 +157,7 @@ func generateChecksumData(relFile string) (*vangogh_integration.ValidationFile, 
 	_, fname := filepath.Split(relFile)
 
 	fa := nod.NewProgress(" %s", fname)
-	defer fa.EndWithResult("done")
+	defer fa.Done()
 
 	absFile, err := vangogh_integration.AbsDownloadDirFromRel(relFile)
 	if err != nil {

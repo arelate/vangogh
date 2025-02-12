@@ -9,7 +9,7 @@ import (
 func TagNames() error {
 
 	tna := nod.Begin(" %s...", vangogh_integration.TagNameProperty)
-	defer tna.EndWithResult("done")
+	defer tna.Done()
 
 	vrAccountPage, err := vangogh_integration.NewProductReader(vangogh_integration.AccountPage)
 	if err != nil {

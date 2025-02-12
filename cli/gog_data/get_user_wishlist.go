@@ -13,7 +13,7 @@ import (
 
 func GetUserWishlist() error {
 	guwa := nod.Begin("getting %s...", vangogh_integration.UserWishlist)
-	defer guwa.EndWithResult("done")
+	defer guwa.Done()
 
 	userWishlistDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.UserWishlist)
 	if err != nil {
@@ -38,7 +38,7 @@ func GetUserWishlist() error {
 func reduceUserWishlist(kvUserWishlist kevlar.KeyValues) error {
 
 	ruwa := nod.Begin(" reducing %s...", vangogh_integration.UserWishlist)
-	defer ruwa.EndWithResult("done")
+	defer ruwa.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {

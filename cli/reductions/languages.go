@@ -3,7 +3,7 @@ package reductions
 //func GetLanguageCodes(rdx redux.Readable) (map[string]bool, error) {
 //
 //	lca := nod.Begin(" %s...", vangogh_integration.LanguageCodeProperty)
-//	defer lca.EndWithResult("done")
+//	defer lca.Done()
 //
 //	langCodeSet := make(map[string]bool)
 //
@@ -56,7 +56,7 @@ package reductions
 //	property := vangogh_integration.LanguageNameProperty
 //
 //	lna := nod.Begin(" %s...", property)
-//	defer lna.EndWithResult("done")
+//	defer lna.Done()
 //
 //	langNamesEx, err := vangogh_integration.NewReduxWriter(property)
 //	if err != nil {
@@ -105,7 +105,7 @@ package reductions
 //	property := vangogh_integration.NativeLanguageNameProperty
 //
 //	nlna := nod.Begin(" %s...", property)
-//	defer nlna.EndWithResult("done")
+//	defer nlna.Done()
 //
 //	langNamesEx, err := vangogh_integration.NewReduxWriter(property)
 //	if err != nil {
@@ -118,7 +118,7 @@ package reductions
 //	}
 //
 //	if len(missingNativeLangs) == 0 {
-//		nlna.EndWithResult("done")
+//		nlna.Done()
 //		return nil
 //	}
 //

@@ -38,7 +38,7 @@ func List(
 	properties []string) error {
 
 	la := nod.Begin("listing %s...", pt)
-	defer la.EndWithResult("done")
+	defer la.Done()
 
 	if !vangogh_integration.IsValidProductType(pt) {
 		return errors.New("can't list invalid product type " + pt.String())

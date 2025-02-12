@@ -86,7 +86,7 @@ func isIncludedByIsOwned(id string, rdx redux.Readable, vrLicenceProducts *vango
 func Owned() error {
 
 	//oa := nod.Begin(" %s...", vangogh_integration.OwnedProperty)
-	//defer oa.EndWithResult("done")
+	//defer oa.Done()
 	//
 	//rdx, err := vangogh_integration.NewReduxWriter(
 	//	vangogh_integration.TitleProperty,

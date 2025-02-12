@@ -15,7 +15,7 @@ func BackupHandler(_ *url.URL) error {
 func Backup() error {
 
 	ba := nod.NewProgress("backing up local data...")
-	defer ba.EndWithResult("done")
+	defer ba.Done()
 
 	abp, err := pathways.GetAbsDir(vangogh_integration.Backups)
 	if err != nil {
@@ -32,7 +32,7 @@ func Backup() error {
 	}
 
 	ca := nod.NewProgress("cleaning up old backups...")
-	defer ca.EndWithResult("done")
+	defer ca.Done()
 
 	if err = backups.Cleanup(abp, true, ca); err != nil {
 		return err

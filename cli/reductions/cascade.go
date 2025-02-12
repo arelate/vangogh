@@ -21,7 +21,7 @@ var cascadingProperties = []string{
 func Cascade() error {
 
 	ca := nod.Begin("cascading supported properties...")
-	defer ca.EndWithResult("done")
+	defer ca.Done()
 
 	rdx, err := vangogh_integration.NewReduxWriter(vangogh_integration.ReduxProperties()...)
 	if err != nil {

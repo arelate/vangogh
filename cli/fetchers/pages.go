@@ -36,7 +36,7 @@ func NewIndexSetter(pt vangogh_integration.ProductType, ids []string) (dolo.Inde
 func Pages(pt vangogh_integration.ProductType, since int64, httpClient *http.Client, tpw nod.TotalProgressWriter) error {
 
 	gfp := nod.Begin(" getting the first %s...", pt)
-	defer gfp.EndWithResult("done")
+	defer gfp.Done()
 
 	up, err := vangogh_integration.NewUrlProvider(pt, nil)
 	if err != nil {
@@ -120,7 +120,7 @@ func Pages(pt vangogh_integration.ProductType, since int64, httpClient *http.Cli
 		}
 	}
 
-	tpw.EndWithResult("done")
+	tpw.Done()
 
 	return nil
 }

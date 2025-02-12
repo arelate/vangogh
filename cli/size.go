@@ -33,7 +33,7 @@ func Size(
 	all bool) error {
 
 	sa := nod.NewProgress("estimating downloads size...")
-	defer sa.EndWithResult("done")
+	defer sa.Done()
 
 	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
 

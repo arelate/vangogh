@@ -10,7 +10,7 @@ import (
 func linkedGames(modifiedAfter int64) ([]string, error) {
 
 	lga := nod.Begin(" finding missing linked %s...", vangogh_integration.ApiProductsV2)
-	defer lga.EndWithResult("done")
+	defer lga.Done()
 
 	missingSet := make(map[string]bool)
 

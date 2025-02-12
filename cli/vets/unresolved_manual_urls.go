@@ -15,7 +15,7 @@ func UnresolvedManualUrls(
 	fix bool) error {
 
 	cumu := nod.NewProgress("checking unresolved manual-urls...")
-	defer cumu.EndWithResult("done")
+	defer cumu.Done()
 
 	vangogh_integration.PrintParams(nil, operatingSystems, langCodes, downloadTypes, noPatches)
 

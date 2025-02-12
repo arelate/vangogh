@@ -25,7 +25,7 @@ func SearchHandler(u *url.URL) error {
 func Search(query map[string][]string) error {
 
 	sa := nod.Begin("searching...")
-	defer sa.EndWithResult("done")
+	defer sa.Done()
 
 	//prepare a list of all properties to load redux for and
 	//always start with a `title` property since it is printed for all matched item

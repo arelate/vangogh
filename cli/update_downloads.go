@@ -83,7 +83,7 @@ func UpdateDownloads(
 	updatesOnly bool) error {
 
 	uda := nod.Begin("itemizing updated downloads...")
-	defer uda.EndWithResult("done")
+	defer uda.Done()
 
 	if ids == nil {
 		var err error

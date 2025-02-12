@@ -8,7 +8,7 @@ import (
 func Types() error {
 
 	ta := nod.Begin(" %s...", vangogh_integration.TypesProperty)
-	defer ta.EndWithResult("done")
+	defer ta.Done()
 
 	idsTypes := make(map[string][]string)
 

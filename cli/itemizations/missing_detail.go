@@ -43,7 +43,7 @@ func missingDetail(
 	//}
 
 	mda := nod.Begin(" finding missing %s for %s...", detailPt, mainPt)
-	defer mda.EndWithResult("done")
+	defer mda.Done()
 
 	missingIdSet := make(map[string]bool)
 

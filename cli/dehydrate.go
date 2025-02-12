@@ -27,7 +27,7 @@ func Dehydrate(
 	force bool) error {
 
 	di := nod.NewProgress("dehydrating images...")
-	defer di.EndWithResult("done")
+	defer di.Done()
 
 	properties := make([]string, 0, len(its)*2)
 	for _, it := range its {

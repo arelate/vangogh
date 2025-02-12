@@ -24,7 +24,7 @@ func MissingLocalDownloads(
 	//4. check if any expected (resolved manualUrls) files are not present -> add to missingIds
 
 	mlda := nod.NewProgress(" itemizing missing local downloads")
-	defer mlda.EndWithResult("done")
+	defer mlda.Done()
 
 	if err := rdx.MustHave(
 		vangogh_integration.LocalManualUrlProperty,

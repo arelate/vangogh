@@ -44,7 +44,7 @@ func GetDownloads(
 	force bool) error {
 
 	gda := nod.NewProgress("downloading product files...")
-	defer gda.EndWithResult("done")
+	defer gda.Done()
 
 	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
 
@@ -119,7 +119,7 @@ type getDownloadsDelegate struct {
 
 func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integration.DownloadsList) error {
 	sda := nod.Begin(slug)
-	defer sda.EndWithResult("done")
+	defer sda.Done()
 
 	if len(list) == 0 {
 		sda.EndWithResult("no downloads for requested operating systems, download types, languages")
@@ -188,7 +188,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	dlClient *dolo.Client) error {
 
 	dmua := nod.NewProgress(" %s:", dl.String())
-	defer dmua.EndWithResult("done")
+	defer dmua.Done()
 
 	//downloading a manual URL is the following set of steps:
 	//1 - check if local file exists (based on manualUrl -> relative localFile association) before attempting to resolve manualUrl
@@ -297,7 +297,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 
 	//5
 	lfa := nod.NewProgress(" - %s", filename)
-	defer lfa.EndWithResult("done")
+	defer lfa.Done()
 	if err := dlClient.Download(resolvedUrl, gdd.forceUpdate, lfa, absDir, filename); err != nil {
 		return err
 	}

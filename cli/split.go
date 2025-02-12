@@ -92,7 +92,7 @@ func split(sourcePt vangogh_integration.ProductType, timestamp int64) error {
 	//	}
 	//}
 	//
-	//spa.EndWithResult("done")
+	//spa.Done()
 
 	return nil
 }

@@ -16,7 +16,7 @@ func Items(
 	httpClient *http.Client) error {
 
 	ia := nod.NewProgress(" fetching %s...", pt)
-	defer ia.EndWithResult("done")
+	defer ia.Done()
 
 	if !vangogh_integration.IsGetItemsSupported(pt) {
 		return fmt.Errorf("getting %s is not supported", pt)

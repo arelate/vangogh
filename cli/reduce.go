@@ -47,7 +47,7 @@ func Reduce(since int64, properties []string, propertiesOnly bool) error {
 	//}
 
 	ra := nod.Begin("reducing properties...")
-	defer ra.EndWithResult("done")
+	defer ra.Done()
 
 	rdx, err := vangogh_integration.NewReduxWriter(maps.Keys(propSet)...)
 	if err != nil {
@@ -119,7 +119,7 @@ func Reduce(since int64, properties []string, propertiesOnly bool) error {
 			}
 		}
 
-		pta.EndWithResult("done")
+		pta.Done()
 	}
 
 	if err := reductions.SteamAppId(since); err != nil {

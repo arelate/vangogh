@@ -3,7 +3,7 @@ package reductions
 func Wishlisted() error {
 
 	//wa := nod.Begin(" %s...", vangogh_integration.UserWishlist)
-	//defer wa.EndWithResult("done")
+	//defer wa.Done()
 	//
 	//vrCatalogProducts, err := vangogh_integration.NewProductReader(vangogh_integration.CatalogProducts)
 	//if err != nil {
@@ -43,7 +43,7 @@ func Wishlisted() error {
 	//	return err
 	//}
 	//
-	//wa.EndWithResult("done")
+	//wa.Done()
 
 	return nil
 }

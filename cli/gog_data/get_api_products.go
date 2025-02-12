@@ -16,7 +16,7 @@ import (
 func GetApiProducts(since int64, force bool) error {
 
 	gapva := nod.NewProgress("getting %s...", vangogh_integration.ApiProductsV2)
-	defer gapva.EndWithResult("done")
+	defer gapva.Done()
 
 	if force {
 		since = -1
@@ -83,7 +83,7 @@ func getCatalogAccountProducts(since int64) (map[string]any, error) {
 func getCatalogPagesProducts(since int64) ([]string, error) {
 
 	gcppa := nod.NewProgress(" enumerating %s...", vangogh_integration.CatalogPage)
-	defer gcppa.EndWithResult("done")
+	defer gcppa.Done()
 
 	catalogPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.CatalogPage)
 	if err != nil {
@@ -140,7 +140,7 @@ func getCatalogPageProducts(page string, kvCatalogPages kevlar.KeyValues) ([]str
 func getAccountPagesProducts(since int64) ([]string, error) {
 
 	gappa := nod.NewProgress(" enumerating %s...", vangogh_integration.AccountPage)
-	defer gappa.EndWithResult("done")
+	defer gappa.Done()
 
 	accountPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.AccountPage)
 	if err != nil {
@@ -197,7 +197,7 @@ func getAccountPageProducts(page string, kvAccountPages kevlar.KeyValues) ([]str
 func reduceApiProducts(kvApiProducts kevlar.KeyValues, ids ...string) error {
 
 	rapa := nod.NewProgress(" reducing %s...", vangogh_integration.ApiProductsV2)
-	defer rapa.EndWithResult("done")
+	defer rapa.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {

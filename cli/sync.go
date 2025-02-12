@@ -103,7 +103,7 @@ func Sync(
 	}
 
 	sa := nod.Begin("syncing source data...")
-	defer sa.EndWithResult("done")
+	defer sa.Done()
 
 	syncStart := since
 	if syncStart == 0 {

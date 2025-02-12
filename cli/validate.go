@@ -38,7 +38,7 @@ func Validate(
 	allNotValid bool) error {
 
 	va := nod.NewProgress("validating...")
-	defer va.EndWithResult("done")
+	defer va.Done()
 
 	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
 
@@ -96,7 +96,7 @@ func Validate(
 func allNotValidIds(rdx redux.Readable) ([]string, error) {
 
 	avia := nod.NewProgress("itemizing all not valid products...")
-	defer avia.EndWithResult("done")
+	defer avia.Done()
 
 	vrDetails, err := vangogh_integration.NewProductReader(vangogh_integration.Details)
 	if err != nil {
@@ -141,7 +141,7 @@ func validateManualUrl(
 	}
 
 	mua := nod.NewProgress(" %s:", dl.String())
-	defer mua.EndWithResult("done")
+	defer mua.Done()
 
 	//local filenames are saved as relative to root downloads folder (e.g. s/slug/local_filename)
 	localFile, ok := rdx.GetLastVal(vangogh_integration.LocalManualUrlProperty, dl.ManualUrl)
@@ -241,7 +241,7 @@ func downloadsListIsExtrasOnly(dls vangogh_integration.DownloadsList) bool {
 func (vd *validateDelegate) Process(id, slug string, list vangogh_integration.DownloadsList) error {
 
 	sva := nod.Begin(slug)
-	defer sva.EndWithResult("done")
+	defer sva.Done()
 
 	manualUrlsValidationResults := make(map[string][]string)
 

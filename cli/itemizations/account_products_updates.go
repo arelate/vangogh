@@ -10,7 +10,7 @@ import (
 func AccountProductsUpdates() ([]string, error) {
 
 	apua := nod.Begin(" finding %s updates...", vangogh_integration.AccountProducts)
-	defer apua.EndWithResult("done")
+	defer apua.Done()
 
 	updatesSet := make(map[string]bool)
 	vrAccountPages, err := vangogh_integration.NewProductReader(vangogh_integration.AccountPage)

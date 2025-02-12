@@ -78,7 +78,7 @@ func Vet(
 	fix bool) error {
 
 	sda := nod.Begin("vetting local data...")
-	defer sda.EndWithResult("done")
+	defer sda.Done()
 
 	if vetOpts.localOnlyImages {
 		if err := vets.LocalOnlyImages(fix); err != nil {

@@ -17,7 +17,7 @@ import (
 func GetRelatedApiProducts(since int64, force bool) error {
 
 	grapva := nod.NewProgress("getting related %s...", vangogh_integration.ApiProductsV2)
-	defer grapva.EndWithResult("done")
+	defer grapva.Done()
 
 	if force {
 		since = -1

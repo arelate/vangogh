@@ -26,7 +26,7 @@ func GetVideoMetadataHandler(u *url.URL) error {
 func GetVideoMetadata(ids []string, missing, force bool) error {
 
 	gvma := nod.NewProgress("getting video metadata...")
-	defer gvma.EndWithResult("done")
+	defer gvma.Done()
 
 	rdx, err := videoReduxAssets()
 	if err != nil {

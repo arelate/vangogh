@@ -53,7 +53,7 @@ func Cleanup(
 	}
 
 	ca := nod.NewProgress("cleaning up...")
-	defer ca.EndWithResult("done")
+	defer ca.Done()
 
 	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
 
@@ -109,7 +109,7 @@ type cleanupDelegate struct {
 func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_integration.DownloadsList) error {
 
 	csa := nod.QueueBegin(slug)
-	defer csa.EndWithResult("done")
+	defer csa.Done()
 
 	if err := cd.rdx.MustHave(vangogh_integration.LocalManualUrlProperty); err != nil {
 		return err
@@ -212,7 +212,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_integrati
 				}
 			}
 		}
-		dft.EndWithResult("done")
+		dft.Done()
 
 		absChecksumFile, err := vangogh_integration.AbsLocalChecksumPath(absDownloadFilename)
 		if err != nil {
@@ -242,7 +242,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_integrati
 				return err
 			}
 		}
-		cft.EndWithResult("done")
+		cft.Done()
 	}
 
 	return nil

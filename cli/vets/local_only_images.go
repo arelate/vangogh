@@ -11,7 +11,7 @@ import (
 func LocalOnlyImages(fix bool) error {
 
 	loia := nod.Begin("checking for local only images...")
-	defer loia.EndWithResult("done")
+	defer loia.Done()
 
 	ilia := nod.Begin(" itemizing local images...")
 	localImages, err := vangogh_integration.LocalImageIds()
@@ -19,7 +19,7 @@ func LocalOnlyImages(fix bool) error {
 		ilia.EndWithResult(err.Error())
 		return err
 	}
-	ilia.EndWithResult("done")
+	ilia.Done()
 
 	propSet := make(map[string]bool)
 	for _, it := range vangogh_integration.AllImageTypes() {
@@ -59,7 +59,7 @@ func LocalOnlyImages(fix bool) error {
 		}
 	}
 
-	ieia.EndWithResult("done")
+	ieia.Done()
 
 	unexpectedImages := make([]string, 0, len(expectedImages))
 	for imageId := range localImages {
@@ -93,7 +93,7 @@ func LocalOnlyImages(fix bool) error {
 			}
 			floia.Increment()
 		}
-		floia.EndWithResult("done")
+		floia.Done()
 	}
 
 	return nil

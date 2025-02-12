@@ -47,7 +47,7 @@ func GetDataLegacy(
 	updated bool) error {
 
 	gda := nod.NewProgress("getting %s data...", pt)
-	defer gda.EndWithResult("done")
+	defer gda.Done()
 
 	if !vangogh_integration.IsValidProductType(pt) {
 		gda.EndWithResult("%s is not a valid product type", pt)

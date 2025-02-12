@@ -13,7 +13,7 @@ import (
 
 func GetLicences() error {
 	gla := nod.Begin("getting %s...", vangogh_integration.Licences)
-	defer gla.EndWithResult("done")
+	defer gla.Done()
 
 	licencesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.Licences)
 	if err != nil {
@@ -47,7 +47,7 @@ func GetLicences() error {
 func reduceLicences(kvLicences kevlar.KeyValues, rdx redux.Writeable) error {
 
 	rla := nod.Begin(" reducing %s...", vangogh_integration.Licences)
-	defer rla.EndWithResult("done")
+	defer rla.Done()
 
 	key := vangogh_integration.LicencesProperty
 	if err := rdx.MustHave(key); err != nil {

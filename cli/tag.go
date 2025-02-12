@@ -31,7 +31,7 @@ func TagHandler(u *url.URL) error {
 func Tag(ids []string, operation, tagName string) error {
 
 	ta := nod.Begin("performing requested tag operation...")
-	defer ta.EndWithResult("done")
+	defer ta.Done()
 
 	//matching default GOG.com capitalization for tags
 	tagName = strings.ToUpper(tagName)
@@ -57,7 +57,7 @@ func Tag(ids []string, operation, tagName string) error {
 	}
 
 	toa := nod.NewProgress(" %s tag %s...", operation, tagName)
-	defer toa.EndWithResult("done")
+	defer toa.Done()
 
 	switch operation {
 	case createOp:

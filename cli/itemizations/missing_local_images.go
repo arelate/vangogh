@@ -41,7 +41,7 @@ func MissingLocalImages(
 	ieg := NewImageReduxGetter(it, rdx)
 
 	mlia := nod.Begin(" itemizing local images (%s)...", it)
-	defer mlia.EndWithResult("done")
+	defer mlia.Done()
 
 	return missingLocalFiles(all, localImageIds, ieg.GetImageIds, nil)
 }

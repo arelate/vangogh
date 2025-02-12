@@ -10,7 +10,7 @@ import (
 func gamesDbCatalogGames(since int64, missing bool) ([]string, error) {
 
 	mcga := nod.Begin(" finding missing %s products of GAME type...", vangogh_integration.CatalogProducts)
-	defer mcga.EndWithResult("done")
+	defer mcga.Done()
 
 	missingSet := make(map[string]bool)
 

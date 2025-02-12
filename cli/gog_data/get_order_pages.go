@@ -13,7 +13,7 @@ import (
 
 func GetOrderPages(force bool) error {
 	gopa := nod.NewProgress("getting %s...", vangogh_integration.OrderPage)
-	defer gopa.EndWithResult("done")
+	defer gopa.Done()
 
 	hc, err := gogAuthHttpClient()
 	if err != nil {
@@ -40,7 +40,7 @@ func GetOrderPages(force bool) error {
 func reduceOrderPages(kvOrderPages kevlar.KeyValues) error {
 
 	ropa := nod.NewProgress(" reducing %s...", vangogh_integration.OrderPage)
-	defer ropa.EndWithResult("done")
+	defer ropa.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {

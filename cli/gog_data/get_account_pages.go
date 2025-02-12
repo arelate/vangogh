@@ -13,7 +13,7 @@ import (
 
 func GetAccountPages(force bool) error {
 	gapa := nod.NewProgress("getting %s...", vangogh_integration.AccountPage)
-	defer gapa.EndWithResult("done")
+	defer gapa.Done()
 
 	hc, err := gogAuthHttpClient()
 	if err != nil {
@@ -40,7 +40,7 @@ func GetAccountPages(force bool) error {
 func reduceAccountPages(kvAccountPages kevlar.KeyValues) error {
 
 	rapa := nod.NewProgress(" reducing %s...", vangogh_integration.AccountPage)
-	defer rapa.EndWithResult("done")
+	defer rapa.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {

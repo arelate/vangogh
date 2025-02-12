@@ -18,7 +18,7 @@ import (
 func GetDetails() error {
 
 	gda := nod.NewProgress("getting new or updated %s...", vangogh_integration.Details)
-	defer gda.EndWithResult("done")
+	defer gda.Done()
 
 	detailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.Details)
 	if err != nil {
@@ -68,7 +68,7 @@ func GetDetails() error {
 func getNewRequiredGameLicences(kvDetails kevlar.KeyValues) (iter.Seq[string], error) {
 
 	gnla := nod.NewProgress(" enumerating %s updates...", vangogh_integration.Licences)
-	defer gnla.EndWithResult("done")
+	defer gnla.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {
@@ -111,7 +111,7 @@ func getNewRequiredGameLicences(kvDetails kevlar.KeyValues) (iter.Seq[string], e
 func getNewUpdatedAccountPages(kvDetails kevlar.KeyValues) (iter.Seq[string], error) {
 
 	gnuapa := nod.NewProgress(" enumerating %s updates...", vangogh_integration.AccountPage)
-	defer gnuapa.EndWithResult("done")
+	defer gnuapa.Done()
 
 	accountPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.AccountPage)
 	if err != nil {

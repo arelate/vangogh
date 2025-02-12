@@ -12,7 +12,7 @@ import (
 func SteamAppId(since int64) error {
 
 	saia := nod.Begin(" %s...", vangogh_integration.SteamAppIdProperty)
-	defer saia.EndWithResult("done")
+	defer saia.Done()
 
 	rdx, err := vangogh_integration.NewReduxWriter(
 		vangogh_integration.TitleProperty,

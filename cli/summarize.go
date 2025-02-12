@@ -34,7 +34,7 @@ func SummarizeHandler(u *url.URL) error {
 func Summarize(since int64) error {
 
 	sa := nod.Begin("summarizing updates...")
-	defer sa.EndWithResult("done")
+	defer sa.Done()
 
 	updates, err := vangogh_integration.Updates(since)
 	if err != nil {
@@ -85,7 +85,7 @@ func Summarize(since int64) error {
 	}
 
 	was := nod.Begin("publishing atom...")
-	defer was.EndWithResult("done")
+	defer was.Done()
 
 	if err := publishAtom(rdx, summary); err != nil {
 		return err

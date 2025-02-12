@@ -17,7 +17,7 @@ type propertyIdValues map[string]map[string][]string
 func GetCatalogPages() error {
 
 	gcpa := nod.NewProgress("getting %s...", vangogh_integration.CatalogPage)
-	defer gcpa.EndWithResult("done")
+	defer gcpa.Done()
 
 	catalogPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.CatalogPage)
 	if err != nil {
@@ -39,7 +39,7 @@ func GetCatalogPages() error {
 func reduceCatalogPages(kvCatalogPages kevlar.KeyValues) error {
 
 	rcpa := nod.NewProgress(" reducing %s...", vangogh_integration.CatalogPage)
-	defer rcpa.EndWithResult("done")
+	defer rcpa.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {

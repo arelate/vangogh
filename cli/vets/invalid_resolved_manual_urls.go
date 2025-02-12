@@ -11,7 +11,7 @@ import (
 func InvalidResolvedManualUrls(fix bool) error {
 
 	cirmu := nod.Begin("checking invalid resolved manual-urls...")
-	defer cirmu.EndWithResult("done")
+	defer cirmu.Done()
 
 	rdx, err := vangogh_integration.NewReduxWriter(
 		vangogh_integration.LocalManualUrlProperty)
@@ -82,7 +82,7 @@ func InvalidResolvedManualUrls(fix bool) error {
 
 		format := "found %d problems:"
 		if fix {
-			firmu.EndWithResult("done")
+			firmu.Done()
 			format = "found and fixed %d problems:"
 		}
 

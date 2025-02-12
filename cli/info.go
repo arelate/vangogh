@@ -23,7 +23,7 @@ func InfoHandler(u *url.URL) error {
 func Info(ids []string, allText, images, videoId bool) error {
 
 	ia := nod.Begin("information:")
-	defer ia.EndWithResult("done")
+	defer ia.Done()
 
 	propSet := map[string]bool{vangogh_integration.TypesProperty: true}
 

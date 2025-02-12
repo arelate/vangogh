@@ -27,7 +27,7 @@ func OwnedHandler(u *url.URL) error {
 func Owned(ids []string) error {
 
 	oa := nod.Begin("checking ownership...")
-	defer oa.EndWithResult("done")
+	defer oa.Done()
 
 	propSet := map[string]bool{
 		vangogh_integration.TitleProperty:             true,

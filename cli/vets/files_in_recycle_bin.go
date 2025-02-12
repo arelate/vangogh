@@ -11,7 +11,7 @@ import (
 func FilesInRecycleBin(fix bool) error {
 
 	srba := nod.Begin("checking files in recycle bin...")
-	defer srba.EndWithResult("done")
+	defer srba.Done()
 
 	recycleBinFiles, err := vangogh_integration.RecycleBinFiles()
 	if err != nil {
@@ -41,7 +41,7 @@ func FilesInRecycleBin(fix bool) error {
 				}
 				rfa.Increment()
 			}
-			rfa.EndWithResult("done")
+			rfa.Done()
 
 			//remove empty directories after fixing files
 			dirLens := make(map[string]int)
@@ -61,7 +61,7 @@ func FilesInRecycleBin(fix bool) error {
 				}
 				rda.Increment()
 			}
-			rda.EndWithResult("done")
+			rda.Done()
 		}
 	}
 

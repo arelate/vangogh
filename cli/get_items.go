@@ -28,7 +28,7 @@ func GetItems(
 	since int64) error {
 
 	gia := nod.NewProgress("getting description items...")
-	defer gia.EndWithResult("done")
+	defer gia.Done()
 
 	rdx, err := vangogh_integration.NewReduxReader(
 		vangogh_integration.TitleProperty,
@@ -96,7 +96,7 @@ func GetItems(
 			continue
 		}
 
-		dia.EndWithResult("done")
+		dia.Done()
 		gia.Increment()
 	}
 

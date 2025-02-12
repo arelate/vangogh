@@ -17,7 +17,7 @@ func WishlistHandler(u *url.URL) error {
 func Wishlist(addProductIds, removeProductIds []string) error {
 
 	wa := nod.Begin("performing requested wishlist operations...")
-	defer wa.EndWithResult("done")
+	defer wa.Done()
 
 	acp, err := vangogh_integration.AbsCookiePath()
 	if err != nil {
@@ -57,7 +57,7 @@ func wishlistAdd(
 	ids []string) ([]string, error) {
 
 	waa := nod.NewProgress(" adding product(s) to local wishlist...")
-	defer waa.EndWithResult("done")
+	defer waa.Done()
 
 	pids, err := vangogh_integration.AddToLocalWishlist(ids, waa)
 	if err != nil {
@@ -71,7 +71,7 @@ func wishlistRemove(
 	ids []string) ([]string, error) {
 
 	wra := nod.NewProgress(" removing product(s) from local wishlist...")
-	defer wra.EndWithResult("done")
+	defer wra.Done()
 
 	pids, err := vangogh_integration.RemoveFromLocalWishlist(ids, wra)
 	if err != nil {

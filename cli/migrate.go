@@ -14,7 +14,7 @@ func MigrateHandler(_ *url.URL) error {
 
 func Migrate() error {
 	ma := nod.Begin("migrating data...")
-	defer ma.EndWithResult("done")
+	defer ma.Done()
 
 	productTypes := vangogh_integration.LocalProducts()
 	productTypes = append(productTypes, vangogh_integration.GOGPagedProducts()...)

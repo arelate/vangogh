@@ -12,7 +12,7 @@ func Modified(
 	pt vangogh_integration.ProductType) ([]string, error) {
 
 	ma := nod.Begin(" finding modified %s...", pt)
-	defer ma.EndWithResult("done")
+	defer ma.Done()
 
 	modSet := make(map[string]bool)
 

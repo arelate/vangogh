@@ -21,7 +21,7 @@ func LocalTagHandler(u *url.URL) error {
 func LocalTag(ids []string, operation string, tagName string) error {
 
 	lta := nod.NewProgress("%s local tag %s...", operation, tagName)
-	defer lta.EndWithResult("done")
+	defer lta.Done()
 
 	switch operation {
 	case "add":

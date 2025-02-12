@@ -126,6 +126,8 @@ github.com/boggydigital/nod v0.1.23 h1:+eHKIB/Y5NUIHM8VrvPOFzbDrN1jFi7KiFXe4JItD
 github.com/boggydigital/nod v0.1.23/go.mod h1:jfTSJmcIjL2QwRp3Mi5CnleOzrYL9f67SFPzW09xqoo=
 github.com/boggydigital/nod v0.1.24 h1:Nkz07dk7ExaBvpVlW6OqCTzsTjBZ5jaPnjG0R/dQbh8=
 github.com/boggydigital/nod v0.1.24/go.mod h1:jfTSJmcIjL2QwRp3Mi5CnleOzrYL9f67SFPzW09xqoo=
+github.com/boggydigital/nod v0.1.25 h1:D7wMe9EyaNrUeUJdSrK1Ui7j8YINGZuUeZyhoOG9XjA=
+github.com/boggydigital/nod v0.1.25/go.mod h1:jfTSJmcIjL2QwRp3Mi5CnleOzrYL9f67SFPzW09xqoo=
 github.com/boggydigital/pathways v0.1.14 h1:cJDL7WfwRM7T8FUJcXy28ReAE7AfeC3ZzDFqIUzGke4=
 github.com/boggydigital/pathways v0.1.14/go.mod h1:3QniBtHEdGUQgQAnBIQnh0C1vu+bmpDCmsLe5XyruS8=
 github.com/boggydigital/pathways v0.1.15 h1:oQwqikyCKBIvoQwUthivHyT2oseQu9zzuO4A2FnwHFo=

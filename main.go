@@ -33,7 +33,7 @@ func main() {
 	nod.EnableStdOutPresenter()
 
 	ns := nod.Begin("vangogh is serving your DRM-free needs")
-	defer ns.EndWithResult("done")
+	defer ns.Done()
 
 	if err := pathways.Setup(dirsOverrideFilename,
 		vangogh_integration.DefaultRootDir,

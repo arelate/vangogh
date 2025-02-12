@@ -14,7 +14,7 @@ func GetSummaryHandler(u *url.URL) error {
 func GetSummary() error {
 
 	sa := nod.Begin("last sync summary:")
-	defer sa.EndWithResult("done")
+	defer sa.Done()
 
 	rdx, err := vangogh_integration.NewReduxReader(
 		vangogh_integration.LastSyncUpdatesProperty,
