@@ -12,7 +12,7 @@ import (
 	"slices"
 )
 
-func GetLicences() error {
+func GetLicences(hc *http.Client, userAccessToken string) error {
 	gla := nod.Begin("getting %s...", vangogh_integration.Licences)
 	defer gla.Done()
 
@@ -26,15 +26,11 @@ func GetLicences() error {
 		return err
 	}
 
-	hc, err := gogAuthHttpClient()
-	if err != nil {
-		return err
-	}
-
 	if err = fetchGogData(vangogh_integration.Licences.String(),
 		gog_integration.LicencesUrl(),
 		hc,
 		http.MethodGet,
+		userAccessToken,
 		kvLicences); err != nil {
 		return err
 	}

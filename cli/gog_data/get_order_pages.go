@@ -12,14 +12,9 @@ import (
 	"time"
 )
 
-func GetOrderPages(force bool) error {
+func GetOrderPages(hc *http.Client, userAccessToken string, force bool) error {
 	gopa := nod.NewProgress("getting %s...", vangogh_integration.OrderPage)
 	defer gopa.Done()
-
-	hc, err := gogAuthHttpClient()
-	if err != nil {
-		return err
-	}
 
 	orderPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.OrderPage)
 	if err != nil {
@@ -31,7 +26,7 @@ func GetOrderPages(force bool) error {
 		return err
 	}
 
-	if err = fetchGogPages(gog_integration.OrdersPageUrl, hc, http.MethodGet, kvOrderPages, gopa, force); err != nil {
+	if err = fetchGogPages(gog_integration.OrdersPageUrl, hc, http.MethodGet, userAccessToken, kvOrderPages, gopa, force); err != nil {
 		return err
 	}
 

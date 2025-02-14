@@ -14,7 +14,7 @@ import (
 	"slices"
 )
 
-func GetRelatedApiProducts(since int64, force bool) error {
+func GetRelatedApiProducts(hc *http.Client, userAccessToken string, since int64, force bool) error {
 
 	grapva := nod.NewProgress("getting related %s...", vangogh_integration.ApiProductsV2)
 	defer grapva.Done()
@@ -66,13 +66,9 @@ func GetRelatedApiProducts(since int64, force bool) error {
 		}
 	}
 
-	hc, err := gogAuthHttpClient()
-	if err != nil {
-		return err
-	}
-
 	relatedIds := slices.Collect(maps.Keys(nrIds))
-	if itemErrs := fetchGogItems(gog_integration.ApiProductV2Url, hc, http.MethodGet, kvApiProducts, grapva, relatedIds...); len(itemErrs) > 0 {
+
+	if itemErrs := fetchGogItems(gog_integration.ApiProductV2Url, hc, http.MethodGet, userAccessToken, kvApiProducts, grapva, relatedIds...); len(itemErrs) > 0 {
 		return fmt.Errorf("get %s errors: %v", vangogh_integration.ApiProductsV2, itemErrs)
 	}
 

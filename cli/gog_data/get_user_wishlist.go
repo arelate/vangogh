@@ -12,7 +12,7 @@ import (
 	"slices"
 )
 
-func GetUserWishlist() error {
+func GetUserWishlist(hc *http.Client, userAccessToken string) error {
 	guwa := nod.Begin("getting %s...", vangogh_integration.UserWishlist)
 	defer guwa.Done()
 
@@ -26,15 +26,11 @@ func GetUserWishlist() error {
 		return err
 	}
 
-	hc, err := gogAuthHttpClient()
-	if err != nil {
-		return err
-	}
-
 	if err = fetchGogData(vangogh_integration.UserWishlist.String(),
 		gog_integration.UserWishlistUrl(),
 		hc,
 		http.MethodGet,
+		userAccessToken,
 		kvUserWishlist); err != nil {
 		return err
 

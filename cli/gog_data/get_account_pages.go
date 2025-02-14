@@ -12,14 +12,9 @@ import (
 	"strconv"
 )
 
-func GetAccountPages(force bool) error {
+func GetAccountPages(hc *http.Client, userAccessToken string, force bool) error {
 	gapa := nod.NewProgress("getting %s...", vangogh_integration.AccountPage)
 	defer gapa.Done()
-
-	hc, err := gogAuthHttpClient()
-	if err != nil {
-		return err
-	}
 
 	accountPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.AccountPage)
 	if err != nil {
@@ -31,7 +26,7 @@ func GetAccountPages(force bool) error {
 		return err
 	}
 
-	if err = fetchGogPages(gog_integration.AccountPageUrl, hc, http.MethodGet, kvAccountPages, gapa, force); err != nil {
+	if err = fetchGogPages(gog_integration.AccountPageUrl, hc, http.MethodGet, userAccessToken, kvAccountPages, gapa, force); err != nil {
 		return err
 	}
 

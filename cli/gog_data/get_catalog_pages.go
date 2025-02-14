@@ -17,7 +17,7 @@ const demoStoreTag = "Demo"
 
 type propertyIdValues map[string]map[string][]string
 
-func GetCatalogPages() error {
+func GetCatalogPages(hc *http.Client, userAccessToken string) error {
 
 	gcpa := nod.NewProgress("getting %s...", vangogh_integration.CatalogPage)
 	defer gcpa.Done()
@@ -32,7 +32,7 @@ func GetCatalogPages() error {
 		return err
 	}
 
-	if err = fetchGogPages(gog_integration.CatalogPageUrl, http.DefaultClient, http.MethodGet, kvCatalogPages, gcpa, true); err != nil {
+	if err = fetchGogPages(gog_integration.CatalogPageUrl, hc, http.MethodGet, userAccessToken, kvCatalogPages, gcpa, true); err != nil {
 		return err
 	}
 

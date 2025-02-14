@@ -13,7 +13,7 @@ import (
 	"strconv"
 )
 
-func GetApiProducts(since int64, force bool) error {
+func GetApiProducts(hc *http.Client, userAccessToken string, since int64, force bool) error {
 
 	gapva := nod.NewProgress("getting %s...", vangogh_integration.ApiProductsV2)
 	defer gapva.Done()
@@ -41,13 +41,8 @@ func GetApiProducts(since int64, force bool) error {
 		ids = append(ids, id)
 	}
 
-	hc, err := gogAuthHttpClient()
-	if err != nil {
-		return err
-	}
-
-	// TODO: Save errors and dates and don't request them again in 30 days
-	if itemErrs := fetchGogItems(gog_integration.ApiProductV2Url, hc, http.MethodGet, kvApiProducts, gapva, ids...); len(itemErrs) > 0 {
+	// TODO: Save errors and dates and don't request them again for 30 days
+	if itemErrs := fetchGogItems(gog_integration.ApiProductV2Url, hc, http.MethodGet, userAccessToken, kvApiProducts, gapva, ids...); len(itemErrs) > 0 {
 		return fmt.Errorf("get %s errors: %v", vangogh_integration.ApiProductsV2, itemErrs)
 	}
 

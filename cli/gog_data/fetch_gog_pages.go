@@ -12,10 +12,10 @@ import (
 
 const firstPageId = "1"
 
-func fetchGogPages(pageUrlFunc idUrlFunc, hc *http.Client, method string, kv kevlar.KeyValues, tpw nod.TotalProgressWriter, force bool) error {
+func fetchGogPages(pageUrlFunc idUrlFunc, hc *http.Client, method string, authBearer string, kv kevlar.KeyValues, tpw nod.TotalProgressWriter, force bool) error {
 
 	firstPageUrl := pageUrlFunc(firstPageId)
-	if err := fetchGogData(firstPageId, firstPageUrl, hc, method, kv); err != nil {
+	if err := fetchGogData(firstPageId, firstPageUrl, hc, method, authBearer, kv); err != nil {
 		return err
 	}
 	if tpw != nil {
@@ -37,12 +37,12 @@ func fetchGogPages(pageUrlFunc idUrlFunc, hc *http.Client, method string, kv kev
 		return nil
 	}
 
-	pages := make([]string, 0, tpp.GetTotalPages()-1)
+	pages := make([]string, 0, tpp.GetTotalPages())
 	for page := 2; page <= tpp.GetTotalPages(); page++ {
 		pages = append(pages, strconv.Itoa(page))
 	}
 
-	if pageErrs := fetchGogItems(pageUrlFunc, hc, method, kv, tpw, pages...); len(pageErrs) > 0 {
+	if pageErrs := fetchGogItems(pageUrlFunc, hc, method, authBearer, kv, tpw, pages...); len(pageErrs) > 0 {
 		return fmt.Errorf("get pages errors: %v", pageErrs)
 	}
 

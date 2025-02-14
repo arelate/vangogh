@@ -16,7 +16,7 @@ import (
 	"strconv"
 )
 
-func GetDetails() error {
+func GetDetails(hc *http.Client, userAccessToken string) error {
 
 	gda := nod.NewProgress("getting new or updated %s...", vangogh_integration.Details)
 	defer gda.Done()
@@ -51,15 +51,10 @@ func GetDetails() error {
 		newUpdatedDetails[id] = nil
 	}
 
-	hc, err := gogAuthHttpClient()
-	if err != nil {
-		return err
-	}
-
 	detailsIds := slices.Collect(maps.Keys(newUpdatedDetails))
 
 	// TODO: figure out error processing
-	if itemErrs := fetchGogItems(gog_integration.DetailsUrl, hc, http.MethodGet, kvDetails, gda, detailsIds...); len(itemErrs) > 0 {
+	if itemErrs := fetchGogItems(gog_integration.DetailsUrl, hc, http.MethodGet, userAccessToken, kvDetails, gda, detailsIds...); len(itemErrs) > 0 {
 		return fmt.Errorf("get %s errors: %v", vangogh_integration.Details, itemErrs)
 	}
 
