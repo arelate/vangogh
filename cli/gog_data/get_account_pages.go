@@ -12,7 +12,7 @@ import (
 	"strconv"
 )
 
-func GetAccountPages(hc *http.Client, userAccessToken string, force bool) error {
+func GetAccountPages(hc *http.Client, userAccessToken string, since int64, force bool) error {
 	gapa := nod.NewProgress("getting %s...", vangogh_integration.AccountPage)
 	defer gapa.Done()
 
@@ -30,12 +30,12 @@ func GetAccountPages(hc *http.Client, userAccessToken string, force bool) error 
 		return err
 	}
 
-	return reduceAccountPages(kvAccountPages)
+	return reduceAccountPages(kvAccountPages, since)
 }
 
-func reduceAccountPages(kvAccountPages kevlar.KeyValues) error {
+func reduceAccountPages(kvAccountPages kevlar.KeyValues, since int64) error {
 
-	rapa := nod.NewProgress(" reducing %s...", vangogh_integration.AccountPage)
+	rapa := nod.Begin(" reducing %s...", vangogh_integration.AccountPage)
 	defer rapa.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -53,16 +53,14 @@ func reduceAccountPages(kvAccountPages kevlar.KeyValues) error {
 		return err
 	}
 
-	rapa.TotalInt(kvAccountPages.Len())
-
 	accountPagesReductions := initReductions(accountProductProperties...)
 
-	for page := range kvAccountPages.Keys() {
+	updatedAccountPages := kvAccountPages.Since(since, kevlar.Create, kevlar.Update)
+
+	for page := range updatedAccountPages {
 		if err = reduceAccountPage(page, kvAccountPages, accountPagesReductions); err != nil {
 			return err
 		}
-
-		rapa.Increment()
 	}
 
 	return writeReductions(rdx, accountPagesReductions)

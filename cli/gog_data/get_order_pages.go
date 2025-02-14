@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-func GetOrderPages(hc *http.Client, userAccessToken string, force bool) error {
+func GetOrderPages(hc *http.Client, userAccessToken string, since int64, force bool) error {
 	gopa := nod.NewProgress("getting %s...", vangogh_integration.OrderPage)
 	defer gopa.Done()
 
@@ -30,12 +30,12 @@ func GetOrderPages(hc *http.Client, userAccessToken string, force bool) error {
 		return err
 	}
 
-	return reduceOrderPages(kvOrderPages)
+	return reduceOrderPages(kvOrderPages, since)
 }
 
-func reduceOrderPages(kvOrderPages kevlar.KeyValues) error {
+func reduceOrderPages(kvOrderPages kevlar.KeyValues, since int64) error {
 
-	ropa := nod.NewProgress(" reducing %s...", vangogh_integration.OrderPage)
+	ropa := nod.Begin(" reducing %s...", vangogh_integration.OrderPage)
 	defer ropa.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -50,16 +50,14 @@ func reduceOrderPages(kvOrderPages kevlar.KeyValues) error {
 		return err
 	}
 
-	ropa.TotalInt(kvOrderPages.Len())
-
 	orderPagesReductions := initReductions(orderProperties...)
 
-	for page := range kvOrderPages.Keys() {
+	updatedOrderPages := kvOrderPages.Since(since, kevlar.Create, kevlar.Update)
+
+	for page := range updatedOrderPages {
 		if err = reduceOrderPage(page, kvOrderPages, orderPagesReductions); err != nil {
 			return err
 		}
-
-		ropa.Increment()
 	}
 
 	return writeReductions(rdx, orderPagesReductions)

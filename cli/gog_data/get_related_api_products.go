@@ -72,7 +72,7 @@ func GetRelatedApiProducts(hc *http.Client, userAccessToken string, since int64,
 		return fmt.Errorf("get %s errors: %v", vangogh_integration.ApiProductsV2, itemErrs)
 	}
 
-	return reduceApiProducts(kvApiProducts, relatedIds...)
+	return reduceApiProducts(kvApiProducts, since)
 }
 
 func relatedProducts(id string, rdx redux.Readable, property string) iter.Seq[string] {

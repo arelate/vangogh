@@ -126,15 +126,15 @@ func GetData(since int64, force bool) error {
 		return err
 	}
 
-	if err = gog_data.GetCatalogPages(hc, uat); err != nil {
+	if err = gog_data.GetCatalogPages(hc, uat, since); err != nil {
 		return err
 	}
 
-	if err = gog_data.GetOrderPages(hc, uat, force); err != nil {
+	if err = gog_data.GetOrderPages(hc, uat, since, force); err != nil {
 		return err
 	}
 
-	if err = gog_data.GetAccountPages(hc, uat, force); err != nil {
+	if err = gog_data.GetAccountPages(hc, uat, since, force); err != nil {
 		return err
 	}
 
@@ -146,11 +146,11 @@ func GetData(since int64, force bool) error {
 		return err
 	}
 
-	if err = gog_data.GetDetails(hc, uat); err != nil {
+	if err = gog_data.GetDetails(hc, uat, since); err != nil {
 		return err
 	}
 
-	if err = gog_data.GetGamesDbProducts(hc, uat, since, force); err != nil {
+	if err = gog_data.GetGamesDbGogProducts(hc, uat, since, force); err != nil {
 		return err
 	}
 
@@ -161,6 +161,8 @@ func GetData(since int64, force bool) error {
 	// HLTB data
 
 	// ProtonDB data
+
+	// reduce, cascade special properties - owned, validation-status, etc - or should this be done in runtime?
 
 	return nil
 }

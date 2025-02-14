@@ -17,7 +17,7 @@ const demoStoreTag = "Demo"
 
 type propertyIdValues map[string]map[string][]string
 
-func GetCatalogPages(hc *http.Client, userAccessToken string) error {
+func GetCatalogPages(hc *http.Client, userAccessToken string, since int64) error {
 
 	gcpa := nod.NewProgress("getting %s...", vangogh_integration.CatalogPage)
 	defer gcpa.Done()
@@ -36,12 +36,12 @@ func GetCatalogPages(hc *http.Client, userAccessToken string) error {
 		return err
 	}
 
-	return reduceCatalogPages(kvCatalogPages)
+	return reduceCatalogPages(kvCatalogPages, since)
 }
 
-func reduceCatalogPages(kvCatalogPages kevlar.KeyValues) error {
+func reduceCatalogPages(kvCatalogPages kevlar.KeyValues, since int64) error {
 
-	rcpa := nod.NewProgress(" reducing %s...", vangogh_integration.CatalogPage)
+	rcpa := nod.Begin(" reducing %s...", vangogh_integration.CatalogPage)
 	defer rcpa.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -80,16 +80,14 @@ func reduceCatalogPages(kvCatalogPages kevlar.KeyValues) error {
 		return err
 	}
 
-	rcpa.TotalInt(kvCatalogPages.Len())
-
 	catalogPagesReductions := initReductions(catalogProductProperties...)
 
-	for page := range kvCatalogPages.Keys() {
+	updatedCatalogPages := kvCatalogPages.Since(since, kevlar.Create, kevlar.Update)
+
+	for page := range updatedCatalogPages {
 		if err = reduceCatalogPage(page, kvCatalogPages, catalogPagesReductions); err != nil {
 			return err
 		}
-
-		rcpa.Increment()
 	}
 
 	return writeReductions(rdx, catalogPagesReductions)

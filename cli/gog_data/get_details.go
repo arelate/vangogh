@@ -16,7 +16,7 @@ import (
 	"strconv"
 )
 
-func GetDetails(hc *http.Client, userAccessToken string) error {
+func GetDetails(hc *http.Client, userAccessToken string, since int64) error {
 
 	gda := nod.NewProgress("getting new or updated %s...", vangogh_integration.Details)
 	defer gda.Done()
@@ -58,7 +58,7 @@ func GetDetails(hc *http.Client, userAccessToken string) error {
 		return fmt.Errorf("get %s errors: %v", vangogh_integration.Details, itemErrs)
 	}
 
-	return nil
+	return reduceDetails(kvDetails, since)
 }
 
 func getNewRequiredGameLicences(kvDetails kevlar.KeyValues) (iter.Seq[string], error) {
@@ -172,8 +172,8 @@ func getPageNewUpdatedAccountProducts(page string, kvAccountPages, kvDetails kev
 	}, nil
 }
 
-func reduceDetails(kvDetails kevlar.KeyValues, ids ...string) error {
-	rda := nod.NewProgress(" reducing %s...", vangogh_integration.Details)
+func reduceDetails(kvDetails kevlar.KeyValues, since int64) error {
+	rda := nod.Begin(" reducing %s...", vangogh_integration.Details)
 	defer rda.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -195,16 +195,14 @@ func reduceDetails(kvDetails kevlar.KeyValues, ids ...string) error {
 		return err
 	}
 
-	rda.TotalInt(len(ids))
-
 	detailReductions := initReductions(detailProperties...)
 
-	for _, id := range ids {
+	updatedDetails := kvDetails.Since(since, kevlar.Create, kevlar.Update)
+
+	for id := range updatedDetails {
 		if err = reduceDetailsProduct(id, kvDetails, detailReductions); err != nil {
 			return err
 		}
-
-		rda.Increment()
 	}
 
 	return writeReductions(rdx, detailReductions)

@@ -46,14 +46,7 @@ func GetApiProducts(hc *http.Client, userAccessToken string, since int64, force 
 		return fmt.Errorf("get %s errors: %v", vangogh_integration.ApiProductsV2, itemErrs)
 	}
 
-	updatedApiProducts := kvApiProducts.Since(since, kevlar.Create, kevlar.Update)
-
-	uapIds := make([]string, 0)
-	for id := range updatedApiProducts {
-		uapIds = append(uapIds, id)
-	}
-
-	return reduceApiProducts(kvApiProducts, uapIds...)
+	return reduceApiProducts(kvApiProducts, since)
 }
 
 func getCatalogAccountProducts(since int64) (map[string]any, error) {
@@ -194,9 +187,9 @@ func getAccountPageProducts(page string, kvAccountPages kevlar.KeyValues) ([]str
 	return ids, nil
 }
 
-func reduceApiProducts(kvApiProducts kevlar.KeyValues, ids ...string) error {
+func reduceApiProducts(kvApiProducts kevlar.KeyValues, since int64) error {
 
-	rapa := nod.NewProgress(" reducing %s...", vangogh_integration.ApiProductsV2)
+	rapa := nod.Begin(" reducing %s...", vangogh_integration.ApiProductsV2)
 	defer rapa.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -246,16 +239,14 @@ func reduceApiProducts(kvApiProducts kevlar.KeyValues, ids ...string) error {
 		return err
 	}
 
-	rapa.TotalInt(len(ids))
-
 	apiProductReductions := initReductions(apiProductProperties...)
 
-	for _, id := range ids {
+	updatedApiProducts := kvApiProducts.Since(since, kevlar.Create, kevlar.Update)
+
+	for id := range updatedApiProducts {
 		if err = reduceApiProduct(id, kvApiProducts, apiProductReductions); err != nil {
 			return err
 		}
-
-		rapa.Increment()
 	}
 
 	return writeReductions(rdx, apiProductReductions)
