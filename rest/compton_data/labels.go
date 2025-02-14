@@ -15,6 +15,7 @@ var LabelProperties = []string{
 	vangogh_integration.DiscountPercentageProperty,
 	vangogh_integration.TagIdProperty,
 	vangogh_integration.LocalTagsProperty,
+	vangogh_integration.IsDemoProperty,
 	//vangogh_integration.WishlistedProperty,
 }
 
@@ -24,5 +25,6 @@ var LabelTitles = map[string]string{
 	vangogh_integration.PreOrderProperty:      "PO",
 	vangogh_integration.InDevelopmentProperty: "In Dev",
 	vangogh_integration.IsFreeProperty:        "Free",
+	vangogh_integration.IsDemoProperty:        "Demo",
 	//vangogh_integration.WishlistedProperty:    "Wish",
 }

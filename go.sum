@@ -136,6 +136,8 @@ github.com/boggydigital/redux v0.1.0 h1:PH0YkJfQRtTodb8vbHQeXZ6sDc8D3OunWd12IiXg
 github.com/boggydigital/redux v0.1.0/go.mod h1:4/x4lapAIcvrzg4X6eJ0G1wQVDO4pO/t6+31kMv7SHk=
 github.com/boggydigital/redux v0.1.3 h1:QlorWy9kEPgEf6aA8hlojb14Uu5GInCKZG9NEUeycNQ=
 github.com/boggydigital/redux v0.1.3/go.mod h1:N5qloppDg8HsXfDwDyWA/2m8i9IAcgr2nlm7bn/g2Cs=
+github.com/boggydigital/redux v0.1.4 h1:Eal5EvfnDlVneId14inDERanhP78Q7EQlWzxlkoJK6E=
+github.com/boggydigital/redux v0.1.4/go.mod h1:N5qloppDg8HsXfDwDyWA/2m8i9IAcgr2nlm7bn/g2Cs=
 github.com/boggydigital/testo v0.1.8 h1:NKuKLpWKn8gG3dYq8xNrFYHimxoCTdzLOs242q6jeQo=
 github.com/boggydigital/testo v0.1.8/go.mod h1:8JTO6UKeQPsHS82vbCH/3NLDfewmr/84vVQ6rNLdCas=
 github.com/boggydigital/wits v0.2.3 h1:Z0eB+QlIA18fJmblyV6ZJQ/swPYSFhOxfgMXOQz4/c8=

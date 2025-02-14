@@ -83,7 +83,8 @@
         }
 
         &.is-free,
-        &.discount-percentage {
+        &.discount-percentage,
+        &.is-demo {
             color: var(--c-highlight);
             --label-color: var(--c-mint);
         }

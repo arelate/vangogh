@@ -42,7 +42,17 @@ func formatLabel(id, property string, owned bool, rdx redux.Readable) compton.Fo
 		fallthrough
 	case vangogh_integration.InDevelopmentProperty:
 		fallthrough
+	case vangogh_integration.IsDemoProperty:
+		if fmtLabel.Title == "true" {
+			fmtLabel.Title = compton_data.LabelTitles[property]
+			break
+		}
+		fmtLabel.Title = ""
 	case vangogh_integration.IsFreeProperty:
+		if demo, ok := rdx.GetLastVal(vangogh_integration.IsDemoProperty, id); ok && demo == "true" {
+			fmtLabel.Title = ""
+			break
+		}
 		if fmtLabel.Title == "true" {
 			fmtLabel.Title = compton_data.LabelTitles[property]
 			break

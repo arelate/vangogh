@@ -96,33 +96,33 @@ func GetData(since int64, force bool) error {
 	//if err := Reduce(since, vangogh_integration.ReduxProperties(), false); err != nil {
 	//	return err
 	//}
-	//
-	//if err := gog_data.GetLicences(); err != nil {
-	//	return err
-	//}
-	//if err := gog_data.GetUserWishlist(); err != nil {
-	//	return err
-	//}
-	//
-	//if err := gog_data.GetCatalogPages(); err != nil {
-	//	return err
-	//}
-	//
-	//if err := gog_data.GetOrderPages(force); err != nil {
-	//	return err
-	//}
-	//
-	//if err := gog_data.GetAccountPages(force); err != nil {
-	//	return err
-	//}
-	//
-	//if err := gog_data.GetApiProducts(since, force); err != nil {
-	//	return err
-	//}
-	//
-	//if err := gog_data.GetRelatedApiProducts(since, force); err != nil {
-	//	return err
-	//}
+
+	if err := gog_data.GetLicences(); err != nil {
+		return err
+	}
+	if err := gog_data.GetUserWishlist(); err != nil {
+		return err
+	}
+
+	if err := gog_data.GetCatalogPages(); err != nil {
+		return err
+	}
+
+	if err := gog_data.GetOrderPages(force); err != nil {
+		return err
+	}
+
+	if err := gog_data.GetAccountPages(force); err != nil {
+		return err
+	}
+
+	if err := gog_data.GetApiProducts(since, force); err != nil {
+		return err
+	}
+
+	if err := gog_data.GetRelatedApiProducts(since, force); err != nil {
+		return err
+	}
 
 	if err := gog_data.GetDetails(); err != nil {
 		return err

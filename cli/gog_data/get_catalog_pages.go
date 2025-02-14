@@ -9,8 +9,11 @@ import (
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 	"net/http"
+	"slices"
 	"strconv"
 )
+
+const demoStoreTag = "Demo"
 
 type propertyIdValues map[string]map[string][]string
 
@@ -69,6 +72,7 @@ func reduceCatalogPages(kvCatalogPages kevlar.KeyValues) error {
 		vangogh_integration.ComingSoonProperty,
 		vangogh_integration.PreOrderProperty,
 		vangogh_integration.InDevelopmentProperty,
+		vangogh_integration.IsDemoProperty,
 	}
 
 	rdx, err := redux.NewWriter(reduxDir, catalogProductProperties...)
@@ -154,6 +158,8 @@ func reduceCatalogPage(page string, kvCatalogPages kevlar.KeyValues, piv propert
 				values = []string{strconv.FormatBool(cp.GetPreOrder())}
 			case vangogh_integration.InDevelopmentProperty:
 				values = []string{strconv.FormatBool(cp.GetInDevelopment())}
+			case vangogh_integration.IsDemoProperty:
+				values = []string{strconv.FormatBool(slices.Contains(cp.GetStoreTags(), demoStoreTag))}
 			}
 
 			piv[property][cp.Id] = values
