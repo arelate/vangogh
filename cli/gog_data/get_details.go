@@ -175,3 +175,79 @@ func getPageNewUpdatedAccountProducts(page string, kvAccountPages, kvDetails kev
 		}
 	}, nil
 }
+
+func reduceDetails(kvDetails kevlar.KeyValues, ids ...string) error {
+	rda := nod.NewProgress(" reducing %s...", vangogh_integration.Details)
+	defer rda.Done()
+
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return err
+	}
+
+	detailProperties := []string{
+		vangogh_integration.TitleProperty,
+		vangogh_integration.FeaturesProperty,
+		vangogh_integration.TagIdProperty,
+		vangogh_integration.GOGReleaseDateProperty,
+		vangogh_integration.ForumUrlProperty,
+		vangogh_integration.ChangelogProperty,
+	}
+
+	rdx, err := redux.NewWriter(reduxDir, detailProperties...)
+	if err != nil {
+		return err
+	}
+
+	rda.TotalInt(len(ids))
+
+	detailReductions := initReductions(detailProperties...)
+
+	for _, id := range ids {
+		if err = reduceDetailsProduct(id, kvDetails, detailReductions); err != nil {
+			return err
+		}
+
+		rda.Increment()
+	}
+
+	return writeReductions(rdx, detailReductions)
+}
+
+func reduceDetailsProduct(id string, kvDetails kevlar.KeyValues, piv propertyIdValues) error {
+
+	rcDetails, err := kvDetails.Get(id)
+	if err != nil {
+		return err
+	}
+	defer rcDetails.Close()
+
+	var det gog_integration.Details
+	if err = json.NewDecoder(rcDetails).Decode(&det); err != nil {
+		return err
+	}
+
+	for property := range piv {
+
+		var values []string
+
+		switch property {
+		case vangogh_integration.TitleProperty:
+			values = []string{det.GetTitle()}
+		case vangogh_integration.FeaturesProperty:
+			values = det.GetFeatures()
+		case vangogh_integration.TagIdProperty:
+			values = det.GetTagIds()
+		case vangogh_integration.GOGReleaseDateProperty:
+			values = []string{det.GetGOGRelease()}
+		case vangogh_integration.ForumUrlProperty:
+			values = []string{det.GetForumUrl()}
+		case vangogh_integration.ChangelogProperty:
+			values = []string{det.GetChangelog()}
+		}
+
+		piv[property][id] = values
+	}
+
+	return nil
+}

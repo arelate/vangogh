@@ -10,7 +10,6 @@ import (
 	"github.com/boggydigital/redux"
 	"iter"
 	"maps"
-	"net/http"
 	"slices"
 )
 
@@ -66,8 +65,13 @@ func GetRelatedApiProducts(since int64, force bool) error {
 		}
 	}
 
+	hc, err := gogAuthHttpClient()
+	if err != nil {
+		return err
+	}
+
 	relatedIds := slices.Collect(maps.Keys(nrIds))
-	if itemErrs := getGogItems(gog_integration.ApiProductV2Url, http.DefaultClient, kvApiProducts, grapva, relatedIds...); len(itemErrs) > 0 {
+	if itemErrs := getGogItems(gog_integration.ApiProductV2Url, hc, kvApiProducts, grapva, relatedIds...); len(itemErrs) > 0 {
 		return fmt.Errorf("get %s errors: %v", vangogh_integration.ApiProductsV2, itemErrs)
 	}
 

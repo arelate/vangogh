@@ -9,7 +9,6 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"net/http"
 	"strconv"
 )
 
@@ -41,8 +40,13 @@ func GetApiProducts(since int64, force bool) error {
 		ids = append(ids, id)
 	}
 
+	hc, err := gogAuthHttpClient()
+	if err != nil {
+		return err
+	}
+
 	// TODO: Save errors and dates and don't request them again in 30 days
-	if itemErrs := getGogItems(gog_integration.ApiProductV2Url, http.DefaultClient, kvApiProducts, gapva, ids...); len(itemErrs) > 0 {
+	if itemErrs := getGogItems(gog_integration.ApiProductV2Url, hc, kvApiProducts, gapva, ids...); len(itemErrs) > 0 {
 		return fmt.Errorf("get %s errors: %v", vangogh_integration.ApiProductsV2, itemErrs)
 	}
 
@@ -349,7 +353,7 @@ func reduceApiProduct(id string, kvApiProduct kevlar.KeyValues, piv propertyIdVa
 			values = []string{strconv.FormatBool(ap.GetPreOrder())}
 		}
 
-		piv[property][strconv.Itoa(ap.GetId())] = values
+		piv[property][id] = values
 
 	}
 
