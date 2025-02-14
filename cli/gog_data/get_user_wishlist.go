@@ -8,6 +8,7 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
+	"net/http"
 	"slices"
 )
 
@@ -25,8 +26,15 @@ func GetUserWishlist() error {
 		return err
 	}
 
-	if err = getGogAuthData(vangogh_integration.UserWishlist.String(),
+	hc, err := gogAuthHttpClient()
+	if err != nil {
+		return err
+	}
+
+	if err = fetchGogData(vangogh_integration.UserWishlist.String(),
 		gog_integration.UserWishlistUrl(),
+		hc,
+		http.MethodGet,
 		kvUserWishlist); err != nil {
 		return err
 

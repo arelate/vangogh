@@ -33,14 +33,14 @@ func (gif *gogItemFetcher) getNextItem(wg *sync.WaitGroup) {
 	id := <-gif.ch
 
 	productUrl := gif.productUrlFunc(id)
-	if err := requestGogData(id, productUrl, gif.hc, gif.method, gif.kv); err != nil {
+	if err := fetchGogData(id, productUrl, gif.hc, gif.method, gif.kv); err != nil {
 		gif.mtx.Lock()
 		gif.errs[id] = err
 		gif.mtx.Unlock()
 	}
 }
 
-func getGogItems(productUrlFunc idUrlFunc, hc *http.Client, kv kevlar.KeyValues, tpw nod.TotalProgressWriter, ids ...string) map[string]error {
+func fetchGogItems(productUrlFunc idUrlFunc, hc *http.Client, method string, kv kevlar.KeyValues, tpw nod.TotalProgressWriter, ids ...string) map[string]error {
 
 	wg := new(sync.WaitGroup)
 	ch := make(chan string, maxConReq)
@@ -48,7 +48,7 @@ func getGogItems(productUrlFunc idUrlFunc, hc *http.Client, kv kevlar.KeyValues,
 	gif := &gogItemFetcher{
 		productUrlFunc: productUrlFunc,
 		hc:             hc,
-		method:         http.MethodGet,
+		method:         method,
 		kv:             kv,
 		errs:           make(map[string]error),
 		ch:             ch,

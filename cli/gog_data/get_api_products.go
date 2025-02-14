@@ -9,6 +9,7 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
+	"net/http"
 	"strconv"
 )
 
@@ -46,7 +47,7 @@ func GetApiProducts(since int64, force bool) error {
 	}
 
 	// TODO: Save errors and dates and don't request them again in 30 days
-	if itemErrs := getGogItems(gog_integration.ApiProductV2Url, hc, kvApiProducts, gapva, ids...); len(itemErrs) > 0 {
+	if itemErrs := fetchGogItems(gog_integration.ApiProductV2Url, hc, http.MethodGet, kvApiProducts, gapva, ids...); len(itemErrs) > 0 {
 		return fmt.Errorf("get %s errors: %v", vangogh_integration.ApiProductsV2, itemErrs)
 	}
 

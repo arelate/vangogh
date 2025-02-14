@@ -8,6 +8,7 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
+	"net/http"
 	"slices"
 )
 
@@ -25,8 +26,15 @@ func GetLicences() error {
 		return err
 	}
 
-	if err = getGogAuthData(vangogh_integration.Licences.String(),
+	hc, err := gogAuthHttpClient()
+	if err != nil {
+		return err
+	}
+
+	if err = fetchGogData(vangogh_integration.Licences.String(),
 		gog_integration.LicencesUrl(),
+		hc,
+		http.MethodGet,
 		kvLicences); err != nil {
 		return err
 	}

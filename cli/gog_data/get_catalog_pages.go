@@ -32,7 +32,7 @@ func GetCatalogPages() error {
 		return err
 	}
 
-	if err = getGogPages(gog_integration.CatalogPageUrl, http.DefaultClient, kvCatalogPages, gcpa, true); err != nil {
+	if err = fetchGogPages(gog_integration.CatalogPageUrl, http.DefaultClient, http.MethodGet, kvCatalogPages, gcpa, true); err != nil {
 		return err
 	}
 

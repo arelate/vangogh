@@ -28,19 +28,7 @@ func gogAuthHttpClient() (*http.Client, error) {
 	return hc, nil
 }
 
-func getGogAuthData(id string, u *url.URL, kv kevlar.KeyValues) error {
-	hc, err := gogAuthHttpClient()
-	if err != nil {
-		return err
-	}
-	return requestGogData(id, u, hc, http.MethodGet, kv)
-}
-
-func getGogPublicData(id string, u *url.URL, kv kevlar.KeyValues) error {
-	return requestGogData(id, u, http.DefaultClient, http.MethodGet, kv)
-}
-
-func requestGogData(id string, u *url.URL, hc *http.Client, method string, kv kevlar.KeyValues) error {
+func fetchGogData(id string, u *url.URL, hc *http.Client, method string, kv kevlar.KeyValues) error {
 
 	req, err := http.NewRequest(method, u.String(), nil)
 	if err != nil {

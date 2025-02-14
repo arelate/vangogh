@@ -8,6 +8,7 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
+	"net/http"
 	"strconv"
 )
 
@@ -30,7 +31,7 @@ func GetAccountPages(force bool) error {
 		return err
 	}
 
-	if err = getGogPages(gog_integration.AccountPageUrl, hc, kvAccountPages, gapa, force); err != nil {
+	if err = fetchGogPages(gog_integration.AccountPageUrl, hc, http.MethodGet, kvAccountPages, gapa, force); err != nil {
 		return err
 	}
 

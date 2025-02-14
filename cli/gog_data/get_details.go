@@ -11,6 +11,7 @@ import (
 	"github.com/boggydigital/redux"
 	"iter"
 	"maps"
+	"net/http"
 	"slices"
 	"strconv"
 )
@@ -58,7 +59,7 @@ func GetDetails() error {
 	detailsIds := slices.Collect(maps.Keys(newUpdatedDetails))
 
 	// TODO: figure out error processing
-	if itemErrs := getGogItems(gog_integration.DetailsUrl, hc, kvDetails, gda, detailsIds...); len(itemErrs) > 0 {
+	if itemErrs := fetchGogItems(gog_integration.DetailsUrl, hc, http.MethodGet, kvDetails, gda, detailsIds...); len(itemErrs) > 0 {
 		return fmt.Errorf("get %s errors: %v", vangogh_integration.Details, itemErrs)
 	}
 

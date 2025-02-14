@@ -8,6 +8,7 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
+	"net/http"
 	"time"
 )
 
@@ -30,7 +31,7 @@ func GetOrderPages(force bool) error {
 		return err
 	}
 
-	if err = getGogPages(gog_integration.OrdersPageUrl, hc, kvOrderPages, gopa, force); err != nil {
+	if err = fetchGogPages(gog_integration.OrdersPageUrl, hc, http.MethodGet, kvOrderPages, gopa, force); err != nil {
 		return err
 	}
 
