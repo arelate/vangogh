@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/cli/fetch"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
@@ -54,7 +55,7 @@ func GetDetails(hc *http.Client, userAccessToken string, since int64) error {
 	detailsIds := slices.Collect(maps.Keys(newUpdatedDetails))
 
 	// TODO: figure out error processing
-	if itemErrs := fetchGogItems(gog_integration.DetailsUrl, hc, http.MethodGet, userAccessToken, kvDetails, gda, detailsIds...); len(itemErrs) > 0 {
+	if itemErrs := fetch.Items(gog_integration.DetailsUrl, hc, http.MethodGet, userAccessToken, kvDetails, gda, detailsIds...); len(itemErrs) > 0 {
 		return fmt.Errorf("get %s errors: %v", vangogh_integration.Details, itemErrs)
 	}
 

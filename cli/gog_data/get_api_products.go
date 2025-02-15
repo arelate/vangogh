@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/cli/fetch"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
@@ -31,6 +32,7 @@ func GetApiProducts(hc *http.Client, userAccessToken string, since int64, force 
 	if err != nil {
 		return err
 	}
+
 	kvApiProducts, err := kevlar.New(apiProductsDir, kevlar.JsonExt)
 	if err != nil {
 		return err
@@ -42,7 +44,7 @@ func GetApiProducts(hc *http.Client, userAccessToken string, since int64, force 
 	}
 
 	// TODO: Save errors and dates and don't request them again for 30 days
-	if itemErrs := fetchGogItems(gog_integration.ApiProductV2Url, hc, http.MethodGet, userAccessToken, kvApiProducts, gapva, ids...); len(itemErrs) > 0 {
+	if itemErrs := fetch.Items(gog_integration.ApiProductV2Url, hc, http.MethodGet, userAccessToken, kvApiProducts, gapva, ids...); len(itemErrs) > 0 {
 		return fmt.Errorf("get %s errors: %v", vangogh_integration.ApiProductsV2, itemErrs)
 	}
 

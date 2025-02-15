@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/cli/fetch"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
@@ -26,7 +27,7 @@ func GetUserWishlist(hc *http.Client, userAccessToken string) error {
 		return err
 	}
 
-	if err = fetchGogData(vangogh_integration.UserWishlist.String(),
+	if err = fetch.SetValue(vangogh_integration.UserWishlist.String(),
 		gog_integration.UserWishlistUrl(),
 		hc,
 		http.MethodGet,

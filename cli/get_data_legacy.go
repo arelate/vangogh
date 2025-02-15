@@ -1,12 +1,7 @@
 package cli
 
 import (
-	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/arelate/vangogh/cli/fetchers"
-	"github.com/arelate/vangogh/cli/itemizations"
-	"github.com/boggydigital/coost"
-	"github.com/boggydigital/nod"
 	"net/url"
 )
 
@@ -46,63 +41,64 @@ func GetDataLegacy(
 	missing bool,
 	updated bool) error {
 
-	gda := nod.NewProgress("getting %s data...", pt)
-	defer gda.Done()
-
-	if !vangogh_integration.IsValidProductType(pt) {
-		gda.EndWithResult("%s is not a valid product type", pt)
-		return nil
-	}
-
-	acp, err := vangogh_integration.AbsCookiePath()
-	if err != nil {
-		return err
-	}
-
-	hc, err := coost.NewHttpClientFromFile(acp)
-	if err != nil {
-		return err
-	}
-
-	if vangogh_integration.IsProductRequiresAuth(pt) {
-		err := gog_integration.IsLoggedIn(hc)
-		if err != nil {
-			return err
-		}
-	}
-
-	if vangogh_integration.IsGOGPagedProduct(pt) {
-		if err := fetchers.Pages(pt, since, hc, gda); err != nil {
-			return err
-		}
-		return split(pt, since)
-	}
-
-	if vangogh_integration.IsArrayProduct(pt) {
-		ids := []string{pt.String()}
-		if err := fetchers.Items(ids, pt, hc); err != nil {
-			return err
-		}
-		return split(pt, since)
-	}
-
-	ids, err = itemizations.All(ids, missing, updated, since, pt)
-	if err != nil {
-		return err
-	}
-
-	skipIdSet := make(map[string]bool, len(skipIds))
-	for _, id := range skipIds {
-		skipIdSet[id] = true
-	}
-
-	approvedIds := make([]string, 0, len(ids))
-
-	for _, id := range ids {
-		if !skipIdSet[id] {
-			approvedIds = append(approvedIds, id)
-		}
-	}
-
-	return fetchers.Items(approvedIds, pt, hc)
+	//gda := nod.NewProgress("getting %s data...", pt)
+	//defer gda.Done()
+	//
+	//if !vangogh_integration.IsValidProductType(pt) {
+	//	gda.EndWithResult("%s is not a valid product type", pt)
+	//	return nil
+	//}
+	//
+	//acp, err := vangogh_integration.AbsCookiePath()
+	//if err != nil {
+	//	return err
+	//}
+	//
+	//hc, err := coost.NewHttpClientFromFile(acp)
+	//if err != nil {
+	//	return err
+	//}
+	//
+	//if vangogh_integration.IsProductRequiresAuth(pt) {
+	//	err := gog_integration.IsLoggedIn(hc)
+	//	if err != nil {
+	//		return err
+	//	}
+	//}
+	//
+	//if vangogh_integration.IsGOGPagedProduct(pt) {
+	//	if err := fetch.Pages(pt, since, hc, gda); err != nil {
+	//		return err
+	//	}
+	//	return split(pt, since)
+	//}
+	//
+	//if vangogh_integration.IsArrayProduct(pt) {
+	//	ids := []string{pt.String()}
+	//	if err := fetch.Items(ids, pt, hc); err != nil {
+	//		return err
+	//	}
+	//	return split(pt, since)
+	//}
+	//
+	//ids, err = itemizations.All(ids, missing, updated, since, pt)
+	//if err != nil {
+	//	return err
+	//}
+	//
+	//skipIdSet := make(map[string]bool, len(skipIds))
+	//for _, id := range skipIds {
+	//	skipIdSet[id] = true
+	//}
+	//
+	//approvedIds := make([]string, 0, len(ids))
+	//
+	//for _, id := range ids {
+	//	if !skipIdSet[id] {
+	//		approvedIds = append(approvedIds, id)
+	//	}
+	//}
+	//
+	//return fetch.Items(approvedIds, pt, hc)
+	return nil
 }

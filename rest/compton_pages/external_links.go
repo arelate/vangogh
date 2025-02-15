@@ -22,7 +22,6 @@ import (
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/redux"
 	"net/url"
-	"strconv"
 )
 
 func ExternalLinks(id string, rdx redux.Readable) compton.PageElement {
@@ -58,19 +57,16 @@ func externalLinks(id string, rdx redux.Readable) map[string][]string {
 		}
 	}
 
-	if steamAppId, ok := rdx.GetLastVal(vangogh_integration.SteamAppIdProperty, id); ok {
-		if appId, err := strconv.ParseUint(steamAppId, 10, 32); err == nil && appId > 0 {
-			uAppId := uint32(appId)
-			links[compton_data.GauginSteamLinksProperty] =
-				append(links[compton_data.GauginSteamLinksProperty],
-					fmt.Sprintf("%s=%s", compton_data.GauginSteamCommunityUrlProperty, steam_integration.SteamCommunityUrl(uAppId)))
-			links[compton_data.GauginSteamLinksProperty] =
-				append(links[compton_data.GauginSteamLinksProperty],
-					fmt.Sprintf("%s=%s", compton_data.GauginSteamGuidesUrlProperty, steam_integration.SteamGuidesUrl(uAppId)))
-			links[compton_data.GauginOtherLinksProperty] =
-				append(links[compton_data.GauginOtherLinksProperty],
-					fmt.Sprintf("%s=%s", compton_data.GauginProtonDBUrlProperty, protondb_integration.ProtonDBUrl(uAppId)))
-		}
+	if appId, ok := rdx.GetLastVal(vangogh_integration.SteamAppIdProperty, id); ok {
+		links[compton_data.GauginSteamLinksProperty] =
+			append(links[compton_data.GauginSteamLinksProperty],
+				fmt.Sprintf("%s=%s", compton_data.GauginSteamCommunityUrlProperty, steam_integration.SteamCommunityUrl(appId)))
+		links[compton_data.GauginSteamLinksProperty] =
+			append(links[compton_data.GauginSteamLinksProperty],
+				fmt.Sprintf("%s=%s", compton_data.GauginSteamGuidesUrlProperty, steam_integration.SteamGuidesUrl(appId)))
+		links[compton_data.GauginOtherLinksProperty] =
+			append(links[compton_data.GauginOtherLinksProperty],
+				fmt.Sprintf("%s=%s", compton_data.GauginProtonDBUrlProperty, protondb_integration.ProtonDBUrl(appId)))
 	}
 
 	links[compton_data.GauginOtherLinksProperty] = append(links[compton_data.GauginOtherLinksProperty],

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/cli/fetch"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
@@ -38,7 +39,7 @@ func GetGamesDbGogProducts(hc *http.Client, userAccessToken string, since int64,
 	}
 
 	// TODO: Save errors and dates and don't request them again for 30 days
-	if itemErrs := fetchGogItems(gog_integration.GamesDbGogExternalReleaseUrl, hc, http.MethodGet, userAccessToken, kvGamesDbGogProducts, ggdpa, ids...); len(itemErrs) > 0 {
+	if itemErrs := fetch.Items(gog_integration.GamesDbGogExternalReleaseUrl, hc, http.MethodGet, userAccessToken, kvGamesDbGogProducts, ggdpa, ids...); len(itemErrs) > 0 {
 		return fmt.Errorf("get %s errors: %v", vangogh_integration.ApiProductsV2, itemErrs)
 	}
 

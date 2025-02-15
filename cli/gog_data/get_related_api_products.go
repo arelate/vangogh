@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/cli/fetch"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
@@ -68,7 +69,7 @@ func GetRelatedApiProducts(hc *http.Client, userAccessToken string, since int64,
 
 	relatedIds := slices.Collect(maps.Keys(nrIds))
 
-	if itemErrs := fetchGogItems(gog_integration.ApiProductV2Url, hc, http.MethodGet, userAccessToken, kvApiProducts, grapva, relatedIds...); len(itemErrs) > 0 {
+	if itemErrs := fetch.Items(gog_integration.ApiProductV2Url, hc, http.MethodGet, userAccessToken, kvApiProducts, grapva, relatedIds...); len(itemErrs) > 0 {
 		return fmt.Errorf("get %s errors: %v", vangogh_integration.ApiProductsV2, itemErrs)
 	}
 

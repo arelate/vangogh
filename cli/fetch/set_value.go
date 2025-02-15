@@ -1,4 +1,4 @@
-package gog_data
+package fetch
 
 import (
 	"errors"
@@ -7,7 +7,7 @@ import (
 	"net/url"
 )
 
-func fetchGogData(id string, u *url.URL, hc *http.Client, method string, authBearer string, kv kevlar.KeyValues) error {
+func SetValue(id string, u *url.URL, hc *http.Client, method string, authBearer string, kv kevlar.KeyValues) error {
 
 	req, err := http.NewRequest(method, u.String(), nil)
 	if err != nil {

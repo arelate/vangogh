@@ -14,6 +14,7 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	_ "image/jpeg"
+	"log"
 	"os"
 )
 
@@ -39,8 +40,7 @@ func main() {
 		vangogh_integration.DefaultRootDir,
 		vangogh_integration.RelToAbsDirs,
 		vangogh_integration.AllAbsDirs...); err != nil {
-		_ = err
-		os.Exit(1)
+		log.Fatalln(err.Error())
 	}
 
 	defs, err := clo.Load(
@@ -48,8 +48,7 @@ func main() {
 		bytes.NewBuffer(cliHelp),
 		clo_delegates.Values)
 	if err != nil {
-		_ = err
-		os.Exit(1)
+		log.Fatalln(err.Error())
 	}
 
 	clo.HandleFuncs(map[string]clo.Handler{
@@ -84,13 +83,11 @@ func main() {
 		"wishlist":           cli.WishlistHandler,
 	})
 
-	if err := defs.AssertCommandsHaveHandlers(); err != nil {
-		_ = err
-		os.Exit(1)
+	if err = defs.AssertCommandsHaveHandlers(); err != nil {
+		log.Fatalln(err.Error())
 	}
 
 	if err := defs.Serve(os.Args[1:]); err != nil {
-		_ = err
-		os.Exit(1)
+		log.Fatalln(err.Error())
 	}
 }
