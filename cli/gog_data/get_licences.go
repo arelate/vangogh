@@ -5,6 +5,7 @@ import (
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
+	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
@@ -27,11 +28,11 @@ func GetLicences(hc *http.Client, userAccessToken string) error {
 		return err
 	}
 
-	if err = fetch.SetValue(vangogh_integration.Licences.String(),
+	licencesId := vangogh_integration.Licences.String()
+
+	if err = fetch.SetValue(licencesId,
 		gog_integration.LicencesUrl(),
-		hc,
-		http.MethodGet,
-		userAccessToken,
+		reqs.Licenses(hc, userAccessToken),
 		kvLicences); err != nil {
 		return err
 	}

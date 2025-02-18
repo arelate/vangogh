@@ -4,6 +4,7 @@ import (
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
+	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"net/http"
@@ -23,11 +24,11 @@ func GetUserAccessToken(hc *http.Client) error {
 		return err
 	}
 
-	if err = fetch.SetValue(vangogh_integration.UserAccessToken.String(),
+	uatId := vangogh_integration.UserAccessToken.String()
+
+	if err = fetch.SetValue(uatId,
 		gog_integration.UserAccessTokenUrl(),
-		hc,
-		http.MethodPost,
-		"",
+		reqs.UserAccessToken(hc),
 		kvUserAccessToken); err != nil {
 		return err
 	}

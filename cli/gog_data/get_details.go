@@ -2,10 +2,10 @@ package gog_data
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
+	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
@@ -14,11 +14,10 @@ import (
 	"iter"
 	"maps"
 	"net/http"
-	"slices"
 	"strconv"
 )
 
-func GetDetails(hc *http.Client, userAccessToken string, since int64) error {
+func GetDetails(hc *http.Client, uat string, since int64) error {
 
 	gda := nod.NewProgress("getting new or updated %s...", vangogh_integration.Details)
 	defer gda.Done()
@@ -53,11 +52,12 @@ func GetDetails(hc *http.Client, userAccessToken string, since int64) error {
 		newUpdatedDetails[id] = nil
 	}
 
-	detailsIds := slices.Collect(maps.Keys(newUpdatedDetails))
+	gda.TotalInt(len(newUpdatedDetails))
 
-	// TODO: figure out error processing
-	if itemErrs := fetch.Items(gog_integration.DetailsUrl, hc, http.MethodGet, userAccessToken, kvDetails, gda, detailsIds...); len(itemErrs) > 0 {
-		return fmt.Errorf("get %s errors: %v", vangogh_integration.Details, itemErrs)
+	itemErrs := fetch.Items(maps.Keys(newUpdatedDetails), reqs.Details(hc, uat), kvDetails, gda)
+
+	if err = shared_data.WriteTypeErrors(vangogh_integration.Details, itemErrs); err != nil {
+		return err
 	}
 
 	return reduceDetails(kvDetails, since)

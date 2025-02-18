@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
@@ -13,7 +14,7 @@ import (
 	"strconv"
 )
 
-func GetAccountPages(hc *http.Client, userAccessToken string, since int64, force bool) error {
+func GetAccountPages(hc *http.Client, uat string, since int64, force bool) error {
 	gapa := nod.NewProgress("getting %s...", vangogh_integration.AccountPage)
 	defer gapa.Done()
 
@@ -27,7 +28,7 @@ func GetAccountPages(hc *http.Client, userAccessToken string, since int64, force
 		return err
 	}
 
-	if err = fetchGogPages(gog_integration.AccountPageUrl, hc, http.MethodGet, userAccessToken, kvAccountPages, gapa, force); err != nil {
+	if err = fetchGogPages(reqs.AccountPage(hc, uat), kvAccountPages, gapa, force); err != nil {
 		return err
 	}
 

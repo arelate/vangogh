@@ -2,23 +2,24 @@ package fetch
 
 import (
 	"errors"
+	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/boggydigital/kevlar"
 	"net/http"
 	"net/url"
 )
 
-func SetValue(id string, u *url.URL, hc *http.Client, method string, authBearer string, kv kevlar.KeyValues) error {
+func SetValue(id string, u *url.URL, itemReq *reqs.Builder, kv kevlar.KeyValues) error {
 
-	req, err := http.NewRequest(method, u.String(), nil)
+	req, err := http.NewRequest(itemReq.HttpMethod, u.String(), nil)
 	if err != nil {
 		return err
 	}
 
-	if authBearer != "" {
-		req.Header.Set("Authorization", "Bearer "+authBearer)
+	if itemReq.AuthBearer != "" {
+		req.Header.Set("Authorization", "Bearer "+itemReq.AuthBearer)
 	}
 
-	resp, err := hc.Do(req)
+	resp, err := itemReq.HttpClient.Do(req)
 	if err != nil {
 		return err
 	}

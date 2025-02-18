@@ -2,20 +2,21 @@ package gog_data
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
+	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
+	"maps"
 	"net/http"
 	"strconv"
 )
 
-func GetApiProducts(hc *http.Client, userAccessToken string, since int64, force bool) error {
+func GetApiProducts(hc *http.Client, uat string, since int64, force bool) error {
 
 	gapva := nod.NewProgress("getting %s...", vangogh_integration.ApiProductsV2)
 	defer gapva.Done()
@@ -39,14 +40,12 @@ func GetApiProducts(hc *http.Client, userAccessToken string, since int64, force 
 		return err
 	}
 
-	ids := make([]string, 0, len(catalogAccountProductIds))
-	for id := range catalogAccountProductIds {
-		ids = append(ids, id)
-	}
+	gapva.TotalInt(len(catalogAccountProductIds))
 
-	// TODO: Save errors and dates and don't request them again for 30 days
-	if itemErrs := fetch.Items(gog_integration.ApiProductV2Url, hc, http.MethodGet, userAccessToken, kvApiProducts, gapva, ids...); len(itemErrs) > 0 {
-		return fmt.Errorf("get %s errors: %v", vangogh_integration.ApiProductsV2, itemErrs)
+	itemErrors := fetch.Items(maps.Keys(catalogAccountProductIds), reqs.ApiProducts(hc, uat), kvApiProducts, gapva)
+
+	if err = shared_data.WriteTypeErrors(vangogh_integration.ApiProductsV2, itemErrors); err != nil {
+		return err
 	}
 
 	return reduceApiProducts(kvApiProducts, since)

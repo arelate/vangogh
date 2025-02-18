@@ -1,10 +1,10 @@
 package gog_data
 
 import (
-	"fmt"
-	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
+	"github.com/arelate/vangogh/cli/reqs"
+	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
@@ -12,10 +12,9 @@ import (
 	"iter"
 	"maps"
 	"net/http"
-	"slices"
 )
 
-func GetRelatedApiProducts(hc *http.Client, userAccessToken string, since int64, force bool) error {
+func GetRelatedApiProducts(hc *http.Client, uat string, since int64, force bool) error {
 
 	grapva := nod.NewProgress("getting related %s...", vangogh_integration.ApiProductsV2)
 	defer grapva.Done()
@@ -67,10 +66,12 @@ func GetRelatedApiProducts(hc *http.Client, userAccessToken string, since int64,
 		}
 	}
 
-	relatedIds := slices.Collect(maps.Keys(nrIds))
+	grapva.TotalInt(len(nrIds))
 
-	if itemErrs := fetch.Items(gog_integration.ApiProductV2Url, hc, http.MethodGet, userAccessToken, kvApiProducts, grapva, relatedIds...); len(itemErrs) > 0 {
-		return fmt.Errorf("get %s errors: %v", vangogh_integration.ApiProductsV2, itemErrs)
+	itemErrs := fetch.Items(maps.Keys(nrIds), reqs.ApiProducts(hc, uat), kvApiProducts, grapva)
+
+	if err = shared_data.WriteTypeErrors(vangogh_integration.ApiProductsV2, itemErrs); err != nil {
+		return err
 	}
 
 	return reduceApiProducts(kvApiProducts, since)

@@ -5,6 +5,7 @@ import (
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
+	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
@@ -13,7 +14,7 @@ import (
 	"slices"
 )
 
-func GetUserWishlist(hc *http.Client, userAccessToken string) error {
+func GetUserWishlist(hc *http.Client, uat string) error {
 	guwa := nod.Begin("getting %s...", vangogh_integration.UserWishlist)
 	defer guwa.Done()
 
@@ -27,11 +28,11 @@ func GetUserWishlist(hc *http.Client, userAccessToken string) error {
 		return err
 	}
 
-	if err = fetch.SetValue(vangogh_integration.UserWishlist.String(),
+	userWishlistId := vangogh_integration.UserWishlist.String()
+
+	if err = fetch.SetValue(userWishlistId,
 		gog_integration.UserWishlistUrl(),
-		hc,
-		http.MethodGet,
-		userAccessToken,
+		reqs.UserWishlist(hc, uat),
 		kvUserWishlist); err != nil {
 		return err
 

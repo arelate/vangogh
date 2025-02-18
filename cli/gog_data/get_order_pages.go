@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
@@ -13,7 +14,7 @@ import (
 	"time"
 )
 
-func GetOrderPages(hc *http.Client, userAccessToken string, since int64, force bool) error {
+func GetOrderPages(hc *http.Client, uat string, since int64, force bool) error {
 	gopa := nod.NewProgress("getting %s...", vangogh_integration.OrderPage)
 	defer gopa.Done()
 
@@ -27,7 +28,7 @@ func GetOrderPages(hc *http.Client, userAccessToken string, since int64, force b
 		return err
 	}
 
-	if err = fetchGogPages(gog_integration.OrdersPageUrl, hc, http.MethodGet, userAccessToken, kvOrderPages, gopa, force); err != nil {
+	if err = fetchGogPages(reqs.OrderPage(hc, uat), kvOrderPages, gopa, force); err != nil {
 		return err
 	}
 

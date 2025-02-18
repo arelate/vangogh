@@ -2,20 +2,21 @@ package gog_data
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
+	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 	"net/http"
+	"slices"
 	"strconv"
 )
 
-func GetGamesDbGogProducts(hc *http.Client, userAccessToken string, since int64, force bool) error {
+func GetGamesDbGogProducts(hc *http.Client, uat string, since int64, force bool) error {
 
 	ggdpa := nod.NewProgress("getting %s...", vangogh_integration.GamesDbGogProducts)
 	defer ggdpa.Done()
@@ -34,14 +35,17 @@ func GetGamesDbGogProducts(hc *http.Client, userAccessToken string, since int64,
 		return err
 	}
 
-	ids, err := getCatalogPagesProducts(since)
+	catalogPagesProducts, err := getCatalogPagesProducts(since)
 	if err != nil {
 		return err
 	}
 
-	// TODO: Save errors and dates and don't request them again for 30 days
-	if itemErrs := fetch.Items(gog_integration.GamesDbGogExternalReleaseUrl, hc, http.MethodGet, userAccessToken, kvGamesDbGogProducts, ggdpa, ids...); len(itemErrs) > 0 {
-		return fmt.Errorf("get %s errors: %v", vangogh_integration.ApiProductsV2, itemErrs)
+	ggdpa.TotalInt(len(catalogPagesProducts))
+
+	itemErrs := fetch.Items(slices.Values(catalogPagesProducts), reqs.GamesDbGogProduct(hc, uat), kvGamesDbGogProducts, ggdpa)
+
+	if err = shared_data.WriteTypeErrors(vangogh_integration.ApiProductsV2, itemErrs); err != nil {
+		return err
 	}
 
 	return reduceGamesDbGogProducts(kvGamesDbGogProducts, since)

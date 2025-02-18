@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
@@ -16,7 +17,7 @@ import (
 
 const demoStoreTag = "Demo"
 
-func GetCatalogPages(hc *http.Client, userAccessToken string, since int64) error {
+func GetCatalogPages(hc *http.Client, uat string, since int64) error {
 
 	gcpa := nod.NewProgress("getting %s...", vangogh_integration.CatalogPage)
 	defer gcpa.Done()
@@ -31,7 +32,7 @@ func GetCatalogPages(hc *http.Client, userAccessToken string, since int64) error
 		return err
 	}
 
-	if err = fetchGogPages(gog_integration.CatalogPageUrl, hc, http.MethodGet, userAccessToken, kvCatalogPages, gcpa, true); err != nil {
+	if err = fetchGogPages(reqs.CatalogPage(hc, uat), kvCatalogPages, gcpa, true); err != nil {
 		return err
 	}
 

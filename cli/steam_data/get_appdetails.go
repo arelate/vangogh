@@ -2,16 +2,16 @@ package steam_data
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
+	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"net/http"
+	"slices"
 	"strconv"
 )
 
@@ -57,9 +57,12 @@ func GetAppDetails(since int64, force bool) error {
 		}
 	}
 
-	// TODO: Save errors and dates and don't request them again for 30 days
-	if itemErrs := fetch.Items(steam_integration.AppDetailsUrl, http.DefaultClient, http.MethodGet, "", kvSteamAppDetails, gada, newSteamAppIds...); len(itemErrs) > 0 {
-		return fmt.Errorf("get %s errors: %v", vangogh_integration.SteamAppDetails, itemErrs)
+	gada.TotalInt(len(newSteamAppIds))
+
+	itemErrs := fetch.Items(slices.Values(newSteamAppIds), reqs.SteamAppDetails(), kvSteamAppDetails, gada)
+
+	if err = shared_data.WriteTypeErrors(vangogh_integration.SteamAppDetails, itemErrs); err != nil {
+		return err
 	}
 
 	return reduceSteamAppDetails(kvSteamAppDetails, since)
