@@ -1,18 +1,20 @@
-package gog_data
+package shared_data
 
 import (
 	"github.com/boggydigital/redux"
 )
 
-func initReductions(properties ...string) propertyIdValues {
-	piv := make(propertyIdValues)
+type PropertyIdValues map[string]map[string][]string
+
+func InitReductions(properties ...string) PropertyIdValues {
+	piv := make(PropertyIdValues)
 	for _, property := range properties {
 		piv[property] = make(map[string][]string)
 	}
 	return piv
 }
 
-func writeReductions(rdx redux.Writeable, piv propertyIdValues) error {
+func WriteReductions(rdx redux.Writeable, piv PropertyIdValues) error {
 	for property, keyValues := range piv {
 		if err := rdx.BatchReplaceValues(property, keyValues); err != nil {
 			return err

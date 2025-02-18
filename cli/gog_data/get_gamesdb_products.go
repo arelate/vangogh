@@ -6,6 +6,7 @@ import (
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
+	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
@@ -68,7 +69,7 @@ func reduceGamesDbGogProducts(kvGamesDbGogProducts kevlar.KeyValues, since int64
 		return err
 	}
 
-	gamesDbGogProductsReductions := initReductions(gamesDbGogProductsProperties...)
+	gamesDbGogProductsReductions := shared_data.InitReductions(gamesDbGogProductsProperties...)
 
 	updatedGamesDbGogProducts := kvGamesDbGogProducts.Since(since, kevlar.Create, kevlar.Update)
 
@@ -78,10 +79,10 @@ func reduceGamesDbGogProducts(kvGamesDbGogProducts kevlar.KeyValues, since int64
 		}
 	}
 
-	return writeReductions(rdx, gamesDbGogProductsReductions)
+	return shared_data.WriteReductions(rdx, gamesDbGogProductsReductions)
 }
 
-func reduceGamesDbGogProduct(id string, kvGamesDbGogProducts kevlar.KeyValues, piv propertyIdValues) error {
+func reduceGamesDbGogProduct(id string, kvGamesDbGogProducts kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
 
 	rcGamesDbGogProduct, err := kvGamesDbGogProducts.Get(id)
 	if err != nil {

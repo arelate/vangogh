@@ -6,6 +6,7 @@ import (
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
+	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
@@ -196,7 +197,7 @@ func reduceDetails(kvDetails kevlar.KeyValues, since int64) error {
 		return err
 	}
 
-	detailReductions := initReductions(detailProperties...)
+	detailReductions := shared_data.InitReductions(detailProperties...)
 
 	updatedDetails := kvDetails.Since(since, kevlar.Create, kevlar.Update)
 
@@ -206,10 +207,10 @@ func reduceDetails(kvDetails kevlar.KeyValues, since int64) error {
 		}
 	}
 
-	return writeReductions(rdx, detailReductions)
+	return shared_data.WriteReductions(rdx, detailReductions)
 }
 
-func reduceDetailsProduct(id string, kvDetails kevlar.KeyValues, piv propertyIdValues) error {
+func reduceDetailsProduct(id string, kvDetails kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
 
 	rcDetails, err := kvDetails.Get(id)
 	if err != nil {

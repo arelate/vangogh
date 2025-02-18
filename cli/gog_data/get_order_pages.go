@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
@@ -50,7 +51,7 @@ func reduceOrderPages(kvOrderPages kevlar.KeyValues, since int64) error {
 		return err
 	}
 
-	orderPagesReductions := initReductions(orderProperties...)
+	orderPagesReductions := shared_data.InitReductions(orderProperties...)
 
 	updatedOrderPages := kvOrderPages.Since(since, kevlar.Create, kevlar.Update)
 
@@ -60,10 +61,10 @@ func reduceOrderPages(kvOrderPages kevlar.KeyValues, since int64) error {
 		}
 	}
 
-	return writeReductions(rdx, orderPagesReductions)
+	return shared_data.WriteReductions(rdx, orderPagesReductions)
 }
 
-func reduceOrderPage(page string, kvOrderPages kevlar.KeyValues, piv propertyIdValues) error {
+func reduceOrderPage(page string, kvOrderPages kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
 
 	rcOrderPage, err := kvOrderPages.Get(page)
 	if err != nil {

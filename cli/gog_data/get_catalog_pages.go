@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
@@ -14,8 +15,6 @@ import (
 )
 
 const demoStoreTag = "Demo"
-
-type propertyIdValues map[string]map[string][]string
 
 func GetCatalogPages(hc *http.Client, userAccessToken string, since int64) error {
 
@@ -80,7 +79,7 @@ func reduceCatalogPages(kvCatalogPages kevlar.KeyValues, since int64) error {
 		return err
 	}
 
-	catalogPagesReductions := initReductions(catalogProductProperties...)
+	catalogPagesReductions := shared_data.InitReductions(catalogProductProperties...)
 
 	updatedCatalogPages := kvCatalogPages.Since(since, kevlar.Create, kevlar.Update)
 
@@ -90,10 +89,10 @@ func reduceCatalogPages(kvCatalogPages kevlar.KeyValues, since int64) error {
 		}
 	}
 
-	return writeReductions(rdx, catalogPagesReductions)
+	return shared_data.WriteReductions(rdx, catalogPagesReductions)
 }
 
-func reduceCatalogPage(page string, kvCatalogPages kevlar.KeyValues, piv propertyIdValues) error {
+func reduceCatalogPage(page string, kvCatalogPages kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
 
 	rcCatalogPage, err := kvCatalogPages.Get(page)
 	if err != nil {

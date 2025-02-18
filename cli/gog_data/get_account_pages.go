@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
@@ -53,7 +54,7 @@ func reduceAccountPages(kvAccountPages kevlar.KeyValues, since int64) error {
 		return err
 	}
 
-	accountPagesReductions := initReductions(accountProductProperties...)
+	accountPagesReductions := shared_data.InitReductions(accountProductProperties...)
 
 	updatedAccountPages := kvAccountPages.Since(since, kevlar.Create, kevlar.Update)
 
@@ -63,10 +64,10 @@ func reduceAccountPages(kvAccountPages kevlar.KeyValues, since int64) error {
 		}
 	}
 
-	return writeReductions(rdx, accountPagesReductions)
+	return shared_data.WriteReductions(rdx, accountPagesReductions)
 }
 
-func reduceAccountPage(page string, kvAccountPages kevlar.KeyValues, piv propertyIdValues) error {
+func reduceAccountPage(page string, kvAccountPages kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
 
 	rcAccountPage, err := kvAccountPages.Get(page)
 	if err != nil {
