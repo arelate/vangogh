@@ -16,14 +16,10 @@ import (
 	"strconv"
 )
 
-func GetGamesDbGogProducts(hc *http.Client, uat string, since int64, force bool) error {
+func GetGamesDbGogProducts(hc *http.Client, uat string, since int64) error {
 
 	ggdpa := nod.NewProgress("getting %s...", vangogh_integration.GamesDbGogProducts)
 	defer ggdpa.Done()
-
-	if force {
-		since = -1
-	}
 
 	gamesDbGogProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GamesDbGogProducts)
 	if err != nil {

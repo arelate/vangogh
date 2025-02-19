@@ -78,25 +78,21 @@ func OrderPage(authHttpClient *http.Client, authBearer string) *Params {
 
 func ApiProducts(authHttpClient *http.Client, authBearer string) *Params {
 	return &Params{
-		ProductType:       vangogh_integration.ApiProductsV2,
-		UrlFunc:           gog_integration.ApiProductV2Url,
-		HttpClient:        authHttpClient,
-		HttpMethod:        http.MethodGet,
-		AuthBearer:        authBearer,
-		RateLimitSeconds:  defaultRateLimitSeconds,
-		RateLimitRequests: defaultRateLimitRequests,
+		ProductType: vangogh_integration.ApiProductsV2,
+		UrlFunc:     gog_integration.ApiProductV2Url,
+		HttpClient:  authHttpClient,
+		HttpMethod:  http.MethodGet,
+		AuthBearer:  authBearer,
 	}
 }
 
 func Details(authHttpClient *http.Client, authBearer string) *Params {
 	return &Params{
-		ProductType:       vangogh_integration.Details,
-		UrlFunc:           gog_integration.DetailsUrl,
-		HttpClient:        authHttpClient,
-		HttpMethod:        http.MethodGet,
-		AuthBearer:        authBearer,
-		RateLimitSeconds:  defaultRateLimitSeconds,
-		RateLimitRequests: defaultRateLimitRequests,
+		ProductType: vangogh_integration.Details,
+		UrlFunc:     gog_integration.DetailsUrl,
+		HttpClient:  authHttpClient,
+		HttpMethod:  http.MethodGet,
+		AuthBearer:  authBearer,
 	}
 }
 
@@ -123,11 +119,18 @@ func SteamAppDetails() *Params {
 
 func SteamAppNews() *Params {
 	return &Params{
-		ProductType:       vangogh_integration.SteamAppNews,
-		UrlFunc:           steam_integration.NewsForAppUrl,
-		HttpClient:        http.DefaultClient,
-		HttpMethod:        http.MethodGet,
-		RateLimitSeconds:  defaultRateLimitSeconds,
-		RateLimitRequests: defaultRateLimitRequests,
+		ProductType: vangogh_integration.SteamAppNews,
+		UrlFunc:     steam_integration.NewsForAppUrl,
+		HttpClient:  http.DefaultClient,
+		HttpMethod:  http.MethodGet,
+	}
+}
+
+func SteamAppReviews() *Params {
+	return &Params{
+		ProductType: vangogh_integration.SteamAppReviews,
+		UrlFunc:     steam_integration.AppReviewsUrl,
+		HttpClient:  http.DefaultClient,
+		HttpMethod:  http.MethodGet,
 	}
 }

@@ -13,14 +13,10 @@ import (
 	"net/http"
 )
 
-func GetRelatedApiProducts(hc *http.Client, uat string, since int64, force bool) error {
+func GetRelatedApiProducts(hc *http.Client, uat string, since int64) error {
 
 	grapva := nod.NewProgress("getting related %s...", vangogh_integration.ApiProductsV2)
 	defer grapva.Done()
-
-	if force {
-		since = -1
-	}
 
 	apiProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.ApiProductsV2)
 	if err != nil {

@@ -20,10 +20,6 @@ func GetAppDetails(since int64, force bool) error {
 	gada := nod.NewProgress("getting %s...", vangogh_integration.SteamAppDetails)
 	defer gada.Done()
 
-	if force {
-		since = -1
-	}
-
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {
 		return err

@@ -16,14 +16,10 @@ import (
 	"strconv"
 )
 
-func GetApiProducts(hc *http.Client, uat string, since int64, force bool) error {
+func GetApiProducts(hc *http.Client, uat string, since int64) error {
 
 	gapva := nod.NewProgress("getting %s...", vangogh_integration.ApiProductsV2)
 	defer gapva.Done()
-
-	if force {
-		since = -1
-	}
 
 	catalogAccountProductIds, err := shared_data.GetCatalogAccountProducts(since)
 	if err != nil {

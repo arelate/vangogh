@@ -10,68 +10,23 @@ import (
 	"github.com/boggydigital/redux"
 	"iter"
 	"path/filepath"
-	"sync"
 	"time"
 )
-
-const maxConReq = 4
 
 const defaultErrorDurationDays = 7
 
 var errorsDurationDays = map[vangogh_integration.ProductType]int{
-	// gog
-	vangogh_integration.CatalogPage: 0,
+	vangogh_integration.CatalogPage: 0, // GOG pages errors are exceptional and likely indicate
 	vangogh_integration.OrderPage:   0,
 	vangogh_integration.AccountPage: 0,
 	vangogh_integration.Details:     1,
 }
 
-type itemFetcher struct {
-	itemReq   *reqs.Params
-	kv        kevlar.KeyValues
-	errs      map[string]error
-	ch        chan string
-	tpw       nod.TotalProgressWriter
-	rateLimit float64
-	mtx       *sync.Mutex
-}
-
-func (ife *itemFetcher) getNextItem(wg *sync.WaitGroup) {
-
-	defer wg.Done()
-
-	time.Sleep(time.Second * time.Duration(ife.rateLimit))
-
-	if ife.tpw != nil {
-		defer ife.tpw.Increment()
-	}
-
-	id := <-ife.ch
-
-	productUrl := ife.itemReq.UrlFunc(id)
-	if err := SetValue(id, productUrl, ife.itemReq, ife.kv); err != nil {
-		ife.mtx.Lock()
-		ife.errs[id] = err
-		ife.mtx.Unlock()
-	}
-}
-
 func Items(ids iter.Seq[string], itemReq *reqs.Params, kv kevlar.KeyValues, tpw nod.TotalProgressWriter) error {
 
-	wg := new(sync.WaitGroup)
-	ch := make(chan string, maxConReq)
-
-	gif := &itemFetcher{
-		itemReq: itemReq,
-		kv:      kv,
-		errs:    make(map[string]error),
-		ch:      ch,
-		tpw:     tpw,
-		mtx:     new(sync.Mutex),
-	}
-
+	var rateLimit time.Duration
 	if itemReq.RateLimitRequests > 0 {
-		gif.rateLimit = maxConReq * itemReq.RateLimitSeconds / itemReq.RateLimitRequests
+		rateLimit = time.Duration(itemReq.RateLimitSeconds * float64(time.Second) / itemReq.RateLimitRequests)
 	}
 
 	perTypeReduxDir, err := pathways.GetAbsRelDir(vangogh_integration.TypeErrors)
@@ -86,9 +41,11 @@ func Items(ids iter.Seq[string], itemReq *reqs.Params, kv kevlar.KeyValues, tpw 
 		return err
 	}
 
+	errs := make(map[string]error)
+
 	for id := range ids {
 
-		if ok, skipErr := shouldSkipError(id, gif.itemReq.ProductType, rdx); skipErr == nil && ok {
+		if ok, skipErr := shouldSkipError(id, itemReq.ProductType, rdx); skipErr == nil && ok {
 			if tpw != nil {
 				tpw.Increment()
 			}
@@ -97,14 +54,19 @@ func Items(ids iter.Seq[string], itemReq *reqs.Params, kv kevlar.KeyValues, tpw 
 			return skipErr
 		}
 
-		ch <- id
-		wg.Add(1)
-		go gif.getNextItem(wg)
+		productUrl := itemReq.UrlFunc(id)
+		if err = SetValue(id, productUrl, itemReq, kv); err != nil {
+			errs[id] = err
+		}
+
+		time.Sleep(rateLimit)
+
+		if tpw != nil {
+			tpw.Increment()
+		}
 	}
 
-	wg.Wait()
-
-	return shared_data.WriteTypeErrors(gif.errs, rdx)
+	return shared_data.WriteTypeErrors(errs, rdx)
 }
 
 func shouldSkipError(id string, productType vangogh_integration.ProductType, rdx redux.Writeable) (bool, error) {

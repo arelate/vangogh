@@ -6,8 +6,33 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/pathways"
+	"github.com/boggydigital/redux"
+	"iter"
 	"strconv"
 )
+
+func GetSteamGogIds(gogIds iter.Seq[string]) (map[string]string, error) {
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return nil, err
+	}
+
+	rdx, err := redux.NewReader(reduxDir, vangogh_integration.SteamAppIdProperty)
+	if err != nil {
+		return nil, err
+	}
+
+	steamGogIds := make(map[string]string)
+
+	for gogId := range gogIds {
+		if steamAppId, ok := rdx.GetLastVal(vangogh_integration.SteamAppIdProperty, gogId); ok && steamAppId != "" {
+			steamGogIds[steamAppId] = gogId
+		}
+	}
+
+	return steamGogIds, nil
+}
 
 func GetCatalogAccountProducts(since int64) (map[string]any, error) {
 	catalogAccountProductIds := make(map[string]any)
