@@ -13,41 +13,41 @@ const (
 	defaultRateLimitSeconds  = 5
 )
 
-type Builder struct {
+type Params struct {
 	ProductType       vangogh_integration.ProductType
 	UrlFunc           func(id string) *url.URL
 	HttpClient        *http.Client
 	HttpMethod        string
 	AuthBearer        string
-	RateLimitRequests int
-	RateLimitSeconds  int
+	RateLimitRequests float64
+	RateLimitSeconds  float64
 }
 
-func UserAccessToken(authHttpClient *http.Client) *Builder {
-	return &Builder{
+func UserAccessToken(authHttpClient *http.Client) *Params {
+	return &Params{
 		HttpClient: authHttpClient,
 		HttpMethod: http.MethodPost,
 	}
 }
 
-func Licenses(authHttpClient *http.Client, authBearer string) *Builder {
-	return &Builder{
+func Licenses(authHttpClient *http.Client, authBearer string) *Params {
+	return &Params{
 		HttpClient: authHttpClient,
 		HttpMethod: http.MethodGet,
 		AuthBearer: authBearer,
 	}
 }
 
-func UserWishlist(authHttpClient *http.Client, authBearer string) *Builder {
-	return &Builder{
+func UserWishlist(authHttpClient *http.Client, authBearer string) *Params {
+	return &Params{
 		HttpClient: authHttpClient,
 		HttpMethod: http.MethodGet,
 		AuthBearer: authBearer,
 	}
 }
 
-func AccountPage(authHttpClient *http.Client, authBearer string) *Builder {
-	return &Builder{
+func AccountPage(authHttpClient *http.Client, authBearer string) *Params {
+	return &Params{
 		ProductType: vangogh_integration.AccountPage,
 		UrlFunc:     gog_integration.AccountPageUrl,
 		HttpClient:  authHttpClient,
@@ -56,8 +56,8 @@ func AccountPage(authHttpClient *http.Client, authBearer string) *Builder {
 	}
 }
 
-func CatalogPage(authHttpClient *http.Client, authBearer string) *Builder {
-	return &Builder{
+func CatalogPage(authHttpClient *http.Client, authBearer string) *Params {
+	return &Params{
 		ProductType: vangogh_integration.CatalogPage,
 		UrlFunc:     gog_integration.CatalogPageUrl,
 		HttpClient:  authHttpClient,
@@ -66,8 +66,8 @@ func CatalogPage(authHttpClient *http.Client, authBearer string) *Builder {
 	}
 }
 
-func OrderPage(authHttpClient *http.Client, authBearer string) *Builder {
-	return &Builder{
+func OrderPage(authHttpClient *http.Client, authBearer string) *Params {
+	return &Params{
 		ProductType: vangogh_integration.OrderPage,
 		UrlFunc:     gog_integration.OrdersPageUrl,
 		HttpClient:  authHttpClient,
@@ -76,8 +76,8 @@ func OrderPage(authHttpClient *http.Client, authBearer string) *Builder {
 	}
 }
 
-func ApiProducts(authHttpClient *http.Client, authBearer string) *Builder {
-	return &Builder{
+func ApiProducts(authHttpClient *http.Client, authBearer string) *Params {
+	return &Params{
 		ProductType:       vangogh_integration.ApiProductsV2,
 		UrlFunc:           gog_integration.ApiProductV2Url,
 		HttpClient:        authHttpClient,
@@ -88,8 +88,8 @@ func ApiProducts(authHttpClient *http.Client, authBearer string) *Builder {
 	}
 }
 
-func Details(authHttpClient *http.Client, authBearer string) *Builder {
-	return &Builder{
+func Details(authHttpClient *http.Client, authBearer string) *Params {
+	return &Params{
 		ProductType:       vangogh_integration.Details,
 		UrlFunc:           gog_integration.DetailsUrl,
 		HttpClient:        authHttpClient,
@@ -100,8 +100,8 @@ func Details(authHttpClient *http.Client, authBearer string) *Builder {
 	}
 }
 
-func GamesDbGogProduct(authHttpClient *http.Client, authBearer string) *Builder {
-	return &Builder{
+func GamesDbGogProduct(authHttpClient *http.Client, authBearer string) *Params {
+	return &Params{
 		ProductType: vangogh_integration.GamesDbGogProducts,
 		UrlFunc:     gog_integration.GamesDbGogExternalReleaseUrl,
 		HttpClient:  authHttpClient,
@@ -110,12 +110,23 @@ func GamesDbGogProduct(authHttpClient *http.Client, authBearer string) *Builder 
 	}
 }
 
-func SteamAppDetails() *Builder {
-	return &Builder{
+func SteamAppDetails() *Params {
+	return &Params{
+		ProductType:       vangogh_integration.SteamAppDetails,
 		UrlFunc:           steam_integration.AppDetailsUrl,
 		HttpClient:        http.DefaultClient,
 		HttpMethod:        http.MethodGet,
-		AuthBearer:        "",
+		RateLimitSeconds:  defaultRateLimitSeconds,
+		RateLimitRequests: defaultRateLimitRequests,
+	}
+}
+
+func SteamAppNews() *Params {
+	return &Params{
+		ProductType:       vangogh_integration.SteamAppNews,
+		UrlFunc:           steam_integration.NewsForAppUrl,
+		HttpClient:        http.DefaultClient,
+		HttpMethod:        http.MethodGet,
 		RateLimitSeconds:  defaultRateLimitSeconds,
 		RateLimitRequests: defaultRateLimitRequests,
 	}

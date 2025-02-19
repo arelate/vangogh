@@ -13,7 +13,7 @@ import (
 
 const firstPageId = "1"
 
-func fetchGogPages(pageReq *reqs.Builder, kv kevlar.KeyValues, tpw nod.TotalProgressWriter, force bool) error {
+func fetchGogPages(pageReq *reqs.Params, kv kevlar.KeyValues, tpw nod.TotalProgressWriter, force bool) error {
 
 	firstPageUrl := pageReq.UrlFunc(firstPageId)
 

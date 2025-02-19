@@ -35,7 +35,7 @@ func GetGamesDbGogProducts(hc *http.Client, uat string, since int64, force bool)
 		return err
 	}
 
-	catalogPagesProducts, err := getCatalogPagesProducts(since)
+	catalogPagesProducts, err := shared_data.GetCatalogPagesProducts(since)
 	if err != nil {
 		return err
 	}

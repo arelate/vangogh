@@ -25,14 +25,14 @@ var (
 
 	dataTypesSections = map[vangogh_integration.ProductType]string{
 		vangogh_integration.SteamAppNews:                 compton_data.SteamNewsSection,
-		vangogh_integration.SteamReviews:                 compton_data.SteamReviewsSection,
+		vangogh_integration.SteamAppReviews:              compton_data.SteamReviewsSection,
 		vangogh_integration.SteamDeckCompatibilityReport: compton_data.SteamDeckSection,
 		//vangogh_integration.Details:                      compton_data.InstallersSection,
 	}
 
 	dataTypesSectionsOrder = []vangogh_integration.ProductType{
 		vangogh_integration.SteamAppNews,
-		vangogh_integration.SteamReviews,
+		vangogh_integration.SteamAppReviews,
 		vangogh_integration.SteamDeckCompatibilityReport,
 		//vangogh_integration.Details,
 	}

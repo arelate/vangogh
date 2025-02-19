@@ -16,31 +16,35 @@ import (
 
 const maxConReq = 4
 
+const defaultErrorDurationDays = 7
+
 var errorsDurationDays = map[vangogh_integration.ProductType]int{
+	// gog
 	vangogh_integration.CatalogPage: 0,
 	vangogh_integration.OrderPage:   0,
 	vangogh_integration.AccountPage: 0,
+	vangogh_integration.Details:     1,
 }
 
 type itemFetcher struct {
-	itemReq   *reqs.Builder
+	itemReq   *reqs.Params
 	kv        kevlar.KeyValues
 	errs      map[string]error
 	ch        chan string
 	tpw       nod.TotalProgressWriter
-	rateLimit int
+	rateLimit float64
 	mtx       *sync.Mutex
-	rdx       redux.Writeable
 }
 
 func (ife *itemFetcher) getNextItem(wg *sync.WaitGroup) {
 
 	defer wg.Done()
+
+	time.Sleep(time.Second * time.Duration(ife.rateLimit))
+
 	if ife.tpw != nil {
 		defer ife.tpw.Increment()
 	}
-
-	time.Sleep(time.Second * time.Duration(ife.rateLimit))
 
 	id := <-ife.ch
 
@@ -52,7 +56,7 @@ func (ife *itemFetcher) getNextItem(wg *sync.WaitGroup) {
 	}
 }
 
-func Items(ids iter.Seq[string], itemReq *reqs.Builder, kv kevlar.KeyValues, tpw nod.TotalProgressWriter) error {
+func Items(ids iter.Seq[string], itemReq *reqs.Params, kv kevlar.KeyValues, tpw nod.TotalProgressWriter) error {
 
 	wg := new(sync.WaitGroup)
 	ch := make(chan string, maxConReq)
@@ -70,7 +74,7 @@ func Items(ids iter.Seq[string], itemReq *reqs.Builder, kv kevlar.KeyValues, tpw
 		gif.rateLimit = maxConReq * itemReq.RateLimitSeconds / itemReq.RateLimitRequests
 	}
 
-	perTypeReduxDir, err := pathways.GetAbsRelDir(vangogh_integration.PerTypeRedux)
+	perTypeReduxDir, err := pathways.GetAbsRelDir(vangogh_integration.TypeErrors)
 	if err != nil {
 		return err
 	}
@@ -108,7 +112,14 @@ func shouldSkipError(id string, productType vangogh_integration.ProductType, rdx
 	if dateStr, ok := rdx.GetLastVal(vangogh_integration.TypeErrorDateProperty, id); ok && dateStr != "" {
 		if dt, err := time.Parse(time.RFC3339, dateStr); err == nil {
 
-			errorExpires := dt.Add(time.Duration(errorsDurationDays[productType]) * 24 * time.Hour)
+			var errorDuration time.Duration
+			if edd, sure := errorsDurationDays[productType]; sure {
+				errorDuration = time.Duration(edd)
+			} else {
+				errorDuration = defaultErrorDurationDays
+			}
+
+			errorExpires := dt.Add(errorDuration * 24 * time.Hour)
 
 			if time.Now().UTC().Before(errorExpires) {
 

@@ -20,7 +20,7 @@ var TypesTitles = map[string]string{
 	vangogh_integration.PCGWExternalLinks.String():            "PCGamingWiki External Links",
 	vangogh_integration.PCGWPageId.String():                   "PCGamingWiki PageId",
 	vangogh_integration.SteamAppNews.String():                 "Steam App News",
-	vangogh_integration.SteamReviews.String():                 "Steam Reviews",
+	vangogh_integration.SteamAppReviews.String():              "Steam Reviews",
 	vangogh_integration.ProtonDBSummary.String():              "ProtonDB Summary",
 	vangogh_integration.UserWishlistProducts.String():         "User Wishlist Products",
 	vangogh_integration.GamesDbGogProducts.String():           "GamesDB GOG Products",

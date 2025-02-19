@@ -85,6 +85,10 @@ func GetData(since int64, force bool) error {
 		return err
 	}
 
+	if err = steam_data.GetAppNews(since, force); err != nil {
+		return err
+	}
+
 	// PCGW data
 
 	// HLTB data

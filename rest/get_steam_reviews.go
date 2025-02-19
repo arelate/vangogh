@@ -13,7 +13,7 @@ func GetSteamReviews(w http.ResponseWriter, r *http.Request) {
 
 	id := r.URL.Query().Get("id")
 
-	sarReader, err := vangogh_integration.NewProductReader(vangogh_integration.SteamReviews)
+	sarReader, err := vangogh_integration.NewProductReader(vangogh_integration.SteamAppReviews)
 
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)

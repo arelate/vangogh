@@ -19,7 +19,7 @@ func Migrate() error {
 	productTypes := vangogh_integration.LocalProducts()
 	productTypes = append(productTypes, vangogh_integration.GOGPagedProducts()...)
 	productTypes = append(productTypes, vangogh_integration.GOGArrayProducts()...)
-	productTypes = append(productTypes, vangogh_integration.SteamArrayProducts()...)
+	productTypes = append(productTypes, vangogh_integration.SteamRemoteProducts()...)
 
 	for _, pt := range productTypes {
 		absPtDir, err := vangogh_integration.AbsProductTypeDir(pt)
