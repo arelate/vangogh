@@ -181,21 +181,12 @@ func reduceDetails(kvDetails kevlar.KeyValues, since int64) error {
 		return err
 	}
 
-	detailProperties := []string{
-		vangogh_integration.TitleProperty,
-		vangogh_integration.FeaturesProperty,
-		vangogh_integration.TagIdProperty,
-		vangogh_integration.GOGReleaseDateProperty,
-		vangogh_integration.ForumUrlProperty,
-		vangogh_integration.ChangelogProperty,
-	}
-
-	rdx, err := redux.NewWriter(reduxDir, detailProperties...)
+	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.GOGDetailsProperties()...)
 	if err != nil {
 		return err
 	}
 
-	detailReductions := shared_data.InitReductions(detailProperties...)
+	detailReductions := shared_data.InitReductions(vangogh_integration.GOGDetailsProperties()...)
 
 	updatedDetails := kvDetails.Since(since, kevlar.Create, kevlar.Update)
 

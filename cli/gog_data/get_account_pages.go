@@ -45,17 +45,12 @@ func reduceAccountPages(kvAccountPages kevlar.KeyValues, since int64) error {
 		return err
 	}
 
-	accountProductProperties := []string{
-		vangogh_integration.TagIdProperty,
-		vangogh_integration.TagNameProperty,
-	}
-
-	rdx, err := redux.NewWriter(reduxDir, accountProductProperties...)
+	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.GOGAccountPageProperties()...)
 	if err != nil {
 		return err
 	}
 
-	accountPagesReductions := shared_data.InitReductions(accountProductProperties...)
+	accountPagesReductions := shared_data.InitReductions(vangogh_integration.GOGAccountPageProperties()...)
 
 	updatedAccountPages := kvAccountPages.Since(since, kevlar.Create, kevlar.Update)
 

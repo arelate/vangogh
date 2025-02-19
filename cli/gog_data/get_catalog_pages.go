@@ -49,38 +49,12 @@ func reduceCatalogPages(kvCatalogPages kevlar.KeyValues, since int64) error {
 		return err
 	}
 
-	catalogProductProperties := []string{
-		vangogh_integration.TitleProperty,
-		vangogh_integration.DevelopersProperty,
-		vangogh_integration.PublishersProperty,
-		vangogh_integration.ImageProperty,
-		vangogh_integration.VerticalImageProperty,
-		vangogh_integration.ScreenshotsProperty,
-		vangogh_integration.GenresProperty,
-		vangogh_integration.FeaturesProperty,
-		vangogh_integration.RatingProperty,
-		vangogh_integration.OperatingSystemsProperty,
-		vangogh_integration.SlugProperty,
-		vangogh_integration.GlobalReleaseDateProperty,
-		vangogh_integration.ProductTypeProperty,
-		vangogh_integration.StoreTagsProperty,
-		vangogh_integration.BasePriceProperty,
-		vangogh_integration.PriceProperty,
-		vangogh_integration.IsFreeProperty,
-		vangogh_integration.IsDiscountedProperty,
-		vangogh_integration.DiscountPercentageProperty,
-		vangogh_integration.ComingSoonProperty,
-		vangogh_integration.PreOrderProperty,
-		vangogh_integration.InDevelopmentProperty,
-		vangogh_integration.IsDemoProperty,
-	}
-
-	rdx, err := redux.NewWriter(reduxDir, catalogProductProperties...)
+	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.GOGCatalogPageProperties()...)
 	if err != nil {
 		return err
 	}
 
-	catalogPagesReductions := shared_data.InitReductions(catalogProductProperties...)
+	catalogPagesReductions := shared_data.InitReductions(vangogh_integration.GOGCatalogPageProperties()...)
 
 	updatedCatalogPages := kvCatalogPages.Since(since, kevlar.Create, kevlar.Update)
 

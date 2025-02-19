@@ -45,14 +45,12 @@ func reduceOrderPages(kvOrderPages kevlar.KeyValues, since int64) error {
 		return err
 	}
 
-	orderProperties := []string{vangogh_integration.GOGOrderDateProperty}
-
-	rdx, err := redux.NewWriter(reduxDir, orderProperties...)
+	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.GOGOrderPageProperties()...)
 	if err != nil {
 		return err
 	}
 
-	orderPagesReductions := shared_data.InitReductions(orderProperties...)
+	orderPagesReductions := shared_data.InitReductions(vangogh_integration.GOGOrderPageProperties()...)
 
 	updatedOrderPages := kvOrderPages.Since(since, kevlar.Create, kevlar.Update)
 

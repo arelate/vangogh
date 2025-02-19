@@ -54,20 +54,12 @@ func reduceGamesDbGogProducts(kvGamesDbGogProducts kevlar.KeyValues, since int64
 		return err
 	}
 
-	gamesDbGogProductsProperties := []string{
-		vangogh_integration.SteamAppIdProperty,
-		vangogh_integration.VideoIdProperty,
-		vangogh_integration.AggregatedRatingProperty,
-		vangogh_integration.ThemesProperty,
-		vangogh_integration.GameModesProperty,
-	}
-
-	rdx, err := redux.NewWriter(reduxDir, gamesDbGogProductsProperties...)
+	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.GOGGamesDbProperties()...)
 	if err != nil {
 		return err
 	}
 
-	gamesDbGogProductsReductions := shared_data.InitReductions(gamesDbGogProductsProperties...)
+	gamesDbGogProductsReductions := shared_data.InitReductions(vangogh_integration.GOGGamesDbProperties()...)
 
 	updatedGamesDbGogProducts := kvGamesDbGogProducts.Since(since, kevlar.Create, kevlar.Update)
 

@@ -55,49 +55,12 @@ func reduceApiProducts(kvApiProducts kevlar.KeyValues, since int64) error {
 		return err
 	}
 
-	apiProductProperties := []string{
-		vangogh_integration.TitleProperty,
-		vangogh_integration.DevelopersProperty,
-		vangogh_integration.PublishersProperty,
-		vangogh_integration.LanguageCodeProperty,
-		vangogh_integration.ImageProperty,
-		vangogh_integration.VerticalImageProperty,
-		vangogh_integration.HeroProperty,
-		vangogh_integration.LogoProperty,
-		vangogh_integration.IconProperty,
-		vangogh_integration.IconSquareProperty,
-		vangogh_integration.BackgroundProperty,
-		vangogh_integration.ScreenshotsProperty,
-		vangogh_integration.GenresProperty,
-		vangogh_integration.FeaturesProperty,
-		vangogh_integration.SeriesProperty,
-		vangogh_integration.VideoIdProperty,
-		vangogh_integration.OperatingSystemsProperty,
-		vangogh_integration.RequiresGamesProperty,
-		vangogh_integration.IsRequiredByGamesProperty,
-		vangogh_integration.IncludesGamesProperty,
-		vangogh_integration.IsIncludedByGamesProperty,
-		vangogh_integration.GlobalReleaseDateProperty,
-		vangogh_integration.GOGReleaseDateProperty,
-		vangogh_integration.StoreUrlProperty,
-		vangogh_integration.ForumUrlProperty,
-		vangogh_integration.SupportUrlProperty,
-		vangogh_integration.DescriptionOverviewProperty,
-		vangogh_integration.DescriptionFeaturesProperty,
-		vangogh_integration.ProductTypeProperty,
-		vangogh_integration.CopyrightsProperty,
-		vangogh_integration.StoreTagsProperty,
-		vangogh_integration.AdditionalRequirementsProperty,
-		vangogh_integration.InDevelopmentProperty,
-		vangogh_integration.PreOrderProperty,
-	}
-
-	rdx, err := redux.NewWriter(reduxDir, apiProductProperties...)
+	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.GOGApiProductProperties()...)
 	if err != nil {
 		return err
 	}
 
-	apiProductReductions := shared_data.InitReductions(apiProductProperties...)
+	apiProductReductions := shared_data.InitReductions(vangogh_integration.GOGApiProductProperties()...)
 
 	updatedApiProducts := kvApiProducts.Since(since, kevlar.Create, kevlar.Update)
 
