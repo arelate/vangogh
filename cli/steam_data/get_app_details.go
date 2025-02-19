@@ -30,12 +30,12 @@ func GetAppDetails(since int64, force bool) error {
 		return err
 	}
 
-	steamAppDetailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.SteamAppDetails)
+	appDetailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.SteamAppDetails)
 	if err != nil {
 		return err
 	}
 
-	kvSteamAppDetails, err := kevlar.New(steamAppDetailsDir, kevlar.JsonExt)
+	kvAppDetails, err := kevlar.New(appDetailsDir, kevlar.JsonExt)
 	if err != nil {
 		return err
 	}
@@ -45,7 +45,7 @@ func GetAppDetails(since int64, force bool) error {
 	for gogId := range rdx.Keys(vangogh_integration.SteamAppIdProperty) {
 		if steamAppIds, ok := rdx.GetAllValues(vangogh_integration.SteamAppIdProperty, gogId); ok {
 			for _, steamAppId := range steamAppIds {
-				if kvSteamAppDetails.Has(steamAppId) && !force {
+				if kvAppDetails.Has(steamAppId) && !force {
 					continue
 				}
 				newSteamAppIds = append(newSteamAppIds, steamAppId)
@@ -55,17 +55,17 @@ func GetAppDetails(since int64, force bool) error {
 
 	gada.TotalInt(len(newSteamAppIds))
 
-	if err = fetch.Items(slices.Values(newSteamAppIds), reqs.SteamAppDetails(), kvSteamAppDetails, gada); err != nil {
+	if err = fetch.Items(slices.Values(newSteamAppIds), reqs.SteamAppDetails(), kvAppDetails, gada); err != nil {
 		return err
 	}
 
-	return reduceAppDetails(kvSteamAppDetails, since)
+	return reduceAppDetails(kvAppDetails, since)
 }
 
-func reduceAppDetails(kvSteamAppDetails kevlar.KeyValues, since int64) error {
+func reduceAppDetails(kvAppDetails kevlar.KeyValues, since int64) error {
 
-	rspada := nod.Begin(" reducing %s...", vangogh_integration.SteamAppDetails)
-	defer rspada.Done()
+	rada := nod.Begin(" reducing %s...", vangogh_integration.SteamAppDetails)
+	defer rada.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {
@@ -79,11 +79,11 @@ func reduceAppDetails(kvSteamAppDetails kevlar.KeyValues, since int64) error {
 
 	steamAppDetailsReductions := shared_data.InitReductions(vangogh_integration.SteamAppDetailsProperties()...)
 
-	updatedSteamAppDetails := kvSteamAppDetails.Since(since, kevlar.Create, kevlar.Update)
+	updatedSteamAppDetails := kvAppDetails.Since(since, kevlar.Create, kevlar.Update)
 
 	for steamAppId := range updatedSteamAppDetails {
 		for gogId := range rdx.Match(map[string][]string{vangogh_integration.SteamAppIdProperty: {steamAppId}}, redux.FullMatch) {
-			if err = reduceAppDetailsProduct(gogId, steamAppId, kvSteamAppDetails, steamAppDetailsReductions); err != nil {
+			if err = reduceAppDetailsProduct(gogId, steamAppId, kvAppDetails, steamAppDetailsReductions); err != nil {
 				return err
 			}
 		}
@@ -92,9 +92,9 @@ func reduceAppDetails(kvSteamAppDetails kevlar.KeyValues, since int64) error {
 	return shared_data.WriteReductions(rdx, steamAppDetailsReductions)
 }
 
-func reduceAppDetailsProduct(gogId, steamAppId string, kvSteamAppDetails kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
+func reduceAppDetailsProduct(gogId, steamAppId string, kvAppDetails kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
 
-	rcSteamAppDetailsResponse, err := kvSteamAppDetails.Get(steamAppId)
+	rcSteamAppDetailsResponse, err := kvAppDetails.Get(steamAppId)
 	if err != nil {
 		return err
 	}

@@ -14,19 +14,19 @@ func GetAppNews(steamGogIds map[string]string) error {
 	gana := nod.NewProgress("getting %s...", vangogh_integration.SteamAppNews)
 	defer gana.Done()
 
-	steamAppNewsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.SteamAppNews)
+	appNewsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.SteamAppNews)
 	if err != nil {
 		return err
 	}
 
-	kvSteamAppNews, err := kevlar.New(steamAppNewsDir, kevlar.JsonExt)
+	kvAppNews, err := kevlar.New(appNewsDir, kevlar.JsonExt)
 	if err != nil {
 		return err
 	}
 
 	gana.TotalInt(len(steamGogIds))
 
-	if err = fetch.Items(maps.Keys(steamGogIds), reqs.SteamAppNews(), kvSteamAppNews, gana); err != nil {
+	if err = fetch.Items(maps.Keys(steamGogIds), reqs.SteamAppNews(), kvAppNews, gana); err != nil {
 		return err
 	}
 

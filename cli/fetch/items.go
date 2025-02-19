@@ -13,15 +13,6 @@ import (
 	"time"
 )
 
-const defaultErrorDurationDays = 7
-
-var errorsDurationDays = map[vangogh_integration.ProductType]int{
-	vangogh_integration.CatalogPage: 0, // GOG pages errors are exceptional and likely indicate
-	vangogh_integration.OrderPage:   0,
-	vangogh_integration.AccountPage: 0,
-	vangogh_integration.Details:     1,
-}
-
 func Items(ids iter.Seq[string], itemReq *reqs.Params, kv kevlar.KeyValues, tpw nod.TotalProgressWriter) error {
 
 	var rateLimit time.Duration
@@ -45,7 +36,7 @@ func Items(ids iter.Seq[string], itemReq *reqs.Params, kv kevlar.KeyValues, tpw 
 
 	for id := range ids {
 
-		if ok, skipErr := shouldSkipError(id, itemReq.ProductType, rdx); skipErr == nil && ok {
+		if skip, skipErr := shared_data.SkipError(id, itemReq.ProductType, rdx); skip && skipErr == nil {
 			if tpw != nil {
 				tpw.Increment()
 			}
@@ -59,7 +50,9 @@ func Items(ids iter.Seq[string], itemReq *reqs.Params, kv kevlar.KeyValues, tpw 
 			errs[id] = err
 		}
 
-		time.Sleep(rateLimit)
+		if rateLimit > 0 {
+			time.Sleep(rateLimit)
+		}
 
 		if tpw != nil {
 			tpw.Increment()
@@ -67,45 +60,4 @@ func Items(ids iter.Seq[string], itemReq *reqs.Params, kv kevlar.KeyValues, tpw 
 	}
 
 	return shared_data.WriteTypeErrors(errs, rdx)
-}
-
-func shouldSkipError(id string, productType vangogh_integration.ProductType, rdx redux.Writeable) (bool, error) {
-
-	if dateStr, ok := rdx.GetLastVal(vangogh_integration.TypeErrorDateProperty, id); ok && dateStr != "" {
-		if dt, err := time.Parse(time.RFC3339, dateStr); err == nil {
-
-			var errorDuration time.Duration
-			if edd, sure := errorsDurationDays[productType]; sure {
-				errorDuration = time.Duration(edd)
-			} else {
-				errorDuration = defaultErrorDurationDays
-			}
-
-			errorExpires := dt.Add(errorDuration * 24 * time.Hour)
-
-			if time.Now().UTC().Before(errorExpires) {
-
-				nod.Log("skipping current %s error last encountered: %s", productType, dateStr)
-
-				return true, nil
-			} else {
-
-				nod.Log("clearing %s error last encountered: %s", productType, dateStr)
-
-				if err = rdx.CutKeys(vangogh_integration.TypeErrorDateProperty, id); err != nil {
-					return false, err
-				}
-				if err = rdx.CutKeys(vangogh_integration.TypeErrorMessageProperty, id); err != nil {
-					return false, err
-				}
-
-				return false, nil
-			}
-
-		} else {
-			return false, err
-		}
-	}
-
-	return false, nil
 }
