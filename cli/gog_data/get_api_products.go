@@ -81,7 +81,7 @@ func reduceApiProduct(id string, kvApiProduct kevlar.KeyValues, piv shared_data.
 	}
 	defer rcApiProduct.Close()
 
-	var ap gog_integration.ApiProductV2
+	var ap gog_integration.ApiProduct
 	if err = json.NewDecoder(rcApiProduct).Decode(&ap); err != nil {
 		return err
 	}
