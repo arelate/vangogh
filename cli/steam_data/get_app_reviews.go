@@ -24,18 +24,18 @@ func GetAppReviews(steamGogIds map[string]string, since int64) error {
 		return err
 	}
 
-	kvSteamAppReviews, err := kevlar.New(appReviewsDir, kevlar.JsonExt)
+	kvAppReviews, err := kevlar.New(appReviewsDir, kevlar.JsonExt)
 	if err != nil {
 		return err
 	}
 
 	gara.TotalInt(len(steamGogIds))
 
-	if err = fetch.Items(maps.Keys(steamGogIds), reqs.SteamAppReviews(), kvSteamAppReviews, gara); err != nil {
+	if err = fetch.Items(maps.Keys(steamGogIds), reqs.SteamAppReviews(), kvAppReviews, gara); err != nil {
 		return err
 	}
 
-	return reduceAppReviews(kvSteamAppReviews, since)
+	return reduceAppReviews(kvAppReviews, since)
 }
 
 func reduceAppReviews(kvAppReviews kevlar.KeyValues, since int64) error {
@@ -53,31 +53,31 @@ func reduceAppReviews(kvAppReviews kevlar.KeyValues, since int64) error {
 		return err
 	}
 
-	steamAppReviewsReductions := shared_data.InitReductions(vangogh_integration.SteamAppReviewsProperties()...)
+	appReviewsReductions := shared_data.InitReductions(vangogh_integration.SteamAppReviewsProperties()...)
 
-	updatedSteamAppReviews := kvAppReviews.Since(since, kevlar.Create, kevlar.Update)
+	updatedAppReviews := kvAppReviews.Since(since, kevlar.Create, kevlar.Update)
 
-	for steamAppId := range updatedSteamAppReviews {
+	for steamAppId := range updatedAppReviews {
 		for gogId := range rdx.Match(map[string][]string{vangogh_integration.SteamAppIdProperty: {steamAppId}}, redux.FullMatch) {
-			if err = reduceAppReviewsProduct(gogId, steamAppId, kvAppReviews, steamAppReviewsReductions); err != nil {
+			if err = reduceAppReviewsProduct(gogId, steamAppId, kvAppReviews, appReviewsReductions); err != nil {
 				return err
 			}
 		}
 	}
 
-	return shared_data.WriteReductions(rdx, steamAppReviewsReductions)
+	return shared_data.WriteReductions(rdx, appReviewsReductions)
 }
 
 func reduceAppReviewsProduct(gogId, steamAppId string, kvAppReviews kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
 
-	rcSteamAppReview, err := kvAppReviews.Get(steamAppId)
+	rcAppReview, err := kvAppReviews.Get(steamAppId)
 	if err != nil {
 		return err
 	}
-	defer rcSteamAppReview.Close()
+	defer rcAppReview.Close()
 
 	var sar steam_integration.AppReviews
-	if err = json.NewDecoder(rcSteamAppReview).Decode(&sar); err != nil {
+	if err = json.NewDecoder(rcAppReview).Decode(&sar); err != nil {
 		return err
 	}
 

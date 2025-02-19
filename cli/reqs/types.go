@@ -134,3 +134,12 @@ func SteamAppReviews() *Params {
 		HttpMethod:  http.MethodGet,
 	}
 }
+
+func SteamDeckCompatibilityReports() *Params {
+	return &Params{
+		ProductType: vangogh_integration.SteamDeckCompatibilityReport,
+		UrlFunc:     steam_integration.DeckAppCompatibilityReportUrl,
+		HttpClient:  http.DefaultClient,
+		HttpMethod:  http.MethodGet,
+	}
+}

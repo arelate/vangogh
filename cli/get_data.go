@@ -109,6 +109,10 @@ func GetData(since int64, force bool) error {
 		return err
 	}
 
+	if err = steam_data.GetDeckCompatibilityReports(steamGogIds, since); err != nil {
+		return err
+	}
+
 	// PCGW data
 
 	// HLTB data
