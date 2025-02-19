@@ -18,7 +18,7 @@ import (
 
 func GetApiProducts(hc *http.Client, uat string, since int64) error {
 
-	gapva := nod.NewProgress("getting %s...", vangogh_integration.ApiProductsV2)
+	gapva := nod.NewProgress("getting %s...", vangogh_integration.ApiProducts)
 	defer gapva.Done()
 
 	catalogAccountProductIds, err := shared_data.GetCatalogAccountProducts(since)
@@ -26,7 +26,7 @@ func GetApiProducts(hc *http.Client, uat string, since int64) error {
 		return err
 	}
 
-	apiProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.ApiProductsV2)
+	apiProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.ApiProducts)
 	if err != nil {
 		return err
 	}
@@ -47,7 +47,7 @@ func GetApiProducts(hc *http.Client, uat string, since int64) error {
 
 func reduceApiProducts(kvApiProducts kevlar.KeyValues, since int64) error {
 
-	rapa := nod.Begin(" reducing %s...", vangogh_integration.ApiProductsV2)
+	rapa := nod.Begin(" reducing %s...", vangogh_integration.ApiProducts)
 	defer rapa.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)

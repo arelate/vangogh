@@ -40,7 +40,7 @@ func GetItems(
 
 	dl := dolo.DefaultClient
 
-	all, err := itemizations.All(ids, false, true, since, vangogh_integration.ApiProductsV2)
+	all, err := itemizations.All(ids, false, true, since, vangogh_integration.ApiProducts)
 	if err != nil {
 		return err
 	}

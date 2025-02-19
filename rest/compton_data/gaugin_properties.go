@@ -10,7 +10,7 @@ const (
 	GauginPCGamingWikiUrlProperty = "pcgamingwiki-url"
 	GauginGOGDBUrlProperty        = "gogdb-url"
 	GauginProtonDBUrlProperty     = "protondb-url"
-	GauginHLTBUrlProperty         = "hltb-url"
+	GauginHltbUrlProperty         = "hltb-url"
 	GauginIGDBUrlProperty         = "igdb-url"
 	GauginStrategyWikiUrlProperty = "strategy-wiki-url"
 	GauginMobyGamesUrlProperty    = "moby-games-url"

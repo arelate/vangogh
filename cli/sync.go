@@ -123,7 +123,7 @@ func Sync(
 	//- reduce PCGamingWiki pageId
 	//- get PCGamingWiki externallinks, engine
 	//- reduce SteamAppId, HowLongToBeatId, IGDBId
-	//- get other detail products (Steam data, HLTB data)
+	//- get other detail products (Steam data, Hltb data)
 	//- finally, reduce all properties
 
 	if err := GetData(since, force); err != nil {

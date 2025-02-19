@@ -34,7 +34,7 @@ func SteamAppId(since int64) error {
 	//for id := range vrCatalogProducts.Since(since, kevlar.Create, kevlar.Update) {
 	//
 	//	// existing Steam App Id would indicate that we've already matched GOG Id to Steam App Id using
-	//	// data sources: HLTB, PCGW, GamesDB and don't need to use potentially lossy mapping by name
+	//	// data sources: Hltb, Pcgw, GamesDB and don't need to use potentially lossy mapping by name
 	//	if appIds, ok := rdx.GetAllValues(vangogh_integration.SteamAppIdProperty, id); ok && len(appIds) > 0 {
 	//		continue
 	//	}

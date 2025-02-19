@@ -128,16 +128,16 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 					fmtProperty.values[value] = noHref()
 				}
 			}
-		case vangogh_integration.HLTBHoursToCompleteMainProperty:
+		case vangogh_integration.HltbHoursToCompleteMainProperty:
 			fallthrough
-		case vangogh_integration.HLTBHoursToCompletePlusProperty:
+		case vangogh_integration.HltbHoursToCompletePlusProperty:
 			fallthrough
-		case vangogh_integration.HLTBHoursToComplete100Property:
+		case vangogh_integration.HltbHoursToComplete100Property:
 			ct := strings.TrimLeft(value, "0") + " hrs"
 			fmtProperty.values[ct] = noHref()
-		case vangogh_integration.HLTBReviewScoreProperty:
+		case vangogh_integration.HltbReviewScoreProperty:
 			if value != "0" {
-				fmtProperty.values[fmtHLTBRating(value)] = noHref()
+				fmtProperty.values[fmtHltbRating(value)] = noHref()
 			}
 		case vangogh_integration.DiscountPercentageProperty:
 			fmtProperty.values[value] = noHref()
@@ -181,8 +181,8 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 		fmtProperty.class = reviewClass(firstValue)
 	case vangogh_integration.RatingProperty:
 		fmtProperty.class = reviewClass(fmtGOGRating(firstValue))
-	case vangogh_integration.HLTBReviewScoreProperty:
-		fmtProperty.class = reviewClass(fmtHLTBRating(firstValue))
+	case vangogh_integration.HltbReviewScoreProperty:
+		fmtProperty.class = reviewClass(fmtHltbRating(firstValue))
 	case vangogh_integration.AggregatedRatingProperty:
 		fmtProperty.class = reviewClass(fmtAggregatedRating(firstValue))
 	case vangogh_integration.SteamDeckAppCompatibilityCategoryProperty:
@@ -283,7 +283,7 @@ func fmtGOGRating(rs string) string {
 	return rd
 }
 
-func fmtHLTBRating(rs string) string {
+func fmtHltbRating(rs string) string {
 	rd := ""
 	if ri, err := strconv.ParseInt(rs, 10, 32); err == nil {
 		rd = ratingDesc(ri)

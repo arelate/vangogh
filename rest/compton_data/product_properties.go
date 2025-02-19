@@ -14,10 +14,10 @@ var ProductProperties = []string{
 
 	vangogh_integration.PriceProperty,
 	vangogh_integration.OperatingSystemsProperty,
-	vangogh_integration.HLTBPlatformsProperty,
+	vangogh_integration.HltbPlatformsProperty,
 	vangogh_integration.RatingProperty,
 	vangogh_integration.SteamReviewScoreDescProperty,
-	vangogh_integration.HLTBReviewScoreProperty,
+	vangogh_integration.HltbReviewScoreProperty,
 	vangogh_integration.AggregatedRatingProperty,
 	vangogh_integration.SteamDeckAppCompatibilityCategoryProperty,
 	vangogh_integration.ProtonDBTierProperty,
@@ -29,7 +29,7 @@ var ProductProperties = []string{
 	vangogh_integration.SeriesProperty,
 	vangogh_integration.GenresProperty,
 	vangogh_integration.ThemesProperty,
-	vangogh_integration.HLTBGenresProperty,
+	vangogh_integration.HltbGenresProperty,
 	vangogh_integration.StoreTagsProperty,
 	vangogh_integration.FeaturesProperty,
 	vangogh_integration.GameModesProperty,
@@ -42,9 +42,9 @@ var ProductProperties = []string{
 	vangogh_integration.RequiresGamesProperty,
 	vangogh_integration.IsRequiredByGamesProperty,
 
-	vangogh_integration.HLTBHoursToCompleteMainProperty,
-	vangogh_integration.HLTBHoursToCompletePlusProperty,
-	vangogh_integration.HLTBHoursToComplete100Property,
+	vangogh_integration.HltbHoursToCompleteMainProperty,
+	vangogh_integration.HltbHoursToCompletePlusProperty,
+	vangogh_integration.HltbHoursToComplete100Property,
 }
 
 var ProductExternalLinksProperties = []string{

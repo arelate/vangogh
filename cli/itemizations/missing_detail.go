@@ -30,8 +30,8 @@ func missingDetail(
 	//api-products-v2 provides
 	//includes-games, is-included-by-games,
 	//requires-games, is-required-by-games
-	if mainPt == vangogh_integration.ApiProductsV2 &&
-		detailPt == vangogh_integration.ApiProductsV2 {
+	if mainPt == vangogh_integration.ApiProducts &&
+		detailPt == vangogh_integration.ApiProducts {
 		return linkedGames(since)
 	}
 

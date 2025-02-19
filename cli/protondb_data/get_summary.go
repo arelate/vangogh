@@ -16,10 +16,10 @@ import (
 
 func GetSummary(steamGogIds map[string]string, since int64) error {
 
-	gsa := nod.NewProgress("getting %s...", vangogh_integration.ProtonDBSummary)
+	gsa := nod.NewProgress("getting %s...", vangogh_integration.ProtonDbSummary)
 	defer gsa.Done()
 
-	summaryDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.ProtonDBSummary)
+	summaryDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.ProtonDbSummary)
 	if err != nil {
 		return err
 	}
@@ -40,7 +40,7 @@ func GetSummary(steamGogIds map[string]string, since int64) error {
 
 func reduceSummary(kvSummary kevlar.KeyValues, since int64) error {
 
-	rsa := nod.Begin(" reducing %s...", vangogh_integration.ProtonDBSummary)
+	rsa := nod.Begin(" reducing %s...", vangogh_integration.ProtonDbSummary)
 	defer rsa.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)

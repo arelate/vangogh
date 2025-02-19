@@ -73,12 +73,12 @@ func externalLinks(id string, rdx redux.Readable) map[string][]string {
 		fmt.Sprintf("%s=%s", compton_data.GauginGOGDBUrlProperty, gogdb_integration.GOGDBUrl(id)))
 
 	otherLink(links,
-		vangogh_integration.PCGWPageIdProperty,
+		vangogh_integration.PcgwPageIdProperty,
 		compton_data.GauginPCGamingWikiUrlProperty,
 		pcgw_integration.WikiUrl)
 	otherLink(links,
-		vangogh_integration.HLTBIdProperty,
-		compton_data.GauginHLTBUrlProperty,
+		vangogh_integration.HltbIdProperty,
+		compton_data.GauginHltbUrlProperty,
 		hltb_integration.GameUrl)
 	otherLink(links,
 		vangogh_integration.IGDBIdProperty,

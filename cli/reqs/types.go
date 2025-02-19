@@ -26,24 +26,27 @@ type Params struct {
 
 func UserAccessToken(authHttpClient *http.Client) *Params {
 	return &Params{
-		HttpClient: authHttpClient,
-		HttpMethod: http.MethodPost,
+		ProductType: vangogh_integration.UserAccessToken,
+		HttpClient:  authHttpClient,
+		HttpMethod:  http.MethodPost,
 	}
 }
 
 func Licenses(authHttpClient *http.Client, authBearer string) *Params {
 	return &Params{
-		HttpClient: authHttpClient,
-		HttpMethod: http.MethodGet,
-		AuthBearer: authBearer,
+		ProductType: vangogh_integration.Licences,
+		HttpClient:  authHttpClient,
+		HttpMethod:  http.MethodGet,
+		AuthBearer:  authBearer,
 	}
 }
 
 func UserWishlist(authHttpClient *http.Client, authBearer string) *Params {
 	return &Params{
-		HttpClient: authHttpClient,
-		HttpMethod: http.MethodGet,
-		AuthBearer: authBearer,
+		ProductType: vangogh_integration.UserWishlist,
+		HttpClient:  authHttpClient,
+		HttpMethod:  http.MethodGet,
+		AuthBearer:  authBearer,
 	}
 }
 
@@ -79,8 +82,8 @@ func OrderPage(authHttpClient *http.Client, authBearer string) *Params {
 
 func ApiProducts(authHttpClient *http.Client, authBearer string) *Params {
 	return &Params{
-		ProductType: vangogh_integration.ApiProductsV2,
-		UrlFunc:     gog_integration.ApiProductV2Url,
+		ProductType: vangogh_integration.ApiProducts,
+		UrlFunc:     gog_integration.ApiProductUrl,
 		HttpClient:  authHttpClient,
 		HttpMethod:  http.MethodGet,
 		AuthBearer:  authBearer,
@@ -147,8 +150,16 @@ func SteamDeckCompatibilityReports() *Params {
 
 func ProtonDbSummary() *Params {
 	return &Params{
-		ProductType: vangogh_integration.ProtonDBSummary,
+		ProductType: vangogh_integration.ProtonDbSummary,
 		UrlFunc:     protondb_integration.SummaryUrl,
+		HttpClient:  http.DefaultClient,
+		HttpMethod:  http.MethodGet,
+	}
+}
+
+func HltbRootPage() *Params {
+	return &Params{
+		ProductType: vangogh_integration.HltbRootPage,
 		HttpClient:  http.DefaultClient,
 		HttpMethod:  http.MethodGet,
 	}

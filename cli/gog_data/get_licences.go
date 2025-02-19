@@ -15,6 +15,7 @@ import (
 )
 
 func GetLicences(hc *http.Client, userAccessToken string) error {
+
 	gla := nod.Begin("getting %s...", vangogh_integration.Licences)
 	defer gla.Done()
 

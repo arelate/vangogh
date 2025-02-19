@@ -112,15 +112,15 @@ func GetData(since int64, force bool) error {
 	//	return err
 	//}
 
-	// PCGW data
-
-	// HLTB data
+	// Pcgw data
 
 	// ProtonDB data
 
 	if err = protondb_data.GetSummary(steamGogIds, since); err != nil {
 		return err
 	}
+
+	// HLTB data
 
 	// reduce, cascade special properties - owned, validation-status, etc - or should this be done in runtime?
 

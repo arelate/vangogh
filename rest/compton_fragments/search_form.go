@@ -79,9 +79,9 @@ var sortProperties = []string{
 	vangogh_integration.TitleProperty,
 	vangogh_integration.RatingProperty,
 	vangogh_integration.DiscountPercentageProperty,
-	vangogh_integration.HLTBHoursToCompleteMainProperty,
-	vangogh_integration.HLTBHoursToCompletePlusProperty,
-	vangogh_integration.HLTBHoursToComplete100Property}
+	vangogh_integration.HltbHoursToCompleteMainProperty,
+	vangogh_integration.HltbHoursToCompletePlusProperty,
+	vangogh_integration.HltbHoursToComplete100Property}
 
 func propertiesDatalist(properties []string) map[string]string {
 	dl := make(map[string]string)

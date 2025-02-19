@@ -15,10 +15,10 @@ import (
 
 func GetRelatedApiProducts(hc *http.Client, uat string, since int64) error {
 
-	grapva := nod.NewProgress("getting related %s...", vangogh_integration.ApiProductsV2)
+	grapva := nod.NewProgress("getting related %s...", vangogh_integration.ApiProducts)
 	defer grapva.Done()
 
-	apiProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.ApiProductsV2)
+	apiProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.ApiProducts)
 	if err != nil {
 		return err
 	}
