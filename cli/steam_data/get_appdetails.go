@@ -59,9 +59,7 @@ func GetAppDetails(since int64, force bool) error {
 
 	gada.TotalInt(len(newSteamAppIds))
 
-	itemErrs := fetch.Items(slices.Values(newSteamAppIds), reqs.SteamAppDetails(), kvSteamAppDetails, gada)
-
-	if err = shared_data.WriteTypeErrors(vangogh_integration.SteamAppDetails, itemErrs); err != nil {
+	if err = fetch.Items(slices.Values(newSteamAppIds), reqs.SteamAppDetails(), kvSteamAppDetails, gada); err != nil {
 		return err
 	}
 

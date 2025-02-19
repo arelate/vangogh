@@ -29,11 +29,9 @@ func GetLicences(hc *http.Client, userAccessToken string) error {
 	}
 
 	licencesId := vangogh_integration.Licences.String()
+	licencesUrl := gog_integration.LicencesUrl()
 
-	if err = fetch.SetValue(licencesId,
-		gog_integration.LicencesUrl(),
-		reqs.Licenses(hc, userAccessToken),
-		kvLicences); err != nil {
+	if err = fetch.SetValue(licencesId, licencesUrl, reqs.Licenses(hc, userAccessToken), kvLicences); err != nil {
 		return err
 	}
 

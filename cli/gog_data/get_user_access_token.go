@@ -25,11 +25,9 @@ func GetUserAccessToken(hc *http.Client) error {
 	}
 
 	uatId := vangogh_integration.UserAccessToken.String()
+	uatUrl := gog_integration.UserAccessTokenUrl()
 
-	if err = fetch.SetValue(uatId,
-		gog_integration.UserAccessTokenUrl(),
-		reqs.UserAccessToken(hc),
-		kvUserAccessToken); err != nil {
+	if err = fetch.SetValue(uatId, uatUrl, reqs.UserAccessToken(hc), kvUserAccessToken); err != nil {
 		return err
 	}
 

@@ -5,7 +5,6 @@ import (
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/vangogh/cli/fetch"
 	"github.com/arelate/vangogh/cli/reqs"
-	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"slices"
@@ -17,6 +16,10 @@ const firstPageId = "1"
 func fetchGogPages(pageReq *reqs.Builder, kv kevlar.KeyValues, tpw nod.TotalProgressWriter, force bool) error {
 
 	firstPageUrl := pageReq.UrlFunc(firstPageId)
+
+	// passing nil for type errors rdx as pages are not expected to produce
+	// errors, so those would be considered catastrophic (indicating that origin
+	// is likely experiencing abnormal state)
 	if err := fetch.SetValue(firstPageId, firstPageUrl, pageReq, kv); err != nil {
 		return err
 	}
@@ -48,9 +51,7 @@ func fetchGogPages(pageReq *reqs.Builder, kv kevlar.KeyValues, tpw nod.TotalProg
 		tpw.TotalInt(tpp.GetTotalPages())
 	}
 
-	pageErrs := fetch.Items(slices.Values(pages), pageReq, kv, tpw)
-
-	if err = shared_data.WriteTypeErrors(pageReq.ProductType, pageErrs); err != nil {
+	if err = fetch.Items(slices.Values(pages), pageReq, kv, tpw); err != nil {
 		return err
 	}
 

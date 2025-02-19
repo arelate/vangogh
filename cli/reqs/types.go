@@ -8,12 +8,19 @@ import (
 	"net/url"
 )
 
+const (
+	defaultRateLimitRequests = 200
+	defaultRateLimitSeconds  = 5
+)
+
 type Builder struct {
-	ProductType vangogh_integration.ProductType
-	UrlFunc     func(id string) *url.URL
-	HttpClient  *http.Client
-	HttpMethod  string
-	AuthBearer  string
+	ProductType       vangogh_integration.ProductType
+	UrlFunc           func(id string) *url.URL
+	HttpClient        *http.Client
+	HttpMethod        string
+	AuthBearer        string
+	RateLimitRequests int
+	RateLimitSeconds  int
 }
 
 func UserAccessToken(authHttpClient *http.Client) *Builder {
@@ -71,21 +78,25 @@ func OrderPage(authHttpClient *http.Client, authBearer string) *Builder {
 
 func ApiProducts(authHttpClient *http.Client, authBearer string) *Builder {
 	return &Builder{
-		ProductType: vangogh_integration.ApiProductsV2,
-		UrlFunc:     gog_integration.ApiProductV2Url,
-		HttpClient:  authHttpClient,
-		HttpMethod:  http.MethodGet,
-		AuthBearer:  authBearer,
+		ProductType:       vangogh_integration.ApiProductsV2,
+		UrlFunc:           gog_integration.ApiProductV2Url,
+		HttpClient:        authHttpClient,
+		HttpMethod:        http.MethodGet,
+		AuthBearer:        authBearer,
+		RateLimitSeconds:  defaultRateLimitSeconds,
+		RateLimitRequests: defaultRateLimitRequests,
 	}
 }
 
 func Details(authHttpClient *http.Client, authBearer string) *Builder {
 	return &Builder{
-		ProductType: vangogh_integration.Details,
-		UrlFunc:     gog_integration.DetailsUrl,
-		HttpClient:  authHttpClient,
-		HttpMethod:  http.MethodGet,
-		AuthBearer:  authBearer,
+		ProductType:       vangogh_integration.Details,
+		UrlFunc:           gog_integration.DetailsUrl,
+		HttpClient:        authHttpClient,
+		HttpMethod:        http.MethodGet,
+		AuthBearer:        authBearer,
+		RateLimitSeconds:  defaultRateLimitSeconds,
+		RateLimitRequests: defaultRateLimitRequests,
 	}
 }
 
@@ -101,9 +112,11 @@ func GamesDbGogProduct(authHttpClient *http.Client, authBearer string) *Builder 
 
 func SteamAppDetails() *Builder {
 	return &Builder{
-		UrlFunc:    steam_integration.AppDetailsUrl,
-		HttpClient: http.DefaultClient,
-		HttpMethod: http.MethodGet,
-		AuthBearer: "",
+		UrlFunc:           steam_integration.AppDetailsUrl,
+		HttpClient:        http.DefaultClient,
+		HttpMethod:        http.MethodGet,
+		AuthBearer:        "",
+		RateLimitSeconds:  defaultRateLimitSeconds,
+		RateLimitRequests: defaultRateLimitRequests,
 	}
 }

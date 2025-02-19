@@ -2,10 +2,7 @@ package shared_data
 
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"os"
-	"path/filepath"
 	"time"
 )
 
@@ -28,24 +25,10 @@ func WriteReductions(rdx redux.Writeable, piv PropertyIdValues) error {
 	return nil
 }
 
-func WriteTypeErrors(productType vangogh_integration.ProductType, itemErrors map[string]error) error {
+func WriteTypeErrors(itemErrors map[string]error, rdx redux.Writeable) error {
 
-	perTypeReduxDir, err := pathways.GetAbsRelDir(vangogh_integration.PerTypeRedux)
-	if err != nil {
-		return err
-	}
-
-	typeReduxDir := filepath.Join(perTypeReduxDir, productType.String())
-
-	if _, err = os.Stat(typeReduxDir); os.IsNotExist(err) {
-		if err = os.MkdirAll(typeReduxDir, 0755); err != nil {
-			return err
-		}
-	}
-
-	rdx, err := redux.NewWriter(typeReduxDir, vangogh_integration.TypeErrorProperties()...)
-	if err != nil {
-		return err
+	if len(itemErrors) == 0 {
+		return nil
 	}
 
 	typeErrors := make(PropertyIdValues)
@@ -65,6 +48,8 @@ func WriteTypeErrors(productType vangogh_integration.ProductType, itemErrors map
 			typeErrors[property][id] = []string{value}
 		}
 	}
+
+	var err error
 
 	for property, idValues := range typeErrors {
 		if err = rdx.BatchReplaceValues(property, idValues); err != nil {

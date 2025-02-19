@@ -54,9 +54,7 @@ func GetDetails(hc *http.Client, uat string, since int64) error {
 
 	gda.TotalInt(len(newUpdatedDetails))
 
-	itemErrs := fetch.Items(maps.Keys(newUpdatedDetails), reqs.Details(hc, uat), kvDetails, gda)
-
-	if err = shared_data.WriteTypeErrors(vangogh_integration.Details, itemErrs); err != nil {
+	if err = fetch.Items(maps.Keys(newUpdatedDetails), reqs.Details(hc, uat), kvDetails, gda); err != nil {
 		return err
 	}
 

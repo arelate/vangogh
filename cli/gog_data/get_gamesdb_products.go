@@ -42,9 +42,7 @@ func GetGamesDbGogProducts(hc *http.Client, uat string, since int64, force bool)
 
 	ggdpa.TotalInt(len(catalogPagesProducts))
 
-	itemErrs := fetch.Items(slices.Values(catalogPagesProducts), reqs.GamesDbGogProduct(hc, uat), kvGamesDbGogProducts, ggdpa)
-
-	if err = shared_data.WriteTypeErrors(vangogh_integration.ApiProductsV2, itemErrs); err != nil {
+	if err = fetch.Items(slices.Values(catalogPagesProducts), reqs.GamesDbGogProduct(hc, uat), kvGamesDbGogProducts, ggdpa); err != nil {
 		return err
 	}
 

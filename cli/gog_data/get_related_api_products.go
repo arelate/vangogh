@@ -4,7 +4,6 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
 	"github.com/arelate/vangogh/cli/reqs"
-	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
@@ -68,9 +67,7 @@ func GetRelatedApiProducts(hc *http.Client, uat string, since int64, force bool)
 
 	grapva.TotalInt(len(nrIds))
 
-	itemErrs := fetch.Items(maps.Keys(nrIds), reqs.ApiProducts(hc, uat), kvApiProducts, grapva)
-
-	if err = shared_data.WriteTypeErrors(vangogh_integration.ApiProductsV2, itemErrs); err != nil {
+	if err = fetch.Items(maps.Keys(nrIds), reqs.ApiProducts(hc, uat), kvApiProducts, grapva); err != nil {
 		return err
 	}
 

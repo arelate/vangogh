@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/cli/gog_data"
 	"github.com/arelate/vangogh/cli/steam_data"
 	"github.com/boggydigital/coost"
 	"github.com/boggydigital/kevlar"
@@ -28,55 +29,55 @@ func GetData(since int64, force bool) error {
 
 	// GOG.com data
 
-	//hc, err := gogAuthHttpClient()
-	//if err != nil {
-	//	return err
-	//}
-	//
-	//if err = gog_data.GetUserAccessToken(hc); err != nil {
-	//	return err
-	//}
-	//
-	//uat, err := readUserAccessToken()
-	//if err != nil {
-	//	return err
-	//}
-	//
-	//if err = gog_data.GetLicences(hc, uat); err != nil {
-	//	return err
-	//}
-	//
-	//if err = gog_data.GetUserWishlist(hc, uat); err != nil {
-	//	return err
-	//}
-	//
-	//if err = gog_data.GetCatalogPages(hc, uat, since); err != nil {
-	//	return err
-	//}
-	//
-	//if err = gog_data.GetOrderPages(hc, uat, since, force); err != nil {
-	//	return err
-	//}
-	//
-	//if err = gog_data.GetAccountPages(hc, uat, since, force); err != nil {
-	//	return err
-	//}
-	//
-	//if err = gog_data.GetApiProducts(hc, uat, since, force); err != nil {
-	//	return err
-	//}
-	//
-	//if err = gog_data.GetRelatedApiProducts(hc, uat, since, force); err != nil {
-	//	return err
-	//}
-	//
-	//if err = gog_data.GetDetails(hc, uat, since); err != nil {
-	//	return err
-	//}
-	//
-	//if err = gog_data.GetGamesDbGogProducts(hc, uat, since, force); err != nil {
-	//	return err
-	//}
+	hc, err := gogAuthHttpClient()
+	if err != nil {
+		return err
+	}
+
+	if err = gog_data.GetUserAccessToken(hc); err != nil {
+		return err
+	}
+
+	uat, err := readUserAccessToken()
+	if err != nil {
+		return err
+	}
+
+	if err = gog_data.GetLicences(hc, uat); err != nil {
+		return err
+	}
+
+	if err = gog_data.GetUserWishlist(hc, uat); err != nil {
+		return err
+	}
+
+	if err = gog_data.GetCatalogPages(hc, uat, since); err != nil {
+		return err
+	}
+
+	if err = gog_data.GetOrderPages(hc, uat, since, force); err != nil {
+		return err
+	}
+
+	if err = gog_data.GetAccountPages(hc, uat, since, force); err != nil {
+		return err
+	}
+
+	if err = gog_data.GetApiProducts(hc, uat, since, force); err != nil {
+		return err
+	}
+
+	if err = gog_data.GetRelatedApiProducts(hc, uat, since, force); err != nil {
+		return err
+	}
+
+	if err = gog_data.GetDetails(hc, uat, since); err != nil {
+		return err
+	}
+
+	if err = gog_data.GetGamesDbGogProducts(hc, uat, since, force); err != nil {
+		return err
+	}
 
 	// Steam data
 

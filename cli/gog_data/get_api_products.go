@@ -42,9 +42,7 @@ func GetApiProducts(hc *http.Client, uat string, since int64, force bool) error 
 
 	gapva.TotalInt(len(catalogAccountProductIds))
 
-	itemErrors := fetch.Items(maps.Keys(catalogAccountProductIds), reqs.ApiProducts(hc, uat), kvApiProducts, gapva)
-
-	if err = shared_data.WriteTypeErrors(vangogh_integration.ApiProductsV2, itemErrors); err != nil {
+	if err = fetch.Items(maps.Keys(catalogAccountProductIds), reqs.ApiProducts(hc, uat), kvApiProducts, gapva); err != nil {
 		return err
 	}
 
