@@ -2,6 +2,7 @@ package reqs
 
 import (
 	"github.com/arelate/southern_light/gog_integration"
+	"github.com/arelate/southern_light/protondb_integration"
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"net/http"
@@ -139,6 +140,15 @@ func SteamDeckCompatibilityReports() *Params {
 	return &Params{
 		ProductType: vangogh_integration.SteamDeckCompatibilityReport,
 		UrlFunc:     steam_integration.DeckAppCompatibilityReportUrl,
+		HttpClient:  http.DefaultClient,
+		HttpMethod:  http.MethodGet,
+	}
+}
+
+func ProtonDbSummary() *Params {
+	return &Params{
+		ProductType: vangogh_integration.ProtonDBSummary,
+		UrlFunc:     protondb_integration.SummaryUrl,
 		HttpClient:  http.DefaultClient,
 		HttpMethod:  http.MethodGet,
 	}
