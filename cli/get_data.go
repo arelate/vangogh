@@ -4,11 +4,9 @@ import (
 	"encoding/json"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/arelate/vangogh/cli/pcgw_data"
-	"github.com/arelate/vangogh/cli/shared_data"
+	"github.com/arelate/vangogh/cli/hltb_data"
 	"github.com/boggydigital/coost"
 	"github.com/boggydigital/kevlar"
-	"maps"
 	"net/http"
 	"net/url"
 )
@@ -90,10 +88,10 @@ func GetData(since int64, force bool) error {
 	//	return err
 	//}
 
-	catalogAccountProducts, err := shared_data.GetCatalogAccountProducts(since)
-	if err != nil {
-		return err
-	}
+	//catalogAccountProducts, err := shared_data.GetCatalogAccountProducts(since)
+	//if err != nil {
+	//	return err
+	//}
 
 	//steamGogIds, err := shared_data.GetSteamGogIds(maps.Keys(catalogAccountProducts))
 	//if err != nil {
@@ -122,20 +120,24 @@ func GetData(since int64, force bool) error {
 	//	return err
 	//}
 
-	pcgwGogIds, err := shared_data.GetPcgwGogIds(maps.Keys(catalogAccountProducts))
-	if err != nil {
-		return err
-	}
+	//pcgwGogIds, err := shared_data.GetPcgwGogIds(maps.Keys(catalogAccountProducts))
+	//if err != nil {
+	//	return err
+	//}
+	//
+	//if err = pcgw_data.GetExternalLinks(pcgwGogIds); err != nil {
+	//	return err
+	//}
 
-	if err = pcgw_data.GetExternalLinks(pcgwGogIds); err != nil {
-		return err
-	}
-
-	if err = pcgw_data.GetEngine(pcgwGogIds); err != nil {
-		return err
-	}
+	//if err = pcgw_data.GetEngine(pcgwGogIds); err != nil {
+	//	return err
+	//}
 
 	// HLTB data
+
+	if err = hltb_data.GetRootPage(); err != nil {
+		return err
+	}
 
 	// - root page
 	// - data

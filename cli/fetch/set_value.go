@@ -15,6 +15,10 @@ func SetValue(id string, u *url.URL, itemReq *reqs.Params, kv kevlar.KeyValues) 
 		return err
 	}
 
+	if itemReq.UserAgent != "" {
+		req.Header.Set("User-Agent", itemReq.UserAgent)
+	}
+
 	if itemReq.AuthBearer != "" {
 		req.Header.Set("Authorization", "Bearer "+itemReq.AuthBearer)
 	}

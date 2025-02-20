@@ -21,6 +21,7 @@ type Params struct {
 	HttpClient        *http.Client
 	HttpMethod        string
 	AuthBearer        string
+	UserAgent         string
 	RateLimitRequests float64
 	RateLimitSeconds  float64
 }
@@ -199,5 +200,6 @@ func HltbRootPage() *Params {
 		ProductType: vangogh_integration.HltbRootPage,
 		HttpClient:  http.DefaultClient,
 		HttpMethod:  http.MethodGet,
+		UserAgent:   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Safari/605.1.15",
 	}
 }
