@@ -2,6 +2,7 @@ package reqs
 
 import (
 	"github.com/arelate/southern_light/gog_integration"
+	"github.com/arelate/southern_light/pcgw_integration"
 	"github.com/arelate/southern_light/protondb_integration"
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
@@ -152,6 +153,42 @@ func ProtonDbSummary() *Params {
 	return &Params{
 		ProductType: vangogh_integration.ProtonDbSummary,
 		UrlFunc:     protondb_integration.SummaryUrl,
+		HttpClient:  http.DefaultClient,
+		HttpMethod:  http.MethodGet,
+	}
+}
+
+func PcgwSteamPageId() *Params {
+	return &Params{
+		ProductType: vangogh_integration.PcgwSteamPageId,
+		UrlFunc:     pcgw_integration.SteamPageIdCargoQueryUrl,
+		HttpClient:  http.DefaultClient,
+		HttpMethod:  http.MethodGet,
+	}
+}
+
+func PcgwGogPageId() *Params {
+	return &Params{
+		ProductType: vangogh_integration.PcgwGogPageId,
+		UrlFunc:     pcgw_integration.GogPageIdCargoQueryUrl,
+		HttpClient:  http.DefaultClient,
+		HttpMethod:  http.MethodGet,
+	}
+}
+
+func PcgwExternalLinks() *Params {
+	return &Params{
+		ProductType: vangogh_integration.PcgwExternalLinks,
+		UrlFunc:     pcgw_integration.ParseExternalLinksUrl,
+		HttpClient:  http.DefaultClient,
+		HttpMethod:  http.MethodGet,
+	}
+}
+
+func PcgwEngine() *Params {
+	return &Params{
+		ProductType: vangogh_integration.PcgwEngine,
+		UrlFunc:     pcgw_integration.EngineCargoQueryUrl,
 		HttpClient:  http.DefaultClient,
 		HttpMethod:  http.MethodGet,
 	}

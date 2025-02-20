@@ -13,6 +13,7 @@ import (
 )
 
 func GetSteamGogIds(gogIds iter.Seq[string]) (map[string]string, error) {
+
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {
 		return nil, err
@@ -32,6 +33,29 @@ func GetSteamGogIds(gogIds iter.Seq[string]) (map[string]string, error) {
 	}
 
 	return steamGogIds, nil
+}
+
+func GetPcgwGogIds(gogIds iter.Seq[string]) (map[string]string, error) {
+
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return nil, err
+	}
+
+	rdx, err := redux.NewReader(reduxDir, vangogh_integration.PcgwPageIdProperty)
+	if err != nil {
+		return nil, err
+	}
+
+	pcgwGogIds := make(map[string]string)
+
+	for gogId := range gogIds {
+		if pcgwPageId, ok := rdx.GetLastVal(vangogh_integration.PcgwPageIdProperty, gogId); ok && pcgwPageId != "" {
+			pcgwGogIds[pcgwPageId] = gogId
+		}
+	}
+
+	return pcgwGogIds, nil
 }
 
 func GetCatalogAccountProducts(since int64) (map[string]any, error) {

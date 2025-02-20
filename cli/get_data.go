@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/arelate/vangogh/cli/protondb_data"
+	"github.com/arelate/vangogh/cli/pcgw_data"
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/coost"
 	"github.com/boggydigital/kevlar"
@@ -95,10 +95,10 @@ func GetData(since int64, force bool) error {
 		return err
 	}
 
-	steamGogIds, err := shared_data.GetSteamGogIds(maps.Keys(catalogAccountProducts))
-	if err != nil {
-		return err
-	}
+	//steamGogIds, err := shared_data.GetSteamGogIds(maps.Keys(catalogAccountProducts))
+	//if err != nil {
+	//	return err
+	//}
 
 	//if err = steam_data.GetAppNews(steamGogIds); err != nil {
 	//	return err
@@ -112,15 +112,39 @@ func GetData(since int64, force bool) error {
 	//	return err
 	//}
 
-	// Pcgw data
+	// PCGamingWiki data
 
-	// ProtonDB data
+	//if err = pcgw_data.GetSteamPageId(steamGogIds, force); err != nil {
+	//	return err
+	//}
+	//
+	//if err = pcgw_data.GetGogPageId(catalogAccountProducts, force); err != nil {
+	//	return err
+	//}
 
-	if err = protondb_data.GetSummary(steamGogIds, since); err != nil {
+	pcgwGogIds, err := shared_data.GetPcgwGogIds(maps.Keys(catalogAccountProducts))
+	if err != nil {
+		return err
+	}
+
+	if err = pcgw_data.GetExternalLinks(pcgwGogIds); err != nil {
+		return err
+	}
+
+	if err = pcgw_data.GetEngine(pcgwGogIds); err != nil {
 		return err
 	}
 
 	// HLTB data
+
+	// - root page
+	// - data
+
+	// ProtonDB data
+
+	//if err = protondb_data.GetSummary(steamGogIds, since); err != nil {
+	//	return err
+	//}
 
 	// reduce, cascade special properties - owned, validation-status, etc - or should this be done in runtime?
 

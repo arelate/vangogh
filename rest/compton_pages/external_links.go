@@ -81,7 +81,7 @@ func externalLinks(id string, rdx redux.Readable) map[string][]string {
 		compton_data.GauginHltbUrlProperty,
 		hltb_integration.GameUrl)
 	otherLink(links,
-		vangogh_integration.IGDBIdProperty,
+		vangogh_integration.IgdbIdProperty,
 		compton_data.GauginIGDBUrlProperty,
 		igdb_integration.GameUrl)
 	otherLink(links,
@@ -101,7 +101,7 @@ func externalLinks(id string, rdx redux.Readable) map[string][]string {
 		compton_data.GauginWineHQUrlProperty,
 		winehq_integration.WineHQUrl)
 	otherLink(links,
-		vangogh_integration.VNDBIdProperty,
+		vangogh_integration.VndbIdProperty,
 		compton_data.GauginVNDBUrlProperty,
 		vndb_integration.ItemUrl)
 	otherLink(links,
