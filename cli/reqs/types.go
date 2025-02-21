@@ -2,6 +2,7 @@ package reqs
 
 import (
 	"github.com/arelate/southern_light/gog_integration"
+	"github.com/arelate/southern_light/hltb_integration"
 	"github.com/arelate/southern_light/pcgw_integration"
 	"github.com/arelate/southern_light/protondb_integration"
 	"github.com/arelate/southern_light/steam_integration"
@@ -13,6 +14,10 @@ import (
 const (
 	defaultRateLimitRequests = 200
 	defaultRateLimitSeconds  = 5
+)
+
+const (
+	safariUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Safari/605.1.15"
 )
 
 type Params struct {
@@ -200,6 +205,27 @@ func HltbRootPage() *Params {
 		ProductType: vangogh_integration.HltbRootPage,
 		HttpClient:  http.DefaultClient,
 		HttpMethod:  http.MethodGet,
-		UserAgent:   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Safari/605.1.15",
+		UserAgent:   safariUserAgent,
+	}
+}
+
+type hltbBuilder struct {
+	buildId string
+}
+
+func (hb *hltbBuilder) DataUrl(hltbId string) *url.URL {
+	return hltb_integration.DataUrl(hb.buildId, hltbId)
+}
+
+func HltbData(buildId string) *Params {
+
+	hb := &hltbBuilder{buildId: buildId}
+
+	return &Params{
+		ProductType: vangogh_integration.HltbData,
+		UrlFunc:     hb.DataUrl,
+		HttpClient:  http.DefaultClient,
+		HttpMethod:  http.MethodGet,
+		UserAgent:   safariUserAgent,
 	}
 }
