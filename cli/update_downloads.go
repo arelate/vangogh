@@ -2,7 +2,6 @@ package cli
 
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/arelate/vangogh/cli/itemizations"
 	"github.com/boggydigital/nod"
 	"golang.org/x/exp/maps"
 	"net/url"
@@ -40,35 +39,37 @@ func itemizeUpdatedAccountProducts(since int64) ([]string, error) {
 	// allow us to capture all updated account-products at a price of some extra checks
 	updAccountProductIds := make(map[string]any)
 
-	uapIds, err := itemizations.AccountProductsUpdates()
-	if err != nil {
-		return nil, err
-	}
+	// TODO: revisit this logic and implement on the new data
 
-	for _, id := range uapIds {
-		updAccountProductIds[id] = nil
-	}
-
-	//Additionally itemize required games for newly acquired DLCs
-	requiredGamesForNewDLCs, err := itemizations.RequiredAndIncluded(since)
-	if err != nil {
-		return nil, err
-	}
-
-	for _, rg := range requiredGamesForNewDLCs {
-		updAccountProductIds[rg] = nil
-	}
-
-	//Additionally add modified details in case the sync was interrupted and
-	//account-products doesn't have .IsNew or .Updates > 0 items
-	modifiedDetails, err := itemizations.Modified(since, vangogh_integration.Details)
-	if err != nil {
-		return nil, err
-	}
-
-	for _, md := range modifiedDetails {
-		updAccountProductIds[md] = nil
-	}
+	//uapIds, err := itemizations.AccountProductsUpdates()
+	//if err != nil {
+	//	return nil, err
+	//}
+	//
+	//for _, id := range uapIds {
+	//	updAccountProductIds[id] = nil
+	//}
+	//
+	////Additionally itemize required games for newly acquired DLCs
+	//requiredGamesForNewDLCs, err := itemizations.RequiredAndIncluded(since)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//
+	//for _, rg := range requiredGamesForNewDLCs {
+	//	updAccountProductIds[rg] = nil
+	//}
+	//
+	////Additionally add modified details in case the sync was interrupted and
+	////account-products doesn't have .IsNew or .Updates > 0 items
+	//modifiedDetails, err := itemizations.Modified(since, vangogh_integration.Details)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//
+	//for _, md := range modifiedDetails {
+	//	updAccountProductIds[md] = nil
+	//}
 
 	return maps.Keys(updAccountProductIds), nil
 }

@@ -46,6 +46,7 @@ func GetSteamPageId(steamGogIds map[string]string, force bool) error {
 }
 
 func getNewSteamGogIds(steamGogIds map[string]string, kv kevlar.KeyValues, force bool) map[string]string {
+
 	if force {
 		return steamGogIds
 	}

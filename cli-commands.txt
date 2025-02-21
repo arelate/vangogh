@@ -51,15 +51,6 @@ get-items
     id&
     since-hours-ago
 
-get-purchases
-    id^&
-    since-hours-ago
-    os&$={operating-systems^}
-    lang-code&$={language-codes^}
-    download-type&$={download-types^}
-    no-patches$
-    force
-
 get-summary
 
 get-video-metadata

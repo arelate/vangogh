@@ -3,7 +3,6 @@ package cli
 import (
 	"fmt"
 	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/arelate/vangogh/cli/itemizations"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/nod"
 	"net/url"
@@ -40,10 +39,13 @@ func GetItems(
 
 	dl := dolo.DefaultClient
 
-	all, err := itemizations.All(ids, false, true, since, vangogh_integration.ApiProducts)
-	if err != nil {
-		return err
-	}
+	// TODO: Revisit and reimplement this logic on the new data
+	//all, err := itemizations.All(ids, false, true, since, vangogh_integration.ApiProducts)
+	//if err != nil {
+	//	return err
+	//}
+
+	all := make([]string, 0)
 
 	gia.TotalInt(len(all))
 

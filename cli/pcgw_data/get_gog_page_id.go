@@ -46,6 +46,7 @@ func GetGogPageId(gogIds map[string]any, force bool) error {
 }
 
 func getNewGogIds(gogIds map[string]any, kv kevlar.KeyValues, force bool) map[string]any {
+
 	if force {
 		return gogIds
 	}
