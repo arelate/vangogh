@@ -14,11 +14,13 @@ func InvalidLocalProductData(fix bool) error {
 
 	allProductTypes := make(map[vangogh_integration.ProductType]bool)
 
-	pts := vangogh_integration.GOGRemoteProducts()
-	pts = append(pts, vangogh_integration.SteamRemoteProducts()...)
-	pts = append(pts, vangogh_integration.LocalProducts()...)
+	//pts := vangogh_integration.GOGRemoteProducts()
+	//pts = append(pts, vangogh_integration.SteamRemoteProducts()...)
+	//pts = append(pts, vangogh_integration.LocalProducts()...)
 
-	for _, pt := range pts {
+	pts := vangogh_integration.AllProductTypes()
+
+	for pt := range pts {
 		allProductTypes[pt] = true
 	}
 

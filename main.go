@@ -66,7 +66,6 @@ func main() {
 		"info":               cli.InfoHandler,
 		"list":               cli.ListHandler,
 		"local-tag":          cli.LocalTagHandler,
-		"migrate":            cli.MigrateHandler,
 		"owned":              cli.OwnedHandler,
 		"reduce":             cli.ReduceHandler,
 		"search":             cli.SearchHandler,

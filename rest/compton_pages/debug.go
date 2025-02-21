@@ -18,7 +18,8 @@ func Debug(id string) (compton.PageElement, error) {
 
 	pageTitle := "Product data for " + id
 
-	localProducts := vangogh_integration.LocalProducts()
+	//TODO: rewrite this with the new data model
+	localProducts := make([]vangogh_integration.ProductType, 0)
 	slices.Sort(localProducts)
 
 	kvs := make(map[vangogh_integration.ProductType]kevlar.KeyValues, len(localProducts))

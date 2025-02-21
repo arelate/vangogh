@@ -12,7 +12,7 @@ func Types() error {
 
 	idsTypes := make(map[string][]string)
 
-	for _, pt := range vangogh_integration.LocalProducts() {
+	for pt := range vangogh_integration.AllProductTypes() {
 
 		vr, err := vangogh_integration.NewProductReader(pt)
 		if err != nil {

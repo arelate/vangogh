@@ -9,8 +9,6 @@ import (
 )
 
 var Values = map[string]func() []string{
-	"remote-product-types":  remoteProductTypes,
-	"local-product-types":   localProductTypes,
 	"image-types":           imageTypes,
 	"redux-properties":      vangogh_integration.ReduxProperties,
 	"all-properties":        vangogh_integration.AllProperties,
@@ -28,14 +26,6 @@ func productTypeStr(productTypes []vangogh_integration.ProductType) []string {
 		ptsStr = append(ptsStr, pt.String())
 	}
 	return ptsStr
-}
-
-func remoteProductTypes() []string {
-	return productTypeStr(vangogh_integration.RemoteProducts())
-}
-
-func localProductTypes() []string {
-	return productTypeStr(vangogh_integration.LocalProducts())
 }
 
 func imageTypes() []string {

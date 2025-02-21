@@ -3,14 +3,12 @@ package cli
 import (
 	"github.com/boggydigital/pathways"
 	"net/url"
-	"os"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/wits"
 )
 
 const (
@@ -113,19 +111,6 @@ func Sync(
 	syncEvents := make(map[string][]string, 2)
 	syncEvents[vangogh_integration.SyncStartKey] = []string{strconv.Itoa(int(syncStart))}
 
-	//data sync is a sequence of specific data types that is required to get
-	//all supported data types in one sync session (assuming the connection data
-	//is available and the data itself if available, of course)
-	//below is a current sequence:
-	//
-	//- get GOG.com, Steam array and paged data
-	//- get GOG.com detail data, PCGamingWiki pageId, steamAppId
-	//- reduce PCGamingWiki pageId
-	//- get PCGamingWiki externallinks, engine
-	//- reduce SteamAppId, HowLongToBeatId, IGDBId
-	//- get other detail products (Steam data, Hltb data)
-	//- finally, reduce all properties
-
 	if err := GetData(since, force); err != nil {
 		return err
 	}
@@ -217,37 +202,4 @@ func Sync(
 
 	// print new, updated
 	return GetSummary()
-}
-
-func getDetailData(pts []vangogh_integration.ProductType, since int64) error {
-	for _, pt := range pts {
-
-		var skipList wits.KeyValues
-
-		aslp, err := vangogh_integration.AbsSkipListPath()
-		if err != nil {
-			return err
-		}
-
-		if _, err := os.Stat(aslp); err == nil {
-			slFile, err := os.Open(aslp)
-			if err != nil {
-				slFile.Close()
-				return err
-			}
-
-			skipList, err = wits.ReadKeyValues(slFile)
-			slFile.Close()
-			if err != nil {
-				return err
-			}
-		}
-
-		skipIds := skipList[pt.String()]
-		if err := GetDataLegacy(nil, skipIds, pt, since, true, true); err != nil {
-			return err
-		}
-	}
-
-	return nil
 }

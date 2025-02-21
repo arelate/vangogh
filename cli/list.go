@@ -1,11 +1,9 @@
 package cli
 
 import (
-	"errors"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"golang.org/x/exp/maps"
 	"net/url"
 	"time"
 )
@@ -39,10 +37,6 @@ func List(
 
 	la := nod.Begin("listing %s...", pt)
 	defer la.Done()
-
-	if !vangogh_integration.IsValidProductType(pt) {
-		return errors.New("can't list invalid product type " + pt.String())
-	}
 
 	propSet := make(map[string]bool)
 	for _, p := range properties {
@@ -89,11 +83,13 @@ func List(
 		}
 	}
 
-	itp, err := vangogh_integration.PropertyListsFromIdSet(
-		ids,
-		nil,
-		vangogh_integration.SupportedPropertiesOnly(pt, maps.Keys(propSet)),
-		nil)
+	// TODO: rewrite this with the new data model
+	itp := make(map[string][]string)
+	//itp, err := vangogh_integration.PropertyListsFromIdSet(
+	//	ids,
+	//	nil,
+	//	vangogh_integration.SupportedPropertiesOnly(pt, maps.Keys(propSet)),
+	//	nil)
 
 	if err != nil {
 		return err
