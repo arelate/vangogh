@@ -70,7 +70,7 @@ info
     video-id
 
 list
-    product-type^*={local-product-types}
+    product-type^*={all-product-types}
     property&={all-properties}
     since-hours-ago
 
