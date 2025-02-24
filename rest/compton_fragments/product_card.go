@@ -39,7 +39,7 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx redux.Readab
 	pc := compton.Card(r, id)
 
 	if repColor, ok := rdx.GetLastVal(vangogh_integration.RepImageColorProperty, id); ok && repColor != issa.NeutralRepColor {
-		compton.SetTint(pc, repColor)
+		pc.SetAttribute("style", "--c-rep:"+repColor)
 	}
 
 	if viSrc, ok := rdx.GetLastVal(vangogh_integration.VerticalImageProperty, id); ok {

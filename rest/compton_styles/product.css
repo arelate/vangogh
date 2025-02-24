@@ -1,4 +1,7 @@
 issa-image.product-poster {
+
+    box-shadow: 0 0 var(--s-xl) var(--c-rep);
+
     & img {
         --w: 800px;
         --h: 370px;
