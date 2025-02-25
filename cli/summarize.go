@@ -2,23 +2,33 @@ package cli
 
 import (
 	"fmt"
+	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/atomus"
+	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 	"net/url"
 	"os"
-	"sort"
+	"slices"
 	"strings"
 	"time"
 
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
-	"golang.org/x/exp/maps"
+	"maps"
 )
 
 const (
 	atomFeedTitle   = "vangogh sync updates"
 	atomEntryAuthor = "Vincent van Gogh"
 	atomEntryTitle  = "Sync results"
+)
+
+const (
+	newProductTitle        = "New products"
+	releasedTodayTitle     = "Released today"
+	steamNewsTitle         = "Steam news"
+	updatedInstallersTitle = "Updated installers"
 )
 
 func SummarizeHandler(u *url.URL) error {
@@ -36,58 +46,90 @@ func Summarize(since int64) error {
 	sa := nod.Begin("summarizing updates...")
 	defer sa.Done()
 
-	updates, err := vangogh_integration.Updates(since)
+	summary := make(map[string][]string)
+
+	// new products
+
+	apiProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.ApiProducts)
 	if err != nil {
 		return err
 	}
 
-	if len(updates) == 0 {
+	kvApiProducts, err := kevlar.New(apiProductsDir, kevlar.JsonExt)
+	if err != nil {
+		return err
+	}
+
+	newApiProducts := kvApiProducts.Since(since, kevlar.Create)
+
+	for id := range newApiProducts {
+		summary[newProductTitle] = append(summary[newProductTitle], id)
+	}
+
+	// released today
+
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return err
+	}
+
+	rdx, err := redux.NewWriter(reduxDir,
+		vangogh_integration.TitleProperty,
+		vangogh_integration.SteamAppIdProperty,
+		vangogh_integration.GOGReleaseDateProperty,
+		vangogh_integration.LastSyncUpdatesProperty)
+	if err != nil {
+		return err
+	}
+
+	if summary[releasedTodayTitle], err = releasedToday(rdx); err != nil {
+		return err
+	}
+
+	// updated installers
+
+	updatedDetails, err := shared_data.GetDetailsUpdates(since)
+	if err != nil {
+		return err
+	}
+
+	for id := range updatedDetails {
+		summary[updatedInstallersTitle] = append(summary[updatedInstallersTitle], id)
+	}
+
+	// updated news
+
+	appNewsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.SteamAppNews)
+	if err != nil {
+		return err
+	}
+
+	kvAppNews, err := kevlar.New(appNewsDir, kevlar.JsonExt)
+	if err != nil {
 		return nil
 	}
 
-	rdx, err := vangogh_integration.NewReduxWriter(
-		vangogh_integration.LastSyncUpdatesProperty,
-		vangogh_integration.TitleProperty,
-		vangogh_integration.GOGReleaseDateProperty)
-	if err != nil {
-		return err
+	updatedAppNews := kvAppNews.Since(since, kevlar.Update)
+	for steamAppId := range updatedAppNews {
+		gogIds := rdx.Match(map[string][]string{vangogh_integration.SteamAppIdProperty: {steamAppId}}, redux.FullMatch)
+		for gogId := range gogIds {
+			summary[steamNewsTitle] = append(summary[steamNewsTitle], gogId)
+		}
 	}
 
-	summary := make(map[string][]string)
-
-	//set new values for each section
-	for section, ids := range updates {
-		sortedIds, err := rdx.Sort(maps.Keys(ids),
-			vangogh_integration.DefaultDesc,
-			vangogh_integration.DefaultSort)
-		if err != nil {
-			return err
+	for section, ids := range summary {
+		sortedIds, sortErr := rdx.Sort(ids, vangogh_integration.DefaultDesc, vangogh_integration.DefaultSort)
+		if sortErr != nil {
+			return sortErr
 		}
 		summary[section] = sortedIds
-	}
-
-	//clean sections filled earlier that don't exist anymore
-	for section := range rdx.Keys(vangogh_integration.LastSyncUpdatesProperty) {
-		if _, ok := updates[section]; ok {
-			continue
-		}
-		summary[section] = nil
-	}
-
-	if rt, err := releasedToday(rdx); err == nil {
-		if len(rt) > 0 {
-			summary["released today"] = rt
-		}
 	}
 
 	if err = rdx.BatchReplaceValues(vangogh_integration.LastSyncUpdatesProperty, summary); err != nil {
 		return err
 	}
 
-	was := nod.Begin("publishing atom...")
-	defer was.Done()
-
-	if err := publishAtom(rdx, summary); err != nil {
+	if err = publishAtom(rdx, summary); err != nil {
 		return err
 	}
 
@@ -111,10 +153,13 @@ func releasedToday(rdx redux.Readable) ([]string, error) {
 		}
 	}
 
-	return rdx.Sort(ids, vangogh_integration.DefaultDesc, vangogh_integration.DefaultSort)
+	return ids, nil
 }
 
 func publishAtom(rdx redux.Readable, summary map[string][]string) error {
+
+	paa := nod.Begin(" publishing atom...")
+	defer paa.Done()
 
 	afp, err := vangogh_integration.AbsAtomFeedPath()
 	if err != nil {
@@ -136,9 +181,9 @@ func NewAtomFeedContent(rdx redux.Readable, summary map[string][]string) string 
 	sb := strings.Builder{}
 
 	sections := maps.Keys(summary)
-	sort.Strings(sections)
+	sortedSections := slices.Sorted(sections)
 
-	for _, section := range sections {
+	for _, section := range sortedSections {
 		if len(summary[section]) == 0 {
 			continue
 		}

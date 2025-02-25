@@ -63,7 +63,6 @@ func GetDownloads(
 	}
 
 	rdx, err := vangogh_integration.NewReduxWriter(
-		//vangogh_integration.NativeLanguageNameProperty,
 		vangogh_integration.SlugProperty,
 		vangogh_integration.LocalManualUrlProperty,
 		vangogh_integration.ManualUrlStatusProperty,
