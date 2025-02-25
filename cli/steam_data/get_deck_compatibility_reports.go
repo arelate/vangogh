@@ -48,7 +48,10 @@ func reduceDeckCompatibilityReports(kvDeckCompatibilityReports kevlar.KeyValues,
 		return err
 	}
 
-	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.SteamDeckCompatibilityReportProperties()...)
+	// need to append SteamAppId property to allow mapping to GOG ids
+	properties := append(vangogh_integration.SteamDeckCompatibilityReportProperties(), vangogh_integration.SteamAppIdProperty)
+
+	rdx, err := redux.NewWriter(reduxDir, properties...)
 	if err != nil {
 		return err
 	}

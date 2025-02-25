@@ -1,8 +1,11 @@
 package cli
 
 import (
+	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/pathways"
+	"maps"
 	"net/url"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -155,12 +158,14 @@ func Sync(
 	// get downloads updates
 	if syncOpts.downloadsUpdates {
 
-		ids, err := itemizeUpdatedAccountProducts(since)
+		updatedDetails, err := shared_data.GetDetailsUpdates(since)
 		if err != nil {
 			return err
 		}
 
-		if err := UpdateDownloads(
+		ids := slices.Collect(maps.Keys(updatedDetails))
+
+		if err = UpdateDownloads(
 			ids,
 			operatingSystems,
 			langCodes,
@@ -171,7 +176,7 @@ func Sync(
 			return err
 		}
 
-		if err := validateUpdated(
+		if err = validateUpdated(
 			ids,
 			since,
 			operatingSystems,

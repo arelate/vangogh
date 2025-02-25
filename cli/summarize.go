@@ -48,6 +48,10 @@ func Summarize(since int64) error {
 
 	summary := make(map[string][]string)
 
+	for _, section := range []string{newProductTitle, releasedTodayTitle, steamNewsTitle, updatedInstallersTitle} {
+		summary[section] = nil
+	}
+
 	// new products
 
 	apiProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.ApiProducts)

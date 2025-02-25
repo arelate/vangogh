@@ -16,15 +16,6 @@ const (
 	updatedProductsLimit = 24 // divisible by 2,3,4,6
 )
 
-var sectionTitles = map[string]string{
-	"new in store":       "Store additions",
-	"new in account":     "Purchased recently",
-	"new in wishlist":    "Wishlist additions",
-	"released today":     "Today's releases",
-	"updates in account": "Updated installers",
-	"updates in news":    "Steam news",
-}
-
 func GetUpdates(w http.ResponseWriter, r *http.Request) {
 
 	// GET /updates
@@ -78,7 +69,7 @@ func GetUpdates(w http.ResponseWriter, r *http.Request) {
 	sections := maps.Keys(updates)
 	sort.Strings(sections)
 
-	updatesPage := compton_pages.Updates(sections, updates, sectionTitles, updateTotals, updated, rdx)
+	updatesPage := compton_pages.Updates(sections, updates, updateTotals, updated, rdx)
 	if err := updatesPage.WriteResponse(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}

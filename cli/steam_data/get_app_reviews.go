@@ -48,7 +48,11 @@ func reduceAppReviews(kvAppReviews kevlar.KeyValues, since int64) error {
 		return err
 	}
 
-	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.SteamAppReviewsProperties()...)
+	// need to append SteamAppId property to allow mapping to GOG ids
+	properties := append(vangogh_integration.SteamAppReviewsProperties(),
+		vangogh_integration.SteamAppIdProperty)
+
+	rdx, err := redux.NewWriter(reduxDir, properties...)
 	if err != nil {
 		return err
 	}

@@ -5,9 +5,11 @@ import (
 	"encoding/xml"
 	"fmt"
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/redux"
+	"maps"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -301,11 +303,12 @@ func validateUpdated(ids []string,
 	noPatches bool) error {
 
 	if ids == nil {
-		var err error
-		ids, err = itemizeUpdatedAccountProducts(since)
+		updatedDetails, err := shared_data.GetDetailsUpdates(since)
 		if err != nil {
 			return err
 		}
+
+		ids = slices.Collect(maps.Keys(updatedDetails))
 	}
 
 	return Validate(ids, operatingSystems, langCodes, downloadTypes, noPatches, false)

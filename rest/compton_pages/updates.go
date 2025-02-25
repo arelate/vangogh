@@ -14,7 +14,6 @@ import (
 
 func Updates(sections []string,
 	updates map[string][]string,
-	sectionTitles map[string]string,
 	updateTotals map[string]int,
 	updated string,
 	rdx redux.Readable) compton.PageElement {
@@ -34,7 +33,7 @@ func Updates(sections []string,
 		topLevelNav = append(topLevelNav, showAll)
 	}
 
-	if sectionNav := compton.SectionsLinks(p, sections, sectionTitles); sectionNav != nil {
+	if sectionNav := compton.SectionsLinks(p, sections, nil); sectionNav != nil {
 		showToc := compton.InputValue(p, input_types.Button, compton.SectionLinksTitle)
 		pageStack.Append(compton.Attach(p, showToc, sectionNav))
 
@@ -51,9 +50,7 @@ func Updates(sections []string,
 
 		ids := updates[section]
 
-		sectionTitle := sectionTitles[section]
-
-		sectionHeading := compton.DSTitle(p, sectionTitle)
+		sectionHeading := compton.DSTitle(p, section)
 
 		dsSection := compton.DSLarge(p, sectionHeading, true).
 			BackgroundColor(color.Highlight).
@@ -68,7 +65,7 @@ func Updates(sections []string,
 
 		dsSection.AppendSummary(cf.TitleElement(p, 0, len(ids), updateTotals[section]))
 
-		dsSection.SetId(sectionTitle)
+		dsSection.SetId(section)
 		dsSection.SetTabIndex(ii + 1)
 		pageStack.Append(dsSection)
 
