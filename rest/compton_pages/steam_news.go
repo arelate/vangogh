@@ -10,7 +10,7 @@ import (
 	"github.com/boggydigital/compton/consts/direction"
 )
 
-func SteamNews(id string, san *steam_integration.AppNews, all bool) compton.PageElement {
+func SteamNews(gogId string, san *steam_integration.AppNews, all bool) compton.PageElement {
 	s := compton_fragments.ProductSection(compton_data.SteamNewsSection)
 
 	pageStack := compton.FlexItems(s, direction.Column)
@@ -27,10 +27,10 @@ func SteamNews(id string, san *steam_integration.AppNews, all bool) compton.Page
 	if len(san.NewsItems) > 0 &&
 		len(communityAnnouncements) < len(san.NewsItems) {
 		title := "Show all news items types"
-		href := "/steam-news?id=" + id + "&all"
+		href := "/steam-news?id=" + gogId + "&all"
 		if all {
 			title = "Show only community announcements"
-			href = "/steam-news?id=" + id
+			href = "/steam-news?id=" + gogId
 		}
 		pageStack.Append(compton_fragments.Button(s, title, href))
 	}

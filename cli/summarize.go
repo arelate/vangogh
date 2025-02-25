@@ -25,10 +25,10 @@ const (
 )
 
 const (
+	installersUpdatesTitle = "Installers updates"
 	newProductTitle        = "New products"
 	releasedTodayTitle     = "Released today"
 	steamNewsTitle         = "Steam news"
-	updatedInstallersTitle = "Updated installers"
 )
 
 func SummarizeHandler(u *url.URL) error {
@@ -48,7 +48,7 @@ func Summarize(since int64) error {
 
 	summary := make(map[string][]string)
 
-	for _, section := range []string{newProductTitle, releasedTodayTitle, steamNewsTitle, updatedInstallersTitle} {
+	for _, section := range []string{newProductTitle, releasedTodayTitle, steamNewsTitle, installersUpdatesTitle} {
 		summary[section] = nil
 	}
 
@@ -98,7 +98,7 @@ func Summarize(since int64) error {
 	}
 
 	for id := range updatedDetails {
-		summary[updatedInstallersTitle] = append(summary[updatedInstallersTitle], id)
+		summary[installersUpdatesTitle] = append(summary[installersUpdatesTitle], id)
 	}
 
 	// updated news
