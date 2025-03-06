@@ -7,7 +7,6 @@ import (
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
-	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
@@ -48,15 +47,15 @@ func Debug(id string) (compton.PageElement, error) {
 			continue
 		}
 
-		summaryHeading := compton.DSTitle(p, compton_data.TypesTitles[pt.String()])
+		//summaryHeading := compton.DSTitle(p, compton_data.TypesTitles[pt.String()])
 
-		ds := compton.DSLarge(p, summaryHeading, false).BackgroundColor(color.Highlight)
+		ds := compton.DSLarge(p, compton_data.TypesTitles[pt.String()], false).BackgroundColor(color.Highlight)
 		pageStack.Append(ds)
 
-		subtitleFspan := compton.Fspan(p, pt.String()).
-			FontSize(size.Small).
-			BackgroundColor(color.Background)
-		ds.AppendSummary(subtitleFspan)
+		//subtitleFspan := compton.Fspan(p, pt.String()).
+		//	FontSize(size.Small).
+		//	BackgroundColor(color.Background)
+		ds.SetLabelText(pt.String())
 
 		iframe := compton.IframeExpandHost(p, pt.String(), "/debug-data?id="+id+"&product-type="+pt.String())
 		ds.Append(iframe)
@@ -76,9 +75,9 @@ func Debug(id string) (compton.PageElement, error) {
 		return nil, err
 	}
 
-	reduxHeading := compton.DSTitle(p, "Redux")
+	//reduxHeading := compton.DSTitle(p, "Redux")
 
-	reduxDs := compton.DSLarge(p, reduxHeading, false).
+	reduxDs := compton.DSLarge(p, "Redux", false).
 		BackgroundColor(color.Foreground).
 		ForegroundColor(color.Background)
 	pageStack.Append(reduxDs)
@@ -90,12 +89,12 @@ func Debug(id string) (compton.PageElement, error) {
 	for _, property := range reduxProperties {
 		if values, ok := rdx.GetAllValues(property, id); ok {
 
-			propertyHeading := compton.Fspan(p, property).FontSize(size.Normal)
+			//propertyHeading := compton.Fspan(p, property).FontSize(size.Normal)
 
 			open := !slices.Contains(vangogh_integration.LongTextProperties(), property) &&
 				!slices.Contains(vangogh_integration.DehydratedImagesProperties(), property)
 
-			ds := compton.DSSmall(p, propertyHeading, open)
+			ds := compton.DSSmall(p, property, open)
 
 			ul := compton.Ul()
 			for _, value := range values {

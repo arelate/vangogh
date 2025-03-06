@@ -50,9 +50,9 @@ func Updates(sections []string,
 
 		ids := updates[section]
 
-		sectionHeading := compton.DSTitle(p, section)
+		//sectionHeading := compton.DSTitle(p, section)
 
-		dsSection := compton.DSLarge(p, sectionHeading, true).
+		dsSection := compton.DSLarge(p, section, true).
 			BackgroundColor(color.Highlight).
 			SummaryMarginBlockEnd(size.Normal).
 			DetailsMarginBlockEnd(size.Unset).
@@ -63,7 +63,7 @@ func Updates(sections []string,
 			compton_data.ManyItemsSinglePageTemplate,
 			compton_data.ManyItemsManyPagesTemplate)
 
-		dsSection.AppendSummary(cf.TitleElement(p, 0, len(ids), updateTotals[section]))
+		dsSection.SetLabelText(cf.Title(0, len(ids), updateTotals[section]))
 
 		dsSection.SetId(section)
 		dsSection.SetTabIndex(ii + 1)

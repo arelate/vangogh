@@ -226,9 +226,9 @@ func propertyTitleValues(r compton.Registrar, property string, fmtProperty forma
 			tv.AppendLinkValues(fmtProperty.values)
 		} else {
 			summaryTitle := fmt.Sprintf("%d values", len(fmtProperty.values))
-			summaryElement := compton.Fspan(r, summaryTitle).
-				ForegroundColor(color.Foreground)
-			ds := compton.DSSmall(r, summaryElement, false).
+			//summaryElement := compton.Fspan(r, summaryTitle).
+			//	ForegroundColor(color.Foreground)
+			ds := compton.DSSmall(r, summaryTitle, false).
 				SummaryMarginBlockEnd(size.Normal).
 				DetailsMarginBlockEnd(size.Small)
 			row := compton.FlexItems(r, direction.Row).

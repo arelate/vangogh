@@ -85,7 +85,7 @@ func main() {
 		log.Fatalln(err.Error())
 	}
 
-	if err := defs.Serve(os.Args[1:]); err != nil {
+	if err = defs.Serve(os.Args[1:]); err != nil {
 		log.Fatalln(err.Error())
 	}
 }

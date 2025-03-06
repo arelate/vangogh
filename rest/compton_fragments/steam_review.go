@@ -75,8 +75,8 @@ func SteamReview(r compton.Registrar, review steam_integration.Review) compton.E
 	container.Append(topFr)
 
 	dsTitleText := fmt.Sprintf("Review length: %d chars", len(review.Review))
-	dsHeading := compton.Fspan(r, dsTitleText).FontSize(size.Small)
-	dsReview := compton.DSSmall(r, dsHeading, len(review.Review) < longReviewThreshold)
+	//dsHeading := compton.Fspan(r, dsTitleText).FontSize(size.Small)
+	dsReview := compton.DSSmall(r, dsTitleText, len(review.Review) < longReviewThreshold)
 	dsReview.Append(compton.PreText(review.Review))
 
 	container.Append(dsReview)

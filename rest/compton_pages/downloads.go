@@ -212,9 +212,9 @@ func downloadLinks(r compton.Registrar,
 		dsTitle = fmt.Sprintf("%d download links", len(downloads))
 	}
 
-	dsHeading := compton.Fspan(r, dsTitle).FontSize(size.Small)
+	//dsHeading := compton.Fspan(r, dsTitle).FontSize(size.Small)
 
-	dsDownloadLinks := compton.DSSmall(r, dsHeading, false)
+	dsDownloadLinks := compton.DSSmall(r, dsTitle, false)
 
 	downloadsColumn := compton.FlexItems(r, direction.Column).
 		RowGap(size.Normal)

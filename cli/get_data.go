@@ -155,7 +155,11 @@ func GetData(since int64, force bool) error {
 		return err
 	}
 
-	// reduce, cascade special properties - owned, validation-status, etc - or should this be done in runtime?
+	// reduce, cascade special properties - has-product-types, owned
+
+	if err = shared_data.ReduceTypes(); err != nil {
+		return err
+	}
 
 	return nil
 }

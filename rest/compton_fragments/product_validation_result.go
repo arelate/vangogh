@@ -2,10 +2,7 @@ package compton_fragments
 
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
-	"github.com/boggydigital/compton/consts/font_weight"
-	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/redux"
 )
 
@@ -20,24 +17,23 @@ var ValidationResultsColors = map[vangogh_integration.ValidationResult]color.Col
 	vangogh_integration.ValidatedChecksumMismatch:      color.Red,
 }
 
-func ProductValidationResult(r compton.Registrar, id string, rdx redux.Readable) compton.Element {
-	pvrc := color.Gray
+func ProductValidationResult(id string, rdx redux.Readable) (string, color.Color) {
 
 	if pvrs, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
 
 		pvr := vangogh_integration.ParseValidationResult(pvrs)
 
-		prve := compton.Fspan(r, pvr.HumanReadableString()).
-			FontSize(size.Small).
-			FontWeight(font_weight.Normal).
-			PaddingInline(size.XSmall).
-			PaddingBlock(size.XXSmall).
-			BorderRadius(size.XXSmall)
+		//prve := compton.Fspan(r, pvr.HumanReadableString()).
+		//	FontSize(size.Small).
+		//	FontWeight(font_weight.Normal).
+		//	PaddingInline(size.XSmall).
+		//	PaddingBlock(size.XXSmall).
+		//	BorderRadius(size.XXSmall)
+		//
+		//pvrc = ValidationResultsColors[pvr]
 
-		pvrc = ValidationResultsColors[pvr]
-
-		return prve.BackgroundColor(pvrc).ForegroundColor(color.Highlight)
+		return pvr.HumanReadableString(), ValidationResultsColors[pvr]
 	}
 
-	return nil
+	return "", color.Transparent
 }

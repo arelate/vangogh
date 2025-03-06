@@ -68,9 +68,9 @@ func TagsEditor(
 
 	/* Tags Property Title */
 
-	tagsPropertyHeading := compton.DSTitle(p, tagsPropertyTitle)
+	//tagsPropertyHeading := compton.DSTitle(p, tagsPropertyTitle)
 
-	dsTags := compton.DSLarge(p, tagsPropertyHeading, true).
+	dsTags := compton.DSLarge(p, tagsPropertyTitle, true).
 		BackgroundColor(color.Highlight).
 		ForegroundColor(color.Foreground).
 		SummaryMarginBlockEnd(size.Normal).

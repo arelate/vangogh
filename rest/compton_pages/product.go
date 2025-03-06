@@ -17,8 +17,6 @@ import (
 	"strings"
 )
 
-const colorBlendClass = "color-blend"
-
 const (
 	theoInstallTemplate       = "theo install {id}"
 	theoUninstallTemplate     = "theo uninstall {id} -force"
@@ -44,10 +42,8 @@ func Product(id string, rdx redux.Readable, hasSections []string) compton.PageEl
 	/* App navigation */
 
 	appNavLinks := compton_fragments.AppNavLinks(p, "")
-	appNavLinks.AddClass(colorBlendClass)
 
 	showToc := compton.InputValue(p, input_types.Button, compton.SectionLinksTitle)
-	showToc.AddClass(colorBlendClass)
 
 	/* Product details sections shortcuts */
 
@@ -67,7 +63,6 @@ func Product(id string, rdx redux.Readable, hasSections []string) compton.PageEl
 	/* Product title */
 
 	productTitle := compton.Heading(1)
-	productTitle.AddClass(colorBlendClass)
 	productTitle.Append(compton.Fspan(p, title).TextAlign(align.Center))
 	productTitle.AddClass("product-title")
 
@@ -106,8 +101,7 @@ func Product(id string, rdx redux.Readable, hasSections []string) compton.PageEl
 	for ii, section := range hasSections {
 
 		sectionTitle := compton_data.SectionTitles[section]
-		summaryHeading := compton.DSTitle(p, sectionTitle)
-		detailsSummary := compton.DSLarge(p, summaryHeading, false).
+		detailsSummary := compton.DSLarge(p, sectionTitle, false).
 			BackgroundColor(color.Highlight).
 			ForegroundColor(color.Foreground).
 			MarkerColor(color.Gray).
@@ -115,20 +109,25 @@ func Product(id string, rdx redux.Readable, hasSections []string) compton.PageEl
 			DetailsMarginBlockEnd(size.Unset)
 		detailsSummary.SetId(sectionTitle)
 		detailsSummary.SetTabIndex(ii + 1)
-		detailsSummary.AddClassSummary(colorBlendClass)
 
 		switch section {
 		case compton_data.SteamDeckSection:
-			if sdc := compton_fragments.SteamDeckCompatibility(p, id, rdx); sdc != nil {
-				detailsSummary.AppendSummary(sdc)
+			if sdct, sdcc := compton_fragments.SteamDeckCompatibility(id, rdx); sdct != "" {
+				detailsSummary.SetLabelText(sdct)
+				detailsSummary.SetLabelBackgroundColor(sdcc)
+				detailsSummary.SetLabelForegroundColor(color.Highlight)
 			}
 		case compton_data.SteamReviewsSection:
-			if srsd := compton_fragments.SteamReviewScoreDesc(p, id, rdx); srsd != nil {
-				detailsSummary.AppendSummary(srsd)
+			if srsdt, srsdc := compton_fragments.SteamReviewScoreDesc(id, rdx); srsdt != "" {
+				detailsSummary.SetLabelText(srsdt)
+				detailsSummary.SetLabelBackgroundColor(srsdc)
+				detailsSummary.SetLabelForegroundColor(color.Highlight)
 			}
 		case compton_data.InstallersSection:
-			if pvr := compton_fragments.ProductValidationResult(p, id, rdx); pvr != nil {
-				detailsSummary.AppendSummary(pvr)
+			if pvrt, pvrc := compton_fragments.ProductValidationResult(id, rdx); pvrt != "" {
+				detailsSummary.SetLabelText(pvrt)
+				detailsSummary.SetLabelBackgroundColor(pvrc)
+				detailsSummary.SetLabelForegroundColor(color.Highlight)
 			}
 		}
 

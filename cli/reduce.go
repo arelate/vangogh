@@ -29,10 +29,6 @@ func Reduce(since int64, properties []string, propertiesOnly bool) error {
 
 	if !propertiesOnly {
 
-		if err := reductions.Types(); err != nil {
-			return err
-		}
-
 		if err := reductions.Owned(); err != nil {
 			return err
 		}
