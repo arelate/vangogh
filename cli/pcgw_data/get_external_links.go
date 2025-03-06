@@ -35,10 +35,10 @@ func GetExternalLinks(pcgwGogIds map[string]string) error {
 		return err
 	}
 
-	return reduceExternalLinks(pcgwGogIds, kvExternalLinks)
+	return ReduceExternalLinks(pcgwGogIds, kvExternalLinks)
 }
 
-func reduceExternalLinks(pcgwGogIds map[string]string, kvExternalLinks kevlar.KeyValues) error {
+func ReduceExternalLinks(pcgwGogIds map[string]string, kvExternalLinks kevlar.KeyValues) error {
 
 	rela := nod.Begin(" reducing %s...", vangogh_integration.PcgwExternalLinks)
 	defer rela.Done()

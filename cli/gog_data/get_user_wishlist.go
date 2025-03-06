@@ -35,10 +35,10 @@ func GetUserWishlist(hc *http.Client, uat string) error {
 		return err
 	}
 
-	return reduceUserWishlist(kvUserWishlist)
+	return ReduceUserWishlist(kvUserWishlist)
 }
 
-func reduceUserWishlist(kvUserWishlist kevlar.KeyValues) error {
+func ReduceUserWishlist(kvUserWishlist kevlar.KeyValues) error {
 
 	ruwa := nod.Begin(" reducing %s...", vangogh_integration.UserWishlist)
 	defer ruwa.Done()

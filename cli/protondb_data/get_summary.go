@@ -35,10 +35,10 @@ func GetSummary(steamGogIds map[string]string, since int64) error {
 		return err
 	}
 
-	return reduceSummary(kvSummary, since)
+	return ReduceSummary(kvSummary, since)
 }
 
-func reduceSummary(kvSummary kevlar.KeyValues, since int64) error {
+func ReduceSummary(kvSummary kevlar.KeyValues, since int64) error {
 
 	rsa := nod.Begin(" reducing %s...", vangogh_integration.ProtonDbSummary)
 	defer rsa.Done()
@@ -58,9 +58,11 @@ func reduceSummary(kvSummary kevlar.KeyValues, since int64) error {
 	updatedSummaries := kvSummary.Since(since, kevlar.Create, kevlar.Update)
 
 	for steamAppId := range updatedSummaries {
-		for gogId := range rdx.Match(map[string][]string{vangogh_integration.SteamAppIdProperty: {steamAppId}}, redux.FullMatch) {
-			if err = reduceSummaryProduct(gogId, steamAppId, kvSummary, summaryReductions); err != nil {
-				return err
+		if matches := rdx.Match(map[string][]string{vangogh_integration.SteamAppIdProperty: {steamAppId}}, redux.FullMatch); matches != nil {
+			for gogId := range matches {
+				if err = reduceSummaryProduct(gogId, steamAppId, kvSummary, summaryReductions); err != nil {
+					return err
+				}
 			}
 		}
 	}

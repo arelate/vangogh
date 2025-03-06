@@ -29,12 +29,12 @@ func GetGogPageId(gogIds map[string]any, force bool) error {
 		return err
 	}
 
-	gameGogIds, err := getGameGogIds(gogIds)
+	gameGogIds, err := GetGameGogIds(gogIds)
 	if err != nil {
 		return err
 	}
 
-	newGameGogIds := getNewGogIds(gameGogIds, kvGogPageId, force)
+	newGameGogIds := GetNewGogIds(gameGogIds, kvGogPageId, force)
 
 	gspia.TotalInt(len(newGameGogIds))
 
@@ -42,10 +42,10 @@ func GetGogPageId(gogIds map[string]any, force bool) error {
 		return err
 	}
 
-	return reduceGogPageIds(newGameGogIds, kvGogPageId)
+	return ReduceGogPageIds(newGameGogIds, kvGogPageId)
 }
 
-func getNewGogIds(gogIds map[string]any, kv kevlar.KeyValues, force bool) map[string]any {
+func GetNewGogIds(gogIds map[string]any, kv kevlar.KeyValues, force bool) map[string]any {
 
 	if force {
 		return gogIds
@@ -63,7 +63,7 @@ func getNewGogIds(gogIds map[string]any, kv kevlar.KeyValues, force bool) map[st
 	return newGogIds
 }
 
-func getGameGogIds(gogIds map[string]any) (map[string]any, error) {
+func GetGameGogIds(gogIds map[string]any) (map[string]any, error) {
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {
@@ -86,7 +86,7 @@ func getGameGogIds(gogIds map[string]any) (map[string]any, error) {
 	return gameGogIds, nil
 }
 
-func reduceGogPageIds(gogIds map[string]any, kvPageId kevlar.KeyValues) error {
+func ReduceGogPageIds(gogIds map[string]any, kvPageId kevlar.KeyValues) error {
 
 	rpia := nod.Begin(" reducing %s...", vangogh_integration.PcgwGogPageId)
 	defer rpia.Done()

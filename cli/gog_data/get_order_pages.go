@@ -32,10 +32,10 @@ func GetOrderPages(hc *http.Client, uat string, since int64, force bool) error {
 		return err
 	}
 
-	return reduceOrderPages(kvOrderPages, since)
+	return ReduceOrderPages(kvOrderPages, since)
 }
 
-func reduceOrderPages(kvOrderPages kevlar.KeyValues, since int64) error {
+func ReduceOrderPages(kvOrderPages kevlar.KeyValues, since int64) error {
 
 	ropa := nod.Begin(" reducing %s...", vangogh_integration.OrderPage)
 	defer ropa.Done()

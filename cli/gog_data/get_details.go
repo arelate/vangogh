@@ -38,10 +38,10 @@ func GetDetails(hc *http.Client, uat string, since int64) error {
 		return err
 	}
 
-	return reduceDetails(kvDetails, since)
+	return ReduceDetails(kvDetails, since)
 }
 
-func reduceDetails(kvDetails kevlar.KeyValues, since int64) error {
+func ReduceDetails(kvDetails kevlar.KeyValues, since int64) error {
 	rda := nod.Begin(" reducing %s...", vangogh_integration.Details)
 	defer rda.Done()
 

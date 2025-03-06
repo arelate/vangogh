@@ -35,10 +35,10 @@ func GetAppReviews(steamGogIds map[string]string, since int64) error {
 		return err
 	}
 
-	return reduceAppReviews(kvAppReviews, since)
+	return ReduceAppReviews(kvAppReviews, since)
 }
 
-func reduceAppReviews(kvAppReviews kevlar.KeyValues, since int64) error {
+func ReduceAppReviews(kvAppReviews kevlar.KeyValues, since int64) error {
 
 	rara := nod.Begin(" reducing %s...", vangogh_integration.SteamAppReviews)
 	defer rara.Done()

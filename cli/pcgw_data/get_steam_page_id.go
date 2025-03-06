@@ -29,12 +29,12 @@ func GetSteamPageId(steamGogIds map[string]string, force bool) error {
 		return err
 	}
 
-	gameSteamGogIds, err := getGameSteamGogIds(steamGogIds)
+	gameSteamGogIds, err := GetGameSteamGogIds(steamGogIds)
 	if err != nil {
 		return err
 	}
 
-	newGameSteamGogIds := getNewSteamGogIds(gameSteamGogIds, kvSteamPageId, force)
+	newGameSteamGogIds := GetNewSteamGogIds(gameSteamGogIds, kvSteamPageId, force)
 
 	gspia.TotalInt(len(newGameSteamGogIds))
 
@@ -42,10 +42,10 @@ func GetSteamPageId(steamGogIds map[string]string, force bool) error {
 		return err
 	}
 
-	return reduceSteamPageIds(newGameSteamGogIds, kvSteamPageId)
+	return ReduceSteamPageIds(newGameSteamGogIds, kvSteamPageId)
 }
 
-func getNewSteamGogIds(steamGogIds map[string]string, kv kevlar.KeyValues, force bool) map[string]string {
+func GetNewSteamGogIds(steamGogIds map[string]string, kv kevlar.KeyValues, force bool) map[string]string {
 
 	if force {
 		return steamGogIds
@@ -63,7 +63,7 @@ func getNewSteamGogIds(steamGogIds map[string]string, kv kevlar.KeyValues, force
 	return newSteamGogIds
 }
 
-func getGameSteamGogIds(steamGogIds map[string]string) (map[string]string, error) {
+func GetGameSteamGogIds(steamGogIds map[string]string) (map[string]string, error) {
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {
@@ -86,7 +86,7 @@ func getGameSteamGogIds(steamGogIds map[string]string) (map[string]string, error
 	return gameSteamGogIds, nil
 }
 
-func reduceSteamPageIds(steamGogIds map[string]string, kvPageId kevlar.KeyValues) error {
+func ReduceSteamPageIds(steamGogIds map[string]string, kvPageId kevlar.KeyValues) error {
 
 	rpia := nod.Begin(" reducing %s...", vangogh_integration.PcgwSteamPageId)
 	defer rpia.Done()

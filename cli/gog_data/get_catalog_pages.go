@@ -36,10 +36,10 @@ func GetCatalogPages(hc *http.Client, uat string, since int64) error {
 		return err
 	}
 
-	return reduceCatalogPages(kvCatalogPages, since)
+	return ReduceCatalogPages(kvCatalogPages, since)
 }
 
-func reduceCatalogPages(kvCatalogPages kevlar.KeyValues, since int64) error {
+func ReduceCatalogPages(kvCatalogPages kevlar.KeyValues, since int64) error {
 
 	rcpa := nod.Begin(" reducing %s...", vangogh_integration.CatalogPage)
 	defer rcpa.Done()
@@ -132,6 +132,8 @@ func reduceCatalogPage(page string, kvCatalogPages kevlar.KeyValues, piv shared_
 				values = []string{strconv.FormatBool(cp.GetInDevelopment())}
 			case vangogh_integration.IsDemoProperty:
 				values = []string{strconv.FormatBool(slices.Contains(cp.GetStoreTags(), demoStoreTag))}
+			case vangogh_integration.EditionsProperty:
+				values = cp.GetEditions()
 			}
 
 			piv[property][cp.Id] = values

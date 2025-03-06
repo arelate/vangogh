@@ -42,10 +42,10 @@ func GetGamesDbGogProducts(hc *http.Client, uat string, since int64) error {
 		return err
 	}
 
-	return reduceGamesDbGogProducts(kvGamesDbGogProducts, since)
+	return ReduceGamesDbGogProducts(kvGamesDbGogProducts, since)
 }
 
-func reduceGamesDbGogProducts(kvGamesDbGogProducts kevlar.KeyValues, since int64) error {
+func ReduceGamesDbGogProducts(kvGamesDbGogProducts kevlar.KeyValues, since int64) error {
 	rgdgpa := nod.Begin(" reducing %s...", vangogh_integration.GamesDbGogProducts)
 	defer rgdgpa.Done()
 

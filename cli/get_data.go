@@ -157,6 +157,10 @@ func GetData(since int64, force bool) error {
 
 	// reduce, cascade special properties - has-product-types, owned
 
+	if err = shared_data.ReduceOwned(); err != nil {
+		return err
+	}
+
 	if err = shared_data.ReduceTypes(); err != nil {
 		return err
 	}

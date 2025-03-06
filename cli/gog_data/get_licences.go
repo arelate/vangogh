@@ -36,6 +36,14 @@ func GetLicences(hc *http.Client, userAccessToken string) error {
 		return err
 	}
 
+	return ReduceLicences(kvLicences)
+}
+
+func ReduceLicences(kvLicences kevlar.KeyValues) error {
+
+	rla := nod.Begin(" reducing %s...", vangogh_integration.Licences)
+	defer rla.Done()
+
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {
 		return err
@@ -45,14 +53,6 @@ func GetLicences(hc *http.Client, userAccessToken string) error {
 	if err != nil {
 		return err
 	}
-
-	return reduceLicences(kvLicences, rdx)
-}
-
-func reduceLicences(kvLicences kevlar.KeyValues, rdx redux.Writeable) error {
-
-	rla := nod.Begin(" reducing %s...", vangogh_integration.Licences)
-	defer rla.Done()
 
 	key := vangogh_integration.LicencesProperty
 	if err := rdx.MustHave(key); err != nil {

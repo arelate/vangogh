@@ -35,10 +35,10 @@ func GetDeckCompatibilityReports(steamGogIds map[string]string, since int64) err
 		return err
 	}
 
-	return reduceDeckCompatibilityReports(kvDeckCompatibilityReports, since)
+	return ReduceDeckCompatibilityReports(kvDeckCompatibilityReports, since)
 }
 
-func reduceDeckCompatibilityReports(kvDeckCompatibilityReports kevlar.KeyValues, since int64) error {
+func ReduceDeckCompatibilityReports(kvDeckCompatibilityReports kevlar.KeyValues, since int64) error {
 
 	rdcra := nod.Begin(" reducing %s...", vangogh_integration.SteamDeckCompatibilityReport)
 	defer rdcra.Done()

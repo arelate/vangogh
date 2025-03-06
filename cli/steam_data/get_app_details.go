@@ -59,10 +59,10 @@ func GetAppDetails(since int64, force bool) error {
 		return err
 	}
 
-	return reduceAppDetails(kvAppDetails, since)
+	return ReduceAppDetails(kvAppDetails, since)
 }
 
-func reduceAppDetails(kvAppDetails kevlar.KeyValues, since int64) error {
+func ReduceAppDetails(kvAppDetails kevlar.KeyValues, since int64) error {
 
 	rada := nod.Begin(" reducing %s...", vangogh_integration.SteamAppDetails)
 	defer rada.Done()

@@ -65,7 +65,7 @@ func GetData(since int64, force bool) error {
 		return err
 	}
 
-	return nil
+	return ReduceData(kvData, since)
 }
 
 func readBuildId() (string, error) {
@@ -98,7 +98,7 @@ func readBuildId() (string, error) {
 	return rootPage.GetBuildId(), nil
 }
 
-func reduceData(kvData kevlar.KeyValues, since int64) error {
+func ReduceData(kvData kevlar.KeyValues, since int64) error {
 
 	rda := nod.Begin(" reducing %s...", vangogh_integration.HltbData)
 	defer rda.Done()
@@ -118,9 +118,11 @@ func reduceData(kvData kevlar.KeyValues, since int64) error {
 	updatedData := kvData.Since(since, kevlar.Create, kevlar.Update)
 
 	for hltbId := range updatedData {
-		for gogId := range rdx.Match(map[string][]string{vangogh_integration.HltbIdProperty: {hltbId}}, redux.FullMatch) {
-			if err = reduceDataProduct(gogId, hltbId, kvData, dataReductions); err != nil {
-				return err
+		if matches := rdx.Match(map[string][]string{vangogh_integration.HltbIdProperty: {hltbId}}, redux.FullMatch); matches != nil {
+			for gogId := range matches {
+				if err = reduceDataProduct(gogId, hltbId, kvData, dataReductions); err != nil {
+					return err
+				}
 			}
 		}
 	}

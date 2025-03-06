@@ -42,10 +42,10 @@ func GetApiProducts(hc *http.Client, uat string, since int64) error {
 		return err
 	}
 
-	return reduceApiProducts(kvApiProducts, since)
+	return ReduceApiProducts(kvApiProducts, since)
 }
 
-func reduceApiProducts(kvApiProducts kevlar.KeyValues, since int64) error {
+func ReduceApiProducts(kvApiProducts kevlar.KeyValues, since int64) error {
 
 	rapa := nod.Begin(" reducing %s...", vangogh_integration.ApiProducts)
 	defer rapa.Done()

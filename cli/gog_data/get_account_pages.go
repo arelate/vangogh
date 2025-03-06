@@ -32,10 +32,10 @@ func GetAccountPages(hc *http.Client, uat string, since int64, force bool) error
 		return err
 	}
 
-	return reduceAccountPages(kvAccountPages, since)
+	return ReduceAccountPages(kvAccountPages, since)
 }
 
-func reduceAccountPages(kvAccountPages kevlar.KeyValues, since int64) error {
+func ReduceAccountPages(kvAccountPages kevlar.KeyValues, since int64) error {
 
 	rapa := nod.Begin(" reducing %s...", vangogh_integration.AccountPage)
 	defer rapa.Done()

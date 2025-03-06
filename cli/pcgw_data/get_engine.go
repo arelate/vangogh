@@ -35,10 +35,10 @@ func GetEngine(pcgwGogIds map[string]string) error {
 		return err
 	}
 
-	return reduceEngine(pcgwGogIds, kvEngine)
+	return ReduceEngine(pcgwGogIds, kvEngine)
 }
 
-func reduceEngine(pcgwGogIds map[string]string, kvEngine kevlar.KeyValues) error {
+func ReduceEngine(pcgwGogIds map[string]string, kvEngine kevlar.KeyValues) error {
 
 	rea := nod.Begin(" reducing %s...", vangogh_integration.PcgwEngine)
 	defer rea.Done()

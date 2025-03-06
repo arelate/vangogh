@@ -80,14 +80,7 @@ local-tag
     operation^=add,remove
     tag-name
 
-owned
-    id^&
-    slug&
-
 reduce
-    property&={redux-properties}
-    since-hours-ago
-    properties-only
 
 search
     {searchable-properties^&}
