@@ -67,7 +67,7 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 
 	for _, property := range propertiesSectionsOrder {
 		if section, ok := propertiesSections[property]; ok {
-			if rdx.HasKey(property, id) {
+			if val, sure := rdx.GetLastVal(property, id); sure && val != "" {
 				hasSections = append(hasSections, section)
 			}
 		}
