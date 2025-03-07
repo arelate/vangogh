@@ -77,7 +77,7 @@
 
         /* Sale/price lifecycle labels */
 
-        &.wishlisted {
+        &.user-wishlist {
             color: var(--c-highlight);
             --label-color: var(--c-orange);
         }
