@@ -18,7 +18,7 @@ func ProductPoster(r compton.Registrar, id string, rdx redux.Readable) compton.E
 			issaImg.AspectRatio(float64(13) / float64(6))
 			poster = issaImg
 		} else {
-			poster = compton.Img(relImgSrc)
+			poster = compton.IssaImageWrapper(r, relImgSrc)
 		}
 		poster.AddClass("product-poster")
 		return poster
