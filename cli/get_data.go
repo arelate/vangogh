@@ -64,10 +64,6 @@ func GetData(since int64, force bool) error {
 		return err
 	}
 
-	if err = gog_data.GetOrderPages(hc, uat, since, force); err != nil {
-		return err
-	}
-
 	if err = gog_data.GetAccountPages(hc, uat, since, force); err != nil {
 		return err
 	}
@@ -77,6 +73,10 @@ func GetData(since int64, force bool) error {
 	}
 
 	if err = gog_data.GetRelatedApiProducts(hc, uat, since); err != nil {
+		return err
+	}
+
+	if err = gog_data.GetOrderPages(hc, uat, since, force); err != nil {
 		return err
 	}
 

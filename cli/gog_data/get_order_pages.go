@@ -45,7 +45,10 @@ func ReduceOrderPages(kvOrderPages kevlar.KeyValues, since int64) error {
 		return err
 	}
 
-	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.GOGOrderPageProperties()...)
+	properties := vangogh_integration.GOGOrderPageProperties()
+	properties = append(properties, vangogh_integration.IncludesGamesProperty)
+
+	rdx, err := redux.NewWriter(reduxDir, properties...)
 	if err != nil {
 		return err
 	}
@@ -55,7 +58,7 @@ func ReduceOrderPages(kvOrderPages kevlar.KeyValues, since int64) error {
 	updatedOrderPages := kvOrderPages.Since(since, kevlar.Create, kevlar.Update)
 
 	for page := range updatedOrderPages {
-		if err = reduceOrderPage(page, kvOrderPages, orderPagesReductions); err != nil {
+		if err = reduceOrderPage(page, kvOrderPages, orderPagesReductions, rdx); err != nil {
 			return err
 		}
 	}
@@ -63,7 +66,7 @@ func ReduceOrderPages(kvOrderPages kevlar.KeyValues, since int64) error {
 	return shared_data.WriteReductions(rdx, orderPagesReductions)
 }
 
-func reduceOrderPage(page string, kvOrderPages kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
+func reduceOrderPage(page string, kvOrderPages kevlar.KeyValues, piv shared_data.PropertyIdValues, rdx redux.Readable) error {
 
 	rcOrderPage, err := kvOrderPages.Get(page)
 	if err != nil {
@@ -88,6 +91,11 @@ func reduceOrderPage(page string, kvOrderPages kevlar.KeyValues, piv shared_data
 				switch property {
 				case vangogh_integration.GOGOrderDateProperty:
 					piv[property][orderProduct.Id] = gogOrderDate
+					if includesGames, ok := rdx.GetAllValues(vangogh_integration.IncludesGamesProperty, orderProduct.Id); ok {
+						for _, igId := range includesGames {
+							piv[property][igId] = gogOrderDate
+						}
+					}
 				}
 			}
 		}

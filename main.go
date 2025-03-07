@@ -9,6 +9,7 @@ import (
 	_ "embed"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli"
+	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/arelate/vangogh/clo_delegates"
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/nod"
@@ -82,6 +83,10 @@ func main() {
 
 	if err = defs.AssertCommandsHaveHandlers(); err != nil {
 		log.Fatalln(err.Error())
+	}
+
+	if err = shared_data.ReduceOwned(); err != nil {
+		panic(err)
 	}
 
 	if err = defs.Serve(os.Args[1:]); err != nil {

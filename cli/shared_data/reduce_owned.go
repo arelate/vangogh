@@ -27,13 +27,11 @@ func ReduceOwned() error {
 
 	owned := make(map[string][]string)
 
-	if licences, ok := rdx.GetAllValues(vangogh_integration.LicencesProperty, vangogh_integration.LicencesProperty); ok {
-		for _, id := range licences {
-			owned[id] = []string{vangogh_integration.TrueValue}
-			if includesGames, sure := rdx.GetAllValues(vangogh_integration.IncludesGamesProperty, id); sure {
-				for _, igId := range includesGames {
-					owned[igId] = []string{vangogh_integration.TrueValue}
-				}
+	for id := range rdx.Keys(vangogh_integration.LicencesProperty) {
+		owned[id] = []string{vangogh_integration.TrueValue}
+		if includesGames, sure := rdx.GetAllValues(vangogh_integration.IncludesGamesProperty, id); sure {
+			for _, igId := range includesGames {
+				owned[igId] = []string{vangogh_integration.TrueValue}
 			}
 		}
 	}

@@ -4,12 +4,10 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/gog_data"
 	"github.com/arelate/vangogh/cli/hltb_data"
-	"github.com/arelate/vangogh/cli/pcgw_data"
 	"github.com/arelate/vangogh/cli/protondb_data"
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/arelate/vangogh/cli/steam_data"
 	"github.com/boggydigital/kevlar"
-	"maps"
 	"net/url"
 )
 
@@ -24,9 +22,9 @@ func Reduce() error {
 		vangogh_integration.Licences,
 		vangogh_integration.UserWishlist,
 		vangogh_integration.CatalogPage,
-		vangogh_integration.OrderPage,
 		vangogh_integration.AccountPage,
 		vangogh_integration.ApiProducts,
+		vangogh_integration.OrderPage,
 		vangogh_integration.Details,
 		vangogh_integration.GamesDbGogProducts,
 		// Steam
@@ -34,6 +32,8 @@ func Reduce() error {
 		vangogh_integration.SteamAppNews,
 		vangogh_integration.SteamAppReviews,
 		vangogh_integration.SteamDeckCompatibilityReport,
+		// PCGW - requires special data processing and will be skipped
+		// ...
 		// HLTB
 		vangogh_integration.HltbData,
 		// ProtonDB
@@ -45,10 +45,6 @@ func Reduce() error {
 			return err
 		}
 	}
-
-	//if err := reducePcgwData(); err != nil {
-	//	return err
-	//}
 
 	if err := shared_data.ReduceOwned(); err != nil {
 		return err
@@ -105,90 +101,4 @@ func reduceProductType(pt vangogh_integration.ProductType) error {
 	}
 
 	return nil
-}
-
-func reducePcgwData() error {
-
-	catalogAccountProducts, err := shared_data.GetCatalogAccountProducts(-1)
-	if err != nil {
-		return err
-	}
-
-	steamGogIds, err := shared_data.GetSteamGogIds(maps.Keys(catalogAccountProducts))
-	if err != nil {
-		return err
-	}
-
-	gameSteamGogIds, err := pcgw_data.GetGameSteamGogIds(steamGogIds)
-	if err != nil {
-		return err
-	}
-
-	steamPageIdDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.PcgwSteamPageId)
-	if err != nil {
-		return err
-	}
-
-	kvSteamPageId, err := kevlar.New(steamPageIdDir, kevlar.JsonExt)
-	if err != nil {
-		return err
-	}
-
-	newGameSteamGogIds := pcgw_data.GetNewSteamGogIds(gameSteamGogIds, kvSteamPageId, true)
-
-	if err = pcgw_data.ReduceSteamPageIds(newGameSteamGogIds, kvSteamPageId); err != nil {
-		return err
-	}
-
-	gogPageIdDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.PcgwGogPageId)
-	if err != nil {
-		return err
-	}
-
-	kvGogPageId, err := kevlar.New(gogPageIdDir, kevlar.JsonExt)
-	if err != nil {
-		return err
-	}
-
-	gameGogIds, err := pcgw_data.GetGameGogIds(catalogAccountProducts)
-	if err != nil {
-		return err
-	}
-
-	newGameGogIds := pcgw_data.GetNewGogIds(gameGogIds, kvGogPageId, true)
-
-	if err = pcgw_data.ReduceGogPageIds(newGameGogIds, kvGogPageId); err != nil {
-		return nil
-	}
-
-	pcgwGogIds, err := shared_data.GetPcgwGogIds(maps.Keys(catalogAccountProducts))
-	if err != nil {
-		return err
-	}
-
-	externalLinksDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.PcgwExternalLinks)
-	if err != nil {
-		return err
-	}
-
-	kvExternalLinks, err := kevlar.New(externalLinksDir, kevlar.JsonExt)
-	if err != nil {
-		return err
-	}
-
-	if err = pcgw_data.ReduceExternalLinks(pcgwGogIds, kvExternalLinks); err != nil {
-		return err
-	}
-
-	engineDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.PcgwEngine)
-	if err != nil {
-		return err
-	}
-
-	kvEngine, err := kevlar.New(engineDir, kevlar.JsonExt)
-	if err != nil {
-		return err
-	}
-
-	return pcgw_data.ReduceEngine(pcgwGogIds, kvEngine)
 }
