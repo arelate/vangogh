@@ -131,11 +131,11 @@ func GetData(since int64, force bool) error {
 		return err
 	}
 
-	if err = pcgw_data.GetExternalLinks(pcgwGogIds); err != nil {
+	if err = pcgw_data.GetExternalLinks(pcgwGogIds, force); err != nil {
 		return err
 	}
 
-	if err = pcgw_data.GetEngine(pcgwGogIds); err != nil {
+	if err = pcgw_data.GetEngine(pcgwGogIds, force); err != nil {
 		return err
 	}
 
