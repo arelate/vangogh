@@ -199,7 +199,12 @@ func operatingSystemsTitleValues(r compton.Registrar, id string, rdx redux.Reada
 	row := compton.FlexItems(r, direction.Row).JustifyContent(align.Start)
 	tv.Append(row)
 	if values, ok := rdx.GetAllValues(property, id); ok {
-		for _, os := range vangogh_integration.ParseManyOperatingSystems(values) {
+		oses := vangogh_integration.ParseManyOperatingSystems(values)
+		for _, os := range []vangogh_integration.OperatingSystem{
+			vangogh_integration.Windows, vangogh_integration.MacOS, vangogh_integration.Linux} {
+			if !slices.Contains(oses, os) {
+				continue
+			}
 			osLink := compton.A(searchHref(property, os.String()))
 			osLink.SetAttribute("target", "_top")
 			osLink.Append(compton.SvgUse(r, compton_data.OperatingSystemSymbols[os]))
