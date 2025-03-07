@@ -14,7 +14,7 @@ import (
 	"maps"
 )
 
-func GetExternalLinks(pcgwGogIds map[string]string) error {
+func GetExternalLinks(pcgwGogIds map[string]string, force bool) error {
 
 	gea := nod.NewProgress("getting %s...", vangogh_integration.PcgwExternalLinks)
 	defer gea.Done()
@@ -29,13 +29,15 @@ func GetExternalLinks(pcgwGogIds map[string]string) error {
 		return err
 	}
 
-	gea.TotalInt(len(pcgwGogIds))
+	newPcgwGogIds := getNewPcgwGogIds(pcgwGogIds, kvExternalLinks, force)
 
-	if err = fetch.Items(maps.Keys(pcgwGogIds), reqs.PcgwExternalLinks(), kvExternalLinks, gea); err != nil {
+	gea.TotalInt(len(newPcgwGogIds))
+
+	if err = fetch.Items(maps.Keys(newPcgwGogIds), reqs.PcgwExternalLinks(), kvExternalLinks, gea); err != nil {
 		return err
 	}
 
-	return ReduceExternalLinks(pcgwGogIds, kvExternalLinks)
+	return ReduceExternalLinks(newPcgwGogIds, kvExternalLinks)
 }
 
 func ReduceExternalLinks(pcgwGogIds map[string]string, kvExternalLinks kevlar.KeyValues) error {

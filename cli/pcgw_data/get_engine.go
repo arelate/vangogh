@@ -14,7 +14,7 @@ import (
 	"maps"
 )
 
-func GetEngine(pcgwGogIds map[string]string) error {
+func GetEngine(pcgwGogIds map[string]string, force bool) error {
 
 	gea := nod.NewProgress("getting %s...", vangogh_integration.PcgwEngine)
 	defer gea.Done()
@@ -29,13 +29,33 @@ func GetEngine(pcgwGogIds map[string]string) error {
 		return err
 	}
 
-	gea.TotalInt(len(pcgwGogIds))
+	newPcgwGogIds := getNewPcgwGogIds(pcgwGogIds, kvEngine, force)
 
-	if err = fetch.Items(maps.Keys(pcgwGogIds), reqs.PcgwEngine(), kvEngine, gea); err != nil {
+	gea.TotalInt(len(newPcgwGogIds))
+
+	if err = fetch.Items(maps.Keys(newPcgwGogIds), reqs.PcgwEngine(), kvEngine, gea); err != nil {
 		return err
 	}
 
-	return ReduceEngine(pcgwGogIds, kvEngine)
+	return ReduceEngine(newPcgwGogIds, kvEngine)
+}
+
+func getNewPcgwGogIds(pcgwGogIds map[string]string, kv kevlar.KeyValues, force bool) map[string]string {
+
+	if force {
+		return pcgwGogIds
+	}
+
+	npgIds := make(map[string]string)
+
+	for pcgwPageId, gogId := range pcgwGogIds {
+		if kv.Has(pcgwPageId) {
+			continue
+		}
+		npgIds[pcgwPageId] = gogId
+	}
+
+	return npgIds
 }
 
 func ReduceEngine(pcgwGogIds map[string]string, kvEngine kevlar.KeyValues) error {
