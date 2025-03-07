@@ -76,15 +76,13 @@ func reduceAccountPage(page string, kvAccountPages kevlar.KeyValues, piv shared_
 		return err
 	}
 
-	accountPageReduction := make(map[string]map[string][]string)
+	//accountPageReduction := make(map[string]map[string][]string)
 
 	// reduce tag names that are provided by account page, not product
-	// and use first page to do that (any page would work equally well)
-	if page == "1" {
-		accountPageReduction[vangogh_integration.TagNameProperty] = make(map[string][]string)
-		for _, tag := range accountPage.Tags {
-			accountPageReduction[vangogh_integration.TagNameProperty][tag.Id] = []string{tag.Name}
-		}
+	// and use any page to do that (any page would work equally well)
+	piv[vangogh_integration.TagNameProperty] = make(map[string][]string)
+	for _, tag := range accountPage.Tags {
+		piv[vangogh_integration.TagNameProperty][tag.Id] = []string{tag.Name}
 	}
 
 	for _, ap := range accountPage.Products {
