@@ -83,7 +83,7 @@ func reduceDeckCompatibilityReportsProduct(gogId, steamAppId string, kvDeckCompa
 	var dcr steam_integration.DeckAppCompatibilityReport
 	if err = json.NewDecoder(rcDeckCompatibilityReport).Decode(&dcr); err != nil {
 		// handle known empty results that return empty array instead of results
-		if strings.Contains(err.Error(), "json: cannot unmarshal array into Go struct field DeckAppCompatibilityReport.results") {
+		if strings.Contains(err.Error(), "cannot unmarshal array into Go struct field DeckAppCompatibilityReport.results") {
 			return nil
 		}
 		return err

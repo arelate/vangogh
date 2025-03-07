@@ -13,6 +13,7 @@ import (
 	"github.com/boggydigital/redux"
 	"maps"
 	"net/http"
+	"strings"
 )
 
 func GetDetails(hc *http.Client, uat string, since int64) error {
@@ -78,6 +79,9 @@ func reduceDetailsProduct(id string, kvDetails kevlar.KeyValues, piv shared_data
 
 	var det gog_integration.Details
 	if err = json.NewDecoder(rcDetails).Decode(&det); err != nil {
+		if strings.Contains(err.Error(), "cannot unmarshal array into Go value of type gog_integration.Details") {
+			return nil
+		}
 		return err
 	}
 
