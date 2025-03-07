@@ -30,10 +30,7 @@ var SearchProperties = []string{
 	vangogh_integration.IsRequiredByGamesProperty,
 	vangogh_integration.ProductTypeProperty,
 
-	//vangogh_integration.WishlistedProperty,
-	//vangogh_integration.OwnedProperty,
-
-	vangogh_integration.LicencesProperty,
+	vangogh_integration.OwnedProperty,
 	vangogh_integration.UserWishlistProperty,
 
 	vangogh_integration.IsFreeProperty,

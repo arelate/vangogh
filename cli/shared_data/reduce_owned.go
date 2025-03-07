@@ -20,7 +20,8 @@ func ReduceOwned() error {
 	rdx, err := redux.NewWriter(reduxDir,
 		vangogh_integration.LicencesProperty,
 		vangogh_integration.IncludesGamesProperty,
-		vangogh_integration.OwnedProperty)
+		vangogh_integration.OwnedProperty,
+		vangogh_integration.TitleProperty)
 	if err != nil {
 		return err
 	}
@@ -33,6 +34,12 @@ func ReduceOwned() error {
 			for _, igId := range includesGames {
 				owned[igId] = []string{vangogh_integration.TrueValue}
 			}
+		}
+	}
+
+	for id := range rdx.Keys(vangogh_integration.TitleProperty) {
+		if _, ok := owned[id]; !ok {
+			owned[id] = []string{vangogh_integration.FalseValue}
 		}
 	}
 

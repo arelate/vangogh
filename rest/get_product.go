@@ -81,7 +81,7 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if val, ok := rdx.GetLastVal(vangogh_integration.LicencesProperty, id); ok && val == vangogh_integration.TrueValue {
+	if val, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && val == vangogh_integration.TrueValue {
 		hasSections = append(hasSections, compton_data.InstallersSection)
 	}
 

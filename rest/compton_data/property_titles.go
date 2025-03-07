@@ -27,10 +27,8 @@ var PropertyTitles = map[string]string{
 	vangogh_integration.IsRequiredByGamesProperty:   "Required By",
 	vangogh_integration.ProductTypeProperty:         "Product Type",
 
-	//vangogh_integration.WishlistedProperty:                        "Wishlisted",
-	//vangogh_integration.OwnedProperty:                             "Owned",
 	vangogh_integration.UserWishlistProperty: "Wishlisted",
-	vangogh_integration.LicencesProperty:     "Owned",
+	vangogh_integration.OwnedProperty:        "Owned",
 
 	vangogh_integration.IsFreeProperty:                            "Free",
 	vangogh_integration.IsDemoProperty:                            "Demo",

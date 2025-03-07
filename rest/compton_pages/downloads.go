@@ -58,7 +58,7 @@ func Downloads(id string, dls vangogh_integration.DownloadsList, rdx redux.Reada
 	pageStack := compton.FlexItems(s, direction.Column)
 	s.Append(pageStack)
 
-	if owned, ok := rdx.GetLastVal(vangogh_integration.LicencesProperty, id); ok && owned == vangogh_integration.FalseValue {
+	if owned, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && owned == vangogh_integration.FalseValue {
 		ownershipRequiredNotice := compton.Fspan(s, "Downloads are available for owned products only").
 			ForegroundColor(color.Gray)
 		pageStack.Append(ownershipRequiredNotice)

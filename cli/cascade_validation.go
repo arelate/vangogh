@@ -56,7 +56,7 @@ func filterOwnedRelated(rdx redux.Readable, p, id string) []string {
 	ownedRelated := make([]string, 0)
 	if related, ok := rdx.GetAllValues(p, id); ok {
 		for _, rid := range related {
-			if own, ok := rdx.GetLastVal(vangogh_integration.LicencesProperty, rid); ok && own == vangogh_integration.TrueValue {
+			if own, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, rid); ok && own == vangogh_integration.TrueValue {
 				ownedRelated = append(ownedRelated, rid)
 			}
 		}

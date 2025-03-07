@@ -34,7 +34,7 @@ func GetTagsEdit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	owned := false
-	if op, ok := rdx.GetLastVal(vangogh_integration.LicencesProperty, id); ok && op == vangogh_integration.TrueValue {
+	if op, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && op == vangogh_integration.TrueValue {
 		owned = true
 	}
 
