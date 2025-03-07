@@ -8,7 +8,6 @@ var ProductProperties = []string{
 	vangogh_integration.TagIdProperty,
 	vangogh_integration.LocalTagsProperty,
 
-	vangogh_integration.OwnedProperty,
 	vangogh_integration.UserWishlistProperty,
 
 	vangogh_integration.PriceProperty,
