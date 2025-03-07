@@ -103,21 +103,21 @@ func reduceApiProduct(id string, kvApiProduct kevlar.KeyValues, piv shared_data.
 		case vangogh_integration.PublishersProperty:
 			values = ap.GetPublishers()
 		case vangogh_integration.ImageProperty:
-			values = []string{ap.GetImage()}
+			values = []string{gog_integration.ImageId(ap.GetImage())}
 		case vangogh_integration.VerticalImageProperty:
-			values = []string{ap.GetVerticalImage()}
+			values = []string{gog_integration.ImageId(ap.GetVerticalImage())}
 		case vangogh_integration.HeroProperty:
-			values = []string{ap.GetHero()}
+			values = []string{gog_integration.ImageId(ap.GetHero())}
 		case vangogh_integration.LogoProperty:
-			values = []string{ap.GetLogo()}
+			values = []string{gog_integration.ImageId(ap.GetLogo())}
 		case vangogh_integration.IconProperty:
-			values = []string{ap.GetIcon()}
+			values = []string{gog_integration.ImageId(ap.GetIcon())}
 		case vangogh_integration.IconSquareProperty:
-			values = []string{ap.GetIconSquare()}
+			values = []string{gog_integration.ImageId(ap.GetIconSquare())}
 		case vangogh_integration.BackgroundProperty:
-			values = []string{ap.GetBackground()}
+			values = []string{gog_integration.ImageId(ap.GetBackground())}
 		case vangogh_integration.ScreenshotsProperty:
-			values = ap.GetScreenshots()
+			values = gog_integration.ImageIds(ap.GetScreenshots()...)
 		case vangogh_integration.GenresProperty:
 			values = ap.GetGenres()
 		case vangogh_integration.FeaturesProperty:

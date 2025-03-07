@@ -93,11 +93,11 @@ func reduceCatalogPage(page string, kvCatalogPages kevlar.KeyValues, piv shared_
 			case vangogh_integration.PublishersProperty:
 				values = cp.GetPublishers()
 			case vangogh_integration.ImageProperty:
-				values = []string{cp.GetImage()}
+				values = []string{gog_integration.ImageId(cp.GetImage())}
 			case vangogh_integration.VerticalImageProperty:
-				values = []string{cp.GetVerticalImage()}
+				values = []string{gog_integration.ImageId(cp.GetVerticalImage())}
 			case vangogh_integration.ScreenshotsProperty:
-				values = cp.GetScreenshots()
+				values = gog_integration.ImageIds(cp.GetScreenshots()...)
 			case vangogh_integration.FeaturesProperty:
 				values = cp.GetFeatures()
 			case vangogh_integration.RatingProperty:
