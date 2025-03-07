@@ -72,6 +72,17 @@ func Product(id string, rdx redux.Readable, hasSections []string) compton.PageEl
 	productLabels := compton.Labels(p, fmtLabels...).FontSize(size.Small).RowGap(size.XSmall).ColumnGap(size.XSmall)
 	pageStack.Append(compton.FICenter(p, productTitle, productLabels))
 
+	/* Product short description */
+
+	if shortDesc, yes := rdx.GetLastVal(vangogh_integration.ShortDescriptionProperty, id); yes {
+		shortDescFspan := compton.Fspan(p, shortDesc).
+			ForegroundColor(color.Gray).
+			FontSize(size.Small).
+			TextAlign(align.Center)
+		shortDescFspan.AddClass("short-description")
+		pageStack.Append(compton.FICenter(p, shortDescFspan))
+	}
+
 	/* Product summary properties */
 
 	properties, values := compton_fragments.SummarizeProductProperties(id, rdx)
