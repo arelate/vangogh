@@ -26,6 +26,11 @@ func GetApiProducts(hc *http.Client, uat string, since int64) error {
 		return err
 	}
 
+	catalogAccountProductIds, err = shared_data.AppendEditions(catalogAccountProductIds)
+	if err != nil {
+		return err
+	}
+
 	apiProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.ApiProducts)
 	if err != nil {
 		return err

@@ -83,6 +83,31 @@ func GetCatalogAccountProducts(since int64) (map[string]any, error) {
 	return catalogAccountProductIds, nil
 }
 
+func AppendEditions(products map[string]any) (map[string]any, error) {
+
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return nil, err
+	}
+
+	rdx, err := redux.NewReader(reduxDir, vangogh_integration.EditionsProperty)
+	if err != nil {
+		return nil, err
+	}
+
+	productsEditions := maps.Clone(products)
+
+	for id := range products {
+		if editions, ok := rdx.GetAllValues(vangogh_integration.EditionsProperty, id); ok {
+			for _, eId := range editions {
+				productsEditions[eId] = nil
+			}
+		}
+	}
+
+	return productsEditions, nil
+}
+
 func GetCatalogPagesProducts(since int64) ([]string, error) {
 
 	gcppa := nod.NewProgress(" enumerating %s...", vangogh_integration.CatalogPage)
