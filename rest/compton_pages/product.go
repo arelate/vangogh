@@ -17,13 +17,6 @@ import (
 	"strings"
 )
 
-const (
-	theoInstallTemplate       = "theo install {id}"
-	theoUninstallTemplate     = "theo uninstall {id} -force"
-	theoWineInstallTemplate   = "theo wine-install {id}"
-	theoWineUninstallTemplate = "theo wine-uninstall {id} -force"
-)
-
 func Product(id string, rdx redux.Readable, hasSections []string) compton.PageElement {
 
 	title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
@@ -146,23 +139,6 @@ func Product(id string, rdx redux.Readable, hasSections []string) compton.PageEl
 		detailsSummary.Append(ifh)
 
 		pageStack.Append(detailsSummary)
-	}
-
-	/* Theo commands */
-
-	if owned, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && owned == vangogh_integration.TrueValue {
-		var os []vangogh_integration.OperatingSystem
-		if vals, ok := rdx.GetAllValues(vangogh_integration.OperatingSystemsProperty, id); ok {
-			os = vangogh_integration.ParseManyOperatingSystems(vals)
-		}
-
-		if slices.Contains(os, vangogh_integration.MacOS) {
-			pageStack.Append(theoCommand(p, theoInstallTemplate, id))
-			pageStack.Append(theoCommand(p, theoUninstallTemplate, id))
-		} else {
-			pageStack.Append(theoCommand(p, theoWineInstallTemplate, id))
-			pageStack.Append(theoCommand(p, theoWineUninstallTemplate, id))
-		}
 	}
 
 	/* Standard app footer */
