@@ -118,6 +118,26 @@ func Debug(gogId string) (compton.PageElement, error) {
 		idsFrow.PropVal("StrategyWiki", strategyWikiId)
 	}
 
+	propertyProductType := map[string]vangogh_integration.ProductType{
+		vangogh_integration.CatalogPageProductsProperty: vangogh_integration.CatalogPage,
+		vangogh_integration.AccountPageProductsProperty: vangogh_integration.AccountPage,
+		vangogh_integration.OrderPageProductsProperty:   vangogh_integration.OrderPage,
+	}
+
+	for property, pt := range propertyProductType {
+
+		if page, ok := rdx.GetLastVal(property, gogId); ok && page != "" {
+
+			if !kvs[pt].Has(page) {
+				continue
+			}
+
+			if ds := productTypeSection(p, page, pt); ds != nil {
+				pageStack.Append(ds)
+			}
+		}
+	}
+
 	gogProductTypes := []vangogh_integration.ProductType{
 		vangogh_integration.ApiProducts,
 		vangogh_integration.Details,

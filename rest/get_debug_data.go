@@ -9,7 +9,7 @@ import (
 
 func GetDebugData(w http.ResponseWriter, r *http.Request) {
 
-	// GET /debug-data?id&pt
+	// GET /debug-data?id&product-type
 
 	id := r.URL.Query().Get(vangogh_integration.IdProperty)
 	pts := r.URL.Query().Get(vangogh_integration.ProductTypeProperty)
