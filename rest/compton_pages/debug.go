@@ -101,6 +101,23 @@ func Debug(gogId string) (compton.PageElement, error) {
 		idsFrow.PropVal("HLTB", hltbId)
 	}
 
+	// various other platform ids
+	if igdbId, ok := rdx.GetLastVal(vangogh_integration.IgdbIdProperty, gogId); ok && igdbId != "" {
+		idsFrow.PropVal("IGDB", igdbId)
+	}
+	if mobyGamesId, ok := rdx.GetLastVal(vangogh_integration.MobyGamesIdProperty, gogId); ok && mobyGamesId != "" {
+		idsFrow.PropVal("MobyGames", mobyGamesId)
+	}
+	if vndbId, ok := rdx.GetLastVal(vangogh_integration.VndbIdProperty, gogId); ok && vndbId != "" {
+		idsFrow.PropVal("VNDB", vndbId)
+	}
+	if wikipediaId, ok := rdx.GetLastVal(vangogh_integration.WikipediaIdProperty, gogId); ok && wikipediaId != "" {
+		idsFrow.PropVal("Wikipedia", wikipediaId)
+	}
+	if strategyWikiId, ok := rdx.GetLastVal(vangogh_integration.StrategyWikiIdProperty, gogId); ok && strategyWikiId != "" {
+		idsFrow.PropVal("StrategyWiki", strategyWikiId)
+	}
+
 	gogProductTypes := []vangogh_integration.ProductType{
 		vangogh_integration.ApiProducts,
 		vangogh_integration.Details,
