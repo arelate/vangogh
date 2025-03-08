@@ -165,6 +165,20 @@ func Debug(gogId string) (compton.PageElement, error) {
 		}
 	}
 
+	protonDbProductTypes := []vangogh_integration.ProductType{
+		vangogh_integration.ProtonDbSummary,
+	}
+
+	for _, pt := range protonDbProductTypes {
+		if !kvs[pt].Has(steamAppId) {
+			continue
+		}
+
+		if ds := productTypeSection(p, steamAppId, pt); ds != nil {
+			pageStack.Append(ds)
+		}
+	}
+
 	reduxDs := compton.DSLarge(p, "Redux", false).BackgroundColor(color.Highlight)
 	pageStack.Append(reduxDs)
 
