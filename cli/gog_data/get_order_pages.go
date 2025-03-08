@@ -88,14 +88,19 @@ func reduceOrderPage(page string, kvOrderPages kevlar.KeyValues, piv shared_data
 
 		for property := range piv {
 			for _, orderProduct := range order.Products {
+
+				id := orderProduct.Id
+
 				switch property {
 				case vangogh_integration.GOGOrderDateProperty:
-					piv[property][orderProduct.Id] = gogOrderDate
-					if includesGames, ok := rdx.GetAllValues(vangogh_integration.IncludesGamesProperty, orderProduct.Id); ok {
+					piv[property][id] = gogOrderDate
+					if includesGames, ok := rdx.GetAllValues(vangogh_integration.IncludesGamesProperty, id); ok {
 						for _, igId := range includesGames {
 							piv[property][igId] = gogOrderDate
 						}
 					}
+				case vangogh_integration.OrderPageProductsProperty:
+					piv[property][id] = []string{page}
 				}
 			}
 		}

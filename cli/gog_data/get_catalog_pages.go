@@ -134,6 +134,8 @@ func reduceCatalogPage(page string, kvCatalogPages kevlar.KeyValues, piv shared_
 				values = []string{strconv.FormatBool(slices.Contains(cp.GetStoreTags(), demoStoreTag))}
 			case vangogh_integration.EditionsProperty:
 				values = cp.GetEditions()
+			case vangogh_integration.CatalogPageProductsProperty:
+				values = []string{page}
 			}
 
 			piv[property][cp.Id] = values
