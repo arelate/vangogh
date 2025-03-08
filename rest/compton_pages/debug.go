@@ -38,7 +38,14 @@ func Debug(id string) (compton.PageElement, error) {
 		return nil, err
 	}
 
-	reduxProperties := vangogh_integration.ReduxProperties()
+	reduxProperties := make([]string, 0)
+
+	for _, property := range vangogh_integration.ReduxProperties() {
+		if slices.Contains(reduxProperties, property) {
+			continue
+		}
+		reduxProperties = append(reduxProperties, property)
+	}
 	slices.Sort(reduxProperties)
 
 	rdx, err := redux.NewReader(reduxDir, reduxProperties...)
