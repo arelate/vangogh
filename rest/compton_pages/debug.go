@@ -15,15 +15,15 @@ import (
 
 func Debug(id string) (compton.PageElement, error) {
 
-	pageTitle := "Product data for " + id
+	localProducts := vangogh_integration.AllProductTypes()
+	sortedLocalProducts := slices.Sorted(localProducts)
 
-	//TODO: rewrite this with the new data model
-	localProducts := make([]vangogh_integration.ProductType, 0)
-	slices.Sort(localProducts)
+	kvs := make(map[vangogh_integration.ProductType]kevlar.KeyValues, len(sortedLocalProducts))
 
-	kvs := make(map[vangogh_integration.ProductType]kevlar.KeyValues, len(localProducts))
-
-	for _, pt := range localProducts {
+	for _, pt := range sortedLocalProducts {
+		if pt == vangogh_integration.UnknownProductType {
+			continue
+		}
 		if absPtDir, err := vangogh_integration.AbsProductTypeDir(pt); err != nil {
 			return nil, err
 		} else {
@@ -31,35 +31,6 @@ func Debug(id string) (compton.PageElement, error) {
 				return nil, err
 			}
 		}
-	}
-
-	p := compton.Page(pageTitle)
-	p.RegisterStyles(compton_styles.Styles, "debug.css")
-
-	pageStack := compton.FlexItems(p, direction.Column)
-	p.Append(pageStack)
-
-	pageStack.Append(compton.FICenter(p, compton.H1Text(pageTitle)))
-
-	for _, pt := range localProducts {
-
-		if !kvs[pt].Has(id) {
-			continue
-		}
-
-		//summaryHeading := compton.DSTitle(p, compton_data.TypesTitles[pt.String()])
-
-		ds := compton.DSLarge(p, compton_data.TypesTitles[pt.String()], false).BackgroundColor(color.Highlight)
-		pageStack.Append(ds)
-
-		//subtitleFspan := compton.Fspan(p, pt.String()).
-		//	FontSize(size.Small).
-		//	BackgroundColor(color.Background)
-		ds.SetLabelText(pt.String())
-
-		iframe := compton.IframeExpandHost(p, pt.String(), "/debug-data?id="+id+"&product-type="+pt.String())
-		ds.Append(iframe)
-
 	}
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -75,11 +46,45 @@ func Debug(id string) (compton.PageElement, error) {
 		return nil, err
 	}
 
-	//reduxHeading := compton.DSTitle(p, "Redux")
+	var productTitle string
+	if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok && title != "" {
+		productTitle = title
+	} else {
+		productTitle = "[" + id + " title not found]"
+	}
 
-	reduxDs := compton.DSLarge(p, "Redux", false).
-		BackgroundColor(color.Foreground).
-		ForegroundColor(color.Background)
+	p := compton.Page(productTitle)
+	p.RegisterStyles(compton_styles.Styles, "debug.css")
+
+	pageStack := compton.FlexItems(p, direction.Column)
+	p.Append(pageStack)
+
+	pageStack.Append(compton.FICenter(p, compton.H1Text(productTitle)))
+	pageStack.Append(compton.FICenter(p, compton.Text("Id: "+id)))
+
+	for _, pt := range sortedLocalProducts {
+		if pt == vangogh_integration.UnknownProductType {
+			continue
+		}
+
+		if !kvs[pt].Has(id) {
+			continue
+		}
+
+		ds := compton.DSLarge(p, compton_data.TypesTitles[pt.String()], false).BackgroundColor(color.Highlight)
+		pageStack.Append(ds)
+
+		//subtitleFspan := compton.Fspan(p, pt.String()).
+		//	FontSize(size.Small).
+		//	BackgroundColor(color.Background)
+		ds.SetLabelText(pt.String())
+
+		iframe := compton.IframeExpandHost(p, pt.String(), "/debug-data?id="+id+"&product-type="+pt.String())
+		ds.Append(iframe)
+
+	}
+
+	reduxDs := compton.DSLarge(p, "Redux", false).BackgroundColor(color.Highlight)
 	pageStack.Append(reduxDs)
 
 	reduxStack := compton.FlexItems(p, direction.Column)

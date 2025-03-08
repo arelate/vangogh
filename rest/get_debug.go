@@ -13,7 +13,7 @@ func GetDebug(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 
 	if debugPage, err := compton_pages.Debug(id); err == nil && debugPage != nil {
-		if err := debugPage.WriteResponse(w); err != nil {
+		if err = debugPage.WriteResponse(w); err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 			return
 		}
@@ -23,5 +23,4 @@ func GetDebug(w http.ResponseWriter, r *http.Request) {
 	} else {
 		http.NotFound(w, r)
 	}
-
 }
