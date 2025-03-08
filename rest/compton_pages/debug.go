@@ -13,7 +13,7 @@ import (
 	"slices"
 )
 
-func Debug(id string) (compton.PageElement, error) {
+func Debug(gogId string) (compton.PageElement, error) {
 
 	localProducts := vangogh_integration.AllProductTypes()
 	sortedLocalProducts := slices.Sorted(localProducts)
@@ -54,10 +54,10 @@ func Debug(id string) (compton.PageElement, error) {
 	}
 
 	var productTitle string
-	if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok && title != "" {
+	if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, gogId); ok && title != "" {
 		productTitle = title
 	} else {
-		productTitle = "[" + id + " title not found]"
+		productTitle = "[GOG Id " + gogId + " title not found]"
 	}
 
 	p := compton.Page(productTitle)
@@ -67,28 +67,102 @@ func Debug(id string) (compton.PageElement, error) {
 	p.Append(pageStack)
 
 	pageStack.Append(compton.FICenter(p, compton.H1Text(productTitle)))
-	pageStack.Append(compton.FICenter(p, compton.Text("Id: "+id)))
 
-	for _, pt := range sortedLocalProducts {
-		if pt == vangogh_integration.UnknownProductType {
+	idsFrow := compton.Frow(p)
+	pageStack.Append(compton.FICenter(p, idsFrow))
+
+	idsFrow.Heading("Platform Ids")
+	idsFrow.PropVal("GOG", gogId)
+
+	var steamAppId string
+	if sai, ok := rdx.GetLastVal(vangogh_integration.SteamAppIdProperty, gogId); ok {
+		steamAppId = sai
+	}
+
+	if steamAppId != "" {
+		idsFrow.PropVal("Steam", steamAppId)
+	}
+
+	var pcgwPageId string
+	if pid, ok := rdx.GetLastVal(vangogh_integration.PcgwPageIdProperty, gogId); ok {
+		pcgwPageId = pid
+	}
+
+	if pcgwPageId != "" {
+		idsFrow.PropVal("PCGW", pcgwPageId)
+	}
+
+	var hltbId string
+	if hid, ok := rdx.GetLastVal(vangogh_integration.HltbIdProperty, gogId); ok {
+		hltbId = hid
+	}
+
+	if hltbId != "" {
+		idsFrow.PropVal("HLTB", hltbId)
+	}
+
+	gogProductTypes := []vangogh_integration.ProductType{
+		vangogh_integration.ApiProducts,
+		vangogh_integration.Details,
+		vangogh_integration.GamesDbGogProducts,
+		vangogh_integration.PcgwGogPageId,
+	}
+
+	for _, pt := range gogProductTypes {
+		if !kvs[pt].Has(gogId) {
 			continue
 		}
 
-		if !kvs[pt].Has(id) {
+		if ds := productTypeSection(p, gogId, pt); ds != nil {
+			pageStack.Append(ds)
+		}
+	}
+
+	steamProductTypes := []vangogh_integration.ProductType{
+		vangogh_integration.SteamAppDetails,
+		vangogh_integration.SteamAppNews,
+		vangogh_integration.SteamAppReviews,
+		vangogh_integration.SteamDeckCompatibilityReport,
+		vangogh_integration.PcgwSteamPageId,
+	}
+
+	for _, pt := range steamProductTypes {
+		if !kvs[pt].Has(steamAppId) {
 			continue
 		}
 
-		ds := compton.DSLarge(p, compton_data.TypesTitles[pt.String()], false).BackgroundColor(color.Highlight)
-		pageStack.Append(ds)
+		if ds := productTypeSection(p, steamAppId, pt); ds != nil {
+			pageStack.Append(ds)
+		}
+	}
 
-		//subtitleFspan := compton.Fspan(p, pt.String()).
-		//	FontSize(size.Small).
-		//	BackgroundColor(color.Background)
-		ds.SetLabelText(pt.String())
+	pcgwProductTypes := []vangogh_integration.ProductType{
+		vangogh_integration.PcgwEngine,
+		vangogh_integration.PcgwExternalLinks,
+	}
 
-		iframe := compton.IframeExpandHost(p, pt.String(), "/debug-data?id="+id+"&product-type="+pt.String())
-		ds.Append(iframe)
+	for _, pt := range pcgwProductTypes {
+		if !kvs[pt].Has(pcgwPageId) {
+			continue
+		}
 
+		if ds := productTypeSection(p, pcgwPageId, pt); ds != nil {
+			pageStack.Append(ds)
+		}
+	}
+
+	hltbProductTypes := []vangogh_integration.ProductType{
+		vangogh_integration.HltbData,
+	}
+
+	for _, pt := range hltbProductTypes {
+		if !kvs[pt].Has(hltbId) {
+			continue
+		}
+
+		if ds := productTypeSection(p, hltbId, pt); ds != nil {
+			pageStack.Append(ds)
+		}
 	}
 
 	reduxDs := compton.DSLarge(p, "Redux", false).BackgroundColor(color.Highlight)
@@ -99,9 +173,7 @@ func Debug(id string) (compton.PageElement, error) {
 	reduxDs.Append(compton.FICenter(p, reduxStack))
 
 	for _, property := range reduxProperties {
-		if values, ok := rdx.GetAllValues(property, id); ok {
-
-			//propertyHeading := compton.Fspan(p, property).FontSize(size.Normal)
+		if values, ok := rdx.GetAllValues(property, gogId); ok {
 
 			open := !slices.Contains(vangogh_integration.LongTextProperties(), property) &&
 				!slices.Contains(vangogh_integration.DehydratedImagesProperties(), property)
@@ -120,4 +192,15 @@ func Debug(id string) (compton.PageElement, error) {
 	}
 
 	return p, nil
+}
+
+func productTypeSection(r compton.Registrar, id string, pt vangogh_integration.ProductType) compton.Element {
+	ds := compton.DSLarge(r, compton_data.TypesTitles[pt.String()], false).BackgroundColor(color.Highlight)
+
+	ds.SetLabelText(pt.String())
+
+	iframe := compton.IframeExpandHost(r, pt.String(), "/debug-data?id="+id+"&product-type="+pt.String())
+	ds.Append(iframe)
+
+	return ds
 }

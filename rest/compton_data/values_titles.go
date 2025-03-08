@@ -19,6 +19,7 @@ var TypesTitles = map[string]string{
 	vangogh_integration.PcgwExternalLinks.String():            "PCGamingWiki External Links",
 	vangogh_integration.PcgwSteamPageId.String():              "PCGamingWiki Steam PageId",
 	vangogh_integration.PcgwGogPageId.String():                "PCGamingWiki GOG PageId",
+	vangogh_integration.SteamAppDetails.String():              "Steam App Details",
 	vangogh_integration.SteamAppNews.String():                 "Steam App News",
 	vangogh_integration.SteamAppReviews.String():              "Steam Reviews",
 	vangogh_integration.ProtonDbSummary.String():              "ProtonDB Summary",
