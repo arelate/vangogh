@@ -16,9 +16,26 @@ func InitReductions(properties ...string) PropertyIdValues {
 
 func WriteReductions(rdx redux.Writeable, piv PropertyIdValues) error {
 	for property, keyValues := range piv {
-		if err := rdx.BatchReplaceValues(property, keyValues); err != nil {
+		fkvs := filterEmptyValues(keyValues)
+		if err := rdx.BatchReplaceValues(property, fkvs); err != nil {
 			return err
 		}
 	}
 	return nil
+}
+
+func filterEmptyValues(kv map[string][]string) map[string][]string {
+	fkv := make(map[string][]string)
+	for key, values := range kv {
+		fvs := make([]string, 0, len(values))
+		for _, val := range values {
+			if val != "" {
+				fvs = append(fvs, val)
+			}
+		}
+		if len(fvs) > 0 {
+			fkv[key] = fvs
+		}
+	}
+	return fkv
 }
