@@ -82,4 +82,5 @@ var PropertyTitles = map[string]string{
 	GauginWineHQUrlProperty:       "WineHQ",
 	GauginVNDBUrlProperty:         "VNDB",
 	GauginIGNWikiUrlProperty:      "IGN Wiki",
+	GauginWebsiteUrlProperty:      "Website",
 }

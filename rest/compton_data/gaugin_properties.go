@@ -18,4 +18,5 @@ const (
 	GauginWineHQUrlProperty       = "winehq-url"
 	GauginVNDBUrlProperty         = "vndb-url"
 	GauginIGNWikiUrlProperty      = "ign-wiki-url"
+	GauginWebsiteUrlProperty      = "website"
 )

@@ -72,6 +72,11 @@ func externalLinks(id string, rdx redux.Readable) map[string][]string {
 	links[compton_data.GauginOtherLinksProperty] = append(links[compton_data.GauginOtherLinksProperty],
 		fmt.Sprintf("%s=%s", compton_data.GauginGOGDBUrlProperty, gogdb_integration.GOGDBUrl(id)))
 
+	if website, ok := rdx.GetLastVal(vangogh_integration.WebsiteProperty, id); ok && website != "" {
+		links[compton_data.GauginOtherLinksProperty] = append(links[compton_data.GauginOtherLinksProperty],
+			fmt.Sprintf("%s=%s", compton_data.GauginWebsiteUrlProperty, website))
+	}
+
 	otherLink(links,
 		vangogh_integration.PcgwPageIdProperty,
 		compton_data.GauginPCGamingWikiUrlProperty,
