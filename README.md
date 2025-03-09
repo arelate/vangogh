@@ -2,9 +2,9 @@
 
 Backend microservice to sync and serve metadata, images from GOG.com. Can be used as a CLI app or a web service that provides a frontend to browse, search that data.
 
-| Dark theme                                      | Light theme                                       |
-|-------------------------------------------------|---------------------------------------------------|
-| ![List Dark](github_images/list-dark.jpeg)      | ![List Light](github_images/list-light.jpeg)       |
+| Dark theme                                       | Light theme                                        |
+|--------------------------------------------------|----------------------------------------------------|
+| ![List Dark](github_images/list-dark.jpeg)       | ![List Light](github_images/list-light.jpeg)       |
 | ![Product Dark](github_images/product-dark.jpeg) | ![Product Light](github_images/product-light.jpeg) |
 
 
