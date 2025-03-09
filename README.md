@@ -4,8 +4,8 @@ Backend microservice to sync and serve metadata, images from GOG.com. Can be use
 
 | Dark theme                                      | Light theme                                       |
 |-------------------------------------------------|---------------------------------------------------|
-| ![List Dark](github_images/list-dark.png)       | ![List Light](github_images/list-light.png)       |
-| ![Product Dark](github_images/product-dark.png) | ![Product Light](github_images/product-light.png) |
+| ![List Dark](github_images/list-dark.jpeg)      | ![List Light](github_images/list-light.jpeg)       |
+| ![Product Dark](github_images/product-dark.jpeg) | ![Product Light](github_images/product-light.jpeg) |
 
 
 
