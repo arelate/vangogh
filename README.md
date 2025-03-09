@@ -2,6 +2,13 @@
 
 Backend microservice to sync and serve metadata, images from GOG.com. Can be used as a CLI app or a web service that provides a frontend to browse, search that data.
 
+| Dark theme                                      | Light theme                                       |
+|-------------------------------------------------|---------------------------------------------------|
+| ![List Dark](github_images/list-dark.png)       | ![List Light](github_images/list-light.png)       |
+| ![Product Dark](github_images/product-dark.png) | ![Product Light](github_images/product-light.png) |
+
+
+
 ## Installation
 
 The recommended way to install `vangogh` is with docker-compose:
