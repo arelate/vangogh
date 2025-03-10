@@ -1,6 +1,7 @@
 package shared_data
 
 import (
+	"fmt"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
@@ -28,11 +29,31 @@ func ReduceOwned() error {
 
 	owned := make(map[string][]string)
 
+	// set all included products as owned
 	for id := range rdx.Keys(vangogh_integration.LicencesProperty) {
 		owned[id] = []string{vangogh_integration.TrueValue}
-		if includesGames, sure := rdx.GetAllValues(vangogh_integration.IncludesGamesProperty, id); sure {
+		if includesGames, ok := rdx.GetAllValues(vangogh_integration.IncludesGamesProperty, id); ok {
 			for _, igId := range includesGames {
 				owned[igId] = []string{vangogh_integration.TrueValue}
+			}
+		}
+	}
+
+	// set all PACKs as owned when all included products are owned
+	for id := range rdx.Keys(vangogh_integration.IncludesGamesProperty) {
+		if id == "1178727668" {
+			fmt.Println("1178727668")
+		}
+		if includesGames, ok := rdx.GetAllValues(vangogh_integration.IncludesGamesProperty, id); ok {
+			includedGamesOwned := true
+			for _, igId := range includesGames {
+				if !rdx.HasKey(vangogh_integration.LicencesProperty, igId) {
+					includedGamesOwned = false
+					break
+				}
+			}
+			if includedGamesOwned {
+				owned[id] = []string{vangogh_integration.TrueValue}
 			}
 		}
 	}
