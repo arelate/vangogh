@@ -41,7 +41,7 @@ func ReduceOwned() error {
 	// set all PACKs as owned when all included products are owned
 	for id := range rdx.Keys(vangogh_integration.IncludesGamesProperty) {
 		if includesGames, ok := rdx.GetAllValues(vangogh_integration.IncludesGamesProperty, id); ok {
-			includedGamesOwned := true
+			includedGamesOwned := len(includesGames) > 0
 			for _, igId := range includesGames {
 				if !rdx.HasKey(vangogh_integration.LicencesProperty, igId) {
 					includedGamesOwned = false
