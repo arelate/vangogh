@@ -9,8 +9,8 @@ images
 input
     # cookies.txt, skiplist.txt
     /var/lib/vangogh
-items
-    /var/lib/vangogh/items
+description_images
+    /var/lib/vangogh/description_images
 logs
     # logs
     /var/lib/vangogh/logs

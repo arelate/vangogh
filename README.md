@@ -45,8 +45,8 @@ services:
       - /docker/vangogh/images:/var/lib/vangogh/images
       # input (hot storage)
       - /docker/vangogh:/var/lib/vangogh/input
-      # items (hot storage)
-      - /docker/vangogh/items:/var/lib/vangogh/items
+      # description_images (hot storage)
+      - /docker/vangogh/description_images:/var/lib/vangogh/description_images
       # logs (cold storage)
       - /docker/vangogh/logs:/var/lib/vangogh/logs
       # metadata (hot storage)

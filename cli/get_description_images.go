@@ -6,6 +6,8 @@ import (
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"net/url"
+	"os"
+	"path/filepath"
 )
 
 func GetDescriptionImagesHandler(u *url.URL) error {
@@ -37,8 +39,6 @@ func GetDescriptionImages(ids []string, since int64, force bool) error {
 		return err
 	}
 
-	dc := dolo.DefaultClient
-
 	apiProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.ApiProducts)
 	if err != nil {
 		return err
@@ -60,37 +60,26 @@ func GetDescriptionImages(ids []string, since int64, force bool) error {
 
 	for _, id := range ids {
 
-		var items []string
+		var descriptionImages []string
 
 		descOverview, ok := rdx.GetLastVal(vangogh_integration.DescriptionOverviewProperty, id)
 		if ok {
-			items = vangogh_integration.ExtractDescItems(descOverview)
+			descriptionImages = vangogh_integration.ExtractDescItems(descOverview)
 		}
 
 		descFeatures, ok := rdx.GetLastVal(vangogh_integration.DescriptionFeaturesProperty, id)
 		if ok {
-			items = append(items, vangogh_integration.ExtractDescItems(descFeatures)...)
+			descriptionImages = append(descriptionImages, vangogh_integration.ExtractDescItems(descFeatures)...)
 		}
 
-		if len(items) < 1 {
+		if len(descriptionImages) == 0 {
 			gdia.Increment()
 			continue
 		}
 
-		for _, itemUrl := range items {
-			if u, err := url.Parse(itemUrl); err == nil {
-				dia := nod.NewProgress(" %s", u.Path)
-
-				aip, err := vangogh_integration.AbsItemPath(u.Path)
-				if err != nil {
-					return err
-				}
-
-				if err = dc.Download(u, force, dia, aip); err != nil {
-					return err
-				}
-
-				dia.Done()
+		for _, descriptionImageUrl := range descriptionImages {
+			if err = getDescriptionImage(descriptionImageUrl, force); err != nil {
+				return err
 			}
 		}
 
@@ -98,4 +87,31 @@ func GetDescriptionImages(ids []string, since int64, force bool) error {
 	}
 
 	return nil
+}
+
+func getDescriptionImage(descriptionImageUrl string, force bool) error {
+
+	diu, err := url.Parse(descriptionImageUrl)
+	if err != nil {
+		return err
+	}
+
+	gdia := nod.NewProgress(" - %s", diu.Path)
+	defer gdia.Done()
+
+	adip, err := vangogh_integration.AbsDescriptionImagePath(diu.Path)
+	if err != nil {
+		return err
+	}
+
+	adiDir, _ := filepath.Split(adip)
+	if _, err = os.Stat(adiDir); os.IsNotExist(err) {
+		if err = os.MkdirAll(adiDir, 0755); err != nil {
+			return err
+		}
+	}
+
+	dc := dolo.DefaultClient
+
+	return dc.Download(diu, force, gdia, adip)
 }

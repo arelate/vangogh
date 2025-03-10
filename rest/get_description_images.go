@@ -8,17 +8,17 @@ import (
 	"path/filepath"
 )
 
-func GetItems(w http.ResponseWriter, r *http.Request) {
+func GetDescriptionImages(w http.ResponseWriter, r *http.Request) {
 
-	// GET /items/{rel-local-path}
+	// GET /description-images/{rel-local-path}
 
-	localPath, err := filepath.Rel("/items/", r.URL.Path)
+	localPath, err := filepath.Rel("/description-images/", r.URL.Path)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusMisdirectedRequest)
 		return
 	}
 
-	if absLocalFilePath, err := vangogh_integration.AbsItemPath(localPath); err == nil && absLocalFilePath != "" {
+	if absLocalFilePath, err := vangogh_integration.AbsDescriptionImagePath(localPath); err == nil && absLocalFilePath != "" {
 		http.ServeFile(w, r, absLocalFilePath)
 	} else {
 		if err == nil {

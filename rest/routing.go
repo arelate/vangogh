@@ -35,8 +35,8 @@ func HandleFuncs() {
 		"GET /steam-reviews":  Log(http.HandlerFunc(GetSteamReviews)),
 		"GET /steam-deck":     Log(http.HandlerFunc(GetSteamDeck)),
 		// unauth media endpoints
-		"GET /image":  Log(http.HandlerFunc(GetImage)),
-		"GET /items/": Log(http.HandlerFunc(GetItems)),
+		"GET /image":               Log(http.HandlerFunc(GetImage)),
+		"GET /description-images/": Log(http.HandlerFunc(GetDescriptionImages)),
 		// auth data endpoints
 		"GET /wishlist/add":     Auth(Log(http.HandlerFunc(GetWishlistAdd)), AdminRole),
 		"GET /wishlist/remove":  Auth(Log(http.HandlerFunc(GetWishlistRemove)), AdminRole),

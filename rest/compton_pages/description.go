@@ -31,7 +31,7 @@ func Description(id string, rdx redux.Readable) compton.PageElement {
 			TextAlign(align.Center)
 		descriptionDiv.Append(compton.FICenter(s, fs))
 	} else {
-		desc = rewriteItemsLinks(desc)
+		desc = rewriteDescriptionImagesLinks(desc)
 		desc = rewriteGameLinks(desc)
 		desc = rewriteLinksAsTargetTop(desc)
 		desc = fixQuotes(desc)
@@ -74,7 +74,7 @@ func Description(id string, rdx redux.Readable) compton.PageElement {
 	return s
 }
 
-func rewriteItemsLinks(desc string) string {
+func rewriteDescriptionImagesLinks(desc string) string {
 
 	itemsUrls := vangogh_integration.ExtractDescItems(desc)
 
@@ -82,7 +82,7 @@ func rewriteItemsLinks(desc string) string {
 		if u, err := url.Parse(itemUrl); err != nil {
 			continue
 		} else {
-			ggUrl := "/items" + u.Path
+			ggUrl := "/description-images" + u.Path
 			desc = strings.Replace(desc, itemUrl, ggUrl, -1)
 		}
 	}

@@ -30,8 +30,8 @@ VOLUME /var/lib/vangogh/checksums
 VOLUME /var/lib/vangogh/images
 # input (hot storage)
 VOLUME /var/lib/vangogh/input
-# items (hot storage)
-VOLUME /var/lib/vangogh/items
+# description_images (hot storage)
+VOLUME /var/lib/vangogh/description_images
 # logs (cold storage)
 VOLUME /var/log/vangogh
 # metadata (hot storage)
