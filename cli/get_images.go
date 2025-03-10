@@ -8,7 +8,7 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/redux"
 	"net/url"
-	"path/filepath"
+	"os"
 	"strings"
 )
 
@@ -21,16 +21,14 @@ func GetImagesHandler(u *url.URL) error {
 	return GetImages(
 		ids,
 		vangogh_integration.ImageTypesFromUrl(u),
-		vangogh_integration.FlagFromUrl(u, "missing"))
+		vangogh_integration.FlagFromUrl(u, "missing"),
+		u.Query().Has("force"))
 }
 
 // GetImages fetches remote images for a given type (box-art, screenshots, background, etc.).
 // If requested it can check locally present files and download all missing (used in data files,
 // but not present locally) images for a given type.
-func GetImages(
-	ids []string,
-	its []vangogh_integration.ImageType,
-	missing bool) error {
+func GetImages(ids []string, its []vangogh_integration.ImageType, missing, force bool) error {
 
 	gia := nod.NewProgress("getting images...")
 	defer gia.Done()
@@ -85,9 +83,6 @@ func GetImages(
 
 	for id, missingIts := range idMissingTypes {
 
-		//for every product collect all image URLs and all corresponding local filenames
-		//to pass to dolo.GetSet, that'll concurrently download all required product images
-
 		title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
 		if !ok {
 			title = id
@@ -95,11 +90,6 @@ func GetImages(
 
 		mita := nod.NewProgress("%s %s", id, title)
 		missingImageTypes := map[vangogh_integration.ImageType]bool{}
-
-		//sensible assumption - we'll have at least as many URLs and filenames
-		//as types of images we're missing
-		urls := make([]*url.URL, 0, len(missingIts))
-		filenames := make([]string, 0, len(missingIts))
 
 		for _, it := range missingIts {
 
@@ -115,24 +105,10 @@ func GetImages(
 				return err
 			}
 
-			urls = append(urls, srcUrls...)
-
 			for _, srcUrl := range srcUrls {
-				dstDir, err := vangogh_integration.AbsImagesDirByImageId(srcUrl.Path)
-				if err != nil {
+				if err = getImage(srcUrl, force); err != nil {
 					return err
 				}
-				filenames = append(filenames, filepath.Join(dstDir, srcUrl.Path))
-			}
-		}
-
-		imagesIndexSetter := dolo.NewFileIndexSetter(filenames)
-
-		//using http.DefaultClient as no image types require authentication
-		//(this might change in the future)
-		if errs := dolo.DefaultClient.GetSet(urls, imagesIndexSetter, mita, false); len(errs) > 0 {
-			for ui, e := range errs {
-				mita.Error(fmt.Errorf("GetSet %s error: %s", urls[ui], e.Error()))
 			}
 		}
 
@@ -176,4 +152,25 @@ func imageTypesReduxAssets(otherProperties []string, its []vangogh_integration.I
 	}
 
 	return vangogh_integration.NewReduxWriter(properties...)
+}
+
+func getImage(imageUrl *url.URL, force bool) error {
+
+	gia := nod.NewProgress(" %s...", imageUrl.Path)
+	defer gia.Done()
+
+	dstImageDir, err := vangogh_integration.AbsImagesDirByImageId(imageUrl.Path)
+	if err != nil {
+		return err
+	}
+
+	if _, err = os.Stat(dstImageDir); os.IsNotExist(err) {
+		if err = os.MkdirAll(dstImageDir, 0755); err != nil {
+			return err
+		}
+	}
+
+	dc := dolo.DefaultClient
+
+	return dc.Download(imageUrl, force, gia, dstImageDir)
 }
