@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"fmt"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/kevlar"
@@ -20,12 +19,12 @@ func GetDescriptionImagesHandler(u *url.URL) error {
 		return err
 	}
 
-	return GetDescriptionImages(ids, since)
+	force := u.Query().Has("force")
+
+	return GetDescriptionImages(ids, since, force)
 }
 
-func GetDescriptionImages(
-	ids []string,
-	since int64) error {
+func GetDescriptionImages(ids []string, since int64, force bool) error {
 
 	gdia := nod.NewProgress("getting description images...")
 	defer gdia.Done()
@@ -38,7 +37,7 @@ func GetDescriptionImages(
 		return err
 	}
 
-	dl := dolo.DefaultClient
+	dc := dolo.DefaultClient
 
 	apiProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.ApiProducts)
 	if err != nil {
@@ -61,13 +60,6 @@ func GetDescriptionImages(
 
 	for _, id := range ids {
 
-		title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
-		if !ok {
-			gdia.Log("%s has no title", id)
-			gdia.Increment()
-			continue
-		}
-
 		var items []string
 
 		descOverview, ok := rdx.GetLastVal(vangogh_integration.DescriptionOverviewProperty, id)
@@ -85,32 +77,24 @@ func GetDescriptionImages(
 			continue
 		}
 
-		dia := nod.NewProgress(" %s %s", id, title)
-		dia.TotalInt(len(items))
-
-		urls := make([]*url.URL, 0, len(items))
-		filenames := make([]string, 0, len(items))
-
 		for _, itemUrl := range items {
 			if u, err := url.Parse(itemUrl); err == nil {
-				urls = append(urls, u)
+				dia := nod.NewProgress(" %s", u.Path)
+
 				aip, err := vangogh_integration.AbsItemPath(u.Path)
 				if err != nil {
 					return err
 				}
-				filenames = append(filenames, aip)
-			}
-		}
 
-		if errs := dl.GetSet(urls, dolo.NewFileIndexSetter(filenames), dia, false); len(errs) > 0 {
-			for ui, e := range errs {
-				dia.Error(fmt.Errorf("GetSet %s error: %s", urls[ui], e.Error()))
+				if err = dc.Download(u, force, dia, aip); err != nil {
+					return err
+				}
+
+				dia.Done()
 			}
-			continue
 		}
 
 		gdia.Increment()
-		dia.Done()
 	}
 
 	return nil
