@@ -7,31 +7,12 @@ import (
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
-	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 	"slices"
 )
 
 func Debug(gogId string) (compton.PageElement, error) {
-
-	localProducts := vangogh_integration.AllProductTypes()
-	sortedLocalProducts := slices.Sorted(localProducts)
-
-	kvs := make(map[vangogh_integration.ProductType]kevlar.KeyValues, len(sortedLocalProducts))
-
-	for _, pt := range sortedLocalProducts {
-		if pt == vangogh_integration.UnknownProductType {
-			continue
-		}
-		if absPtDir, err := vangogh_integration.AbsProductTypeDir(pt); err != nil {
-			return nil, err
-		} else {
-			if kvs[pt], err = kevlar.New(absPtDir, kevlar.JsonExt); err != nil {
-				return nil, err
-			}
-		}
-	}
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {
@@ -58,6 +39,13 @@ func Debug(gogId string) (compton.PageElement, error) {
 		productTitle = title
 	} else {
 		productTitle = "[GOG Id " + gogId + " title not found]"
+	}
+
+	var productTypes []vangogh_integration.ProductType
+	if pts, ok := rdx.GetAllValues(vangogh_integration.TypesProperty, gogId); ok && len(pts) > 0 {
+		for _, pt := range pts {
+			productTypes = append(productTypes, vangogh_integration.ParseProductType(pt))
+		}
 	}
 
 	p := compton.Page(productTitle)
@@ -126,16 +114,16 @@ func Debug(gogId string) (compton.PageElement, error) {
 
 	for property, pt := range propertyProductType {
 
+		if !slices.Contains(productTypes, pt) {
+			continue
+		}
+
 		if page, ok := rdx.GetLastVal(property, gogId); ok && page != "" {
-
-			if !kvs[pt].Has(page) {
-				continue
-			}
-
 			if ds := productTypeSection(p, page, pt); ds != nil {
 				pageStack.Append(ds)
 			}
 		}
+
 	}
 
 	gogProductTypes := []vangogh_integration.ProductType{
@@ -146,7 +134,7 @@ func Debug(gogId string) (compton.PageElement, error) {
 	}
 
 	for _, pt := range gogProductTypes {
-		if !kvs[pt].Has(gogId) {
+		if !slices.Contains(productTypes, pt) {
 			continue
 		}
 
@@ -164,7 +152,7 @@ func Debug(gogId string) (compton.PageElement, error) {
 	}
 
 	for _, pt := range steamProductTypes {
-		if !kvs[pt].Has(steamAppId) {
+		if !slices.Contains(productTypes, pt) {
 			continue
 		}
 
@@ -179,7 +167,7 @@ func Debug(gogId string) (compton.PageElement, error) {
 	}
 
 	for _, pt := range pcgwProductTypes {
-		if !kvs[pt].Has(pcgwPageId) {
+		if !slices.Contains(productTypes, pt) {
 			continue
 		}
 
@@ -193,7 +181,7 @@ func Debug(gogId string) (compton.PageElement, error) {
 	}
 
 	for _, pt := range hltbProductTypes {
-		if !kvs[pt].Has(hltbId) {
+		if !slices.Contains(productTypes, pt) {
 			continue
 		}
 
@@ -207,7 +195,7 @@ func Debug(gogId string) (compton.PageElement, error) {
 	}
 
 	for _, pt := range protonDbProductTypes {
-		if !kvs[pt].Has(steamAppId) {
+		if !slices.Contains(productTypes, pt) {
 			continue
 		}
 
