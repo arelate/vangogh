@@ -51,6 +51,7 @@ get-images
     slug&
     missing
     image-type&*^={image-types}
+    force
 
 get-summary
 
