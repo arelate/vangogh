@@ -13,39 +13,18 @@ func InfoHandler(u *url.URL) error {
 		return err
 	}
 
-	return Info(
-		ids,
-		vangogh_integration.FlagFromUrl(u, "all-text"),
-		vangogh_integration.FlagFromUrl(u, "images"),
-		vangogh_integration.FlagFromUrl(u, "video-id"))
+	return Info(ids...)
 }
 
-func Info(ids []string, allText, images, videoId bool) error {
+func Info(ids ...string) error {
 
 	ia := nod.Begin("information:")
 	defer ia.Done()
 
 	propSet := map[string]bool{vangogh_integration.TypesProperty: true}
 
-	for _, p := range vangogh_integration.TextProperties() {
+	for _, p := range vangogh_integration.ReduxProperties() {
 		propSet[p] = true
-	}
-	if allText {
-		for _, p := range vangogh_integration.AllTextProperties() {
-			propSet[p] = true
-		}
-	}
-	if images {
-		imageProperties := vangogh_integration.ImageIdProperties()
-		imageProperties = append(imageProperties, vangogh_integration.DehydratedImagesProperties()...)
-		for _, p := range imageProperties {
-			propSet[p] = true
-		}
-	}
-	if videoId {
-		for _, p := range vangogh_integration.VideoProperties() {
-			propSet[p] = true
-		}
 	}
 
 	rdx, err := vangogh_integration.NewReduxReader(maps.Keys(propSet)...)

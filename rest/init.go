@@ -42,9 +42,6 @@ func SetPassword(role, p string) {
 func Init() error {
 
 	var err error
-	properties := vangogh_integration.AllProperties()
-	//used by get_downloads
-	//properties = append(properties, vangogh_integration.NativeLanguageNameProperty)
-	rdx, err = vangogh_integration.NewReduxReader(properties...)
+	rdx, err = vangogh_integration.NewReduxReader(vangogh_integration.ReduxProperties()...)
 	return err
 }

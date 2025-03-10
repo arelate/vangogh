@@ -65,13 +65,10 @@ health
 info
     id^&
     slug&
-    all-text
-    images
-    video-id
 
 list
     product-type^*={all-product-types}
-    property&={all-properties}
+    property&={redux-properties}
     since-hours-ago
 
 local-tag

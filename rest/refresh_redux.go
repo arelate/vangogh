@@ -6,7 +6,7 @@ func RefreshRedux() (err error) {
 	if rdx, err = rdx.RefreshReader(); err != nil {
 		return err
 	}
-	if err := rdx.MustHave(vangogh_integration.AllProperties()...); err != nil {
+	if err = rdx.MustHave(vangogh_integration.ReduxProperties()...); err != nil {
 		return err
 	}
 	return err

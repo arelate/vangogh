@@ -5,8 +5,10 @@ import (
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_styles"
 	"github.com/boggydigital/compton"
+	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
+	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 	"slices"
@@ -211,20 +213,51 @@ func Debug(gogId string) (compton.PageElement, error) {
 	reduxStack.AddClass("redux-data")
 	reduxDs.Append(compton.FICenter(p, reduxStack))
 
+	closedProperties := []string{
+		vangogh_integration.DescriptionOverviewProperty,
+		vangogh_integration.DescriptionFeaturesProperty,
+		vangogh_integration.AdditionalRequirementsProperty,
+		vangogh_integration.CopyrightsProperty,
+		vangogh_integration.DehydratedImageProperty,
+		vangogh_integration.DehydratedVerticalImageProperty,
+		vangogh_integration.StoreTagsProperty,
+		vangogh_integration.ScreenshotsProperty,
+		vangogh_integration.TypesProperty,
+		vangogh_integration.HltbPlatformsProperty,
+		vangogh_integration.ShortDescriptionProperty,
+		vangogh_integration.SteamCategoriesProperty,
+		vangogh_integration.ThemesProperty,
+	}
+
+	propertySources := make(map[string][]string)
+	for pt, properties := range vangogh_integration.ProductTypeProperties {
+		for _, property := range properties {
+			propertySources[property] = append(propertySources[property], compton_data.TypesTitles[pt.String()])
+		}
+	}
+
 	for _, property := range reduxProperties {
 		if values, ok := rdx.GetAllValues(property, gogId); ok {
 
-			open := !slices.Contains(vangogh_integration.LongTextProperties(), property) &&
-				!slices.Contains(vangogh_integration.DehydratedImagesProperties(), property)
+			open := !slices.Contains(closedProperties, property)
 
 			ds := compton.DSSmall(p, property, open)
+
+			dsStack := compton.FlexItems(p, direction.Column).AlignItems(align.Start)
+			ds.Append(dsStack)
+
+			if len(propertySources[property]) > 0 {
+				sourcesFrow := compton.Frow(p).FontSize(size.Small)
+				sourcesFrow.PropVal("Sources", propertySources[property]...)
+				dsStack.Append(sourcesFrow)
+			}
 
 			ul := compton.Ul()
 			for _, value := range values {
 				ul.Append(compton.ListItemText(value))
 			}
 
-			ds.Append(ul)
+			dsStack.Append(ul)
 
 			reduxStack.Append(ds)
 		}

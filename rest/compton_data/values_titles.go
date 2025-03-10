@@ -8,6 +8,8 @@ var BinaryTitles = map[string]string{
 }
 
 var TypesTitles = map[string]string{
+	vangogh_integration.Licences.String():                     "Licences",
+	vangogh_integration.UserWishlist.String():                 "User Wishlist",
 	vangogh_integration.AccountPage.String():                  "Account Page",
 	vangogh_integration.ApiProducts.String():                  "API Products",
 	vangogh_integration.CatalogPage.String():                  "Catalog Page",
@@ -23,7 +25,6 @@ var TypesTitles = map[string]string{
 	vangogh_integration.SteamAppNews.String():                 "Steam App News",
 	vangogh_integration.SteamAppReviews.String():              "Steam Reviews",
 	vangogh_integration.ProtonDbSummary.String():              "ProtonDB Summary",
-	vangogh_integration.UserWishlistProducts.String():         "User Wishlist Products",
 	vangogh_integration.GamesDbGogProducts.String():           "GamesDB GOG Products",
 	vangogh_integration.SteamDeckCompatibilityReport.String(): "Steam Deck Compat Report",
 }

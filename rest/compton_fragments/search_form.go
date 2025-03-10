@@ -47,11 +47,6 @@ var binDatalist = map[string]string{
 	"false": "No",
 }
 
-var typesDigest = []vangogh_integration.ProductType{
-	vangogh_integration.AccountProducts,
-	vangogh_integration.CatalogProducts,
-}
-
 func stringerDatalist[T fmt.Stringer](items []T) map[string]string {
 	dl := make(map[string]string)
 	for _, item := range items {
@@ -59,10 +54,6 @@ func stringerDatalist[T fmt.Stringer](items []T) map[string]string {
 		dl[str] = compton_data.PropertyTitles[str]
 	}
 	return dl
-}
-
-func typesDatalist() map[string]string {
-	return stringerDatalist(typesDigest)
 }
 
 func operatingSystemsDatalist() map[string]string {
@@ -153,8 +144,6 @@ func searchInputs(r compton.Registrar, query map[string][]string, container comp
 			listId = "bin-list"
 		} else if slices.Contains(compton_data.DigestProperties, property) {
 			switch property {
-			case vangogh_integration.TypesProperty:
-				datalist = typesDatalist()
 			case vangogh_integration.OperatingSystemsProperty:
 				datalist = operatingSystemsDatalist()
 			case vangogh_integration.SortProperty:

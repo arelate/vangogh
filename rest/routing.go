@@ -55,7 +55,7 @@ func HandleFuncs() {
 		"GET /api/metadata":    Log(http.HandlerFunc(GetMetadata)),
 		// debug endpoints
 		"GET /debug":      Log(http.HandlerFunc(GetDebug)),
-		"GET /debug-data": Auth(Log(http.HandlerFunc(GetDebugData)), AdminRole),
+		"GET /debug-data": Auth(Log(http.HandlerFunc(GetDebugData)), AdminRole, SharedRole),
 		// start at the updates
 		"GET /": Redirect("/updates", http.StatusPermanentRedirect),
 	}
