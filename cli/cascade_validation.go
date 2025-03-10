@@ -17,7 +17,7 @@ func CascadeValidation() error {
 	defer cva.Done()
 
 	rdx, err := vangogh_integration.NewReduxWriter(
-		//vangogh_integration.OwnedProperty,
+		vangogh_integration.OwnedProperty,
 		vangogh_integration.IsRequiredByGamesProperty,
 		vangogh_integration.IsIncludedByGamesProperty,
 		vangogh_integration.ProductTypeProperty,

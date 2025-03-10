@@ -46,7 +46,6 @@ func Validate(
 
 	rdx, err := vangogh_integration.NewReduxWriter(
 		vangogh_integration.SlugProperty,
-		//vangogh_integration.NativeLanguageNameProperty,
 		vangogh_integration.LocalManualUrlProperty,
 		vangogh_integration.ManualUrlStatusProperty,
 		vangogh_integration.ManualUrlValidationResultProperty,
