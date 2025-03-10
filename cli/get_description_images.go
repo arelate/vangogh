@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func GetDescriptionImagesHandler(u *url.URL) error {
@@ -113,5 +114,13 @@ func getDescriptionImage(descriptionImageUrl string, force bool) error {
 
 	dc := dolo.DefaultClient
 
-	return dc.Download(diu, force, gdia, adip)
+	if err = dc.Download(diu, force, gdia, adip); err != nil {
+		if ext := filepath.Ext(adip); ext != "" && strings.Contains(err.Error(), "404") {
+			nod.Log(" - %s not found", gdia)
+			return nil
+		}
+		return err
+	}
+
+	return nil
 }
