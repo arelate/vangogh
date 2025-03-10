@@ -126,7 +126,7 @@ func Sync(
 
 	// get items (embedded into descriptions)
 	if syncOpts.items {
-		if err := GetItems(nil, since); err != nil {
+		if err := GetDescriptionImages(nil, since); err != nil {
 			return err
 		}
 	}

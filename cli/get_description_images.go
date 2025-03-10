@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/dolo"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"net/url"
 )
 
-func GetItemsHandler(u *url.URL) error {
+func GetDescriptionImagesHandler(u *url.URL) error {
 	since, err := vangogh_integration.SinceFromUrl(u)
 	if err != nil {
 		return nil
@@ -19,15 +20,15 @@ func GetItemsHandler(u *url.URL) error {
 		return err
 	}
 
-	return GetItems(ids, since)
+	return GetDescriptionImages(ids, since)
 }
 
-func GetItems(
+func GetDescriptionImages(
 	ids []string,
 	since int64) error {
 
-	gia := nod.NewProgress("getting description items...")
-	defer gia.Done()
+	gdia := nod.NewProgress("getting description images...")
+	defer gdia.Done()
 
 	rdx, err := vangogh_integration.NewReduxReader(
 		vangogh_integration.TitleProperty,
@@ -39,21 +40,31 @@ func GetItems(
 
 	dl := dolo.DefaultClient
 
-	// TODO: Revisit and reimplement this logic on the new data
-	//all, err := itemizations.All(ids, false, true, since, vangogh_integration.ApiProducts)
-	//if err != nil {
-	//	return err
-	//}
+	apiProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.ApiProducts)
+	if err != nil {
+		return err
+	}
 
-	all := make([]string, 0)
+	kvApiProducts, err := kevlar.New(apiProductsDir, kevlar.JsonExt)
+	if err != nil {
+		return err
+	}
 
-	gia.TotalInt(len(all))
+	if len(ids) == 0 {
+		newApiProducts := kvApiProducts.Since(since, kevlar.Create, kevlar.Update)
+		for id := range newApiProducts {
+			ids = append(ids, id)
+		}
+	}
 
-	for _, id := range all {
+	gdia.TotalInt(len(ids))
+
+	for _, id := range ids {
 
 		title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
 		if !ok {
-			gia.Log("%s has no title", id)
+			gdia.Log("%s has no title", id)
+			gdia.Increment()
 			continue
 		}
 
@@ -70,7 +81,7 @@ func GetItems(
 		}
 
 		if len(items) < 1 {
-			gia.Increment()
+			gdia.Increment()
 			continue
 		}
 
@@ -98,8 +109,8 @@ func GetItems(
 			continue
 		}
 
+		gdia.Increment()
 		dia.Done()
-		gia.Increment()
 	}
 
 	return nil

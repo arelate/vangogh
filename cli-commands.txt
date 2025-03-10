@@ -31,6 +31,10 @@ get-data
     since-hours-ago
     force
 
+get-description-images
+    id&
+    since-hours-ago
+
 get-downloads
     id^&
     slug&
@@ -46,10 +50,6 @@ get-images
     slug&
     missing
     image-type&*^={image-types}
-
-get-items
-    id&
-    since-hours-ago
 
 get-summary
 
