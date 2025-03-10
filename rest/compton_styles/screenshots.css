@@ -3,6 +3,6 @@ a {
 
     & img {
         width: 100%;
-        border-radius: var(--br-n);
+        border-radius: var(--s-xs);
     }
 }

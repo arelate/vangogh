@@ -6,7 +6,7 @@
     & img, video {
         margin: auto;
         max-width: 100%;
-        border-radius: var(--br-n);
+        border-radius: var(--s-xs);
         display: block
     }
 
@@ -24,7 +24,7 @@
         margin-top: var(--s-s);
         position: relative;
         background-color: var(--c-highlight);
-        border-radius: var(--br-n);
+        border-radius: var(--s-xs);
         font-weight: var(--fw-b);
         display: block
     }

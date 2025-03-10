@@ -227,6 +227,7 @@ func Debug(gogId string) (compton.PageElement, error) {
 		vangogh_integration.ShortDescriptionProperty,
 		vangogh_integration.SteamCategoriesProperty,
 		vangogh_integration.ThemesProperty,
+		vangogh_integration.ChangelogProperty,
 	}
 
 	propertySources := make(map[string][]string)
