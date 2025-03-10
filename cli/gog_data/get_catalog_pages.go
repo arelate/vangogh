@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"slices"
 	"strconv"
+	"strings"
 )
 
 const demoStoreTag = "Demo"
@@ -131,7 +132,11 @@ func reduceCatalogPage(page string, kvCatalogPages kevlar.KeyValues, piv shared_
 			case vangogh_integration.InDevelopmentProperty:
 				values = []string{strconv.FormatBool(cp.GetInDevelopment())}
 			case vangogh_integration.IsDemoProperty:
-				values = []string{strconv.FormatBool(slices.Contains(cp.GetStoreTags(), demoStoreTag))}
+				isDemo := slices.Contains(cp.GetStoreTags(), demoStoreTag)
+				if !isDemo {
+					isDemo = cp.IsFree() && strings.HasSuffix(strings.ToLower(cp.Title), "demo")
+				}
+				values = []string{strconv.FormatBool(isDemo)}
 			case vangogh_integration.EditionsProperty:
 				values = cp.GetEditions()
 			case vangogh_integration.CatalogPageProductsProperty:
