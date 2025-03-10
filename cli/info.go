@@ -3,8 +3,9 @@ package cli
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
-	"golang.org/x/exp/maps"
+	"maps"
 	"net/url"
+	"slices"
 )
 
 func InfoHandler(u *url.URL) error {
@@ -27,7 +28,9 @@ func Info(ids ...string) error {
 		propSet[p] = true
 	}
 
-	rdx, err := vangogh_integration.NewReduxReader(maps.Keys(propSet)...)
+	properties := slices.Collect(maps.Keys(propSet))
+
+	rdx, err := vangogh_integration.NewReduxReader(properties...)
 	if err != nil {
 		return err
 	}
@@ -35,7 +38,7 @@ func Info(ids ...string) error {
 	itp, err := vangogh_integration.PropertyListsFromIdSet(
 		ids,
 		nil,
-		maps.Keys(propSet),
+		properties,
 		rdx)
 
 	if err != nil {

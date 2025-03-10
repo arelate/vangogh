@@ -10,7 +10,7 @@ import (
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/redux"
-	"golang.org/x/exp/maps"
+	"maps"
 	"slices"
 	"strconv"
 	"strings"
@@ -238,9 +238,8 @@ func propertyTitleValues(r compton.Registrar, property string, fmtProperty forma
 				DetailsMarginBlockEnd(size.Small)
 			row := compton.FlexItems(r, direction.Row).
 				JustifyContent(align.Start)
-			keys := maps.Keys(fmtProperty.values)
-			slices.Sort(keys)
-			for _, link := range keys {
+			sortedKeys := slices.Sorted(maps.Keys(fmtProperty.values))
+			for _, link := range sortedKeys {
 				href := fmtProperty.values[link]
 				anchor := compton.AText(link, href)
 				anchor.SetAttribute("target", "_top")

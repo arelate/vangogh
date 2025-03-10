@@ -10,8 +10,8 @@ import (
 	"github.com/boggydigital/compton/consts/input_types"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/redux"
-	"golang.org/x/exp/maps"
 	"golang.org/x/net/html/atom"
+	"maps"
 	"slices"
 	"strings"
 )
@@ -96,7 +96,7 @@ func steamDeckDatalist() map[string]string {
 
 func languagesDatalist() map[string]string {
 	dl := make(map[string]string)
-	for _, lc := range maps.Keys(compton_data.LanguageTitles) {
+	for lc := range maps.Keys(compton_data.LanguageTitles) {
 		dl[lc] = compton_data.FormatLanguage(lc)
 	}
 	return dl

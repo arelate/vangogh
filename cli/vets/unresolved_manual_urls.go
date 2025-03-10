@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
-	"golang.org/x/exp/maps"
+	"maps"
+	"slices"
 )
 
 func UnresolvedManualUrls(
@@ -68,7 +69,7 @@ func UnresolvedManualUrls(
 	} else {
 
 		summary, err := vangogh_integration.PropertyListsFromIdSet(
-			maps.Keys(unresolvedIds),
+			slices.Collect(maps.Keys(unresolvedIds)),
 			nil,
 			[]string{vangogh_integration.TitleProperty},
 			rdx)

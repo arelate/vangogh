@@ -2,9 +2,9 @@ package rest
 
 import (
 	"github.com/arelate/vangogh/rest/compton_pages"
-	"golang.org/x/exp/maps"
+	"maps"
 	"net/http"
-	"sort"
+	"slices"
 	"strconv"
 	"time"
 
@@ -54,9 +54,6 @@ func GetUpdates(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	ids := maps.Keys(keys)
-	sort.Strings(ids)
-
 	updated := "recently"
 	if scs, ok := rdx.GetLastVal(vangogh_integration.SyncEventsProperty, vangogh_integration.SyncCompleteKey); ok {
 		if sci, err := strconv.ParseInt(scs, 10, 64); err == nil {
@@ -67,9 +64,9 @@ func GetUpdates(w http.ResponseWriter, r *http.Request) {
 	// section order will be based on full title ("new in ...", "updates in ...")
 	// so the order won't be changed after expanding titles
 	sections := maps.Keys(updates)
-	sort.Strings(sections)
+	sortedSections := slices.Sorted(sections)
 
-	updatesPage := compton_pages.Updates(sections, updates, updateTotals, updated, rdx)
+	updatesPage := compton_pages.Updates(sortedSections, updates, updateTotals, updated, rdx)
 	if err := updatesPage.WriteResponse(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}

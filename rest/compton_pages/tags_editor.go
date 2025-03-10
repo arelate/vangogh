@@ -14,7 +14,7 @@ import (
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/issa"
 	"github.com/boggydigital/redux"
-	"golang.org/x/exp/maps"
+	"maps"
 	"net/http"
 	"slices"
 	"strconv"
@@ -102,9 +102,9 @@ func TagsEditor(
 	swColumn.Append(conditionInput)
 
 	keys := maps.Keys(allValues)
-	slices.Sort(keys)
+	sortedKeys := slices.Sorted(keys)
 
-	for _, vid := range keys {
+	for _, vid := range sortedKeys {
 		label := allValues[vid]
 		_, has := selected[vid]
 		swColumn.Append(switchLabel(p, vid, label, has, !owned))

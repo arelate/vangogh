@@ -4,8 +4,9 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
-	"golang.org/x/exp/maps"
+	"maps"
 	"os"
+	"slices"
 )
 
 func LocalOnlyImages(fix bool) error {
@@ -26,7 +27,9 @@ func LocalOnlyImages(fix bool) error {
 		propSet[vangogh_integration.PropertyFromImageType(it)] = true
 	}
 
-	rdx, err := vangogh_integration.NewReduxReader(maps.Keys(propSet)...)
+	properties := slices.Collect(maps.Keys(propSet))
+
+	rdx, err := vangogh_integration.NewReduxReader(properties...)
 	if err != nil {
 		return err
 	}
