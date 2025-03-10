@@ -19,6 +19,8 @@ hr.subtle {
     border-color: var(--c-background)
 }
 
-/*hr.thick {*/
-/*    border-width: var(--s-xxs);*/
-/*}*/
+.operating-system-heading {
+    padding: var(--s-s);
+    border-radius: var(--s-xs);
+    --bg: var(--c-background);
+}
