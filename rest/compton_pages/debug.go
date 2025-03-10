@@ -264,6 +264,13 @@ func Debug(gogId string) (compton.PageElement, error) {
 		}
 	}
 
+	// get-data per-type errors
+
+	ds := compton.DSLarge(p, "Get Data Errors", false).BackgroundColor(color.Highlight)
+	iframe := compton.IframeExpandHost(p, "get-data-errors", "/debug-get-data-errors?id="+gogId)
+	ds.Append(iframe)
+	pageStack.Append(ds)
+
 	return p, nil
 }
 
