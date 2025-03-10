@@ -9,6 +9,7 @@ import (
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/kevlar"
 	"io"
+	"strings"
 )
 
 func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageElement, error) {
@@ -57,5 +58,10 @@ func formatJson(rc io.ReadCloser) (compton.Element, error) {
 		return nil, err
 	}
 
-	return compton.PreText(preBuf.String()), nil
+	jsonString := preBuf.String()
+
+	jsonString = strings.Replace(jsonString, "<", "&lt;", -1)
+	jsonString = strings.Replace(jsonString, ">", "&gt;", -1)
+
+	return compton.PreText(jsonString), nil
 }
