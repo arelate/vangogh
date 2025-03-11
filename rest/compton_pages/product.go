@@ -68,12 +68,16 @@ func Product(id string, rdx redux.Readable, hasSections []string) compton.PageEl
 	/* Product short description */
 
 	if shortDesc, yes := rdx.GetLastVal(vangogh_integration.ShortDescriptionProperty, id); yes {
+		oneLiner := compton.OneLiner(p)
+
 		shortDescFspan := compton.Fspan(p, shortDesc).
 			ForegroundColor(color.Gray).
 			FontSize(size.Small).
 			TextAlign(align.Center)
 		shortDescFspan.AddClass("short-description")
-		pageStack.Append(compton.FICenter(p, shortDescFspan))
+		oneLiner.Append(shortDescFspan)
+
+		pageStack.Append(compton.FICenter(p, oneLiner))
 	}
 
 	/* Product summary properties */
