@@ -4,8 +4,10 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/nod"
+	"maps"
 	"net/url"
 	"os"
+	"slices"
 )
 
 func UpdateDownloadsHandler(u *url.URL) error {
@@ -44,9 +46,7 @@ func UpdateDownloads(
 			return err
 		}
 
-		for id := range updatedDetails {
-			ids = append(ids, id)
-		}
+		ids = append(ids, slices.Collect(maps.Keys(updatedDetails))...)
 	}
 
 	if len(ids) == 0 {
