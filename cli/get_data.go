@@ -151,7 +151,7 @@ func GetData(since int64, force bool) error {
 
 	// ProtonDB data
 
-	if err = protondb_data.GetSummary(steamGogIds, since); err != nil {
+	if err = protondb_data.GetSummary(steamGogIds, since, force); err != nil {
 		return err
 	}
 

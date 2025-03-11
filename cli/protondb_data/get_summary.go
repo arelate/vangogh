@@ -14,7 +14,7 @@ import (
 	"maps"
 )
 
-func GetSummary(steamGogIds map[string]string, since int64) error {
+func GetSummary(steamGogIds map[string]string, since int64, force bool) error {
 
 	gsa := nod.NewProgress("getting %s...", vangogh_integration.ProtonDbSummary)
 	defer gsa.Done()
@@ -31,7 +31,16 @@ func GetSummary(steamGogIds map[string]string, since int64) error {
 
 	gsa.TotalInt(len(steamGogIds))
 
-	if err = fetch.Items(maps.Keys(steamGogIds), reqs.ProtonDbSummary(), kvSummary, gsa); err != nil {
+	var newSteamGogIds map[string]string
+
+	for steamAppId, gogId := range steamGogIds {
+		if kvSummary.Has(steamAppId) && !force {
+			continue
+		}
+		newSteamGogIds[steamAppId] = gogId
+	}
+
+	if err = fetch.Items(maps.Keys(newSteamGogIds), reqs.ProtonDbSummary(), kvSummary, gsa); err != nil {
 		return err
 	}
 
