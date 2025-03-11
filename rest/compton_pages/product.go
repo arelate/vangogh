@@ -74,8 +74,8 @@ func Product(id string, rdx redux.Readable, hasSections []string) compton.PageEl
 			ForegroundColor(color.Gray).
 			FontSize(size.Small).
 			TextAlign(align.Center)
-		shortDescFspan.AddClass("short-description")
 		oneLiner.Append(shortDescFspan)
+		oneLiner.AddClass("short-description")
 
 		pageStack.Append(compton.FICenter(p, oneLiner))
 	}
