@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/dolo"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"os"
 	"path/filepath"
@@ -33,14 +34,19 @@ func MissingChecksums(
 
 	manualUrlsMissingChecksums := make([]string, 0)
 
-	vrDetails, err := vangogh_integration.NewProductReader(vangogh_integration.Details)
+	detailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.Details)
 	if err != nil {
 		return err
 	}
 
-	mca.TotalInt(vrDetails.Len())
+	kvDetails, err := kevlar.New(detailsDir, kevlar.JsonExt)
+	if err != nil {
+		return err
+	}
 
-	for id := range vrDetails.Keys() {
+	mca.TotalInt(kvDetails.Len())
+
+	for id := range kvDetails.Keys() {
 
 		// skip DLC and PACK product types as they don't have Details for their ids and would
 		// crash below attempting to read vrDetails for missing product. That's totally ok, since
@@ -50,9 +56,13 @@ func MissingChecksums(
 			continue
 		}
 
-		det, err := vrDetails.Details(id)
+		det, err := vangogh_integration.UnmarshalDetails(id, kvDetails)
 		if err != nil {
 			return err
+		}
+
+		if det == nil {
+			continue
 		}
 
 		dls, err := vangogh_integration.FromDetails(det, rdx)

@@ -3,6 +3,7 @@ package vets
 import (
 	"fmt"
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"maps"
 	"slices"
@@ -22,26 +23,35 @@ func UnresolvedManualUrls(
 
 	rdx, err := vangogh_integration.NewReduxReader(
 		vangogh_integration.TitleProperty,
-		//vangogh_integration.NativeLanguageNameProperty,
 		vangogh_integration.LocalManualUrlProperty)
 	if err != nil {
 		return err
 	}
 
-	vrDetails, err := vangogh_integration.NewProductReader(vangogh_integration.Details)
+	detailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.Details)
+	if err != nil {
+		return err
+	}
+
+	kvDetails, err := kevlar.New(detailsDir, kevlar.JsonExt)
 	if err != nil {
 		return err
 	}
 
 	unresolvedIds := make(map[string]bool)
 
-	cumu.TotalInt(vrDetails.Len())
+	cumu.TotalInt(kvDetails.Len())
 
-	for id := range vrDetails.Keys() {
+	for id := range kvDetails.Keys() {
 
-		det, err := vrDetails.Details(id)
+		det, err := vangogh_integration.UnmarshalDetails(id, kvDetails)
 		if err != nil {
 			cumu.Error(err)
+			cumu.Increment()
+			continue
+		}
+
+		if det == nil {
 			cumu.Increment()
 			continue
 		}

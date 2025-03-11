@@ -3,6 +3,7 @@ package rest
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_pages"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/redux"
 	"net/http"
@@ -37,7 +38,12 @@ func getDownloads(id string,
 	noPatches bool,
 	rdx redux.Readable) (vangogh_integration.DownloadsList, error) {
 
-	vrDetails, err := vangogh_integration.NewProductReader(vangogh_integration.Details)
+	detailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.Details)
+	if err != nil {
+		return nil, err
+	}
+
+	kvDetails, err := kevlar.New(detailsDir, kevlar.JsonExt)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +56,7 @@ func getDownloads(id string,
 	// - id represents a product that the user doesn't own
 	// in this case we can remove basic product metadata (title, slug, etc) and no downloads
 
-	if !vrDetails.Has(id) {
+	if !kvDetails.Has(id) {
 		if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); ok {
 			switch pt {
 			case "PACK":
@@ -64,10 +70,13 @@ func getDownloads(id string,
 
 	// at this point we know that we should have product details in storage (see above)
 	// so if we don't - that should be an error worth investigating
-
-	det, err := vrDetails.Details(id)
+	det, err := vangogh_integration.UnmarshalDetails(id, kvDetails)
 	if err != nil {
 		return nil, err
+	}
+
+	if det == nil {
+		return nil, nil
 	}
 
 	dl := make(vangogh_integration.DownloadsList, 0)

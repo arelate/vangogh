@@ -1,8 +1,6 @@
 package gog_data
 
 import (
-	"encoding/json"
-	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
 	"github.com/arelate/vangogh/cli/reqs"
@@ -13,7 +11,6 @@ import (
 	"github.com/boggydigital/redux"
 	"maps"
 	"net/http"
-	"strings"
 )
 
 func GetDetails(hc *http.Client, uat string, since int64) error {
@@ -71,18 +68,13 @@ func ReduceDetails(kvDetails kevlar.KeyValues, since int64) error {
 
 func reduceDetailsProduct(id string, kvDetails kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
 
-	rcDetails, err := kvDetails.Get(id)
+	det, err := vangogh_integration.UnmarshalDetails(id, kvDetails)
 	if err != nil {
 		return err
 	}
-	defer rcDetails.Close()
 
-	var det gog_integration.Details
-	if err = json.NewDecoder(rcDetails).Decode(&det); err != nil {
-		if strings.Contains(err.Error(), "cannot unmarshal array into Go value of type gog_integration.Details") {
-			return nil
-		}
-		return err
+	if det == nil {
+		return nil
 	}
 
 	for property := range piv {

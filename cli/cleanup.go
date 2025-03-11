@@ -46,7 +46,6 @@ func Cleanup(
 
 	rdx, err := vangogh_integration.NewReduxReader(
 		vangogh_integration.SlugProperty,
-		//vangogh_integration.NativeLanguageNameProperty,
 		vangogh_integration.LocalManualUrlProperty)
 	if err != nil {
 		return err
@@ -75,7 +74,7 @@ func Cleanup(
 	}
 
 	// cleaning files in local download directory that no longer map to downloads
-	if err := vangogh_integration.MapDownloads(
+	if err = vangogh_integration.MapDownloads(
 		ids,
 		rdx,
 		operatingSystems,
