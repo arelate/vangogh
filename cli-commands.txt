@@ -68,11 +68,6 @@ info
     id^&
     slug&
 
-list
-    product-type^*={all-product-types}
-    property&={redux-properties}
-    since-hours-ago
-
 local-tag
     id^&
     slug

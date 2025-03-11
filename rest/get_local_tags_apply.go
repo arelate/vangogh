@@ -51,11 +51,5 @@ func GetLocalTagsApply(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	//TODO: Restore from vangogh
-	//if err := patchLocalTag(http.DefaultClient, id, localTags); err != nil {
-	//	http.Error(w, nod.Error(err).Error(), http.StatusBadRequest)
-	//	return
-	//}
-
 	http.Redirect(w, r, "/product?id="+id, http.StatusTemporaryRedirect)
 }

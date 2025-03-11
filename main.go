@@ -64,7 +64,6 @@ func main() {
 		"get-video-metadata":     cli.GetVideoMetadataHandler,
 		"health":                 cli.HealthHandler,
 		"info":                   cli.InfoHandler,
-		"list":                   cli.ListHandler,
 		"local-tag":              cli.LocalTagHandler,
 		"reduce":                 cli.ReduceHandler,
 		"search":                 cli.SearchHandler,
