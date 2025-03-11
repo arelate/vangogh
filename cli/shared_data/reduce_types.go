@@ -59,6 +59,8 @@ func ReduceTypes() error {
 			case vangogh_integration.SteamDeckCompatibilityReport:
 				fallthrough
 			case vangogh_integration.SteamAppReviews:
+				fallthrough
+			case vangogh_integration.ProtonDbSummary:
 				gogId := steamAppIdGogIds[id]
 				idsTypes[gogId] = append(idsTypes[gogId], pt.String())
 			default:
