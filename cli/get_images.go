@@ -107,7 +107,7 @@ func GetImages(ids []string, its []vangogh_integration.ImageType, missing, force
 
 			for _, srcUrl := range srcUrls {
 				if err = getImage(srcUrl, force); err != nil {
-					return err
+					nod.Log(err.Error())
 				}
 			}
 		}
@@ -146,7 +146,7 @@ func imageTypesReduxAssets(otherProperties []string, its []vangogh_integration.I
 		propSet[p] = true
 	}
 
-	properties := make([]string, len(propSet))
+	properties := make([]string, 0, len(propSet))
 	for p := range propSet {
 		properties = append(properties, p)
 	}
