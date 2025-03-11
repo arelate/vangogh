@@ -60,7 +60,7 @@ func ReduceCatalogPages(kvCatalogPages kevlar.KeyValues, since int64) error {
 	updatedCatalogPages := kvCatalogPages.Since(since, kevlar.Create, kevlar.Update)
 
 	for page := range updatedCatalogPages {
-		if err = reduceCatalogPage(page, kvCatalogPages, catalogPagesReductions); err != nil {
+		if err = reduceCatalogPage(page, kvCatalogPages, catalogPagesReductions, rdx); err != nil {
 			return err
 		}
 	}
@@ -68,7 +68,7 @@ func ReduceCatalogPages(kvCatalogPages kevlar.KeyValues, since int64) error {
 	return shared_data.WriteReductions(rdx, catalogPagesReductions)
 }
 
-func reduceCatalogPage(page string, kvCatalogPages kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
+func reduceCatalogPage(page string, kvCatalogPages kevlar.KeyValues, piv shared_data.PropertyIdValues, rdx redux.Readable) error {
 
 	rcCatalogPage, err := kvCatalogPages.Get(page)
 	if err != nil {
@@ -141,6 +141,10 @@ func reduceCatalogPage(page string, kvCatalogPages kevlar.KeyValues, piv shared_
 				values = cp.GetEditions()
 			case vangogh_integration.CatalogPageProductsProperty:
 				values = []string{page}
+			case vangogh_integration.UserWishlistProperty:
+				if !rdx.HasValue(vangogh_integration.UserWishlistProperty, cp.Id, vangogh_integration.TrueValue) {
+					values = []string{vangogh_integration.FalseValue}
+				}
 			}
 
 			piv[property][cp.Id] = values
