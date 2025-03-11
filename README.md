@@ -1,6 +1,6 @@
 # vangogh
 
-Backend microservice to sync and serve metadata, images from GOG.com. Can be used as a CLI app or a web service that provides a frontend to browse, search that data.
+A service to sync and serve games and data from GOG.com. Can be used as a CLI app or a web service that provides a frontend to browse, search that data.
 
 | Dark theme                                       | Light theme                                        |
 |--------------------------------------------------|----------------------------------------------------|
@@ -8,14 +8,11 @@ Backend microservice to sync and serve metadata, images from GOG.com. Can be use
 | ![Product Dark](github_images/product-dark.jpeg) | ![Product Light](github_images/product-light.jpeg) |
 
 
-
 ## Installation
 
 The recommended way to install `vangogh` is with docker-compose:
 
 - create a `docker-compose.yaml` file (this minimal example omits common settings like network, restart, etc):
-- NOTE: cold storage signifies resources used less frequently
-- NOTE: hot storage signifies resources used on most page loads
 
 ```yaml
 version: '3'
@@ -66,14 +63,11 @@ services:
 - (move it to location of your choice, e.g. `/docker/vangogh` or remote server or anywhere else)
 - while in the directory with that config - pull the image with `docker-compose pull`
 - start the service with `docker-compose up -d`
+- assuming everything was setup correctly - `vangogh` will now be available at this location address, port 1853 (e.g. http://localhost:1853 for a local server installation)
 
 ## Getting started
 
-After you've installed `vangogh`, you need to authenticate your GOG.com username / password. 
-Please note - your credentials are not stored by `vangogh` and only used to get session cookies from GOG.com - 
-exactly the same way you would log in to a website.
-
-To do that you'll need to import your cookies from existing browser session. To do that you need to create `cookies.txt` in the `temporary data` folder (see [docker installation](#Installation)),
+After you've installed `vangogh`, you need to authenticate GOG.com access by providing browser cookie data. To do that you need to create `cookies.txt` in the `temporary data` folder (see [docker installation](#Installation)),
    then follow [instructions here](https://github.com/boggydigital/coost#copying-session-cookies-from-an-existing-browser-session) to copy `gog.com` cookies into that file. When you run `vangogh` for the first time, it'll import the cookie header value and split individual parameters.
 
 Regardless of how you do it, the content of `cookies.txt` should look like this:
@@ -86,28 +80,16 @@ gog.com
  gog_us=(some value)
 ```
 
-You can verify that you've successfully authorized `vangogh` by getting licences data (a list of all product ids that GOG.com considers owned by you): `docker-compose exec vangogh vg get-data licences`. The successful run will display something like this:
-
-```text
-vangogh is serving your DRM-free needs 
-getting licences (game) data... 
- fetching licences (game)... done 
- splitting licences (game)... 
- splitting licences (game)... unchanged 
-```
-
-If you want to de-authorize `vangogh` from accessing your GOG.com data - delete the `cookies.txt` file. After that you'll still be able to download anything that does not require account authorization. All the account specific data you'll have accumulated until that point will be preserved. 
-
-## Serving data
-
-The recommended way to enjoy the data sync'd by `vangogh` is to serve it with a `serve` command.
+If you want to de-authorize `vangogh` from accessing your GOG.com data - delete the `cookies.txt` file. After that you'll still be able to download anything that does not require account authorization. All the account specific data you'll have accumulated until that point will be preserved.
 
 ## Updating data
 
 To update your data you can use `vangogh` with a CLI interface to get and maintain all the publicly available GOG.com data, including your account data (game installers):
 
-- in the same folder with `docker-compose.yaml` config use `docker-compose exec vangogh vg <command> <options>`
-- most commonly you would run sync `docker-compose exec vangogh vg sync -all` that gets all available data from GOG.com. Sync is optimized to get as little data as possible on each run - only the newly added images and updated installers. There is no great way to determine if metadata was updated remotely, so all of it is fetched on each sync - however upon doing that `vangogh` would know exactly what changed and use this information to optimize decisions.
+- in the same folder with `docker-compose.yaml` config use `docker-compose exec vangogh vangogh <command> <options>`
+- most commonly you would run sync `docker-compose exec vangogh vangogh sync -all` that gets all available data from GOG.com. 
+
+Sync is optimized to get as little data as possible on each run - only the newly added images and updated installers. There is no great way to determine if metadata was updated remotely, so all of it is fetched on each sync - however upon doing that `vangogh` would know exactly what changed and use this information to optimize decisions. You can also create scheduled runs of synchronization (e.g. with cron) to keep your data fresh. We recommend running sync no more often than every 24 hours. 
 
 ### Disk space requirements
 
