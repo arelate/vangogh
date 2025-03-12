@@ -28,6 +28,7 @@ dehydrate
     force
 
 get-data
+    product-type={all-product-types}
     since-hours-ago
     force
 

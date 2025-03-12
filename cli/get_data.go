@@ -15,9 +15,12 @@ import (
 	"maps"
 	"net/http"
 	"net/url"
+	"slices"
 )
 
 func GetDataHandler(u *url.URL) error {
+
+	productTypes := vangogh_integration.ProductTypesFromUrl(u)
 
 	since, err := vangogh_integration.SinceFromUrl(u)
 	if err != nil {
@@ -25,10 +28,14 @@ func GetDataHandler(u *url.URL) error {
 	}
 
 	force := u.Query().Has("force")
-	return GetData(since, force)
+	return GetData(productTypes, since, force)
 }
 
-func GetData(since int64, force bool) error {
+func GetData(productTypes []vangogh_integration.ProductType, since int64, force bool) error {
+
+	if len(productTypes) == 0 {
+		productTypes = slices.Collect(vangogh_integration.AllProductTypes())
+	}
 
 	var err error
 
@@ -52,40 +59,55 @@ func GetData(since int64, force bool) error {
 		return err
 	}
 
-	if err = gog_data.GetLicences(hc, uat); err != nil {
-		return err
+	if slices.Contains(productTypes, vangogh_integration.Licences) {
+		if err = gog_data.GetLicences(hc, uat); err != nil {
+			return err
+		}
 	}
 
-	if err = gog_data.GetUserWishlist(hc, uat); err != nil {
-		return err
+	if slices.Contains(productTypes, vangogh_integration.UserWishlist) {
+		if err = gog_data.GetUserWishlist(hc, uat); err != nil {
+			return err
+		}
 	}
 
-	if err = gog_data.GetCatalogPages(hc, uat, since); err != nil {
-		return err
+	if slices.Contains(productTypes, vangogh_integration.CatalogPage) {
+		if err = gog_data.GetCatalogPages(hc, uat, since); err != nil {
+			return err
+		}
 	}
 
-	if err = gog_data.GetAccountPages(hc, uat, since); err != nil {
-		return err
+	if slices.Contains(productTypes, vangogh_integration.AccountPage) {
+		if err = gog_data.GetAccountPages(hc, uat, since); err != nil {
+			return err
+		}
 	}
 
-	if err = gog_data.GetApiProducts(hc, uat, since, force); err != nil {
-		return err
+	if slices.Contains(productTypes, vangogh_integration.ApiProducts) {
+		if err = gog_data.GetApiProducts(hc, uat, since, force); err != nil {
+			return err
+		}
+		if err = gog_data.GetRelatedApiProducts(hc, uat, since, force); err != nil {
+			return err
+		}
 	}
 
-	if err = gog_data.GetRelatedApiProducts(hc, uat, since, force); err != nil {
-		return err
+	if slices.Contains(productTypes, vangogh_integration.OrderPage) {
+		if err = gog_data.GetOrderPages(hc, uat, since, force); err != nil {
+			return err
+		}
 	}
 
-	if err = gog_data.GetOrderPages(hc, uat, since, force); err != nil {
-		return err
+	if slices.Contains(productTypes, vangogh_integration.Details) {
+		if err = gog_data.GetDetails(hc, uat, since); err != nil {
+			return err
+		}
 	}
 
-	if err = gog_data.GetDetails(hc, uat, since); err != nil {
-		return err
-	}
-
-	if err = gog_data.GetGamesDbGogProducts(hc, uat, since, force); err != nil {
-		return err
+	if slices.Contains(productTypes, vangogh_integration.GamesDbGogProducts) {
+		if err = gog_data.GetGamesDbGogProducts(hc, uat, since, force); err != nil {
+			return err
+		}
 	}
 
 	// Steam data
@@ -100,30 +122,42 @@ func GetData(since int64, force bool) error {
 		return err
 	}
 
-	if err = steam_data.GetAppDetails(steamGogIds, since, force); err != nil {
-		return err
+	if slices.Contains(productTypes, vangogh_integration.SteamAppDetails) {
+		if err = steam_data.GetAppDetails(steamGogIds, since, force); err != nil {
+			return err
+		}
 	}
 
-	if err = steam_data.GetAppNews(steamGogIds); err != nil {
-		return err
+	if slices.Contains(productTypes, vangogh_integration.SteamAppNews) {
+		if err = steam_data.GetAppNews(steamGogIds); err != nil {
+			return err
+		}
 	}
 
-	if err = steam_data.GetAppReviews(steamGogIds, since, force); err != nil {
-		return err
+	if slices.Contains(productTypes, vangogh_integration.SteamAppReviews) {
+		if err = steam_data.GetAppReviews(steamGogIds, since, force); err != nil {
+			return err
+		}
 	}
 
-	if err = steam_data.GetDeckCompatibilityReports(steamGogIds, since, force); err != nil {
-		return err
+	if slices.Contains(productTypes, vangogh_integration.SteamDeckCompatibilityReport) {
+		if err = steam_data.GetDeckCompatibilityReports(steamGogIds, since, force); err != nil {
+			return err
+		}
 	}
 
 	// PCGamingWiki data
 
-	if err = pcgw_data.GetSteamPageId(steamGogIds, force); err != nil {
-		return err
+	if slices.Contains(productTypes, vangogh_integration.PcgwGogPageId) {
+		if err = pcgw_data.GetSteamPageId(steamGogIds, force); err != nil {
+			return err
+		}
 	}
 
-	if err = pcgw_data.GetGogPageId(catalogAccountProducts, force); err != nil {
-		return err
+	if slices.Contains(productTypes, vangogh_integration.PcgwSteamPageId) {
+		if err = pcgw_data.GetGogPageId(catalogAccountProducts, force); err != nil {
+			return err
+		}
 	}
 
 	pcgwGogIds, err := shared_data.GetPcgwGogIds(maps.Keys(catalogAccountProducts))
@@ -131,28 +165,35 @@ func GetData(since int64, force bool) error {
 		return err
 	}
 
-	if err = pcgw_data.GetExternalLinks(pcgwGogIds, force); err != nil {
-		return err
+	if slices.Contains(productTypes, vangogh_integration.PcgwExternalLinks) {
+		if err = pcgw_data.GetExternalLinks(pcgwGogIds, force); err != nil {
+			return err
+		}
 	}
 
-	if err = pcgw_data.GetEngine(pcgwGogIds, force); err != nil {
-		return err
+	if slices.Contains(productTypes, vangogh_integration.PcgwEngine) {
+		if err = pcgw_data.GetEngine(pcgwGogIds, force); err != nil {
+			return err
+		}
 	}
 
 	// HLTB data
 
-	if err = hltb_data.GetRootPage(); err != nil {
-		return err
-	}
-
-	if err = hltb_data.GetData(since, force); err != nil {
-		return err
+	if slices.Contains(productTypes, vangogh_integration.HltbData) {
+		if err = hltb_data.GetRootPage(); err != nil {
+			return err
+		}
+		if err = hltb_data.GetData(since, force); err != nil {
+			return err
+		}
 	}
 
 	// ProtonDB data
 
-	if err = protondb_data.GetSummary(steamGogIds, since, force); err != nil {
-		return err
+	if slices.Contains(productTypes, vangogh_integration.ProtonDbSummary) {
+		if err = protondb_data.GetSummary(steamGogIds, since, force); err != nil {
+			return err
+		}
 	}
 
 	// reduce, cascade special properties - has-product-types, owned
