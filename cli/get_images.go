@@ -107,7 +107,7 @@ func GetImages(ids []string, its []vangogh_integration.ImageType, missing, force
 
 			for _, srcUrl := range srcUrls {
 				if err = getImage(srcUrl, force); err != nil {
-					nod.Log(err.Error())
+					nod.Error(err)
 				}
 			}
 		}

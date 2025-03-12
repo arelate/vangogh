@@ -94,7 +94,7 @@ func Dehydrate(
 				repColors[id] = []string{rc}
 				dehydratedImageModified[id] = []string{strconv.FormatInt(time.Now().Unix(), 10)}
 			} else {
-				nod.Log(err.Error())
+				nod.Error(err)
 			}
 
 			di.Increment()
