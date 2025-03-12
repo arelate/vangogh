@@ -3,6 +3,7 @@ package compton_pages
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/compton"
+	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 	"path/filepath"
@@ -11,6 +12,8 @@ import (
 func DebugGetDataErrors(id string) (compton.PageElement, error) {
 
 	p := compton.IframeExpandContent("get-data-errors", "Get-Data Errors")
+
+	hasErrors := false
 
 	typeErrorsDir, err := pathways.GetAbsRelDir(vangogh_integration.TypeErrors)
 	if err != nil {
@@ -36,8 +39,13 @@ func DebugGetDataErrors(id string) (compton.PageElement, error) {
 				frow.PropVal("Date", dt)
 			}
 			p.Append(frow)
+			hasErrors = true
 		}
 
+	}
+
+	if !hasErrors {
+		p.Append(compton.FICenter(p, compton.Fspan(p, "No errors found").ForegroundColor(color.Gray)))
 	}
 
 	return p, nil
