@@ -53,12 +53,12 @@ var PropertyTitles = map[string]string{
 	vangogh_integration.BasePriceProperty:                         "Base Price",
 	vangogh_integration.DiscountPercentageProperty:                "Discount",
 
-	vangogh_integration.HltbHoursToCompleteMainProperty: "Hltb Main Story",
-	vangogh_integration.HltbHoursToCompletePlusProperty: "Hltb Story + Extras",
-	vangogh_integration.HltbHoursToComplete100Property:  "Hltb Completionist",
-	vangogh_integration.HltbGenresProperty:              "Hltb Genres",
-	vangogh_integration.HltbPlatformsProperty:           "Hltb Platforms",
-	vangogh_integration.HltbReviewScoreProperty:         "Hltb Review Score",
+	vangogh_integration.HltbHoursToCompleteMainProperty: "HLTB Main Story",
+	vangogh_integration.HltbHoursToCompletePlusProperty: "HLTB Story + Extras",
+	vangogh_integration.HltbHoursToComplete100Property:  "HLTB Completionist",
+	vangogh_integration.HltbGenresProperty:              "HLTB Genres",
+	vangogh_integration.HltbPlatformsProperty:           "HLTB Platforms",
+	vangogh_integration.HltbReviewScoreProperty:         "HLTB Review Score",
 
 	GauginGOGLinksProperty:   "GOG.com Links",
 	GauginOtherLinksProperty: "Other Links",
@@ -73,7 +73,7 @@ var PropertyTitles = map[string]string{
 
 	GauginGOGDBUrlProperty:        "GOGDB",
 	GauginIGDBUrlProperty:         "IGDB",
-	GauginHltbUrlProperty:         "Hltb",
+	GauginHltbUrlProperty:         "HLTB",
 	GauginMobyGamesUrlProperty:    "MobyGames",
 	GauginPCGamingWikiUrlProperty: "PCGamingWiki",
 	GauginProtonDBUrlProperty:     "ProtonDB",
