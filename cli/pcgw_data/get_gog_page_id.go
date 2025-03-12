@@ -113,17 +113,17 @@ func reduceGogPageIdProduct(gogId string, kvPageId kevlar.KeyValues, piv shared_
 		case vangogh_integration.PcgwPageIdProperty:
 			values = []string{pageId.GetPageId()}
 		case vangogh_integration.SteamAppIdProperty:
+			hasSteamAppId := false
 			if steamAppIds, ok := rdx.GetAllValues(vangogh_integration.SteamAppIdProperty, gogId); ok {
-				hasSteamAppId := false
 				for _, steamAppId := range steamAppIds {
 					if steamAppId != "" {
 						hasSteamAppId = true
 						break
 					}
 				}
-				if hasSteamAppId {
-					continue
-				}
+			}
+			if hasSteamAppId {
+				continue
 			}
 			values = []string{pageId.GetSteamAppId()}
 		}
