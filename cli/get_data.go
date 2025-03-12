@@ -148,13 +148,13 @@ func GetData(productTypes []vangogh_integration.ProductType, since int64, force 
 
 	// PCGamingWiki data
 
-	if slices.Contains(productTypes, vangogh_integration.PcgwGogPageId) {
+	if slices.Contains(productTypes, vangogh_integration.PcgwSteamPageId) {
 		if err = pcgw_data.GetSteamPageId(steamGogIds, force); err != nil {
 			return err
 		}
 	}
 
-	if slices.Contains(productTypes, vangogh_integration.PcgwSteamPageId) {
+	if slices.Contains(productTypes, vangogh_integration.PcgwGogPageId) {
 		if err = pcgw_data.GetGogPageId(catalogAccountProducts, force); err != nil {
 			return err
 		}
