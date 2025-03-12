@@ -25,6 +25,7 @@ func ReduceTypes() error {
 
 	steamAppIdGogIds := GetSteamAppIdGogIds(rdx)
 	pcgwPageIdsGogIds := GetPcgwPageIdGogIds(rdx)
+	hltbIdsGogIds := GetHltbIdGogIds(rdx)
 
 	idsTypes := make(map[string][]string)
 
@@ -62,13 +63,19 @@ func ReduceTypes() error {
 			case vangogh_integration.PcgwSteamPageId:
 				fallthrough
 			case vangogh_integration.ProtonDbSummary:
-				gogId := steamAppIdGogIds[id]
-				idsTypes[gogId] = append(idsTypes[gogId], pt.String())
+				for _, gogId := range steamAppIdGogIds[id] {
+					idsTypes[gogId] = append(idsTypes[gogId], pt.String())
+				}
 			case vangogh_integration.PcgwEngine:
 				fallthrough
 			case vangogh_integration.PcgwExternalLinks:
-				gogId := pcgwPageIdsGogIds[id]
-				idsTypes[gogId] = append(idsTypes[gogId], pt.String())
+				for _, gogId := range pcgwPageIdsGogIds[id] {
+					idsTypes[gogId] = append(idsTypes[gogId], pt.String())
+				}
+			case vangogh_integration.HltbData:
+				for _, gogId := range hltbIdsGogIds[id] {
+					idsTypes[gogId] = append(idsTypes[gogId], pt.String())
+				}
 			default:
 				idsTypes[id] = append(idsTypes[id], pt.String())
 			}
@@ -82,30 +89,29 @@ func ReduceTypes() error {
 	return nil
 }
 
-func GetSteamAppIdGogIds(rdx redux.Readable) map[string]string {
-	steamAppIdGogIds := make(map[string]string)
-
-	for gogId := range rdx.Keys(vangogh_integration.SteamAppIdProperty) {
-		if steamAppIds, ok := rdx.GetAllValues(vangogh_integration.SteamAppIdProperty, gogId); ok {
-			for _, said := range steamAppIds {
-				steamAppIdGogIds[said] = gogId
-			}
-		}
-	}
-
-	return steamAppIdGogIds
+func GetSteamAppIdGogIds(rdx redux.Readable) map[string][]string {
+	return externalIdsGogIds(vangogh_integration.SteamAppIdProperty, rdx)
 }
 
-func GetPcgwPageIdGogIds(rdx redux.Readable) map[string]string {
-	pcgwPageIdGogIds := make(map[string]string)
+func GetPcgwPageIdGogIds(rdx redux.Readable) map[string][]string {
+	return externalIdsGogIds(vangogh_integration.PcgwPageIdProperty, rdx)
+}
 
-	for gogId := range rdx.Keys(vangogh_integration.PcgwPageIdProperty) {
-		if pageIds, ok := rdx.GetAllValues(vangogh_integration.PcgwPageIdProperty, gogId); ok {
-			for _, pid := range pageIds {
-				pcgwPageIdGogIds[pid] = gogId
+func GetHltbIdGogIds(rdx redux.Readable) map[string][]string {
+	return externalIdsGogIds(vangogh_integration.HltbIdProperty, rdx)
+}
+
+func externalIdsGogIds(externalIdProperty string, rdx redux.Readable) map[string][]string {
+
+	externalIdGogIds := make(map[string][]string)
+
+	for gogId := range rdx.Keys(externalIdProperty) {
+		if externalIds, ok := rdx.GetAllValues(externalIdProperty, gogId); ok {
+			for _, eid := range externalIds {
+				externalIdGogIds[eid] = append(externalIdGogIds[eid], gogId)
 			}
 		}
 	}
 
-	return pcgwPageIdGogIds
+	return externalIdGogIds
 }
