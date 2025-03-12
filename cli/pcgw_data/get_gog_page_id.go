@@ -50,7 +50,7 @@ func GetGameGogIds(gogIds map[string]any) (map[string]any, error) {
 		return nil, err
 	}
 
-	rdx, err := redux.NewReader(reduxDir, vangogh_integration.PcgwPageIdProperties()...)
+	rdx, err := redux.NewReader(reduxDir, vangogh_integration.ProductTypeProperty)
 	if err != nil {
 		return nil, err
 	}
