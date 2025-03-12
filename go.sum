@@ -38,6 +38,8 @@ github.com/boggydigital/nod v0.1.26 h1:zLMCMO7WfEpnuHGGNnqA4wWPCUTxlzmW5G/v6xFaH
 github.com/boggydigital/nod v0.1.26/go.mod h1:jfTSJmcIjL2QwRp3Mi5CnleOzrYL9f67SFPzW09xqoo=
 github.com/boggydigital/nod v0.1.28 h1:wB0GBRk2oPj69ozqRFRpcWnulLCcN4pY0MSLXop6Z9o=
 github.com/boggydigital/nod v0.1.28/go.mod h1:jfTSJmcIjL2QwRp3Mi5CnleOzrYL9f67SFPzW09xqoo=
+github.com/boggydigital/nod v0.1.29 h1:Ep/yKEb/+BWQ5y4egHIXlXUqD7nT593VYernCu23FiY=
+github.com/boggydigital/nod v0.1.29/go.mod h1:jfTSJmcIjL2QwRp3Mi5CnleOzrYL9f67SFPzW09xqoo=
 github.com/boggydigital/pathways v0.1.15 h1:oQwqikyCKBIvoQwUthivHyT2oseQu9zzuO4A2FnwHFo=
 github.com/boggydigital/pathways v0.1.15/go.mod h1:z7Ip2VdIJg+xhEUsfOhc9oDy31YVDAUZKlipP1AWhE0=
 github.com/boggydigital/redux v0.1.4 h1:Eal5EvfnDlVneId14inDERanhP78Q7EQlWzxlkoJK6E=
