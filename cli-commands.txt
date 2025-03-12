@@ -76,6 +76,7 @@ local-tag
     tag-name
 
 reduce
+    product-type={all-product-types}
 
 search
     {searchable-properties^&}

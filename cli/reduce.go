@@ -1,46 +1,37 @@
 package cli
 
 import (
+	"errors"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/gog_data"
 	"github.com/arelate/vangogh/cli/hltb_data"
+	"github.com/arelate/vangogh/cli/pcgw_data"
 	"github.com/arelate/vangogh/cli/protondb_data"
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/arelate/vangogh/cli/steam_data"
 	"github.com/boggydigital/kevlar"
+	"maps"
 	"net/url"
+	"slices"
 )
 
-func ReduceHandler(_ *url.URL) error {
-	return Reduce()
+func ReduceHandler(u *url.URL) error {
+
+	productTypes := vangogh_integration.ProductTypesFromUrl(u)
+
+	return Reduce(productTypes)
 }
 
-func Reduce() error {
+func Reduce(productTypes []vangogh_integration.ProductType) error {
 
-	productTypes := []vangogh_integration.ProductType{
-		// GOG
-		vangogh_integration.Licences,
-		vangogh_integration.UserWishlist,
-		vangogh_integration.CatalogPage,
-		vangogh_integration.AccountPage,
-		vangogh_integration.ApiProducts,
-		vangogh_integration.OrderPage,
-		vangogh_integration.Details,
-		vangogh_integration.GamesDbGogProducts,
-		// Steam
-		vangogh_integration.SteamAppDetails,
-		vangogh_integration.SteamAppNews,
-		vangogh_integration.SteamAppReviews,
-		vangogh_integration.SteamDeckCompatibilityReport,
-		// PCGW - requires special data processing and will be skipped
-		// ...
-		// HLTB
-		vangogh_integration.HltbData,
-		// ProtonDB
-		vangogh_integration.ProtonDbSummary,
+	if len(productTypes) == 0 {
+		productTypes = slices.Collect(vangogh_integration.AllProductTypes())
 	}
 
 	for _, pt := range productTypes {
+		if pt == vangogh_integration.UnknownProductType {
+			continue
+		}
 		if err := reduceProductType(pt); err != nil {
 			return err
 		}
@@ -65,6 +56,11 @@ func reduceProductType(pt vangogh_integration.ProductType) error {
 	}
 
 	kvPt, err := kevlar.New(ptDir, kevlar.JsonExt)
+	if err != nil {
+		return err
+	}
+
+	catalogAccountProducts, err := shared_data.GetCatalogAccountProducts(-1)
 	if err != nil {
 		return err
 	}
@@ -94,10 +90,36 @@ func reduceProductType(pt vangogh_integration.ProductType) error {
 		return steam_data.ReduceAppReviews(kvPt, -1)
 	case vangogh_integration.SteamDeckCompatibilityReport:
 		return steam_data.ReduceDeckCompatibilityReports(kvPt, -1)
+	case vangogh_integration.PcgwGogPageId:
+		gogIds, err := pcgw_data.GetGameGogIds(catalogAccountProducts)
+		if err != nil {
+			return err
+		}
+		return pcgw_data.ReduceGogPageIds(gogIds, kvPt)
+	case vangogh_integration.PcgwSteamPageId:
+		steamGogIds, err := shared_data.GetSteamGogIds(maps.Keys(catalogAccountProducts))
+		if err != nil {
+			return err
+		}
+		return pcgw_data.ReduceSteamPageIds(steamGogIds, kvPt)
+	case vangogh_integration.PcgwExternalLinks:
+		pcgwGogIds, err := shared_data.GetPcgwGogIds(maps.Keys(catalogAccountProducts))
+		if err != nil {
+			return err
+		}
+		return pcgw_data.ReduceExternalLinks(pcgwGogIds, kvPt)
+	case vangogh_integration.PcgwEngine:
+		pcgwGogIds, err := shared_data.GetPcgwGogIds(maps.Keys(catalogAccountProducts))
+		if err != nil {
+			return err
+		}
+		return pcgw_data.ReduceEngine(pcgwGogIds, kvPt)
 	case vangogh_integration.HltbData:
 		return hltb_data.ReduceData(kvPt, -1)
 	case vangogh_integration.ProtonDbSummary:
 		return protondb_data.ReduceSummary(kvPt, -1)
+	default:
+		return errors.New("reduction is not supported for " + pt.String())
 	}
 
 	return nil
