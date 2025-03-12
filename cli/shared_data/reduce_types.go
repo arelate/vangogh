@@ -18,14 +18,13 @@ func ReduceTypes() error {
 		return err
 	}
 
-	rdx, err := redux.NewWriter(reduxDir,
-		vangogh_integration.SteamAppIdProperty,
-		vangogh_integration.TypesProperty)
+	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.ReduxProperties()...)
 	if err != nil {
 		return err
 	}
 
-	steamAppIdGogIds := getSteamAppIdGogIds(rdx)
+	steamAppIdGogIds := GetSteamAppIdGogIds(rdx)
+	pcgwPageIdsGogIds := GetPcgwPageIdGogIds(rdx)
 
 	idsTypes := make(map[string][]string)
 
@@ -60,8 +59,15 @@ func ReduceTypes() error {
 				fallthrough
 			case vangogh_integration.SteamAppReviews:
 				fallthrough
+			case vangogh_integration.PcgwSteamPageId:
+				fallthrough
 			case vangogh_integration.ProtonDbSummary:
 				gogId := steamAppIdGogIds[id]
+				idsTypes[gogId] = append(idsTypes[gogId], pt.String())
+			case vangogh_integration.PcgwEngine:
+				fallthrough
+			case vangogh_integration.PcgwExternalLinks:
+				gogId := pcgwPageIdsGogIds[id]
 				idsTypes[gogId] = append(idsTypes[gogId], pt.String())
 			default:
 				idsTypes[id] = append(idsTypes[id], pt.String())
@@ -76,7 +82,7 @@ func ReduceTypes() error {
 	return nil
 }
 
-func getSteamAppIdGogIds(rdx redux.Readable) map[string]string {
+func GetSteamAppIdGogIds(rdx redux.Readable) map[string]string {
 	steamAppIdGogIds := make(map[string]string)
 
 	for gogId := range rdx.Keys(vangogh_integration.SteamAppIdProperty) {
@@ -88,4 +94,18 @@ func getSteamAppIdGogIds(rdx redux.Readable) map[string]string {
 	}
 
 	return steamAppIdGogIds
+}
+
+func GetPcgwPageIdGogIds(rdx redux.Readable) map[string]string {
+	pcgwPageIdGogIds := make(map[string]string)
+
+	for gogId := range rdx.Keys(vangogh_integration.PcgwPageIdProperty) {
+		if pageIds, ok := rdx.GetAllValues(vangogh_integration.PcgwPageIdProperty, gogId); ok {
+			for _, pid := range pageIds {
+				pcgwPageIdGogIds[pid] = gogId
+			}
+		}
+	}
+
+	return pcgwPageIdGogIds
 }
