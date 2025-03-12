@@ -76,15 +76,12 @@ func ReduceGogPageIds(gogIds map[string]any, kvPageId kevlar.KeyValues) error {
 		return err
 	}
 
-	properties := vangogh_integration.PcgwPageIdProperties()
-	properties = append(properties, vangogh_integration.SteamAppIdProperty)
-
-	rdx, err := redux.NewWriter(reduxDir, properties...)
+	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.PcgwPageIdProperties()...)
 	if err != nil {
 		return err
 	}
 
-	pageIdReductions := shared_data.InitReductions(properties...)
+	pageIdReductions := shared_data.InitReductions(vangogh_integration.PcgwPageIdProperties()...)
 
 	for gogId := range gogIds {
 		if err = reduceGogPageIdProduct(gogId, kvPageId, pageIdReductions, rdx); err != nil {
