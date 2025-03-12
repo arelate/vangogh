@@ -31,7 +31,7 @@ func GetUserWishlist(hc *http.Client, uat string) error {
 	userWishlistId := vangogh_integration.UserWishlist.String()
 	userWishlistUrl := gog_integration.UserWishlistUrl()
 
-	if err = fetch.SetValue(userWishlistId, userWishlistUrl, reqs.UserWishlist(hc, uat), kvUserWishlist); err != nil {
+	if err = fetch.RequestSetValue(userWishlistId, userWishlistUrl, reqs.UserWishlist(hc, uat), kvUserWishlist); err != nil {
 		return err
 	}
 

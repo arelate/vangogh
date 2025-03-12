@@ -29,15 +29,13 @@ func GetExternalLinks(pcgwGogIds map[string]string, force bool) error {
 		return err
 	}
 
-	newPcgwGogIds := getNewPcgwGogIds(pcgwGogIds, kvExternalLinks, force)
+	gea.TotalInt(len(pcgwGogIds))
 
-	gea.TotalInt(len(newPcgwGogIds))
-
-	if err = fetch.Items(maps.Keys(newPcgwGogIds), reqs.PcgwExternalLinks(), kvExternalLinks, gea); err != nil {
+	if err = fetch.Items(maps.Keys(pcgwGogIds), reqs.PcgwExternalLinks(), kvExternalLinks, gea, force); err != nil {
 		return err
 	}
 
-	return ReduceExternalLinks(newPcgwGogIds, kvExternalLinks)
+	return ReduceExternalLinks(pcgwGogIds, kvExternalLinks)
 }
 
 func ReduceExternalLinks(pcgwGogIds map[string]string, kvExternalLinks kevlar.KeyValues) error {

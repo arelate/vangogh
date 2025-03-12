@@ -27,7 +27,7 @@ func GetRootPage() error {
 	rootPageId := vangogh_integration.HltbRootPage.String()
 	rootPageUrl := hltb_integration.RootUrl()
 
-	if err = fetch.SetValue(rootPageId, rootPageUrl, reqs.HltbRootPage(), kvRootPage); err != nil {
+	if err = fetch.RequestSetValue(rootPageId, rootPageUrl, reqs.HltbRootPage(), kvRootPage); err != nil {
 		return err
 	}
 

@@ -14,7 +14,7 @@ import (
 	"maps"
 )
 
-func GetAppReviews(steamGogIds map[string]string, since int64) error {
+func GetAppReviews(steamGogIds map[string]string, since int64, force bool) error {
 
 	gara := nod.NewProgress("getting %s...", vangogh_integration.SteamAppReviews)
 	defer gara.Done()
@@ -31,7 +31,7 @@ func GetAppReviews(steamGogIds map[string]string, since int64) error {
 
 	gara.TotalInt(len(steamGogIds))
 
-	if err = fetch.Items(maps.Keys(steamGogIds), reqs.SteamAppReviews(), kvAppReviews, gara); err != nil {
+	if err = fetch.Items(maps.Keys(steamGogIds), reqs.SteamAppReviews(), kvAppReviews, gara, force); err != nil {
 		return err
 	}
 

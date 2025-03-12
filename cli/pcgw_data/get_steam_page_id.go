@@ -34,33 +34,13 @@ func GetSteamPageId(steamGogIds map[string]string, force bool) error {
 		return err
 	}
 
-	newGameSteamGogIds := GetNewSteamGogIds(gameSteamGogIds, kvSteamPageId, force)
+	gspia.TotalInt(len(gameSteamGogIds))
 
-	gspia.TotalInt(len(newGameSteamGogIds))
-
-	if err = fetch.Items(maps.Keys(newGameSteamGogIds), reqs.PcgwSteamPageId(), kvSteamPageId, gspia); err != nil {
+	if err = fetch.Items(maps.Keys(gameSteamGogIds), reqs.PcgwSteamPageId(), kvSteamPageId, gspia, force); err != nil {
 		return err
 	}
 
-	return ReduceSteamPageIds(newGameSteamGogIds, kvSteamPageId)
-}
-
-func GetNewSteamGogIds(steamGogIds map[string]string, kv kevlar.KeyValues, force bool) map[string]string {
-
-	if force {
-		return steamGogIds
-	}
-
-	newSteamGogIds := make(map[string]string, len(steamGogIds))
-
-	for steamAppId, gogId := range steamGogIds {
-		if kv.Has(steamAppId) {
-			continue
-		}
-		newSteamGogIds[steamAppId] = gogId
-	}
-
-	return newSteamGogIds
+	return ReduceSteamPageIds(gameSteamGogIds, kvSteamPageId)
 }
 
 func GetGameSteamGogIds(steamGogIds map[string]string) (map[string]string, error) {

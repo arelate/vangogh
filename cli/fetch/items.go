@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-func Items(ids iter.Seq[string], itemReq *reqs.Params, kv kevlar.KeyValues, tpw nod.TotalProgressWriter) error {
+func Items(ids iter.Seq[string], itemReq *reqs.Params, kv kevlar.KeyValues, tpw nod.TotalProgressWriter, force bool) error {
 
 	var rateLimit time.Duration
 	if itemReq.RateLimitRequests > 0 {
@@ -36,6 +36,13 @@ func Items(ids iter.Seq[string], itemReq *reqs.Params, kv kevlar.KeyValues, tpw 
 
 	for id := range ids {
 
+		if kv.Has(id) && !force {
+			if tpw != nil {
+				tpw.Increment()
+			}
+			continue
+		}
+
 		if skip, skipErr := shared_data.SkipError(id, itemReq.ProductType, rdx); skip && skipErr == nil {
 			if tpw != nil {
 				tpw.Increment()
@@ -46,7 +53,7 @@ func Items(ids iter.Seq[string], itemReq *reqs.Params, kv kevlar.KeyValues, tpw 
 		}
 
 		productUrl := itemReq.UrlFunc(id)
-		if err = SetValue(id, productUrl, itemReq, kv); err != nil {
+		if err = RequestSetValue(id, productUrl, itemReq, kv); err != nil {
 			errs[id] = err
 		}
 

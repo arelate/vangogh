@@ -16,7 +16,7 @@ import (
 	"strconv"
 )
 
-func GetGamesDbGogProducts(hc *http.Client, uat string, since int64) error {
+func GetGamesDbGogProducts(hc *http.Client, uat string, since int64, force bool) error {
 
 	ggdpa := nod.NewProgress("getting %s...", vangogh_integration.GamesDbGogProducts)
 	defer ggdpa.Done()
@@ -38,7 +38,7 @@ func GetGamesDbGogProducts(hc *http.Client, uat string, since int64) error {
 
 	ggdpa.TotalInt(len(catalogPagesProducts))
 
-	if err = fetch.Items(slices.Values(catalogPagesProducts), reqs.GamesDbGogProduct(hc, uat), kvGamesDbGogProducts, ggdpa); err != nil {
+	if err = fetch.Items(slices.Values(catalogPagesProducts), reqs.GamesDbGogProduct(hc, uat), kvGamesDbGogProducts, ggdpa, force); err != nil {
 		return err
 	}
 

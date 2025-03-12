@@ -41,31 +41,32 @@ func GetData(since int64, force bool) error {
 		return err
 	}
 
-	var newHltbIds []string
+	hltbIds := getHltbIds(rdx)
 
-	for gogId := range rdx.Keys(vangogh_integration.HltbIdProperty) {
-		if hltbIds, ok := rdx.GetAllValues(vangogh_integration.HltbIdProperty, gogId); ok {
-			for _, hltbId := range hltbIds {
-				if kvData.Has(hltbId) && !force {
-					continue
-				}
-				newHltbIds = append(newHltbIds, hltbId)
-			}
-		}
-	}
-
-	gda.TotalInt(len(newHltbIds))
+	gda.TotalInt(len(hltbIds))
 
 	buildId, err := readBuildId()
 	if err != nil {
 		return err
 	}
 
-	if err = fetch.Items(slices.Values(newHltbIds), reqs.HltbData(buildId), kvData, gda); err != nil {
+	if err = fetch.Items(slices.Values(hltbIds), reqs.HltbData(buildId), kvData, gda, force); err != nil {
 		return err
 	}
 
 	return ReduceData(kvData, since)
+}
+
+func getHltbIds(rdx redux.Readable) []string {
+	var ids []string
+
+	for gogId := range rdx.Keys(vangogh_integration.HltbIdProperty) {
+		if hltbIds, ok := rdx.GetAllValues(vangogh_integration.HltbIdProperty, gogId); ok {
+			ids = append(ids, hltbIds...)
+		}
+	}
+
+	return ids
 }
 
 func readBuildId() (string, error) {

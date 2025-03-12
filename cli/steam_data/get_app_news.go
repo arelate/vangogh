@@ -26,7 +26,7 @@ func GetAppNews(steamGogIds map[string]string) error {
 
 	gana.TotalInt(len(steamGogIds))
 
-	if err = fetch.Items(maps.Keys(steamGogIds), reqs.SteamAppNews(), kvAppNews, gana); err != nil {
+	if err = fetch.Items(maps.Keys(steamGogIds), reqs.SteamAppNews(), kvAppNews, gana, true); err != nil {
 		return err
 	}
 

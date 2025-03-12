@@ -32,7 +32,7 @@ func GetDetails(hc *http.Client, uat string, since int64) error {
 
 	gda.TotalInt(len(newUpdatedDetails))
 
-	if err = fetch.Items(maps.Keys(newUpdatedDetails), reqs.Details(hc, uat), kvDetails, gda); err != nil {
+	if err = fetch.Items(maps.Keys(newUpdatedDetails), reqs.Details(hc, uat), kvDetails, gda, true); err != nil {
 		return err
 	}
 

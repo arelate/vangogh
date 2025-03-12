@@ -15,7 +15,7 @@ import (
 	"strings"
 )
 
-func GetDeckCompatibilityReports(steamGogIds map[string]string, since int64) error {
+func GetDeckCompatibilityReports(steamGogIds map[string]string, since int64, force bool) error {
 
 	gdcra := nod.NewProgress("getting %s...", vangogh_integration.SteamDeckCompatibilityReport)
 	defer gdcra.Done()
@@ -32,7 +32,7 @@ func GetDeckCompatibilityReports(steamGogIds map[string]string, since int64) err
 
 	gdcra.TotalInt(len(steamGogIds))
 
-	if err = fetch.Items(maps.Keys(steamGogIds), reqs.SteamDeckCompatibilityReports(), kvDeckCompatibilityReports, gdcra); err != nil {
+	if err = fetch.Items(maps.Keys(steamGogIds), reqs.SteamDeckCompatibilityReports(), kvDeckCompatibilityReports, gdcra, force); err != nil {
 		return err
 	}
 

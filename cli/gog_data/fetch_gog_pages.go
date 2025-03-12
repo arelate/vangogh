@@ -20,7 +20,7 @@ func fetchGogPages(pageReq *reqs.Params, kv kevlar.KeyValues, tpw nod.TotalProgr
 	// passing nil for type errors rdx as pages are not expected to produce
 	// errors, so those would be considered catastrophic (indicating that origin
 	// is likely experiencing abnormal state)
-	if err := fetch.SetValue(firstPageId, firstPageUrl, pageReq, kv); err != nil {
+	if err := fetch.RequestSetValue(firstPageId, firstPageUrl, pageReq, kv); err != nil {
 		return err
 	}
 	if tpw != nil {
@@ -51,7 +51,7 @@ func fetchGogPages(pageReq *reqs.Params, kv kevlar.KeyValues, tpw nod.TotalProgr
 		tpw.TotalInt(tpp.GetTotalPages())
 	}
 
-	if err = fetch.Items(slices.Values(pages), pageReq, kv, tpw); err != nil {
+	if err = fetch.Items(slices.Values(pages), pageReq, kv, tpw, force); err != nil {
 		return err
 	}
 

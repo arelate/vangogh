@@ -29,15 +29,13 @@ func GetEngine(pcgwGogIds map[string]string, force bool) error {
 		return err
 	}
 
-	newPcgwGogIds := getNewPcgwGogIds(pcgwGogIds, kvEngine, force)
+	gea.TotalInt(len(pcgwGogIds))
 
-	gea.TotalInt(len(newPcgwGogIds))
-
-	if err = fetch.Items(maps.Keys(newPcgwGogIds), reqs.PcgwEngine(), kvEngine, gea); err != nil {
+	if err = fetch.Items(maps.Keys(pcgwGogIds), reqs.PcgwEngine(), kvEngine, gea, force); err != nil {
 		return err
 	}
 
-	return ReduceEngine(newPcgwGogIds, kvEngine)
+	return ReduceEngine(pcgwGogIds, kvEngine)
 }
 
 func getNewPcgwGogIds(pcgwGogIds map[string]string, kv kevlar.KeyValues, force bool) map[string]string {

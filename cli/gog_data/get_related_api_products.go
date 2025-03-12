@@ -13,7 +13,7 @@ import (
 	"net/http"
 )
 
-func GetRelatedApiProducts(hc *http.Client, uat string, since int64) error {
+func GetRelatedApiProducts(hc *http.Client, uat string, since int64, force bool) error {
 
 	grapva := nod.NewProgress("getting related %s...", vangogh_integration.ApiProducts)
 	defer grapva.Done()
@@ -63,7 +63,7 @@ func GetRelatedApiProducts(hc *http.Client, uat string, since int64) error {
 
 	grapva.TotalInt(len(nrIds))
 
-	if err = fetch.Items(maps.Keys(nrIds), reqs.ApiProducts(hc, uat), kvApiProducts, grapva); err != nil {
+	if err = fetch.Items(maps.Keys(nrIds), reqs.ApiProducts(hc, uat), kvApiProducts, grapva, force); err != nil {
 		return err
 	}
 

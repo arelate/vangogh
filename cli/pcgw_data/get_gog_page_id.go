@@ -34,33 +34,13 @@ func GetGogPageId(gogIds map[string]any, force bool) error {
 		return err
 	}
 
-	newGameGogIds := GetNewGogIds(gameGogIds, kvGogPageId, force)
+	gspia.TotalInt(len(gameGogIds))
 
-	gspia.TotalInt(len(newGameGogIds))
-
-	if err = fetch.Items(maps.Keys(newGameGogIds), reqs.PcgwGogPageId(), kvGogPageId, gspia); err != nil {
+	if err = fetch.Items(maps.Keys(gameGogIds), reqs.PcgwGogPageId(), kvGogPageId, gspia, force); err != nil {
 		return err
 	}
 
-	return ReduceGogPageIds(newGameGogIds, kvGogPageId)
-}
-
-func GetNewGogIds(gogIds map[string]any, kv kevlar.KeyValues, force bool) map[string]any {
-
-	if force {
-		return gogIds
-	}
-
-	newGogIds := make(map[string]any, len(gogIds))
-
-	for gogId := range gogIds {
-		if kv.Has(gogId) {
-			continue
-		}
-		newGogIds[gogId] = nil
-	}
-
-	return newGogIds
+	return ReduceGogPageIds(gameGogIds, kvGogPageId)
 }
 
 func GetGameGogIds(gogIds map[string]any) (map[string]any, error) {

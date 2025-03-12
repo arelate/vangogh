@@ -8,7 +8,7 @@ import (
 	"net/url"
 )
 
-func SetValue(id string, u *url.URL, itemReq *reqs.Params, kv kevlar.KeyValues) error {
+func RequestSetValue(id string, u *url.URL, itemReq *reqs.Params, kv kevlar.KeyValues) error {
 
 	req, err := http.NewRequest(itemReq.HttpMethod, u.String(), nil)
 	if err != nil {

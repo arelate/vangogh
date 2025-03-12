@@ -31,16 +31,7 @@ func GetSummary(steamGogIds map[string]string, since int64, force bool) error {
 
 	gsa.TotalInt(len(steamGogIds))
 
-	var newSteamGogIds map[string]string
-
-	for steamAppId, gogId := range steamGogIds {
-		if kvSummary.Has(steamAppId) && !force {
-			continue
-		}
-		newSteamGogIds[steamAppId] = gogId
-	}
-
-	if err = fetch.Items(maps.Keys(newSteamGogIds), reqs.ProtonDbSummary(), kvSummary, gsa); err != nil {
+	if err = fetch.Items(maps.Keys(steamGogIds), reqs.ProtonDbSummary(), kvSummary, gsa, force); err != nil {
 		return err
 	}
 

@@ -16,7 +16,7 @@ import (
 	"strconv"
 )
 
-func GetApiProducts(hc *http.Client, uat string, since int64) error {
+func GetApiProducts(hc *http.Client, uat string, since int64, force bool) error {
 
 	gapva := nod.NewProgress("getting %s...", vangogh_integration.ApiProducts)
 	defer gapva.Done()
@@ -43,7 +43,7 @@ func GetApiProducts(hc *http.Client, uat string, since int64) error {
 
 	gapva.TotalInt(len(catalogAccountProductIds))
 
-	if err = fetch.Items(maps.Keys(catalogAccountProductIds), reqs.ApiProducts(hc, uat), kvApiProducts, gapva); err != nil {
+	if err = fetch.Items(maps.Keys(catalogAccountProductIds), reqs.ApiProducts(hc, uat), kvApiProducts, gapva, force); err != nil {
 		return err
 	}
 

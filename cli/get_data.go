@@ -68,11 +68,11 @@ func GetData(since int64, force bool) error {
 		return err
 	}
 
-	if err = gog_data.GetApiProducts(hc, uat, since); err != nil {
+	if err = gog_data.GetApiProducts(hc, uat, since, force); err != nil {
 		return err
 	}
 
-	if err = gog_data.GetRelatedApiProducts(hc, uat, since); err != nil {
+	if err = gog_data.GetRelatedApiProducts(hc, uat, since, force); err != nil {
 		return err
 	}
 
@@ -84,15 +84,11 @@ func GetData(since int64, force bool) error {
 		return err
 	}
 
-	if err = gog_data.GetGamesDbGogProducts(hc, uat, since); err != nil {
+	if err = gog_data.GetGamesDbGogProducts(hc, uat, since, force); err != nil {
 		return err
 	}
 
 	// Steam data
-
-	if err = steam_data.GetAppDetails(since, force); err != nil {
-		return err
-	}
 
 	catalogAccountProducts, err := shared_data.GetCatalogAccountProducts(since)
 	if err != nil {
@@ -104,15 +100,19 @@ func GetData(since int64, force bool) error {
 		return err
 	}
 
+	if err = steam_data.GetAppDetails(steamGogIds, since, force); err != nil {
+		return err
+	}
+
 	if err = steam_data.GetAppNews(steamGogIds); err != nil {
 		return err
 	}
 
-	if err = steam_data.GetAppReviews(steamGogIds, since); err != nil {
+	if err = steam_data.GetAppReviews(steamGogIds, since, force); err != nil {
 		return err
 	}
 
-	if err = steam_data.GetDeckCompatibilityReports(steamGogIds, since); err != nil {
+	if err = steam_data.GetDeckCompatibilityReports(steamGogIds, since, force); err != nil {
 		return err
 	}
 

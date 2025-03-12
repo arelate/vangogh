@@ -11,24 +11,14 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"slices"
+	"maps"
 	"strconv"
 )
 
-func GetAppDetails(since int64, force bool) error {
+func GetAppDetails(steamGogIds map[string]string, since int64, force bool) error {
 
 	gada := nod.NewProgress("getting %s...", vangogh_integration.SteamAppDetails)
 	defer gada.Done()
-
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewReader(reduxDir, vangogh_integration.SteamAppIdProperty)
-	if err != nil {
-		return err
-	}
 
 	appDetailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.SteamAppDetails)
 	if err != nil {
@@ -40,22 +30,9 @@ func GetAppDetails(since int64, force bool) error {
 		return err
 	}
 
-	var newSteamAppIds []string
+	gada.TotalInt(len(steamGogIds))
 
-	for gogId := range rdx.Keys(vangogh_integration.SteamAppIdProperty) {
-		if steamAppIds, ok := rdx.GetAllValues(vangogh_integration.SteamAppIdProperty, gogId); ok {
-			for _, steamAppId := range steamAppIds {
-				if kvAppDetails.Has(steamAppId) && !force {
-					continue
-				}
-				newSteamAppIds = append(newSteamAppIds, steamAppId)
-			}
-		}
-	}
-
-	gada.TotalInt(len(newSteamAppIds))
-
-	if err = fetch.Items(slices.Values(newSteamAppIds), reqs.SteamAppDetails(), kvAppDetails, gada); err != nil {
+	if err = fetch.Items(maps.Keys(steamGogIds), reqs.SteamAppDetails(), kvAppDetails, gada, force); err != nil {
 		return err
 	}
 
