@@ -76,15 +76,18 @@ func ReduceGogPageIds(gogIds map[string]any, kvPageId kevlar.KeyValues) error {
 		return err
 	}
 
-	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.PcgwPageIdProperties()...)
+	properties := vangogh_integration.PcgwPageIdProperties()
+	properties = append(properties, vangogh_integration.SteamAppIdProperty)
+
+	rdx, err := redux.NewWriter(reduxDir, properties...)
 	if err != nil {
 		return err
 	}
 
-	pageIdReductions := shared_data.InitReductions(vangogh_integration.PcgwPageIdProperties()...)
+	pageIdReductions := shared_data.InitReductions(properties...)
 
 	for gogId := range gogIds {
-		if err = reduceGogPageIdProduct(gogId, kvPageId, pageIdReductions); err != nil {
+		if err = reduceGogPageIdProduct(gogId, kvPageId, pageIdReductions, rdx); err != nil {
 			return err
 		}
 	}
@@ -92,7 +95,7 @@ func ReduceGogPageIds(gogIds map[string]any, kvPageId kevlar.KeyValues) error {
 	return shared_data.WriteReductions(rdx, pageIdReductions)
 }
 
-func reduceGogPageIdProduct(gogId string, kvPageId kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
+func reduceGogPageIdProduct(gogId string, kvPageId kevlar.KeyValues, piv shared_data.PropertyIdValues, rdx redux.Readable) error {
 
 	rcPageId, err := kvPageId.Get(gogId)
 	if err != nil {
@@ -112,6 +115,10 @@ func reduceGogPageIdProduct(gogId string, kvPageId kevlar.KeyValues, piv shared_
 		switch property {
 		case vangogh_integration.PcgwPageIdProperty:
 			values = []string{pageId.GetPageId()}
+		case vangogh_integration.SteamAppIdProperty:
+			if !rdx.HasKey(vangogh_integration.SteamAppIdProperty, gogId) {
+				values = []string{pageId.GetSteamAppId()}
+			}
 		}
 
 		piv[property][gogId] = values
