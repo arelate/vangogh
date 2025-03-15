@@ -60,6 +60,16 @@ func ReduceOwned() error {
 		}
 	}
 
+	// some products coming from licences will not have a title
+	// we need to filter them out from owned, otherwise Search > Owned view
+	// will have fewer products than declared (since product card are NOT
+	// created for products without a title)
+	for id := range owned {
+		if !rdx.HasKey(vangogh_integration.TitleProperty, id) {
+			owned[id] = []string{vangogh_integration.FalseValue}
+		}
+	}
+
 	if err = rdx.BatchReplaceValues(vangogh_integration.OwnedProperty, owned); err != nil {
 		return err
 	}
