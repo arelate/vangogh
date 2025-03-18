@@ -1,7 +1,8 @@
 card[data-id] {
     & > issa-image {
 
-        outline: var(--s-xxxs) solid var(--c-rep);
+        --c-outline: color-mix(in display-p3, var(--c-rep) var(--cma), transparent);
+        outline: var(--s-xxxs) solid var(--c-outline);
 
         & > img {
             object-fit: fill;
