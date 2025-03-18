@@ -1,3 +1,10 @@
-card[data-id] > issa-image > img {
-    object-fit:fill;
+card[data-id] {
+    & > issa-image {
+
+        outline: var(--s-xxxs) solid var(--c-rep);
+
+        & > img {
+            object-fit: fill;
+        }
+    }
 }
