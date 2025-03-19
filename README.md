@@ -65,6 +65,17 @@ services:
 - start the service with `docker-compose up -d`
 - assuming everything was setup correctly - `vangogh` will now be available at this location address, port 1853 (e.g. http://localhost:1853 for a local server installation)
 
+## Browser compatibility
+
+`vangogh` has been tested in the most popular browsers (Chrome and other Chromium-based browsers, Safari, Firefox) and should work reasonably well in all of them with minor visual differences.
+
+However, in order to make `vangogh` work in Firefox you'd need to enable [@scope](https://developer.mozilla.org/en-US/docs/Web/CSS/@scope) support if you're comfortable enabling preview Web Platform feature. Here's how to do that (copied from MDN): 
+
+```text
+From version 128: this feature is behind the layout.css.at-scope.enabled preference (needs to be set to true). To change preferences in Firefox, visit about:config.
+```
+
+
 ## Getting started
 
 After you've installed `vangogh`, you need to authenticate GOG.com access by providing browser cookie data. To do that you need to create `cookies.txt` in the `temporary data` folder (see [docker installation](#Installation)),
