@@ -108,12 +108,17 @@ Please note that all data === a lot of data, so make sure you have space availab
 
 Here are few estimates of how much space you'll need for each type of data:
 
-- core metadata (Store, Account, Wishlist products and associated detailed data; Steam reviews, product pages, app list): 1.3Gb
-- images, including screenshots: 30Gb
-- description items: 6.5Gb
-- thumbnails: 400 Mb
-- checksums (automatically downloaded with installers for validation): 120Mb
-- product installers: estimate is about 6.5Tb for 1000 products for installers for the 10 most common languages for all operating systems (just Windows and English is about half of that)
+- metadata (GOG, Steam, PCGamingWiki, HLTB, ProtonDB data for GOG products): 1Gb
+- images, including screenshots: 68Gb
+- description items: 19Gb
+- product installers estimates (done with `size` command): 
+  - 6.5Tb/1000 products for all operating systems (Windows, macOS, Linux) for the 10 most common languages installers, DLCs, extras
+  - 4.5Tb/1000 products for all operating systems (Windows, macOS, Linux), English installers, DLCs, extras 
+  - 3.3Tb/1000 products for Windows, English installers, DLCs, extras
+  - 1.0Tb/1000 products for macOS, English installers, DLCs, extras
+  - 0.6Tb/1000 products for Linux, English installers, DLCs, extras
+
+`vangogh` directories allow you to use the best storage type for each data type. For example you might want to store installers, checksums and logs on slower HDDs as those are typically written and read sequentially. Metadata and images on the other hand would benefit from faster SSDs if you're using `vangogh` as a web frontend for your data.
 
 ## Taking care of your data
 
