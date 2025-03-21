@@ -17,7 +17,6 @@ var ProductProperties = []string{
 	vangogh_integration.SteamReviewScoreDescProperty,
 	vangogh_integration.HltbReviewScoreProperty,
 	vangogh_integration.AggregatedRatingProperty,
-	vangogh_integration.SteamDeckAppCompatibilityCategoryProperty,
 	vangogh_integration.ProtonDBTierProperty,
 	vangogh_integration.ProtonDBConfidenceProperty,
 	vangogh_integration.DevelopersProperty,
