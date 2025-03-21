@@ -67,12 +67,12 @@ func SkipError(id string, productType vangogh_integration.ProductType, rdx redux
 
 			if time.Now().UTC().Before(errorExpires) {
 
-				nod.Log("skipping current %s error last encountered: %s", productType, dateStr)
+				nod.Log("skipping current %s %s error last encountered: %s", productType, id, dateStr)
 
 				return true, nil
 			} else {
 
-				nod.Log("clearing %s error last encountered: %s", productType, dateStr)
+				nod.Log("clearing %s %s error last encountered: %s", productType, id, dateStr)
 
 				if err = rdx.CutKeys(vangogh_integration.TypeErrorDateProperty, id); err != nil {
 					return false, err
