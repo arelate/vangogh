@@ -7,8 +7,8 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-func Properties(id string, rdx redux.Readable) compton.PageElement {
-	s := compton_fragments.ProductSection(compton_data.PropertiesSection)
+func ProductDetails(id string, rdx redux.Readable) compton.PageElement {
+	s := compton_fragments.ProductSection(compton_data.ProductDetailsSection)
 
 	if properties := compton_fragments.ProductProperties(s, id, rdx); properties != nil {
 		s.Append(properties)

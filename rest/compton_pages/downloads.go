@@ -99,13 +99,6 @@ func Downloads(id string, dls vangogh_integration.DownloadsList, rdx redux.Reada
 				pageStack.Append(compton.Hr())
 			}
 		}
-
-		//if ii != len(dlOs)-1 {
-		//
-		//	operatingSystemsHr := compton.Hr()
-		//	operatingSystemsHr.AddClass("os-hr")
-		//	pageStack.Append(operatingSystemsHr)
-		//}
 	}
 
 	return s
@@ -162,7 +155,9 @@ func validationResults(r compton.Registrar, id string, dls vangogh_integration.D
 func operatingSystemHeading(r compton.Registrar, os vangogh_integration.OperatingSystem) compton.Element {
 	osRow := compton.FlexItems(r, direction.Row).
 		AlignItems(align.Center).
-		ColumnGap(size.Small)
+		JustifyContent(align.Center).
+		ColumnGap(size.Small).
+		BackgroundColor(color.Background)
 	osRow.AddClass("operating-system-heading")
 	osSymbol := compton.Sparkle
 	if smb, ok := compton_data.OperatingSystemSymbols[os]; ok {

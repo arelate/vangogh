@@ -14,6 +14,7 @@ import (
 	"slices"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type formattedProperty struct {
@@ -105,8 +106,12 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 			}
 			fmtProperty.values[refTitle] = "/product?id=" + value
 		case vangogh_integration.GOGOrderDateProperty:
-			jtd := justTheDate(value)
-			fmtProperty.values[jtd] = searchHref(property, jtd)
+			jtd := formatDate(value)
+			if d, _, ok := strings.Cut(value, "T"); ok {
+				fmtProperty.values[jtd] = searchHref(property, d)
+			} else {
+				fmtProperty.values[jtd] = searchHref(property, value)
+			}
 		case vangogh_integration.LanguageCodeProperty:
 			fmtProperty.values[compton_data.FormatLanguage(value)] = searchHref(property, value)
 		case vangogh_integration.RatingProperty:
@@ -152,7 +157,9 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 				fmtProperty.values[fmtAggregatedRating(value)] = noHref()
 			}
 		default:
-			fmtProperty.values[value] = searchHref(property, value)
+			if value != "" {
+				fmtProperty.values[value] = searchHref(property, value)
+			}
 		}
 	}
 
@@ -330,6 +337,9 @@ func ratingDesc(ri int64) string {
 	return rd
 }
 
-func justTheDate(s string) string {
-	return strings.Split(s, " ")[0]
+func formatDate(s string) string {
+	if t, err := time.Parse(time.RFC3339, s); err == nil {
+		return t.Format("2006.01.02")
+	}
+	return s
 }

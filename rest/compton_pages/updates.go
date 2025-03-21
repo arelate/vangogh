@@ -72,7 +72,7 @@ func Updates(sections []string,
 		sectionStack := compton.FlexItems(p, direction.Column)
 		dsSection.Append(sectionStack)
 
-		productsList := compton_fragments.ProductsList(p, ids, 0, len(ids), rdx)
+		productsList := compton_fragments.ProductsList(p, ids, 0, len(ids), rdx, false)
 		sectionStack.Append(productsList)
 	}
 

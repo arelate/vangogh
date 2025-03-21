@@ -1,0 +1,14 @@
+html {
+    margin-inline: 0;
+}
+
+body {
+    max-width: unset;
+}
+
+.property-title {
+    padding: var(--s-s);
+    border-radius: var(--s-xs);
+    max-width: var(--s-maxw);
+    width: 100%;
+}

@@ -17,7 +17,6 @@ var ProductProperties = []string{
 	vangogh_integration.SteamReviewScoreDescProperty,
 	vangogh_integration.HltbReviewScoreProperty,
 	vangogh_integration.AggregatedRatingProperty,
-	vangogh_integration.SteamDeckAppCompatibilityCategoryProperty,
 	vangogh_integration.ProtonDBTierProperty,
 	vangogh_integration.ProtonDBConfidenceProperty,
 	vangogh_integration.DevelopersProperty,
@@ -35,10 +34,6 @@ var ProductProperties = []string{
 	vangogh_integration.GlobalReleaseDateProperty,
 	vangogh_integration.GOGReleaseDateProperty,
 	vangogh_integration.GOGOrderDateProperty,
-	vangogh_integration.IncludesGamesProperty,
-	vangogh_integration.IsIncludedByGamesProperty,
-	vangogh_integration.RequiresGamesProperty,
-	vangogh_integration.IsRequiredByGamesProperty,
 
 	vangogh_integration.HltbHoursToCompleteMainProperty,
 	vangogh_integration.HltbHoursToCompletePlusProperty,

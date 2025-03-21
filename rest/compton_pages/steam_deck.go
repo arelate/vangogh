@@ -15,13 +15,13 @@ import (
 
 var messageByCategory = map[string]string{
 	"Verified": "Valve’s testing indicates that <span class='title'>%s</span> is " +
-		"<span class='category verified'>Verified</span> on Steam Deck. " +
+		"<a class='category verified' target='_top' href='/search?steam-deck-app-compatibility-category=Verified'>Verified</a> on Steam Deck. " +
 		"This game is fully functional on Steam Deck, and works great with the built-in controls and display.",
 	"Playable": "Valve’s testing indicates that <span class='title'>%s</span> is " +
-		"<span class='category playable'>Playable</span> on Steam Deck. " +
+		"<a class='category playable' target='_top' href='/search?steam-deck-app-compatibility-category=Playable'>Playable</a> on Steam Deck. " +
 		"This game is functional on Steam Deck, but might require extra effort to interact with or configure.",
 	"Unsupported": "Valve’s testing indicates that <span class='title'>%s</span> is " +
-		"<span class='category unsupported'>Unsupported</span> on Steam Deck. " +
+		"<a class='category unsupported' target='_top' href='/search?steam-deck-app-compatibility-category=Unsupported'>Unsupported</a> on Steam Deck. " +
 		"Some or all of this game currently doesn't function on Steam Deck.",
 	"Unknown": "Valve is still learning about <span class='title'>%s</span>. " +
 		"We do not currently have further information regarding Steam Deck compatibility.",

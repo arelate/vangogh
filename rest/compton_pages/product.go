@@ -17,7 +17,36 @@ import (
 	"strings"
 )
 
-func Product(id string, rdx redux.Readable, hasSections []string) compton.PageElement {
+var (
+	propertiesSections = map[string]string{
+		vangogh_integration.DescriptionOverviewProperty: compton_data.DescriptionSection,
+		vangogh_integration.ChangelogProperty:           compton_data.ChangelogSection,
+		vangogh_integration.ScreenshotsProperty:         compton_data.ScreenshotsSection,
+		vangogh_integration.VideoIdProperty:             compton_data.VideosSection,
+	}
+	propertiesSectionsOrder = []string{
+		vangogh_integration.DescriptionOverviewProperty,
+		vangogh_integration.ChangelogProperty,
+		vangogh_integration.ScreenshotsProperty,
+		vangogh_integration.VideoIdProperty,
+	}
+
+	dataTypesSections = map[vangogh_integration.ProductType]string{
+		vangogh_integration.SteamAppNews:                 compton_data.SteamNewsSection,
+		vangogh_integration.SteamAppReviews:              compton_data.SteamReviewsSection,
+		vangogh_integration.SteamDeckCompatibilityReport: compton_data.SteamDeckSection,
+		//vangogh_integration.Details:                      compton_data.InstallersSection,
+	}
+
+	dataTypesSectionsOrder = []vangogh_integration.ProductType{
+		vangogh_integration.SteamAppNews,
+		vangogh_integration.SteamAppReviews,
+		vangogh_integration.SteamDeckCompatibilityReport,
+		//vangogh_integration.Details,
+	}
+)
+
+func Product(id string, rdx redux.Readable) compton.PageElement {
 
 	title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
 	if !ok {
@@ -37,6 +66,46 @@ func Product(id string, rdx redux.Readable, hasSections []string) compton.PageEl
 	appNavLinks := compton_fragments.AppNavLinks(p, "")
 
 	showToc := compton.InputValue(p, input_types.Button, compton.SectionLinksTitle)
+
+	/* Determine which sections should the product page have */
+
+	hasSections := make([]string, 0)
+
+	hasSections = append(hasSections, compton_data.ProductDetailsSection)
+
+	relatedProductsCount := 0
+	for _, rpp := range compton_data.RelatedProductsProperties {
+		var rps []string
+		if rps, ok = rdx.GetAllValues(rpp, id); ok {
+			relatedProductsCount += len(rps)
+		}
+	}
+
+	if relatedProductsCount > 0 {
+		hasSections = append(hasSections, compton_data.RelatedProductsSection)
+	}
+
+	hasSections = append(hasSections, compton_data.ExternalLinksSection)
+
+	for _, property := range propertiesSectionsOrder {
+		if section, ok := propertiesSections[property]; ok {
+			if val, sure := rdx.GetLastVal(property, id); sure && val != "" {
+				hasSections = append(hasSections, section)
+			}
+		}
+	}
+
+	for _, dt := range dataTypesSectionsOrder {
+		if section, ok := dataTypesSections[dt]; ok {
+			if rdx.HasValue(vangogh_integration.TypesProperty, id, dt.String()) {
+				hasSections = append(hasSections, section)
+			}
+		}
+	}
+
+	if val, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && val == vangogh_integration.TrueValue {
+		hasSections = append(hasSections, compton_data.InstallersSection)
+	}
 
 	/* Product details sections shortcuts */
 

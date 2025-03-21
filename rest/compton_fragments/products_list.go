@@ -8,12 +8,15 @@ import (
 
 const dehydratedCount = 3
 
-func ProductsList(r compton.Registrar, ids []string, from, to int, rdx redux.Readable) compton.Element {
+func ProductsList(r compton.Registrar, ids []string, from, to int, rdx redux.Readable, topTarget bool) compton.Element {
 	productCards := compton.GridItems(r).JustifyContent(align.Center)
 
 	for ii := from; ii < to; ii++ {
 		id := ids[ii]
 		productLink := compton.A("/product?id=" + id)
+		if topTarget {
+			productLink.SetAttribute("target", "_top")
+		}
 
 		if productCard := ProductCard(r, id, ii-from < dehydratedCount, rdx); productCard != nil {
 			productLink.Append(productCard)
