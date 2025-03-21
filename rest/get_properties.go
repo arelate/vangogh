@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func GetProperties(w http.ResponseWriter, r *http.Request) {
+func GetProductDetails(w http.ResponseWriter, r *http.Request) {
 
 	// GET /properties?id
 
@@ -17,7 +17,7 @@ func GetProperties(w http.ResponseWriter, r *http.Request) {
 
 	id := r.URL.Query().Get("id")
 
-	if p := compton_pages.Properties(id, rdx); p != nil {
+	if p := compton_pages.ProductDetails(id, rdx); p != nil {
 		if err := p.WriteResponse(w); err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		}

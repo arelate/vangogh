@@ -71,7 +71,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 	hasSections := make([]string, 0)
 
-	hasSections = append(hasSections, compton_data.PropertiesSection)
+	hasSections = append(hasSections, compton_data.ProductDetailsSection)
 
 	relatedProductsCount := 0
 	for _, rpp := range compton_data.RelatedProductsProperties {

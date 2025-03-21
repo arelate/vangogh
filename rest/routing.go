@@ -24,7 +24,7 @@ func HandleFuncs() {
 		"GET /updates":          Log(http.HandlerFunc(GetUpdates)),
 		"GET /product":          Log(http.HandlerFunc(GetProduct)),
 		"GET /search":           Log(http.HandlerFunc(GetSearch)),
-		"GET /properties":       Log(http.HandlerFunc(GetProperties)),
+		"GET /product-details":  Log(http.HandlerFunc(GetProductDetails)),
 		"GET /related-products": Log(http.HandlerFunc(GetRelatedProducts)),
 		"GET /external-links":   Log(http.HandlerFunc(GetExternalLinks)),
 		"GET /description":      Log(http.HandlerFunc(GetDescription)),

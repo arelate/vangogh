@@ -1,7 +1,7 @@
 package compton_data
 
 const (
-	PropertiesSection      = "properties"
+	ProductDetailsSection  = "product-details"
 	RelatedProductsSection = "related-products"
 	ExternalLinksSection   = "external-links"
 	DescriptionSection     = "description"
@@ -15,7 +15,7 @@ const (
 )
 
 var SectionTitles = map[string]string{
-	PropertiesSection:      "Properties",
+	ProductDetailsSection:  "Product Details",
 	RelatedProductsSection: "Editions and DLCs",
 	ExternalLinksSection:   "External Links",
 	DescriptionSection:     "Description",
