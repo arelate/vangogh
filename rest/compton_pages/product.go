@@ -74,15 +74,9 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 	hasSections = append(hasSections, compton_data.PropertiesSection)
 
 	relatedProductsCount := 0
-	relatedProductsProperties := []string{
-		vangogh_integration.IncludesGamesProperty,
-		vangogh_integration.RequiresGamesProperty,
-		vangogh_integration.IsIncludedByGamesProperty,
-		vangogh_integration.IsRequiredByGamesProperty}
-
-	for _, relatedProductProperty := range relatedProductsProperties {
+	for _, rpp := range compton_data.RelatedProductsProperties {
 		var rps []string
-		if rps, ok = rdx.GetAllValues(relatedProductProperty, id); ok {
+		if rps, ok = rdx.GetAllValues(rpp, id); ok {
 			relatedProductsCount += len(rps)
 		}
 	}

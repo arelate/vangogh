@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"github.com/arelate/vangogh/rest/compton_pages"
 	"github.com/boggydigital/nod"
 	"net/http"
 )
@@ -14,11 +15,11 @@ func GetRelatedProducts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//id := r.URL.Query().Get("id")
+	id := r.URL.Query().Get("id")
 
-	//if p := compton_pages.ExternalLinks(id, rdx); p != nil {
-	//	if err := p.WriteResponse(w); err != nil {
-	//		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-	//	}
-	//}
+	if p := compton_pages.RelatedProducts(id, rdx); p != nil {
+		if err := p.WriteResponse(w); err != nil {
+			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+		}
+	}
 }

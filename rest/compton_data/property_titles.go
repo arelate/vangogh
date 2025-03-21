@@ -21,11 +21,13 @@ var PropertyTitles = map[string]string{
 	vangogh_integration.FeaturesProperty:            "Features",
 	vangogh_integration.GameModesProperty:           "Game Modes",
 	vangogh_integration.LanguageCodeProperty:        "Language",
-	vangogh_integration.IncludesGamesProperty:       "Includes",
-	vangogh_integration.IsIncludedByGamesProperty:   "Included By",
-	vangogh_integration.RequiresGamesProperty:       "Requires",
-	vangogh_integration.IsRequiredByGamesProperty:   "Required By",
-	vangogh_integration.ProductTypeProperty:         "Product Type",
+
+	vangogh_integration.IsIncludedByGamesProperty: "Editions",
+	vangogh_integration.IsRequiredByGamesProperty: "DLCs",
+	vangogh_integration.IncludesGamesProperty:     "This Editions Contains",
+	vangogh_integration.RequiresGamesProperty:     "This DLC Requires",
+
+	vangogh_integration.ProductTypeProperty: "Product Type",
 
 	vangogh_integration.UserWishlistProperty: "Wishlisted",
 	vangogh_integration.OwnedProperty:        "Owned",

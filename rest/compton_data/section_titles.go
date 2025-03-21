@@ -16,7 +16,7 @@ const (
 
 var SectionTitles = map[string]string{
 	PropertiesSection:      "Properties",
-	RelatedProductsSection: "Editions, DLCs",
+	RelatedProductsSection: "Editions and DLCs",
 	ExternalLinksSection:   "External Links",
 	DescriptionSection:     "Description",
 	ChangelogSection:       "Changelog",

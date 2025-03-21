@@ -74,7 +74,7 @@ func Search(query map[string][]string, ids []string, from, to int, rdx redux.Rea
 	/* Search results product cards */
 
 	if len(ids) > 0 {
-		productsList := compton_fragments.ProductsList(p, ids, from, to, rdx)
+		productsList := compton_fragments.ProductsList(p, ids, from, to, rdx, false)
 		pageStack.Append(productsList)
 	}
 
