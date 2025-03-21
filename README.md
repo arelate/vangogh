@@ -21,17 +21,15 @@ services:
     container_name: vangogh
     image: ghcr.io/arelate/vangogh:latest
     environment:
-    # Download lists filters
-    # - VANGOGH_OS=Windows,macOS
-    # - VANGOGH_LANG-CODE=en,fr
-    # - VANGOGH_NO-PATCHES=true
-    # debug
+    # Set operating systems, languages, etc - customize to your needs
+      - VANGOGH_OS=Windows # possible values: Windows, macOS, Linux
+      - VANGOGH_LANG-CODE=en # see all possible values in https://github.com/arelate/southern_light/blob/main/gog_integration/languages.go  
+      - VANGOGH_NO-PATCHES=true # this disables individual patches downloads
+    # Uncomment (remove leading # in the line below) to create a log file on every sync 
     # - VANGOGH_SYNC_DEBUG=true    
     volumes:
-      # cold storage is less frequently accessed data,
-      # that can be stored on hibernating HDD.
-      # hot storage is frequently accessed data,
-      # that can benefit from being stored on SSD.
+      # cold storage - less frequently accessed data, that can be stored on hibernating HDD.
+      # hot storage - frequently accessed data, that can benefit from being stored on SSD.
       # backups (cold storage)
       - /docker/vangogh/backups:/var/lib/vangogh/backups
       # downloads (cold storage)
