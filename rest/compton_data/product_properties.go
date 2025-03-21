@@ -35,10 +35,6 @@ var ProductProperties = []string{
 	vangogh_integration.GlobalReleaseDateProperty,
 	vangogh_integration.GOGReleaseDateProperty,
 	vangogh_integration.GOGOrderDateProperty,
-	vangogh_integration.IncludesGamesProperty,
-	vangogh_integration.IsIncludedByGamesProperty,
-	vangogh_integration.RequiresGamesProperty,
-	vangogh_integration.IsRequiredByGamesProperty,
 
 	vangogh_integration.HltbHoursToCompleteMainProperty,
 	vangogh_integration.HltbHoursToCompletePlusProperty,
