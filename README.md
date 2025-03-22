@@ -16,7 +16,7 @@ A service to sync and serve games and data from GOG.com. Can be used as a CLI ap
 
 The recommended way to install `vangogh` is with docker-compose:
 
-- create a `docker-compose.yaml` file (this minimal example omits common settings like network, restart, etc):
+- create a `docker-compose.yml` file (this minimal example omits common settings like network, restart, etc):
 
 ```yaml
 version: '3'
@@ -121,6 +121,24 @@ Here are few estimates of how much space you'll need for each type of data:
   - 0.6Tb/1000 products for Linux, English installers, DLCs, extras
 
 `vangogh` directories allow you to use the best storage type for each data type. For example you might want to store installers, checksums and logs on slower HDDs as those are typically written and read sequentially. Metadata and images on the other hand would benefit from faster SSDs if you're using `vangogh` as a web frontend for your data.
+
+## Setting up authentication
+
+`vangogh` requires configured usernames/password to access more sensitive data (e.g. installers downloads). Unless you set those - you won't be able to access them through the CLI. You also need to set those for `theo` to be able to download games.
+
+Here's how to do that - you need to add that to `docker-compose.yml` in the `environment:` section:
+
+```yaml
+  # add this under environment: in docker-compose.yml
+  - VANGOGH_SERVE_ADMIN-USERNAME=admin-user
+  - VANGOGH_SERVE_ADMIN-PASSWORD=admin-password
+  - VANGOGH_SERVE_SHARED-USERNAME=shared-user
+  - VANGOGH_SERVE_SHARED-PASSWORD=shared-password
+```
+
+After setting those values - you'll need to restart `vangogh` service with `docker compose restart` (you'll need to be in the same directory `docker-compose.yml` for `vangogh` is).
+
+You can see up to date specification of what endpoints require authentication, as well as role requirements [here](https://github.com/arelate/vangogh/blob/main/rest/routing.go).
 
 ## Taking care of your data
 
