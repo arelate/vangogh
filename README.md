@@ -8,6 +8,10 @@ A service to sync and serve games and data from GOG.com. Can be used as a CLI ap
 | ![Product Dark](github_images/product-dark.jpeg) | ![Product Light](github_images/product-light.jpeg) |
 
 
+## Future vangogh ideas and aspirations
+
+`vnagogh` roadmap is available [here](ROADMAP.md).
+
 ## Installation
 
 The recommended way to install `vangogh` is with docker-compose:
