@@ -8,6 +8,9 @@
 
 backup
 
+cache-github-releases
+    force
+
 cascade-validation
 
 cleanup

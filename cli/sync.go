@@ -187,6 +187,10 @@ func Sync(
 		}
 	}
 
+	if err := CacheGitHubReleases(force); err != nil {
+		return err
+	}
+
 	syncEventsRdx, err := vangogh_integration.NewReduxWriter(vangogh_integration.SyncEventsProperty)
 	if err != nil {
 		return err
