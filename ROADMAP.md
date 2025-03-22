@@ -1,0 +1,14 @@
+# Future vangogh ideas and aspirations
+
+The list below is roughly (not precisely) stack ranked. That doesn't mean that the work will likely happen in that order though.
+
+1. [Effort: XL] Implement proper user support and permission model based on roles and capabilities (see https://github.com/arelate/vangogh/issues/91).
+2. [Effort: XL] Investigate implementing depot support (aka how Galaxy handles installations). See [this note](https://github.com/arelate/theo?tab=readme-ov-file#vangogh-technical-decisions-and-resulting-theo-behaviors) for explanation.
+3. [Effort: XL] (Likely depends on depot work above) Investigate supporting Steam DRM-free games.
+4. [Effort: XL] (Likely depends on depot work above) Investigate supporting Epic DRM-free games.
+5. [Effort: M] Integrate data from GOG Dreamlist. I've already looked into this during data refactor and added most of the bits required to implement full support. I stopped when I realized that Dreamlist is about 40K products (which is about 4x of GOG.com ~10K) and missing the point of doing this. With that said - for Steam/Epic/other stores support - Dreamlist might be able to supply high quality assets in GOG formats that would make certain things much easier (e.g. Steam Deck required assets map pretty cleanly to types of images GOG provides).
+6. [Effort: XL] Make `vangogh` web interface feature complete, like the CLI interface. This would require `nod` changes to allow tracking (and reporting) activity status.
+7. [Effort: M] Add support for different directories partitions and allow transitioning between them (see https://github.com/arelate/vangogh/issues/92#issuecomment-2744705150).
+8. [Effort: S] Improve product lists grids - specifically situations where small number of items is displayed on a large screen (e.g. 1 DLC in Editions and DLCs section).
+9. [Effort: M] Implement caching of GitHub releases for `theo`. Currently `theo` handles all GitHub interactions, however this is not ideal and I'd like to move that to `vangogh`. This should make it possible to setup `theo` in LAN-only scenarios or when certain project has been removed from GitHub (however unlikely that is).
+10. [Effort: L] Move all Ratings and Reviews into a separate section, replacing Steam Reviews section. As part of this consider creating an aggregate rating from all available sources and using Ratings and Reviews label to display it. Revisit [current ratings](https://github.com/arelate/vangogh/blob/b47c30a72035ed653d443f06d46562dad4ed23a4/rest/compton_fragments/product_properties.go#L320) to make sure various sources are consistent
