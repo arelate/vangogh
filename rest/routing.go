@@ -54,7 +54,7 @@ func HandleFuncs() {
 		"GET /api/health":             Log(http.HandlerFunc(GetHealth)),
 		"GET /api/health-auth":        Auth(Log(http.HandlerFunc(GetHealth)), AdminRole, SharedRole),
 		"GET /api/downloads-manifest": Log(http.HandlerFunc(GetDownloadsManifest)),
-		"GET /api/releases":           Log(http.HandlerFunc(GetReleases)),
+		"GET /api/github-releases":    Log(http.HandlerFunc(GetGitHubReleases)),
 		// debug endpoints
 		"GET /debug":                 Log(http.HandlerFunc(GetDebug)),
 		"GET /debug-data":            Auth(Log(http.HandlerFunc(GetDebugData)), AdminRole, SharedRole),

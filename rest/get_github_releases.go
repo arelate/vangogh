@@ -9,9 +9,9 @@ import (
 	"net/http"
 )
 
-func GetReleases(w http.ResponseWriter, r *http.Request) {
+func GetGitHubReleases(w http.ResponseWriter, r *http.Request) {
 
-	// GET /api/releases?owner-repo
+	// GET /api/github-releases?owner-repo
 
 	q := r.URL.Query()
 

@@ -21,6 +21,8 @@ import (
 	"time"
 )
 
+const forceGitHubUpdatesDays = 7
+
 func CacheGitHubReleasesHandler(u *url.URL) error {
 	return CacheGitHubReleases(u.Query().Has("force"))
 }
@@ -50,8 +52,6 @@ func CacheGitHubReleases(force bool) error {
 
 	return nil
 }
-
-const forceGitHubUpdatesDays = 30
 
 func getGitHubReleases(os vangogh_integration.OperatingSystem, force bool) error {
 
