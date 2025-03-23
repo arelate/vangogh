@@ -32,20 +32,20 @@ func CacheGitHubReleases(force bool) error {
 	cgra := nod.Begin("caching GitHub releases...")
 	defer cgra.Done()
 
-	for _, os := range vangogh_integration.AllOperatingSystems() {
-		if os == vangogh_integration.AnyOperatingSystem {
+	for _, operatingSystem := range vangogh_integration.AllOperatingSystems() {
+		if operatingSystem == vangogh_integration.AnyOperatingSystem {
 			continue
 		}
 
-		if err := getGitHubReleases(os, force); err != nil {
+		if err := getGitHubReleases(operatingSystem, force); err != nil {
 			return err
 		}
 
-		if err := downloadGitHubLatestRelease(os, force); err != nil {
+		if err := downloadGitHubLatestRelease(operatingSystem, force); err != nil {
 			return err
 		}
 
-		if err := cleanupGitHubReleases(os); err != nil {
+		if err := cleanupGitHubReleases(operatingSystem); err != nil {
 			return err
 		}
 	}
@@ -53,9 +53,9 @@ func CacheGitHubReleases(force bool) error {
 	return nil
 }
 
-func getGitHubReleases(os vangogh_integration.OperatingSystem, force bool) error {
+func getGitHubReleases(operatingSystem vangogh_integration.OperatingSystem, force bool) error {
 
-	ggra := nod.Begin(" getting GitHub releases for %s...", os)
+	ggra := nod.Begin(" getting GitHub releases for %s...", operatingSystem)
 	defer ggra.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -80,7 +80,7 @@ func getGitHubReleases(os vangogh_integration.OperatingSystem, force bool) error
 
 	forceRepoUpdate := force
 
-	for _, repo := range vangogh_integration.OperatingSystemGitHubRepos(os) {
+	for _, repo := range vangogh_integration.OperatingSystemGitHubRepos(operatingSystem) {
 
 		if ghsu, ok := rdx.GetLastVal(vangogh_integration.GitHubReleasesUpdatedProperty, repo); ok && ghsu != "" {
 			if ghsut, err := time.Parse(time.RFC3339, ghsu); err == nil {
@@ -196,9 +196,9 @@ func downloadRepoRelease(repo string, release *github_integration.GitHubRelease,
 	return nil
 }
 
-func cleanupGitHubReleases(os vangogh_integration.OperatingSystem) error {
+func cleanupGitHubReleases(operatingSystem vangogh_integration.OperatingSystem) error {
 
-	cra := nod.Begin("cleaning up cached GitHub releases, keeping the latest for %s...", os)
+	cra := nod.Begin("cleaning up cached GitHub releases, keeping the latest for %s...", operatingSystem)
 	defer cra.Done()
 
 	gitHubReleasesDir, err := pathways.GetAbsRelDir(vangogh_integration.GitHubReleases)
@@ -211,7 +211,7 @@ func cleanupGitHubReleases(os vangogh_integration.OperatingSystem) error {
 		return err
 	}
 
-	for _, repo := range vangogh_integration.OperatingSystemGitHubRepos(os) {
+	for _, repo := range vangogh_integration.OperatingSystemGitHubRepos(operatingSystem) {
 
 		if err = cleanupRepoReleases(repo, kvGitHubReleases); err != nil {
 			return err
