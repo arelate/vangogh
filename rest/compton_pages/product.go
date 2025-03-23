@@ -131,7 +131,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 	/* Product labels */
 
 	fmtLabels := compton_fragments.FormatLabels(id, rdx)
-	productLabels := compton.Labels(p, fmtLabels...).FontSize(size.Small).RowGap(size.XSmall).ColumnGap(size.XSmall)
+	productLabels := compton.Labels(p, fmtLabels...).FontSize(size.XSmall).RowGap(size.XSmall).ColumnGap(size.XSmall)
 	pageStack.Append(compton.FICenter(p, productTitle, productLabels))
 
 	/* Product short description */
@@ -141,7 +141,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 		shortDescFspan := compton.Fspan(p, shortDesc).
 			ForegroundColor(color.Gray).
-			FontSize(size.Small).
+			FontSize(size.XSmall).
 			TextAlign(align.Center)
 		oneLiner.Append(shortDescFspan)
 		oneLiner.AddClass("short-description")
@@ -154,8 +154,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 	properties, values := compton_fragments.SummarizeProductProperties(id, rdx)
 	osSymbols := make([]compton.Symbol, 0, 2)
 
-	summaryRow := compton.Frow(p).
-		FontSize(size.Small)
+	summaryRow := compton.Frow(p).FontSize(size.XSmall)
 
 	for _, p := range properties {
 		switch p {

@@ -53,7 +53,7 @@ func Search(query map[string][]string, ids []string, from, to int, rdx redux.Rea
 
 	var queryFrow *compton.FrowElement
 	if len(query) > 0 {
-		queryFrow = compton.Frow(p).FontSize(size.Small)
+		queryFrow = compton.Frow(p).FontSize(size.XSmall)
 		fq := compton_fragments.FormatQuery(query, rdx)
 		props := maps.Keys(query)
 		sortedPropes := slices.Sorted(props)

@@ -124,7 +124,7 @@ func validationResults(r compton.Registrar, id string, dls vangogh_integration.D
 		pvrc = compton_fragments.ValidationResultsColors[pvr]
 	}
 
-	valRes := compton.Frow(r).FontSize(size.Small).
+	valRes := compton.Frow(r).FontSize(size.XSmall).
 		IconColor(compton.Circle, pvrc).
 		Heading("Installers, DLC")
 	results := make(map[vangogh_integration.ValidationResult]int)
@@ -173,7 +173,7 @@ func operatingSystemHeading(r compton.Registrar, os vangogh_integration.Operatin
 	default:
 		osString = os.String()
 	}
-	osTitle.Append(compton.Fspan(r, osString))
+	osTitle.Append(compton.Fspan(r, osString).FontSize(size.Small))
 	osRow.Append(osIcon, osTitle)
 	return osRow
 }
@@ -181,7 +181,7 @@ func operatingSystemHeading(r compton.Registrar, os vangogh_integration.Operatin
 func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 
 	fr := compton.Frow(r).
-		FontSize(size.Small).
+		FontSize(size.XSmall).
 		IconColor(compton.Circle, downloadTypesColors[dv.dlType]).
 		Heading(downloadTypesStrings[dv.dlType])
 
@@ -272,12 +272,12 @@ func downloadLink(r compton.Registrar, productTitle string, dl vangogh_integrati
 	}
 
 	validationResult := compton.Fspan(r, vr.HumanReadableString()).
-		FontSize(size.Small).
+		FontSize(size.XSmall).
 		ForegroundColor(compton_fragments.ValidationResultsColors[vr]).
 		FontWeight(validationResultsFontWeights[vr])
 	linkColumn.Append(validationResult)
 
-	sizeFr := compton.Frow(r).FontSize(size.Small).
+	sizeFr := compton.Frow(r).FontSize(size.XSmall).
 		PropVal("Size", fmtBytes(dl.EstimatedBytes))
 	linkColumn.Append(sizeFr)
 
