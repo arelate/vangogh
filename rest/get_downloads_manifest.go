@@ -13,9 +13,9 @@ import (
 
 const applicationJsonContentType = "application/json"
 
-func GetMetadata(w http.ResponseWriter, r *http.Request) {
+func GetDownloadsManifest(w http.ResponseWriter, r *http.Request) {
 
-	// GET /metadata?id
+	// GET /downloads-manifest?id
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
@@ -34,51 +34,51 @@ func GetMetadata(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Content-Type", applicationJsonContentType)
 
-	dm, err := getProductMetadata(id, dls, rdx)
+	pdm, err := getProductDownloadsManifest(id, dls, rdx)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
 	}
 
-	if err := json.NewEncoder(w).Encode(dm); err != nil {
+	if err = json.NewEncoder(w).Encode(pdm); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}
 
 }
 
-func getProductMetadata(id string, dls vangogh_integration.DownloadsList, rdx redux.Readable) (*vangogh_integration.TheoMetadata, error) {
-	tm := &vangogh_integration.TheoMetadata{Id: id}
+func getProductDownloadsManifest(id string, dls vangogh_integration.DownloadsList, rdx redux.Readable) (*vangogh_integration.DownloadsManifest, error) {
+	dm := &vangogh_integration.DownloadsManifest{Id: id}
 	if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
-		tm.Title = title
+		dm.Title = title
 	}
 	if slug, ok := rdx.GetLastVal(vangogh_integration.SlugProperty, id); ok {
-		tm.Slug = slug
+		dm.Slug = slug
 	}
 
 	if image, ok := rdx.GetLastVal(vangogh_integration.ImageProperty, id); ok {
-		tm.Images.Image = image
+		dm.Images.Image = image
 	}
 	if verticalImage, ok := rdx.GetLastVal(vangogh_integration.VerticalImageProperty, id); ok {
-		tm.Images.VerticalImage = verticalImage
+		dm.Images.VerticalImage = verticalImage
 	}
 	if hero, ok := rdx.GetLastVal(vangogh_integration.HeroProperty, id); ok {
-		tm.Images.Hero = hero
+		dm.Images.Hero = hero
 	}
 	if logo, ok := rdx.GetLastVal(vangogh_integration.LogoProperty, id); ok {
-		tm.Images.Logo = logo
+		dm.Images.Logo = logo
 	}
 	if icon, ok := rdx.GetLastVal(vangogh_integration.IconProperty, id); ok {
-		tm.Images.Icon = icon
+		dm.Images.Icon = icon
 	}
 	if iconSquare, ok := rdx.GetLastVal(vangogh_integration.IconSquareProperty, id); ok {
-		tm.Images.IconSquare = iconSquare
+		dm.Images.IconSquare = iconSquare
 	}
 	if background, ok := rdx.GetLastVal(vangogh_integration.BackgroundProperty, id); ok {
-		tm.Images.Background = background
+		dm.Images.Background = background
 	}
 
 	for _, dl := range dls {
-		link := vangogh_integration.TheoDownloadLink{
+		link := vangogh_integration.ManifestDownloadLink{
 			ManualUrl:      dl.ManualUrl,
 			Name:           dl.Name,
 			OS:             dl.OS.String(),
@@ -113,10 +113,10 @@ func getProductMetadata(id string, dls vangogh_integration.DownloadsList, rdx re
 			link.ValidationResult = vangogh_integration.ValidationResultUnknown.String()
 		}
 
-		tm.DownloadLinks = append(tm.DownloadLinks, link)
+		dm.DownloadLinks = append(dm.DownloadLinks, link)
 	}
 
-	return tm, nil
+	return dm, nil
 }
 
 func getMd5Checksum(relLocalDownloadPath string) (string, error) {
@@ -133,7 +133,7 @@ func getMd5Checksum(relLocalDownloadPath string) (string, error) {
 	defer chkFile.Close()
 
 	var chkData vangogh_integration.ValidationFile
-	if err := xml.NewDecoder(chkFile).Decode(&chkData); err != nil {
+	if err = xml.NewDecoder(chkFile).Decode(&chkData); err != nil {
 		return "", err
 	}
 
