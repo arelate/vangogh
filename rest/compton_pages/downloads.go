@@ -165,7 +165,6 @@ func operatingSystemHeading(r compton.Registrar, os vangogh_integration.Operatin
 	}
 	osIcon := compton.SvgUse(r, osSymbol)
 	osIcon.AddClass("operating-system")
-	osTitle := compton.H3()
 	osString := ""
 	switch os {
 	case vangogh_integration.AnyOperatingSystem:
@@ -173,7 +172,7 @@ func operatingSystemHeading(r compton.Registrar, os vangogh_integration.Operatin
 	default:
 		osString = os.String()
 	}
-	osTitle.Append(compton.Fspan(r, osString).FontSize(size.Small))
+	osTitle := compton.Fspan(r, osString).FontSize(size.Small)
 	osRow.Append(osIcon, osTitle)
 	return osRow
 }
@@ -208,8 +207,6 @@ func downloadLinks(r compton.Registrar,
 	if len(downloads) > 1 {
 		dsTitle = fmt.Sprintf("%d download links", len(downloads))
 	}
-
-	//dsHeading := compton.Fspan(r, dsTitle).FontSize(size.Small)
 
 	dsDownloadLinks := compton.DSSmall(r, dsTitle, false)
 

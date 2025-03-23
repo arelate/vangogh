@@ -29,7 +29,8 @@ func RelatedProducts(id string, rdx redux.Readable) compton.PageElement {
 				ColumnGap(size.Small).
 				BackgroundColor(color.Background)
 			propertyTitleRow.AddClass("property-title")
-			propertyTitleRow.Append(compton.H3Text(compton_data.PropertyTitles[rpp]))
+			propertyTitleRow.Append(
+				compton.Fspan(s, compton_data.PropertyTitles[rpp]).FontSize(size.Small))
 
 			stack.Append(compton.FICenter(s, propertyTitleRow))
 			stack.Append(compton_fragments.ProductsList(s, rps, 0, len(rps), rdx, true))
