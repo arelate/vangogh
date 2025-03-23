@@ -80,9 +80,9 @@ func getGitHubReleases(os vangogh_integration.OperatingSystem, force bool) error
 
 	forceRepoUpdate := force
 
-	for _, repo := range vangogh_integration.OperatingSystemGitHubSources(os) {
+	for _, repo := range vangogh_integration.OperatingSystemGitHubRepos(os) {
 
-		if ghsu, ok := rdx.GetLastVal(vangogh_integration.GitHubReleasesUpdatedProperty, repo.OwnerRepo); ok && ghsu != "" {
+		if ghsu, ok := rdx.GetLastVal(vangogh_integration.GitHubReleasesUpdatedProperty, repo); ok && ghsu != "" {
 			if ghsut, err := time.Parse(time.RFC3339, ghsu); err == nil {
 				if ghsut.AddDate(0, 0, forceGitHubUpdatesDays).Before(time.Now()) {
 					forceRepoUpdate = true
@@ -98,17 +98,17 @@ func getGitHubReleases(os vangogh_integration.OperatingSystem, force bool) error
 	return nil
 }
 
-func getRepoReleases(ghs *github_integration.GitHubSource, kvGitHubReleases kevlar.KeyValues, rdx redux.Writeable, force bool) error {
+func getRepoReleases(repo string, kvGitHubReleases kevlar.KeyValues, rdx redux.Writeable, force bool) error {
 
-	grlra := nod.Begin(" %s...", ghs.OwnerRepo)
+	grlra := nod.Begin(" %s...", repo)
 	defer grlra.Done()
 
-	if kvGitHubReleases.Has(ghs.OwnerRepo) && !force {
+	if kvGitHubReleases.Has(repo) && !force {
 		grlra.EndWithResult("skip recently updated")
 		return nil
 	}
 
-	owner, repo, _ := strings.Cut(ghs.OwnerRepo, "/")
+	owner, repo, _ := strings.Cut(repo, "/")
 	ghsu := github_integration.ReleasesUrl(owner, repo)
 
 	resp, err := http.DefaultClient.Get(ghsu.String())
@@ -121,12 +121,12 @@ func getRepoReleases(ghs *github_integration.GitHubSource, kvGitHubReleases kevl
 		return errors.New(resp.Status)
 	}
 
-	if err = kvGitHubReleases.Set(ghs.OwnerRepo, resp.Body); err != nil {
+	if err = kvGitHubReleases.Set(repo, resp.Body); err != nil {
 		return err
 	}
 
 	ft := time.Now().Format(time.RFC3339)
-	return rdx.ReplaceValues(vangogh_integration.GitHubReleasesUpdatedProperty, ghs.OwnerRepo, ft)
+	return rdx.ReplaceValues(vangogh_integration.GitHubReleasesUpdatedProperty, repo, ft)
 }
 
 func downloadGitHubLatestRelease(operatingSystem vangogh_integration.OperatingSystem, force bool) error {
@@ -146,9 +146,9 @@ func downloadGitHubLatestRelease(operatingSystem vangogh_integration.OperatingSy
 
 	dc := dolo.DefaultClient
 
-	for _, ghs := range vangogh_integration.OperatingSystemGitHubSources(operatingSystem) {
+	for _, repo := range vangogh_integration.OperatingSystemGitHubRepos(operatingSystem) {
 
-		latestRelease, err := ghs.GetLatestRelease(kvGitHubReleases)
+		latestRelease, err := github_integration.GetLatestRelease(repo, kvGitHubReleases)
 		if err != nil {
 			return err
 		}
@@ -157,7 +157,7 @@ func downloadGitHubLatestRelease(operatingSystem vangogh_integration.OperatingSy
 			continue
 		}
 
-		if err = downloadRepoRelease(ghs, latestRelease, dc, force); err != nil {
+		if err = downloadRepoRelease(repo, latestRelease, dc, force); err != nil {
 			return err
 		}
 	}
@@ -165,12 +165,12 @@ func downloadGitHubLatestRelease(operatingSystem vangogh_integration.OperatingSy
 	return nil
 }
 
-func downloadRepoRelease(ghs *github_integration.GitHubSource, release *github_integration.GitHubRelease, dc *dolo.Client, force bool) error {
+func downloadRepoRelease(repo string, release *github_integration.GitHubRelease, dc *dolo.Client, force bool) error {
 
 	crra := nod.Begin(" - tag: %s...", release.TagName)
 	defer crra.Done()
 
-	asset := ghs.GetAsset(release)
+	asset := github_integration.GetReleaseAsset(repo, release)
 	if asset == nil {
 		crra.EndWithResult("asset not found")
 		return nil
@@ -181,7 +181,7 @@ func downloadRepoRelease(ghs *github_integration.GitHubSource, release *github_i
 		return err
 	}
 
-	relDir, err := vangogh_integration.AbsGitHubReleasesDir(ghs, release)
+	relDir, err := vangogh_integration.AbsGitHubReleasesDir(repo, release)
 	if err != nil {
 		return err
 	}
@@ -211,7 +211,7 @@ func cleanupGitHubReleases(os vangogh_integration.OperatingSystem) error {
 		return err
 	}
 
-	for _, repo := range vangogh_integration.OperatingSystemGitHubSources(os) {
+	for _, repo := range vangogh_integration.OperatingSystemGitHubRepos(os) {
 
 		if err = cleanupRepoReleases(repo, kvGitHubReleases); err != nil {
 			return err
@@ -221,11 +221,11 @@ func cleanupGitHubReleases(os vangogh_integration.OperatingSystem) error {
 	return nil
 }
 
-func cleanupRepoReleases(ghs *github_integration.GitHubSource, kvGitHubReleases kevlar.KeyValues) error {
-	crra := nod.Begin(" %s...", ghs.OwnerRepo)
+func cleanupRepoReleases(repo string, kvGitHubReleases kevlar.KeyValues) error {
+	crra := nod.Begin(" %s...", repo)
 	defer crra.Done()
 
-	rcReleases, err := kvGitHubReleases.Get(ghs.OwnerRepo)
+	rcReleases, err := kvGitHubReleases.Get(repo)
 	if err != nil {
 		return err
 	}
@@ -243,12 +243,12 @@ func cleanupRepoReleases(ghs *github_integration.GitHubSource, kvGitHubReleases 
 			continue
 		}
 
-		asset := ghs.GetAsset(&release)
+		asset := github_integration.GetReleaseAsset(repo, &release)
 		if asset == nil {
 			continue
 		}
 
-		absReleaseAssetPath, err := vangogh_integration.AbsGitHubReleaseAssetPath(ghs, &release, asset)
+		absReleaseAssetPath, err := vangogh_integration.AbsGitHubReleaseAssetPath(repo, &release, asset)
 		if err != nil {
 			return err
 		}
