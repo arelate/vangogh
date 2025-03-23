@@ -131,7 +131,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 	/* Product labels */
 
 	fmtLabels := compton_fragments.FormatLabels(id, rdx)
-	productLabels := compton.Labels(p, fmtLabels...).FontSize(size.XSmall).RowGap(size.XSmall).ColumnGap(size.XSmall)
+	productLabels := compton.Labels(p, fmtLabels...).FontSize(size.XXSmall).RowGap(size.XSmall).ColumnGap(size.XSmall)
 	pageStack.Append(compton.FICenter(p, productTitle, productLabels))
 
 	/* Product short description */

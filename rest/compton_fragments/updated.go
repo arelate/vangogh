@@ -11,5 +11,5 @@ func Updated(r compton.Registrar, updated string) compton.Element {
 	updatedTitle := compton.Fspan(r, "Updated: ").ForegroundColor(color.Gray)
 	updatedValue := compton.Fspan(r, updated)
 
-	return compton.FICenter(r, updatedTitle, updatedValue).FontSize(size.Small).ColumnGap(size.Small)
+	return compton.FICenter(r, updatedTitle, updatedValue).FontSize(size.XXSmall).ColumnGap(size.Small)
 }
