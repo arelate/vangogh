@@ -11,11 +11,11 @@ import (
 
 func GetGitHubReleases(w http.ResponseWriter, r *http.Request) {
 
-	// GET /api/github-releases?owner-repo
+	// GET /api/github-releases?repo
 
 	q := r.URL.Query()
 
-	ownerRepo := q.Get("owner-repo")
+	repo := q.Get("repo")
 
 	githubReleasesDir, err := pathways.GetAbsRelDir(vangogh_integration.GitHubReleases)
 	if err != nil {
@@ -29,11 +29,11 @@ func GetGitHubReleases(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !kvGitHubReleases.Has(ownerRepo) {
+	if !kvGitHubReleases.Has(repo) {
 		http.NotFound(w, r)
 	}
 
-	rcGitHubRelease, err := kvGitHubReleases.Get(ownerRepo)
+	rcGitHubRelease, err := kvGitHubReleases.Get(repo)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
@@ -44,5 +44,4 @@ func GetGitHubReleases(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
 	}
-
 }
