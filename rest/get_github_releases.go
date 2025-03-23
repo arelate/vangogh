@@ -31,6 +31,7 @@ func GetGitHubReleases(w http.ResponseWriter, r *http.Request) {
 
 	if !kvGitHubReleases.Has(repo) {
 		http.NotFound(w, r)
+		return
 	}
 
 	rcGitHubRelease, err := kvGitHubReleases.Get(repo)
