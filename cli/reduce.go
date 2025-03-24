@@ -66,6 +66,8 @@ func reduceProductType(pt vangogh_integration.ProductType) error {
 	}
 
 	switch pt {
+	case vangogh_integration.UserAccessToken:
+		// do nothing
 	case vangogh_integration.Licences:
 		return gog_data.ReduceLicences(kvPt)
 	case vangogh_integration.UserWishlist:
