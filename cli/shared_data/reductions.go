@@ -39,3 +39,15 @@ func filterEmptyValues(kv map[string][]string) map[string][]string {
 	}
 	return fkv
 }
+
+func IsNotEmpty(strs ...string) bool {
+	if len(strs) == 0 {
+		return false
+	}
+	for _, s := range strs {
+		if s != "" {
+			return true
+		}
+	}
+	return false
+}

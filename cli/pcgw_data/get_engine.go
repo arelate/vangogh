@@ -2,6 +2,7 @@ package pcgw_data
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/arelate/southern_light/pcgw_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
@@ -58,7 +59,9 @@ func getNewPcgwGogIds(pcgwGogIds map[string]string, kv kevlar.KeyValues, force b
 
 func ReduceEngine(pcgwGogIds map[string]string, kvEngine kevlar.KeyValues) error {
 
-	rea := nod.Begin(" reducing %s...", vangogh_integration.PcgwEngine)
+	dataType := vangogh_integration.PcgwEngine
+
+	rea := nod.Begin(" reducing %s...", dataType)
 	defer rea.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -74,6 +77,11 @@ func ReduceEngine(pcgwGogIds map[string]string, kvEngine kevlar.KeyValues) error
 	engineReductions := shared_data.InitReductions(vangogh_integration.PcgwEngineProperties()...)
 
 	for pcgwPageId, gogId := range pcgwGogIds {
+		if !kvEngine.Has(pcgwPageId) {
+			nod.LogError(fmt.Errorf("%s is missing %s", dataType, pcgwPageId))
+			continue
+		}
+
 		if err = reduceEngineProduct(gogId, pcgwPageId, kvEngine, engineReductions); err != nil {
 			return err
 		}
@@ -106,7 +114,9 @@ func reduceEngineProduct(gogId, pcgwPageId string, kvEngine kevlar.KeyValues, pi
 			values = engine.GetEnginesBuilds()
 		}
 
-		piv[property][gogId] = values
+		if shared_data.IsNotEmpty(values...) {
+			piv[property][gogId] = values
+		}
 
 	}
 

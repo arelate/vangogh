@@ -2,6 +2,7 @@ package gog_data
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
@@ -46,7 +47,10 @@ func GetGamesDbGogProducts(hc *http.Client, uat string, since int64, force bool)
 }
 
 func ReduceGamesDbGogProducts(kvGamesDbGogProducts kevlar.KeyValues, since int64) error {
-	rgdgpa := nod.Begin(" reducing %s...", vangogh_integration.GamesDbGogProducts)
+
+	dataType := vangogh_integration.GamesDbGogProducts
+
+	rgdgpa := nod.Begin(" reducing %s...", dataType)
 	defer rgdgpa.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -64,6 +68,11 @@ func ReduceGamesDbGogProducts(kvGamesDbGogProducts kevlar.KeyValues, since int64
 	updatedGamesDbGogProducts := kvGamesDbGogProducts.Since(since, kevlar.Create, kevlar.Update)
 
 	for id := range updatedGamesDbGogProducts {
+		if !kvGamesDbGogProducts.Has(id) {
+			nod.LogError(fmt.Errorf("%s is missing %s", dataType, id))
+			continue
+		}
+
 		if err = reduceGamesDbGogProduct(id, kvGamesDbGogProducts, gamesDbGogProductsReductions); err != nil {
 			return err
 		}
@@ -104,7 +113,9 @@ func reduceGamesDbGogProduct(id string, kvGamesDbGogProducts kevlar.KeyValues, p
 			values = gdgp.GetGameModes()
 		}
 
-		piv[property][id] = values
+		if shared_data.IsNotEmpty(values...) {
+			piv[property][id] = values
+		}
 
 	}
 

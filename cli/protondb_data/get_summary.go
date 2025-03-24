@@ -2,6 +2,7 @@ package protondb_data
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/arelate/southern_light/protondb_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
@@ -40,7 +41,9 @@ func GetSummary(steamGogIds map[string]string, since int64, force bool) error {
 
 func ReduceSummary(kvSummary kevlar.KeyValues, since int64) error {
 
-	rsa := nod.Begin(" reducing %s...", vangogh_integration.ProtonDbSummary)
+	dataType := vangogh_integration.ProtonDbSummary
+
+	rsa := nod.Begin(" reducing %s...", dataType)
 	defer rsa.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -58,6 +61,11 @@ func ReduceSummary(kvSummary kevlar.KeyValues, since int64) error {
 	updatedSummaries := kvSummary.Since(since, kevlar.Create, kevlar.Update)
 
 	for steamAppId := range updatedSummaries {
+		if !kvSummary.Has(steamAppId) {
+			nod.LogError(fmt.Errorf("%s is missing %s", dataType, steamAppId))
+			continue
+		}
+
 		if matches := rdx.Match(map[string][]string{vangogh_integration.SteamAppIdProperty: {steamAppId}}, redux.FullMatch); matches != nil {
 			for gogId := range matches {
 				if err = reduceSummaryProduct(gogId, steamAppId, kvSummary, summaryReductions); err != nil {
@@ -94,7 +102,9 @@ func reduceSummaryProduct(gogId, steamAppId string, kvSummary kevlar.KeyValues, 
 			values = []string{sum.GetConfidence()}
 		}
 
-		piv[property][gogId] = values
+		if shared_data.IsNotEmpty(values...) {
+			piv[property][gogId] = values
+		}
 
 	}
 

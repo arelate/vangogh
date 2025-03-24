@@ -1,6 +1,7 @@
 package gog_data
 
 import (
+	"fmt"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
 	"github.com/arelate/vangogh/cli/reqs"
@@ -40,7 +41,10 @@ func GetDetails(hc *http.Client, uat string, since int64) error {
 }
 
 func ReduceDetails(kvDetails kevlar.KeyValues, since int64) error {
-	rda := nod.Begin(" reducing %s...", vangogh_integration.Details)
+
+	dataType := vangogh_integration.Details
+
+	rda := nod.Begin(" reducing %s...", dataType)
 	defer rda.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -58,6 +62,11 @@ func ReduceDetails(kvDetails kevlar.KeyValues, since int64) error {
 	updatedDetails := kvDetails.Since(since, kevlar.Create, kevlar.Update)
 
 	for id := range updatedDetails {
+		if !kvDetails.Has(id) {
+			nod.LogError(fmt.Errorf("%s is missing %s", dataType, id))
+			continue
+		}
+
 		if err = reduceDetailsProduct(id, kvDetails, detailReductions); err != nil {
 			return err
 		}
@@ -96,7 +105,9 @@ func reduceDetailsProduct(id string, kvDetails kevlar.KeyValues, piv shared_data
 			values = []string{det.GetChangelog()}
 		}
 
-		piv[property][id] = values
+		if shared_data.IsNotEmpty(values...) {
+			piv[property][id] = values
+		}
 	}
 
 	return nil

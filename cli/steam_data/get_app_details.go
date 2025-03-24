@@ -2,6 +2,7 @@ package steam_data
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
@@ -41,7 +42,9 @@ func GetAppDetails(steamGogIds map[string]string, since int64, force bool) error
 
 func ReduceAppDetails(kvAppDetails kevlar.KeyValues, since int64) error {
 
-	rada := nod.Begin(" reducing %s...", vangogh_integration.SteamAppDetails)
+	dataType := vangogh_integration.SteamAppDetails
+
+	rada := nod.Begin(" reducing %s...", dataType)
 	defer rada.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -59,6 +62,11 @@ func ReduceAppDetails(kvAppDetails kevlar.KeyValues, since int64) error {
 	updatedAppDetails := kvAppDetails.Since(since, kevlar.Create, kevlar.Update)
 
 	for steamAppId := range updatedAppDetails {
+		if !kvAppDetails.Has(steamAppId) {
+			nod.LogError(fmt.Errorf("%s is missing %s", dataType, steamAppId))
+			continue
+		}
+
 		for gogId := range rdx.Match(map[string][]string{vangogh_integration.SteamAppIdProperty: {steamAppId}}, redux.FullMatch) {
 			if err = reduceAppDetailsProduct(gogId, steamAppId, kvAppDetails, appDetailsReductions); err != nil {
 				return err
@@ -111,7 +119,9 @@ func reduceAppDetailsProduct(gogId, steamAppId string, kvAppDetails kevlar.KeyVa
 			values = []string{ad.GetSupportEmail()}
 		}
 
-		piv[property][gogId] = values
+		if shared_data.IsNotEmpty(values...) {
+			piv[property][gogId] = values
+		}
 
 	}
 

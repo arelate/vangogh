@@ -2,6 +2,7 @@ package gog_data
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/reqs"
@@ -37,7 +38,9 @@ func GetAccountPages(hc *http.Client, uat string, since int64) error {
 
 func ReduceAccountPages(kvAccountPages kevlar.KeyValues, since int64) error {
 
-	rapa := nod.Begin(" reducing %s...", vangogh_integration.AccountPage)
+	pageType := vangogh_integration.AccountPage
+
+	rapa := nod.Begin(" reducing %s...", pageType)
 	defer rapa.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -55,6 +58,12 @@ func ReduceAccountPages(kvAccountPages kevlar.KeyValues, since int64) error {
 	updatedAccountPages := kvAccountPages.Since(since, kevlar.Create, kevlar.Update)
 
 	for page := range updatedAccountPages {
+
+		if !kvAccountPages.Has(page) {
+			nod.LogError(fmt.Errorf("%s is missing %s", pageType, page))
+			continue
+		}
+
 		if err = reduceAccountPage(page, kvAccountPages, accountPagesReductions); err != nil {
 			return err
 		}
@@ -75,8 +84,6 @@ func reduceAccountPage(page string, kvAccountPages kevlar.KeyValues, piv shared_
 	if err = json.NewDecoder(rcAccountPage).Decode(&accountPage); err != nil {
 		return err
 	}
-
-	//accountPageReduction := make(map[string]map[string][]string)
 
 	// reduce tag names that are provided by account page, not product
 	// and use any page to do that (any page would work equally well)
@@ -100,10 +107,11 @@ func reduceAccountPage(page string, kvAccountPages kevlar.KeyValues, piv shared_
 				values = []string{page}
 			}
 
-			piv[property][strconv.Itoa(ap.Id)] = values
+			if shared_data.IsNotEmpty(values...) {
+				piv[property][strconv.Itoa(ap.Id)] = values
+			}
 		}
 	}
 
 	return nil
-
 }

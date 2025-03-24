@@ -2,6 +2,7 @@ package hltb_data
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/arelate/southern_light/hltb_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
@@ -101,7 +102,9 @@ func readBuildId() (string, error) {
 
 func ReduceData(kvData kevlar.KeyValues, since int64) error {
 
-	rda := nod.Begin(" reducing %s...", vangogh_integration.HltbData)
+	dataType := vangogh_integration.HltbData
+
+	rda := nod.Begin(" reducing %s...", dataType)
 	defer rda.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -119,6 +122,11 @@ func ReduceData(kvData kevlar.KeyValues, since int64) error {
 	updatedData := kvData.Since(since, kevlar.Create, kevlar.Update)
 
 	for hltbId := range updatedData {
+		if !kvData.Has(hltbId) {
+			nod.LogError(fmt.Errorf("%s is missing %s", dataType, hltbId))
+			continue
+		}
+
 		if matches := rdx.Match(map[string][]string{vangogh_integration.HltbIdProperty: {hltbId}}, redux.FullMatch); matches != nil {
 			for gogId := range matches {
 				if err = reduceDataProduct(gogId, hltbId, kvData, dataReductions); err != nil {
@@ -165,7 +173,9 @@ func reduceDataProduct(gogId, hltbId string, kvData kevlar.KeyValues, piv shared
 			values = []string{data.GetIgnWikiSlug()}
 		}
 
-		piv[property][gogId] = values
+		if shared_data.IsNotEmpty(values...) {
+			piv[property][gogId] = values
+		}
 
 	}
 

@@ -2,6 +2,7 @@ package steam_data
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
@@ -40,7 +41,9 @@ func GetAppReviews(steamGogIds map[string]string, since int64, force bool) error
 
 func ReduceAppReviews(kvAppReviews kevlar.KeyValues, since int64) error {
 
-	rara := nod.Begin(" reducing %s...", vangogh_integration.SteamAppReviews)
+	dataType := vangogh_integration.SteamAppReviews
+
+	rara := nod.Begin(" reducing %s...", dataType)
 	defer rara.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -62,6 +65,11 @@ func ReduceAppReviews(kvAppReviews kevlar.KeyValues, since int64) error {
 	updatedAppReviews := kvAppReviews.Since(since, kevlar.Create, kevlar.Update)
 
 	for steamAppId := range updatedAppReviews {
+		if !kvAppReviews.Has(steamAppId) {
+			nod.LogError(fmt.Errorf("%s is missing %s", dataType, steamAppId))
+			continue
+		}
+
 		for gogId := range rdx.Match(map[string][]string{vangogh_integration.SteamAppIdProperty: {steamAppId}}, redux.FullMatch) {
 			if err = reduceAppReviewsProduct(gogId, steamAppId, kvAppReviews, appReviewsReductions); err != nil {
 				return err
@@ -94,7 +102,9 @@ func reduceAppReviewsProduct(gogId, steamAppId string, kvAppReviews kevlar.KeyVa
 			values = []string{sar.GetReviewScoreDesc()}
 		}
 
-		piv[property][gogId] = values
+		if shared_data.IsNotEmpty(values...) {
+			piv[property][gogId] = values
+		}
 
 	}
 

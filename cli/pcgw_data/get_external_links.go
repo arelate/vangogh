@@ -2,6 +2,7 @@ package pcgw_data
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/arelate/southern_light/pcgw_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
@@ -40,6 +41,8 @@ func GetExternalLinks(pcgwGogIds map[string]string, force bool) error {
 
 func ReduceExternalLinks(pcgwGogIds map[string]string, kvExternalLinks kevlar.KeyValues) error {
 
+	dataType := vangogh_integration.PcgwExternalLinks
+
 	rela := nod.Begin(" reducing %s...", vangogh_integration.PcgwExternalLinks)
 	defer rela.Done()
 
@@ -56,6 +59,11 @@ func ReduceExternalLinks(pcgwGogIds map[string]string, kvExternalLinks kevlar.Ke
 	externalLinksReductions := shared_data.InitReductions(vangogh_integration.PcgwExternalLinksProperties()...)
 
 	for pcgwPageId, gogId := range pcgwGogIds {
+		if !kvExternalLinks.Has(pcgwPageId) {
+			nod.LogError(fmt.Errorf("%s is missing %s", dataType, pcgwPageId))
+			continue
+		}
+
 		if err = reduceExternalLinksProduct(gogId, pcgwPageId, kvExternalLinks, externalLinksReductions); err != nil {
 			return err
 		}
@@ -96,7 +104,9 @@ func reduceExternalLinksProduct(gogId, pcgwPageId string, kvExternalLinks kevlar
 			values = []string{externalLinks.GetStrategyWikiId()}
 		}
 
-		piv[property][gogId] = values
+		if shared_data.IsNotEmpty(values...) {
+			piv[property][gogId] = values
+		}
 
 	}
 

@@ -2,6 +2,7 @@ package steam_data
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
@@ -41,7 +42,9 @@ func GetDeckCompatibilityReports(steamGogIds map[string]string, since int64, for
 
 func ReduceDeckCompatibilityReports(kvDeckCompatibilityReports kevlar.KeyValues, since int64) error {
 
-	rdcra := nod.Begin(" reducing %s...", vangogh_integration.SteamDeckCompatibilityReport)
+	dataType := vangogh_integration.SteamDeckCompatibilityReport
+
+	rdcra := nod.Begin(" reducing %s...", dataType)
 	defer rdcra.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -62,6 +65,11 @@ func ReduceDeckCompatibilityReports(kvDeckCompatibilityReports kevlar.KeyValues,
 	updatedDeckCompatibilityReviews := kvDeckCompatibilityReports.Since(since, kevlar.Create, kevlar.Update)
 
 	for steamAppId := range updatedDeckCompatibilityReviews {
+		if !kvDeckCompatibilityReports.Has(steamAppId) {
+			nod.LogError(fmt.Errorf("%s is missing %s", dataType, steamAppId))
+			continue
+		}
+
 		for gogId := range rdx.Match(map[string][]string{vangogh_integration.SteamAppIdProperty: {steamAppId}}, redux.FullMatch) {
 			if err = reduceDeckCompatibilityReportsProduct(gogId, steamAppId, kvDeckCompatibilityReports, deckCompatibilityReportsReductions); err != nil {
 				return err
@@ -98,7 +106,9 @@ func reduceDeckCompatibilityReportsProduct(gogId, steamAppId string, kvDeckCompa
 			values = []string{dcr.String()}
 		}
 
-		piv[property][gogId] = values
+		if shared_data.IsNotEmpty(values...) {
+			piv[property][gogId] = values
+		}
 
 	}
 

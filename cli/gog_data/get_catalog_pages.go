@@ -2,6 +2,7 @@ package gog_data
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/reqs"
@@ -42,7 +43,9 @@ func GetCatalogPages(hc *http.Client, uat string, since int64) error {
 
 func ReduceCatalogPages(kvCatalogPages kevlar.KeyValues, since int64) error {
 
-	rcpa := nod.Begin(" reducing %s...", vangogh_integration.CatalogPage)
+	pageType := vangogh_integration.CatalogPage
+
+	rcpa := nod.Begin(" reducing %s...", pageType)
 	defer rcpa.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -60,6 +63,11 @@ func ReduceCatalogPages(kvCatalogPages kevlar.KeyValues, since int64) error {
 	updatedCatalogPages := kvCatalogPages.Since(since, kevlar.Create, kevlar.Update)
 
 	for page := range updatedCatalogPages {
+		if !kvCatalogPages.Has(page) {
+			nod.LogError(fmt.Errorf("%s is missing %s", pageType, page))
+			continue
+		}
+
 		if err = reduceCatalogPage(page, kvCatalogPages, catalogPagesReductions, rdx); err != nil {
 			return err
 		}
@@ -147,7 +155,9 @@ func reduceCatalogPage(page string, kvCatalogPages kevlar.KeyValues, piv shared_
 				}
 			}
 
-			piv[property][cp.Id] = values
+			if shared_data.IsNotEmpty(values...) {
+				piv[property][cp.Id] = values
+			}
 		}
 	}
 

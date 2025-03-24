@@ -2,6 +2,7 @@ package gog_data
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/reqs"
@@ -37,7 +38,9 @@ func GetOrderPages(hc *http.Client, uat string, since int64, force bool) error {
 
 func ReduceOrderPages(kvOrderPages kevlar.KeyValues, since int64) error {
 
-	ropa := nod.Begin(" reducing %s...", vangogh_integration.OrderPage)
+	pageType := vangogh_integration.OrderPage
+
+	ropa := nod.Begin(" reducing %s...", pageType)
 	defer ropa.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -58,6 +61,11 @@ func ReduceOrderPages(kvOrderPages kevlar.KeyValues, since int64) error {
 	updatedOrderPages := kvOrderPages.Since(since, kevlar.Create, kevlar.Update)
 
 	for page := range updatedOrderPages {
+		if !kvOrderPages.Has(page) {
+			nod.LogError(fmt.Errorf("%s is missing %s", pageType, page))
+			continue
+		}
+
 		if err = reduceOrderPage(page, kvOrderPages, orderPagesReductions, rdx); err != nil {
 			return err
 		}

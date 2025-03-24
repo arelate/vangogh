@@ -2,6 +2,7 @@ package pcgw_data
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/arelate/southern_light/pcgw_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
@@ -68,7 +69,9 @@ func GetGameSteamGogIds(steamGogIds map[string]string) (map[string]string, error
 
 func ReduceSteamPageIds(steamGogIds map[string]string, kvPageId kevlar.KeyValues) error {
 
-	rpia := nod.Begin(" reducing %s...", vangogh_integration.PcgwSteamPageId)
+	dataType := vangogh_integration.PcgwSteamPageId
+
+	rpia := nod.Begin(" reducing %s...", dataType)
 	defer rpia.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -84,6 +87,11 @@ func ReduceSteamPageIds(steamGogIds map[string]string, kvPageId kevlar.KeyValues
 	pageIdReductions := shared_data.InitReductions(vangogh_integration.PcgwPageIdProperties()...)
 
 	for steamAppId, gogId := range steamGogIds {
+		if !kvPageId.Has(steamAppId) {
+			nod.LogError(fmt.Errorf("%s is missing %s", dataType, steamAppId))
+			continue
+		}
+
 		if err = reduceSteamPageIdProduct(gogId, steamAppId, kvPageId, pageIdReductions); err != nil {
 			return err
 		}
@@ -114,7 +122,9 @@ func reduceSteamPageIdProduct(gogId, steamAppId string, kvPageId kevlar.KeyValue
 			values = []string{pageId.GetPageId()}
 		}
 
-		piv[property][gogId] = values
+		if shared_data.IsNotEmpty(values...) {
+			piv[property][gogId] = values
+		}
 
 	}
 

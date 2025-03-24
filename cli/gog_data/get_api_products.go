@@ -2,6 +2,7 @@ package gog_data
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
@@ -52,7 +53,9 @@ func GetApiProducts(hc *http.Client, uat string, since int64, force bool) error 
 
 func ReduceApiProducts(kvApiProducts kevlar.KeyValues, since int64) error {
 
-	rapa := nod.Begin(" reducing %s...", vangogh_integration.ApiProducts)
+	dataType := vangogh_integration.ApiProducts
+
+	rapa := nod.Begin(" reducing %s...", dataType)
 	defer rapa.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -70,6 +73,11 @@ func ReduceApiProducts(kvApiProducts kevlar.KeyValues, since int64) error {
 	updatedApiProducts := kvApiProducts.Since(since, kevlar.Create, kevlar.Update)
 
 	for id := range updatedApiProducts {
+		if !kvApiProducts.Has(id) {
+			nod.LogError(fmt.Errorf("%s is missing %s", dataType, id))
+			continue
+		}
+
 		if err = reduceApiProduct(id, kvApiProducts, apiProductReductions); err != nil {
 			return err
 		}
@@ -166,7 +174,9 @@ func reduceApiProduct(id string, kvApiProduct kevlar.KeyValues, piv shared_data.
 			values = []string{strconv.FormatBool(ap.GetPreOrder())}
 		}
 
-		piv[property][id] = values
+		if shared_data.IsNotEmpty(values...) {
+			piv[property][id] = values
+		}
 
 	}
 
