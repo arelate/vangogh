@@ -20,15 +20,56 @@ import (
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/boggydigital/compton"
+	"github.com/boggydigital/compton/consts/align"
+	"github.com/boggydigital/compton/consts/color"
+	"github.com/boggydigital/compton/consts/direction"
+	"github.com/boggydigital/compton/consts/font_weight"
+	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/redux"
 	"net/url"
+	"strings"
 )
 
 func ExternalLinks(id string, rdx redux.Readable) compton.PageElement {
 	s := compton_fragments.ProductSection(compton_data.ExternalLinksSection)
 
-	if links := compton_fragments.ProductExternalLinks(s, externalLinks(id, rdx)); links != nil {
-		s.Append(links)
+	stack := compton.FlexItems(s, direction.Column)
+	s.Append(stack)
+
+	extLinks := externalLinks(id, rdx)
+
+	for _, linkProperty := range compton_data.ProductExternalLinksProperties {
+		if links, ok := extLinks[linkProperty]; ok && len(links) > 0 {
+
+			linksTypeRow := compton.FlexItems(s, direction.Row).
+				AlignItems(align.Center).
+				JustifyContent(align.Center).
+				ColumnGap(size.Small).
+				BackgroundColor(color.Background)
+			stack.Append(linksTypeRow)
+
+			linksTypeRow.AddClass("links-type")
+			linksTypeRow.Append(
+				compton.Fspan(s, compton_data.PropertyTitles[linkProperty]).FontSize(size.Small))
+
+			linksRow := compton.FlexItems(s, direction.Row)
+			stack.Append(linksRow)
+
+			linksRow.AddClass("links-row")
+
+			for _, link := range links {
+				if lp, value, sure := strings.Cut(link, "="); sure {
+
+					a := compton.A(value)
+					a.Append(compton.Fspan(s,
+						compton_data.PropertyTitles[lp]).
+						ForegroundColor(color.Cyan).
+						FontWeight(font_weight.Bolder))
+
+					linksRow.Append(a)
+				}
+			}
+		}
 	}
 
 	return s

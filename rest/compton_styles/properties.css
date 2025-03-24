@@ -1,5 +1,5 @@
 body {
-    max-width: unset;
+    max-width: calc(2 * var(--s-maxw));
 }
 
 @scope (title-values) {
