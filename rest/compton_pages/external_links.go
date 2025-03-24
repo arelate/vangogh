@@ -63,6 +63,7 @@ func ExternalLinks(id string, rdx redux.Readable) compton.PageElement {
 					a := compton.A(value)
 					a.Append(compton.Fspan(s,
 						compton_data.PropertyTitles[lp]).
+						FontSize(size.Small).
 						ForegroundColor(color.Cyan).
 						FontWeight(font_weight.Bolder))
 
