@@ -116,6 +116,8 @@ func reduceProductType(pt vangogh_integration.ProductType) error {
 			return err
 		}
 		return pcgw_data.ReduceEngine(pcgwGogIds, kvPt)
+	case vangogh_integration.HltbRootPage:
+		// do nothing
 	case vangogh_integration.HltbData:
 		return hltb_data.ReduceData(kvPt, -1)
 	case vangogh_integration.ProtonDbSummary:
