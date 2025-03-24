@@ -50,6 +50,7 @@ var PropertyTitles = map[string]string{
 	vangogh_integration.GOGOrderDateProperty:                      "GOG.com Order",
 	vangogh_integration.ProductValidationResultProperty:           "Validation Result",
 	vangogh_integration.RatingProperty:                            "Rating",
+	vangogh_integration.MetacriticScoreProperty:                   "Metacritic Rating",
 	vangogh_integration.AggregatedRatingProperty:                  "Aggregated Rating",
 	vangogh_integration.PriceProperty:                             "Price",
 	vangogh_integration.BasePriceProperty:                         "Base Price",

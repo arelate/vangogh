@@ -152,6 +152,8 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 			fmtProperty.values[value] = grdSortedSearchHref(property, value)
 		case vangogh_integration.EnginesBuildsProperty:
 			fmtProperty.values[value] = noHref()
+		case vangogh_integration.MetacriticScoreProperty:
+			fallthrough
 		case vangogh_integration.AggregatedRatingProperty:
 			if value != "" {
 				fmtProperty.values[fmtAggregatedRating(value)] = noHref()
@@ -190,6 +192,8 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 		fmtProperty.class = reviewClass(fmtGOGRating(firstValue))
 	case vangogh_integration.HltbReviewScoreProperty:
 		fmtProperty.class = reviewClass(fmtHltbRating(firstValue))
+	case vangogh_integration.MetacriticScoreProperty:
+		fallthrough
 	case vangogh_integration.AggregatedRatingProperty:
 		fmtProperty.class = reviewClass(fmtAggregatedRating(firstValue))
 	case vangogh_integration.SteamDeckAppCompatibilityCategoryProperty:
@@ -320,7 +324,7 @@ func fmtAggregatedRating(rs string) string {
 func ratingDesc(ri int64) string {
 	rd := "Not Rated"
 	if ri >= 95 {
-		rd = "Overwhelming Positive"
+		rd = "Overwhelmingly Positive"
 	} else if ri >= 85 {
 		rd = "Very Positive"
 	} else if ri >= 80 {
