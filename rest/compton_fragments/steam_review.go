@@ -17,18 +17,25 @@ func SteamReview(r compton.Registrar, review steam_integration.Review) compton.E
 
 	container := compton.FlexItems(r, direction.Column).RowGap(size.Normal)
 
-	votedTitle := "Not Recommended"
-	votedColor := color.Red
-	if review.VotedUp {
-		votedTitle = "Recommended"
+	var votedTitle string
+	var votedColor color.Color
+
+	switch review.VotedUp {
+	case true:
+		votedTitle = "&#x1F44D;" // "Recommended"
 		votedColor = color.Green
+	case false:
+		votedTitle = "&#x1F44E;" // "Not Recommended"
+		votedColor = color.Red
 	}
 
-	container.Append(compton.H3Text(votedTitle))
+	topFr := compton.Frow(r).FontSize(size.XSmall)
 
-	topFr := compton.Frow(r).
-		FontSize(size.XSmall).
-		IconColor(compton.Circle, votedColor).Heading("Author")
+	thumbsUpDown := compton.Fspan(r, votedTitle).ForegroundColor(votedColor)
+	thumbsUpDown.AddClass("monochrome-emoji")
+	topFr.Elements(thumbsUpDown)
+
+	topFr.Heading("Author")
 
 	if review.Author.NumGamesOwned > 0 {
 		topFr.PropVal("Games", strconv.Itoa(review.Author.NumGamesOwned))

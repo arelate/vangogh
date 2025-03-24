@@ -15,3 +15,9 @@ pre {
     overflow: hidden;
     word-break: break-word;
 }
+
+fspan.monochrome-emoji {
+    color: transparent;
+    text-shadow: 0 0 0 var(--fg);
+    font-size: var(--fs-n)
+}
