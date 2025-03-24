@@ -323,18 +323,10 @@ func fmtAggregatedRating(rs string) string {
 
 func ratingDesc(ri int64) string {
 	rd := "Not Rated"
-	if ri >= 95 {
-		rd = "Overwhelmingly Positive"
-	} else if ri >= 85 {
-		rd = "Very Positive"
-	} else if ri >= 80 {
+	if ri >= 70 {
 		rd = "Positive"
-	} else if ri >= 70 {
-		rd = "Mostly Positive"
 	} else if ri >= 40 {
 		rd = "Mixed"
-	} else if ri >= 20 {
-		rd = "Mostly Negative"
 	} else if ri > 0 {
 		rd = "Negative"
 	}
