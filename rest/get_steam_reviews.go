@@ -11,7 +11,7 @@ import (
 	"net/http"
 )
 
-func GetSteamReviews(w http.ResponseWriter, r *http.Request) {
+func GetRatingsReviews(w http.ResponseWriter, r *http.Request) {
 
 	// GET /steam-reviews?id
 

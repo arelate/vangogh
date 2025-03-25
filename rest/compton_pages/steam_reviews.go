@@ -12,7 +12,7 @@ import (
 
 func SteamReviews(sar *steam_integration.AppReviews) compton.PageElement {
 
-	s := compton_fragments.ProductSection(compton_data.SteamReviewsSection)
+	s := compton_fragments.ProductSection(compton_data.RatingsReviewsSections)
 
 	pageStack := compton.FlexItems(s, direction.Column)
 	s.Append(pageStack)

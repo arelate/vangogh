@@ -33,16 +33,14 @@ var (
 
 	dataTypesSections = map[vangogh_integration.ProductType]string{
 		vangogh_integration.SteamAppNews:                 compton_data.SteamNewsSection,
-		vangogh_integration.SteamAppReviews:              compton_data.SteamReviewsSection,
+		vangogh_integration.SteamAppReviews:              compton_data.RatingsReviewsSections,
 		vangogh_integration.SteamDeckCompatibilityReport: compton_data.SteamDeckSection,
-		//vangogh_integration.Details:                      compton_data.InstallersSection,
 	}
 
 	dataTypesSectionsOrder = []vangogh_integration.ProductType{
 		vangogh_integration.SteamAppNews,
 		vangogh_integration.SteamAppReviews,
 		vangogh_integration.SteamDeckCompatibilityReport,
-		//vangogh_integration.Details,
 	}
 )
 
@@ -156,18 +154,18 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 	summaryRow := compton.Frow(p).FontSize(size.XSmall)
 
-	for _, p := range properties {
-		switch p {
+	for _, property := range properties {
+		switch property {
 		case vangogh_integration.OperatingSystemsProperty:
-			osValues := vangogh_integration.ParseManyOperatingSystems(values[p])
+			osValues := vangogh_integration.ParseManyOperatingSystems(values[property])
 			for _, os := range compton_data.OSOrder {
 				if slices.Contains(osValues, os) {
 					osSymbols = append(osSymbols, compton_data.OperatingSystemSymbols[os])
 				}
 			}
-			summaryRow.PropIcons(compton_data.PropertyTitles[p], osSymbols...)
+			summaryRow.PropIcons(compton_data.PropertyTitles[property], osSymbols...)
 		default:
-			summaryRow.PropVal(compton_data.PropertyTitles[p], strings.Join(values[p], ", "))
+			summaryRow.PropVal(compton_data.PropertyTitles[property], strings.Join(values[property], ", "))
 		}
 	}
 	pageStack.Append(compton.FICenter(p, summaryRow))
@@ -193,7 +191,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 				detailsSummary.SetLabelBackgroundColor(sdcc)
 				detailsSummary.SetLabelForegroundColor(color.Highlight)
 			}
-		case compton_data.SteamReviewsSection:
+		case compton_data.RatingsReviewsSections:
 			if srsdt, srsdc := compton_fragments.SteamReviewScoreDesc(id, rdx); srsdt != "" {
 				detailsSummary.SetLabelText(srsdt)
 				detailsSummary.SetLabelBackgroundColor(srsdc)
@@ -219,13 +217,4 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 		compton.Footer(p, "Arles", "https://github.com/arelate", "🇫🇷"))
 
 	return p
-}
-
-func theoCommand(r compton.Registrar, cmdTemplate, id string) compton.Element {
-	cmd := strings.Replace(cmdTemplate, "{id}", id, -1)
-	cmdContainer := compton.Fspan(r, cmd).
-		ForegroundColor(color.Gray).
-		TextAlign(align.Center)
-	cmdContainer.AddClass("cmd")
-	return compton.FICenter(r, cmdContainer)
 }
