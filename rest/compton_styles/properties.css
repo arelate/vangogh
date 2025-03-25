@@ -4,17 +4,22 @@ body {
 
 @scope (title-values) {
 
-    &.positive .values {
+    &.Positive .values {
         --fg: var(--c-green);
     }
 
-    &.negative .values {
+    &.Negative .values {
         --fg: var(--c-red);
     }
 
-    &.neutral .values {
+    &.Mixed .values {
+        --fg: var(--c-yellow);
+    }
+
+    &.Not .Rated .values {
         --fg: var(--c-gray);
     }
+
 
     &.Verified .values {
         --fg: var(--c-green)

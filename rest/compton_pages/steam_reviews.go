@@ -8,9 +8,10 @@ import (
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
+	"github.com/boggydigital/compton/consts/size"
 )
 
-func SteamReviews(sar *steam_integration.AppReviews) compton.PageElement {
+func RatingsReviews(sar *steam_integration.AppReviews) compton.PageElement {
 
 	s := compton_fragments.ProductSection(compton_data.RatingsReviewsSections)
 
@@ -22,6 +23,18 @@ func SteamReviews(sar *steam_integration.AppReviews) compton.PageElement {
 			ForegroundColor(color.Gray).
 			TextAlign(align.Center)
 		pageStack.Append(compton.FICenter(s, fs))
+	}
+
+	if len(sar.Reviews) > 0 {
+		steamReviewsRow := compton.FlexItems(s, direction.Row).
+			AlignItems(align.Center).
+			JustifyContent(align.Center).
+			ColumnGap(size.Small).
+			BackgroundColor(color.Background)
+		steamReviewsRow.AddClass("steam-reviews")
+		steamReviewsRow.Append(
+			compton.Fspan(s, "Steam Reviews").FontSize(size.Small))
+		pageStack.Append(steamReviewsRow)
 	}
 
 	for ii, review := range sar.Reviews {

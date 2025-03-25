@@ -6,30 +6,25 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-func SteamReviewScoreDesc(id string, rdx redux.Readable) (string, color.Color) {
+func SummaryReviews(id string, rdx redux.Readable) (string, color.Color) {
 
-	if srsdp, ok := rdx.GetLastVal(vangogh_integration.SteamReviewScoreDescProperty, id); ok {
-
-		//srsd := compton.Fspan(r, srsdp).
-		//	FontSize(size.Small).
-		//	FontWeight(font_weight.Normal).
-		//	PaddingInline(size.XSmall).
-		//	PaddingBlock(size.XXSmall).
-		//	BorderRadius(size.XXSmall)
+	if srp, ok := rdx.GetLastVal(vangogh_integration.SummaryReviewsProperty, id); ok {
 
 		var c color.Color
-		switch reviewClass(srsdp) {
-		case "positive":
+		switch srp {
+		case vangogh_integration.RatingPositive:
 			c = color.Green
-		case "negative":
+		case vangogh_integration.RatingNegative:
 			c = color.Red
+		case vangogh_integration.RatingMixed:
+			c = color.Yellow
 		default:
 			c = color.Gray
 		}
 
-		return srsdp, c
+		return srp, c
 
 	}
 
-	return "", color.Transparent
+	return vangogh_integration.RatingUnknown, color.Gray
 }

@@ -45,6 +45,10 @@ func Reduce(productTypes []vangogh_integration.ProductType) error {
 		return err
 	}
 
+	if err := shared_data.ReduceSummaryRatings(); err != nil {
+		return err
+	}
+
 	return nil
 }
 

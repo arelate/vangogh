@@ -192,9 +192,9 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 				detailsSummary.SetLabelForegroundColor(color.Highlight)
 			}
 		case compton_data.RatingsReviewsSections:
-			if srsdt, srsdc := compton_fragments.SteamReviewScoreDesc(id, rdx); srsdt != "" {
-				detailsSummary.SetLabelText(srsdt)
-				detailsSummary.SetLabelBackgroundColor(srsdc)
+			if srp, src := compton_fragments.SummaryReviews(id, rdx); srp != "" {
+				detailsSummary.SetLabelText(srp)
+				detailsSummary.SetLabelBackgroundColor(src)
 				detailsSummary.SetLabelForegroundColor(color.Highlight)
 			}
 		case compton_data.InstallersSection:

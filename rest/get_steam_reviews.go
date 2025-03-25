@@ -13,7 +13,7 @@ import (
 
 func GetRatingsReviews(w http.ResponseWriter, r *http.Request) {
 
-	// GET /steam-reviews?id
+	// GET /ratings-reviews?id
 
 	gogId := r.URL.Query().Get("id")
 
@@ -23,7 +23,7 @@ func GetRatingsReviews(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	p := compton_pages.SteamReviews(appReviews)
+	p := compton_pages.RatingsReviews(appReviews)
 
 	if err := p.Write(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)

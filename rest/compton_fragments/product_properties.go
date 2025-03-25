@@ -278,21 +278,23 @@ func propertyTitleValues(r compton.Registrar, property string, fmtProperty forma
 }
 
 func reviewClass(sr string) string {
-	if strings.Contains(sr, "Positive") {
-		return "positive"
-	} else if strings.Contains(sr, "Negative") {
-		return "negative"
+	if strings.Contains(sr, vangogh_integration.RatingPositive) {
+		return vangogh_integration.RatingPositive
+	} else if strings.Contains(sr, vangogh_integration.RatingNegative) {
+		return vangogh_integration.RatingNegative
+	} else if strings.Contains(sr, vangogh_integration.RatingMixed) {
+		return vangogh_integration.RatingMixed
 	} else {
-		return "neutral"
+		return vangogh_integration.RatingUnknown
 	}
 }
 
 func fmtGOGRating(rs string) string {
 	rd := ""
 	if ri, err := strconv.ParseInt(rs, 10, 32); err == nil {
-		rd = ratingDesc(ri * 2)
+		rd = vangogh_integration.RatingDesc(ri * 2)
 		if ri > 0 {
-			rd += fmt.Sprintf(" (%.1f)", float32(ri)/10.0)
+			rd += fmt.Sprintf(" (%.1f)", float32(ri))
 		}
 	}
 	return rd
@@ -301,7 +303,7 @@ func fmtGOGRating(rs string) string {
 func fmtHltbRating(rs string) string {
 	rd := ""
 	if ri, err := strconv.ParseInt(rs, 10, 32); err == nil {
-		rd = ratingDesc(ri)
+		rd = vangogh_integration.RatingDesc(ri)
 		if ri > 0 {
 			rd += fmt.Sprintf(" (%d)", ri)
 		}
@@ -313,22 +315,10 @@ func fmtAggregatedRating(rs string) string {
 	rd := ""
 	if rf, err := strconv.ParseFloat(rs, 64); err == nil {
 		ri := int64(rf)
-		rd = ratingDesc(ri)
+		rd = vangogh_integration.RatingDesc(ri)
 		if ri > 0 {
 			rd += fmt.Sprintf(" (%d)", ri)
 		}
-	}
-	return rd
-}
-
-func ratingDesc(ri int64) string {
-	rd := "Not Rated"
-	if ri >= 70 {
-		rd = "Positive"
-	} else if ri >= 40 {
-		rd = "Mixed"
-	} else if ri > 0 {
-		rd = "Negative"
 	}
 	return rd
 }

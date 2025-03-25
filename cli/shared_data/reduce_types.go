@@ -10,8 +10,8 @@ import (
 
 func ReduceTypes() error {
 
-	ta := nod.Begin(" reducing %s...", vangogh_integration.TypesProperty)
-	defer ta.Done()
+	rta := nod.Begin(" reducing %s...", vangogh_integration.TypesProperty)
+	defer rta.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {

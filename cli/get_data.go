@@ -206,6 +206,10 @@ func GetData(productTypes []vangogh_integration.ProductType, since int64, force 
 		return err
 	}
 
+	if err = shared_data.ReduceSummaryRatings(); err != nil {
+		return err
+	}
+
 	return nil
 }
 
