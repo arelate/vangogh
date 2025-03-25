@@ -35,13 +35,17 @@ func ReduceSummaryRatings() error {
 			if grf, err := strconv.ParseFloat(grs, 32); err == nil {
 				summaryRating += int(grf * 2)
 				summaryRatingsCount++
+			} else {
+				nod.LogError(err)
 			}
 		}
 
-		if srs, ok := rdx.GetLastVal(vangogh_integration.AggregatedRatingProperty, id); ok && srs != "" && srs != "0" {
-			if sri, err := strconv.ParseInt(srs, 10, 32); err == nil {
-				summaryRating += int(sri)
+		if ars, ok := rdx.GetLastVal(vangogh_integration.AggregatedRatingProperty, id); ok && ars != "" && ars != "0" {
+			if ari, err := strconv.ParseFloat(ars, 32); err == nil {
+				summaryRating += int(ari)
 				summaryRatingsCount++
+			} else {
+				nod.LogError(err)
 			}
 		}
 
@@ -49,6 +53,8 @@ func ReduceSummaryRatings() error {
 			if mri, err := strconv.ParseInt(mrs, 10, 32); err == nil {
 				summaryRating += int(mri)
 				summaryRatingsCount++
+			} else {
+				nod.LogError(err)
 			}
 		}
 
@@ -56,6 +62,8 @@ func ReduceSummaryRatings() error {
 			if hri, err := strconv.ParseInt(hrs, 10, 32); err == nil {
 				summaryRating += int(hri)
 				summaryRatingsCount++
+			} else {
+				nod.LogError(err)
 			}
 		}
 
