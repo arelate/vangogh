@@ -34,6 +34,10 @@ func RatingsReviews(id string, sar *steam_integration.AppReviews, rdx redux.Read
 		pageStack.Append(rrp)
 	}
 
+	if sar == nil {
+		return s
+	}
+
 	steamReviewsRow := compton.FlexItems(s, direction.Row).
 		AlignItems(align.Center).
 		JustifyContent(align.Center).

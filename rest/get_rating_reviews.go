@@ -24,8 +24,9 @@ func GetRatingsReviews(w http.ResponseWriter, r *http.Request) {
 
 	appReviews, err := getSteamReviews(gogId)
 	if err != nil {
-		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-		return
+		nod.Log(err.Error())
+		//http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+		//return
 	}
 
 	p := compton_pages.RatingsReviews(gogId, appReviews, rdx)
