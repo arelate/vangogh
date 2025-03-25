@@ -61,6 +61,7 @@ func ExternalLinks(id string, rdx redux.Readable) compton.PageElement {
 				if lp, value, sure := strings.Cut(link, "="); sure {
 
 					a := compton.A(value)
+					a.SetAttribute("target", "_top")
 					a.Append(compton.Fspan(s,
 						compton_data.PropertyTitles[lp]).
 						FontSize(size.Small).
