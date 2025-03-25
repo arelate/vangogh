@@ -24,10 +24,6 @@ var SearchProperties = []string{
 	vangogh_integration.FeaturesProperty,
 	vangogh_integration.GameModesProperty,
 	vangogh_integration.LanguageCodeProperty,
-	vangogh_integration.IncludesGamesProperty,
-	vangogh_integration.IsIncludedByGamesProperty,
-	vangogh_integration.RequiresGamesProperty,
-	vangogh_integration.IsRequiredByGamesProperty,
 	vangogh_integration.ProductTypeProperty,
 
 	vangogh_integration.OwnedProperty,
