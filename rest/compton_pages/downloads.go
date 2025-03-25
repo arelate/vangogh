@@ -55,7 +55,7 @@ func Downloads(id string, dls vangogh_integration.DownloadsList, rdx redux.Reada
 
 	s := compton_fragments.ProductSection(compton_data.InstallersSection)
 
-	pageStack := compton.FlexItems(s, direction.Column)
+	pageStack := compton.FlexItems(s, direction.Column).RowGap(size.Normal)
 	s.Append(pageStack)
 
 	if owned, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && owned == vangogh_integration.FalseValue {
@@ -80,18 +80,20 @@ func Downloads(id string, dls vangogh_integration.DownloadsList, rdx redux.Reada
 		productTitles := getProductTitles(os, dls)
 		for jj, productTitle := range productTitles {
 
-			titleHeadings := compton.H4Text(productTitle)
-			pageStack.Append(titleHeadings)
+			productStack := compton.FlexItems(s, direction.Column).RowGap(size.Normal)
+			pageStack.Append(productStack)
+
+			titleHeadings := compton.H3Text(productTitle)
+			productStack.Append(titleHeadings)
 
 			variants := getDownloadVariants(os, productTitle, dls)
 
 			for _, variant := range variants {
 				if dv := downloadVariant(s, variant); dv != nil {
-					pageStack.Append(dv)
+					productStack.Append(dv)
 				}
 				if dlLinks := downloadLinks(s, os, productTitle, variant, dls, rdx); dlLinks != nil {
-					pageStack.Append(dlLinks)
-
+					productStack.Append(dlLinks)
 				}
 			}
 
@@ -210,8 +212,7 @@ func downloadLinks(r compton.Registrar,
 
 	dsDownloadLinks := compton.DSSmall(r, dsTitle, false)
 
-	downloadsColumn := compton.FlexItems(r, direction.Column).
-		RowGap(size.Normal)
+	downloadsColumn := compton.FlexItems(r, direction.Column).RowGap(size.Normal)
 	dsDownloadLinks.Append(downloadsColumn)
 
 	for ii, dl := range downloads {
@@ -233,8 +234,7 @@ func downloadLink(r compton.Registrar, productTitle string, dl vangogh_integrati
 	link := compton.A("/files?manual-url=" + dl.ManualUrl)
 	link.AddClass("download", dl.Type.String())
 
-	linkColumn := compton.FlexItems(r, direction.Column).
-		RowGap(size.Small)
+	linkColumn := compton.FlexItems(r, direction.Column).RowGap(size.Small)
 
 	name := dl.Name
 	if dl.Type == vangogh_integration.DLC {

@@ -18,7 +18,7 @@ func RelatedProducts(id string, rdx redux.Readable) compton.PageElement {
 	s.RegisterStyles(compton_styles.Styles, "product-labels.css")
 	s.AppendSpeculationRules("/product?id=*")
 
-	stack := compton.FlexItems(s, direction.Column)
+	stack := compton.FlexItems(s, direction.Column).RowGap(size.Normal)
 	s.Append(stack)
 
 	for _, rpp := range compton_data.RelatedProductsProperties {

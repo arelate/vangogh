@@ -179,8 +179,8 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 			BackgroundColor(color.Highlight).
 			ForegroundColor(color.Foreground).
 			MarkerColor(color.Gray).
-			SummaryMarginBlockEnd(size.Normal).
-			DetailsMarginBlockEnd(size.Unset)
+			DetailsMarginBlockEnd(size.Unset).
+			SummaryMarginBlockEnd(size.Normal)
 		detailsSummary.SetId(sectionTitle)
 		detailsSummary.SetTabIndex(ii + 1)
 
@@ -203,6 +203,8 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 				detailsSummary.SetLabelBackgroundColor(pvrc)
 				detailsSummary.SetLabelForegroundColor(color.Highlight)
 			}
+		default:
+			detailsSummary.SummaryMarginBlockEnd(size.Normal)
 		}
 
 		ifh := compton.IframeExpandHost(p, section, "/"+section+"?id="+id)

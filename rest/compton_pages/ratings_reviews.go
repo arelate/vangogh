@@ -27,7 +27,7 @@ func RatingsReviews(id string, sar *steam_integration.AppReviews, rdx redux.Read
 	s := compton_fragments.ProductSection(compton_data.RatingsReviewsSection)
 	s.RegisterStyles(compton_styles.Styles, "ratings.css")
 
-	pageStack := compton.FlexItems(s, direction.Column)
+	pageStack := compton.FlexItems(s, direction.Column).RowGap(size.Normal)
 	s.Append(pageStack)
 
 	for _, rrp := range compton_fragments.ProductProperties(s, id, rdx, ratingReviewsProperties...) {
