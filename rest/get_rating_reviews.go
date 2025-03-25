@@ -15,6 +15,11 @@ func GetRatingsReviews(w http.ResponseWriter, r *http.Request) {
 
 	// GET /ratings-reviews?id
 
+	if err := RefreshRedux(); err != nil {
+		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+		return
+	}
+
 	gogId := r.URL.Query().Get("id")
 
 	appReviews, err := getSteamReviews(gogId)
@@ -23,7 +28,7 @@ func GetRatingsReviews(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	p := compton_pages.RatingsReviews(appReviews)
+	p := compton_pages.RatingsReviews(gogId, appReviews, rdx)
 
 	if err := p.Write(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)

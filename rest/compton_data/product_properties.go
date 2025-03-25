@@ -15,12 +15,6 @@ var ProductProperties = []string{
 	vangogh_integration.PriceProperty,
 	vangogh_integration.LanguageCodeProperty,
 
-	vangogh_integration.RatingProperty,
-	vangogh_integration.MetacriticScoreProperty,
-	vangogh_integration.SteamReviewScoreDescProperty,
-	vangogh_integration.AggregatedRatingProperty,
-	vangogh_integration.HltbReviewScoreProperty,
-
 	vangogh_integration.SeriesProperty,
 	vangogh_integration.GenresProperty,
 	vangogh_integration.ThemesProperty,

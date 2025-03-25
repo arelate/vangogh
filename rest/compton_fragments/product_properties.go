@@ -23,25 +23,26 @@ type formattedProperty struct {
 	actions map[string]string
 }
 
-func ProductProperties(r compton.Registrar, id string, rdx redux.Readable) compton.Element {
-	grid := compton.GridItems(r).JustifyContent(align.Center)
+func ProductProperties(r compton.Registrar, id string, rdx redux.Readable, properties ...string) []compton.Element {
 
-	for _, property := range compton_data.ProductProperties {
+	productProperties := make([]compton.Element, 0)
+
+	for _, property := range properties {
 
 		if property == vangogh_integration.OperatingSystemsProperty {
 			if tv := operatingSystemsTitleValues(r, id, rdx); tv != nil {
-				grid.Append(tv)
+				productProperties = append(productProperties, tv)
 				continue
 			}
 		}
 
 		fmtProperty := formatProperty(id, property, rdx)
 		if tv := propertyTitleValues(r, property, fmtProperty); tv != nil {
-			grid.Append(tv)
+			productProperties = append(productProperties, tv)
 		}
 	}
 
-	return grid
+	return productProperties
 }
 
 func searchHref(property, value string) string {
@@ -294,7 +295,7 @@ func fmtGOGRating(rs string) string {
 	if ri, err := strconv.ParseInt(rs, 10, 32); err == nil {
 		rd = vangogh_integration.RatingDesc(ri * 2)
 		if ri > 0 {
-			rd += fmt.Sprintf(" (%.1f)", float32(ri))
+			rd += fmt.Sprintf(" (%.0f)", float32(ri*2))
 		}
 	}
 	return rd

@@ -9,7 +9,7 @@ const (
 	ScreenshotsSection     = "screenshots"
 	VideosSection          = "videos"
 	SteamNewsSection       = "steam-news"
-	RatingsReviewsSections = "ratings-reviews"
+	RatingsReviewsSection  = "ratings-reviews"
 	SteamDeckSection       = "steam-deck"
 	InstallersSection      = "installers"
 )
@@ -23,7 +23,7 @@ var SectionTitles = map[string]string{
 	ScreenshotsSection:     "Screenshots",
 	VideosSection:          "Videos",
 	SteamNewsSection:       "Steam News",
-	RatingsReviewsSections: "Ratings and Reviews",
+	RatingsReviewsSection:  "Ratings and Reviews",
 	SteamDeckSection:       "Steam Deck",
 	InstallersSection:      "Installers",
 }

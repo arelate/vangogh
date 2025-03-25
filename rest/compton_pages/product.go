@@ -33,13 +33,11 @@ var (
 
 	dataTypesSections = map[vangogh_integration.ProductType]string{
 		vangogh_integration.SteamAppNews:                 compton_data.SteamNewsSection,
-		vangogh_integration.SteamAppReviews:              compton_data.RatingsReviewsSections,
 		vangogh_integration.SteamDeckCompatibilityReport: compton_data.SteamDeckSection,
 	}
 
 	dataTypesSectionsOrder = []vangogh_integration.ProductType{
 		vangogh_integration.SteamAppNews,
-		vangogh_integration.SteamAppReviews,
 		vangogh_integration.SteamDeckCompatibilityReport,
 	}
 )
@@ -78,6 +76,8 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 			relatedProductsCount += len(rps)
 		}
 	}
+
+	hasSections = append(hasSections, compton_data.RatingsReviewsSection)
 
 	if relatedProductsCount > 0 {
 		hasSections = append(hasSections, compton_data.RelatedProductsSection)
@@ -191,7 +191,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 				detailsSummary.SetLabelBackgroundColor(sdcc)
 				detailsSummary.SetLabelForegroundColor(color.Highlight)
 			}
-		case compton_data.RatingsReviewsSections:
+		case compton_data.RatingsReviewsSection:
 			if srp, src := compton_fragments.SummaryReviews(id, rdx); srp != "" {
 				detailsSummary.SetLabelText(srp)
 				detailsSummary.SetLabelBackgroundColor(src)

@@ -1,39 +1,3 @@
 body {
     max-width: calc(2 * var(--s-maxw));
 }
-
-@scope (title-values) {
-
-    &.Positive .values {
-        --fg: var(--c-green);
-    }
-
-    &.Negative .values {
-        --fg: var(--c-red);
-    }
-
-    &.Mixed .values {
-        --fg: var(--c-yellow);
-    }
-
-    &.Not .Rated .values {
-        --fg: var(--c-gray);
-    }
-
-
-    &.Verified .values {
-        --fg: var(--c-green)
-    }
-
-    &.Playable .values {
-        --fg: var(--c-orange)
-    }
-
-    &.Unsupported .values {
-        --fg: var(--c-red)
-    }
-
-    &.Unknown .values {
-        --fg: var(--c-gray)
-    }
-}
