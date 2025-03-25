@@ -63,6 +63,9 @@ var PropertyTitles = map[string]string{
 	vangogh_integration.HltbPlatformsProperty:           "HLTB Platforms",
 	vangogh_integration.HltbReviewScoreProperty:         "HLTB Rating",
 
+	vangogh_integration.SummaryRatingProperty:  "Summary Rating",
+	vangogh_integration.SummaryReviewsProperty: "Summary Reviews",
+
 	GauginGOGLinksProperty:   "GOG.com Links",
 	GauginOtherLinksProperty: "Other Links",
 	GauginSteamLinksProperty: "Steam Links",

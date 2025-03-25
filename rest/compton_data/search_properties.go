@@ -36,6 +36,7 @@ var SearchProperties = []string{
 	vangogh_integration.ComingSoonProperty,
 	vangogh_integration.InDevelopmentProperty,
 	vangogh_integration.TypesProperty,
+	vangogh_integration.SummaryReviewsProperty,
 	vangogh_integration.SteamReviewScoreDescProperty,
 	vangogh_integration.GOGReleaseDateProperty,
 	vangogh_integration.GlobalReleaseDateProperty,
