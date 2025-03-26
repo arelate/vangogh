@@ -42,7 +42,7 @@ func ReduceSummaryRatings() error {
 
 		if srs, ok := rdx.GetLastVal(vangogh_integration.SteamReviewScoreProperty, id); ok && srs != "" && srs != "0" {
 			if sri, err := strconv.ParseInt(srs, 10, 32); err == nil {
-				summaryRating += int(sri)
+				summaryRating += int(sri) * 10
 				summaryRatingsCount++
 			} else {
 				nod.LogError(err)
