@@ -16,8 +16,9 @@ import (
 
 var ratingReviewsProperties = []string{
 	vangogh_integration.RatingProperty,
-	vangogh_integration.MetacriticScoreProperty,
+	vangogh_integration.SteamReviewScoreProperty,
 	vangogh_integration.AggregatedRatingProperty,
+	vangogh_integration.MetacriticScoreProperty,
 	vangogh_integration.HltbReviewScoreProperty,
 	vangogh_integration.SteamReviewScoreDescProperty,
 }

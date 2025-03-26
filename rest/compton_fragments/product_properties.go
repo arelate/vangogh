@@ -153,6 +153,8 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 			fmtProperty.values[value] = grdSortedSearchHref(property, value)
 		case vangogh_integration.EnginesBuildsProperty:
 			fmtProperty.values[value] = noHref()
+		case vangogh_integration.SteamReviewScoreProperty:
+			fallthrough
 		case vangogh_integration.MetacriticScoreProperty:
 			fallthrough
 		case vangogh_integration.AggregatedRatingProperty:
@@ -193,6 +195,8 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 		fmtProperty.class = reviewClass(fmtGOGRating(firstValue))
 	case vangogh_integration.HltbReviewScoreProperty:
 		fmtProperty.class = reviewClass(fmtHltbRating(firstValue))
+	case vangogh_integration.SteamReviewScoreProperty:
+		fallthrough
 	case vangogh_integration.MetacriticScoreProperty:
 		fallthrough
 	case vangogh_integration.AggregatedRatingProperty:

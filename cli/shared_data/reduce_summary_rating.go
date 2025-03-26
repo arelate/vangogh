@@ -40,6 +40,15 @@ func ReduceSummaryRatings() error {
 			}
 		}
 
+		if srs, ok := rdx.GetLastVal(vangogh_integration.SteamReviewScoreProperty, id); ok && srs != "" && srs != "0" {
+			if sri, err := strconv.ParseInt(srs, 10, 32); err == nil {
+				summaryRating += int(sri)
+				summaryRatingsCount++
+			} else {
+				nod.LogError(err)
+			}
+		}
+
 		if ars, ok := rdx.GetLastVal(vangogh_integration.AggregatedRatingProperty, id); ok && ars != "" && ars != "0" {
 			if ari, err := strconv.ParseFloat(ars, 32); err == nil {
 				summaryRating += int(ari)

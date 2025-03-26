@@ -13,6 +13,7 @@ import (
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 	"maps"
+	"strconv"
 )
 
 func GetAppReviews(steamGogIds map[string]string, since int64, force bool) error {
@@ -100,6 +101,8 @@ func reduceAppReviewsProduct(gogId, steamAppId string, kvAppReviews kevlar.KeyVa
 		switch property {
 		case vangogh_integration.SteamReviewScoreDescProperty:
 			values = []string{sar.GetReviewScoreDesc()}
+		case vangogh_integration.SteamReviewScoreProperty:
+			values = []string{strconv.Itoa(sar.GetReviewScore())}
 		}
 
 		if shared_data.IsNotEmpty(values...) {
