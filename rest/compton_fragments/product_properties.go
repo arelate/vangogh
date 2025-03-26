@@ -289,7 +289,7 @@ func fmtGOGRating(rs string) string {
 	if ri, err := strconv.ParseInt(rs, 10, 32); err == nil {
 		rd = vangogh_integration.RatingDesc(ri * 2)
 		if ri > 0 {
-			rd += fmt.Sprintf(" (%.0f)", float32(ri*2))
+			rd += fmt.Sprintf(" %.0f%%", float32(ri*2))
 		}
 	}
 	return rd
@@ -300,7 +300,7 @@ func fmtHltbRating(rs string) string {
 	if ri, err := strconv.ParseInt(rs, 10, 32); err == nil {
 		rd = vangogh_integration.RatingDesc(ri)
 		if ri > 0 {
-			rd += fmt.Sprintf(" (%d)", ri)
+			rd += fmt.Sprintf(" %d%%", ri)
 		}
 	}
 	return rd
@@ -311,7 +311,7 @@ func fmtSteamRating(rs string) string {
 	if ri, err := strconv.ParseInt(rs, 10, 32); err == nil {
 		rd = vangogh_integration.RatingDesc(ri * 10)
 		if ri > 0 {
-			rd += fmt.Sprintf(" (%d)", ri*10)
+			rd += fmt.Sprintf(" %d%%", ri*10)
 		}
 	}
 	return rd
@@ -324,7 +324,7 @@ func fmtAggregatedRating(rs string) string {
 		ri := int64(rf)
 		rd = vangogh_integration.RatingDesc(ri)
 		if ri > 0 {
-			rd += fmt.Sprintf(" (%d)", ri)
+			rd += fmt.Sprintf(" %d%%", ri)
 		}
 	}
 	return rd

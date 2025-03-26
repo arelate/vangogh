@@ -8,10 +8,10 @@ import (
 
 func SummaryReviews(id string, rdx redux.Readable) (string, color.Color) {
 
-	if srp, ok := rdx.GetLastVal(vangogh_integration.SummaryReviewsProperty, id); ok {
+	if srep, ok := rdx.GetLastVal(vangogh_integration.SummaryReviewsProperty, id); ok {
 
 		var c color.Color
-		switch srp {
+		switch srep {
 		case vangogh_integration.RatingPositive:
 			c = color.Green
 		case vangogh_integration.RatingNegative:
@@ -22,7 +22,13 @@ func SummaryReviews(id string, rdx redux.Readable) (string, color.Color) {
 			c = color.Gray
 		}
 
-		return srp, c
+		ratingsReviews := srep
+
+		if srap, sure := rdx.GetLastVal(vangogh_integration.SummaryRatingProperty, id); sure {
+			ratingsReviews = fmtAggregatedRating(srap)
+		}
+
+		return ratingsReviews, c
 
 	}
 
