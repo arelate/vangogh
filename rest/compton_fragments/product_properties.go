@@ -311,7 +311,7 @@ func fmtSteamRating(rs string) string {
 	if ri, err := strconv.ParseInt(rs, 10, 32); err == nil {
 		rd = vangogh_integration.RatingDesc(ri * 10)
 		if ri > 0 {
-			rd += fmt.Sprintf(" (%d)", ri)
+			rd += fmt.Sprintf(" (%d)", ri*10)
 		}
 	}
 	return rd
