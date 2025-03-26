@@ -94,18 +94,6 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 				title = "Yes"
 			}
 			fmtProperty.values[title] = searchHref(property, value)
-		case vangogh_integration.IncludesGamesProperty:
-			fallthrough
-		case vangogh_integration.IsIncludedByGamesProperty:
-			fallthrough
-		case vangogh_integration.RequiresGamesProperty:
-			fallthrough
-		case vangogh_integration.IsRequiredByGamesProperty:
-			refTitle := value
-			if rtp, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, value); ok {
-				refTitle = rtp
-			}
-			fmtProperty.values[refTitle] = "/product?id=" + value
 		case vangogh_integration.GOGOrderDateProperty:
 			jtd := formatDate(value)
 			if d, _, ok := strings.Cut(value, "T"); ok {
@@ -154,7 +142,9 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 		case vangogh_integration.EnginesBuildsProperty:
 			fmtProperty.values[value] = noHref()
 		case vangogh_integration.SteamReviewScoreProperty:
-			fallthrough
+			if value != "" {
+				fmtProperty.values[fmtSteamRating(value)] = noHref()
+			}
 		case vangogh_integration.MetacriticScoreProperty:
 			fallthrough
 		case vangogh_integration.AggregatedRatingProperty:
@@ -196,7 +186,7 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 	case vangogh_integration.HltbReviewScoreProperty:
 		fmtProperty.class = reviewClass(fmtHltbRating(firstValue))
 	case vangogh_integration.SteamReviewScoreProperty:
-		fallthrough
+		fmtProperty.class = reviewClass(fmtSteamRating(firstValue))
 	case vangogh_integration.MetacriticScoreProperty:
 		fallthrough
 	case vangogh_integration.AggregatedRatingProperty:
@@ -314,6 +304,18 @@ func fmtHltbRating(rs string) string {
 		}
 	}
 	return rd
+}
+
+func fmtSteamRating(rs string) string {
+	rd := ""
+	if ri, err := strconv.ParseInt(rs, 10, 32); err == nil {
+		rd = vangogh_integration.RatingDesc(ri * 10)
+		if ri > 0 {
+			rd += fmt.Sprintf(" (%d)", ri)
+		}
+	}
+	return rd
+
 }
 
 func fmtAggregatedRating(rs string) string {
