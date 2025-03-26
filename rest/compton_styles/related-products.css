@@ -7,7 +7,7 @@ body {
 }
 
 .property-title {
-    padding: var(--s-s);
+    padding-block: var(--s-s);
     border-radius: var(--s-xs);
     max-width: var(--s-maxw);
     width: 100%;
