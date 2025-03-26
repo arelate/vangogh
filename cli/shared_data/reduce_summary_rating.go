@@ -1,6 +1,7 @@
 package shared_data
 
 import (
+	"fmt"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
@@ -78,7 +79,7 @@ func ReduceSummaryRatings() error {
 
 		if summaryRatingsCount > 0 {
 			avgSummaryRating := summaryRating / summaryRatingsCount
-			avgSummaryRatings[id] = []string{strconv.Itoa(avgSummaryRating)}
+			avgSummaryRatings[id] = []string{fmt.Sprintf("%03d", avgSummaryRating)}
 			avgSummaryReviews[id] = []string{vangogh_integration.RatingDesc(int64(avgSummaryRating))}
 		}
 	}

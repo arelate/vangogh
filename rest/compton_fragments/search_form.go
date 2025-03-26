@@ -66,6 +66,7 @@ var sortProperties = []string{
 	vangogh_integration.GlobalReleaseDateProperty,
 	vangogh_integration.GOGReleaseDateProperty,
 	vangogh_integration.GOGOrderDateProperty,
+	vangogh_integration.SummaryRatingProperty,
 	vangogh_integration.TitleProperty,
 	vangogh_integration.RatingProperty,
 	vangogh_integration.DiscountPercentageProperty,
