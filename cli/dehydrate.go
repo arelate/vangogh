@@ -33,7 +33,6 @@ func Dehydrate(
 	for _, it := range its {
 		properties = append(properties,
 			vangogh_integration.ImageTypeDehydratedProperty(it),
-			vangogh_integration.ImageTypeDehydratedModifiedProperty(it),
 			vangogh_integration.ImageTypeRepColorProperty(it))
 	}
 
@@ -102,11 +101,6 @@ func Dehydrate(
 
 		dehydratedProperty := vangogh_integration.ImageTypeDehydratedProperty(it)
 		if err := rdx.BatchReplaceValues(dehydratedProperty, dehydratedImages); err != nil {
-			return err
-		}
-
-		dehydratedModifiedProperty := vangogh_integration.ImageTypeDehydratedModifiedProperty(it)
-		if err := rdx.BatchReplaceValues(dehydratedModifiedProperty, dehydratedImageModified); err != nil {
 			return err
 		}
 

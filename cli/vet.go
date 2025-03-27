@@ -10,43 +10,38 @@ import (
 const (
 	VetLocalOnlyImages           = "local-only-images"
 	VetRecycleBin                = "recycle-bin"
-	VetInvalidData               = "invalid-data"
 	VetUnresolvedManualUrls      = "unresolved-manual-urls"
 	VetInvalidResolvedManualUrls = "invalid-resolved-manual-urls"
 	VetMissingChecksums          = "missing-checksums"
-	VetStaleDehydrations         = "stale-dehydrations"
 	VetOldLogs                   = "old-logs"
 )
 
 type vetOptions struct {
-	localOnlyImages             bool
-	recycleBin                  bool
-	unresolvedManualUrls        bool
-	invalidUnresolvedManualUrls bool
-	staleDehydrations           bool
-	missingChecksums            bool
-	oldLogs                     bool
+	localOnlyImages           bool
+	recycleBin                bool
+	unresolvedManualUrls      bool
+	invalidResolvedManualUrls bool
+	missingChecksums          bool
+	oldLogs                   bool
 }
 
 func initVetOptions(u *url.URL) *vetOptions {
 
 	vo := &vetOptions{
-		localOnlyImages:             vangogh_integration.FlagFromUrl(u, VetLocalOnlyImages),
-		recycleBin:                  vangogh_integration.FlagFromUrl(u, VetRecycleBin),
-		unresolvedManualUrls:        vangogh_integration.FlagFromUrl(u, VetUnresolvedManualUrls),
-		invalidUnresolvedManualUrls: vangogh_integration.FlagFromUrl(u, VetInvalidResolvedManualUrls),
-		missingChecksums:            vangogh_integration.FlagFromUrl(u, VetMissingChecksums),
-		staleDehydrations:           vangogh_integration.FlagFromUrl(u, VetStaleDehydrations),
-		oldLogs:                     vangogh_integration.FlagFromUrl(u, VetOldLogs),
+		localOnlyImages:           vangogh_integration.FlagFromUrl(u, VetLocalOnlyImages),
+		recycleBin:                vangogh_integration.FlagFromUrl(u, VetRecycleBin),
+		unresolvedManualUrls:      vangogh_integration.FlagFromUrl(u, VetUnresolvedManualUrls),
+		invalidResolvedManualUrls: vangogh_integration.FlagFromUrl(u, VetInvalidResolvedManualUrls),
+		missingChecksums:          vangogh_integration.FlagFromUrl(u, VetMissingChecksums),
+		oldLogs:                   vangogh_integration.FlagFromUrl(u, VetOldLogs),
 	}
 
 	if vangogh_integration.FlagFromUrl(u, "all") {
 		vo.localOnlyImages = !vangogh_integration.FlagFromUrl(u, NegOpt(VetLocalOnlyImages))
 		vo.recycleBin = !vangogh_integration.FlagFromUrl(u, NegOpt(VetRecycleBin))
 		vo.unresolvedManualUrls = !vangogh_integration.FlagFromUrl(u, NegOpt(VetUnresolvedManualUrls))
-		vo.invalidUnresolvedManualUrls = !vangogh_integration.FlagFromUrl(u, NegOpt(VetInvalidResolvedManualUrls))
+		vo.invalidResolvedManualUrls = !vangogh_integration.FlagFromUrl(u, NegOpt(VetInvalidResolvedManualUrls))
 		vo.missingChecksums = !vangogh_integration.FlagFromUrl(u, NegOpt(VetMissingChecksums))
-		vo.staleDehydrations = !vangogh_integration.FlagFromUrl(u, NegOpt(VetStaleDehydrations))
 		vo.oldLogs = !vangogh_integration.FlagFromUrl(u, NegOpt(VetOldLogs))
 	}
 
@@ -95,7 +90,7 @@ func Vet(
 		}
 	}
 
-	if vetOpts.invalidUnresolvedManualUrls {
+	if vetOpts.invalidResolvedManualUrls {
 		if err := vets.InvalidResolvedManualUrls(fix); err != nil {
 			return err
 		}
@@ -107,19 +102,11 @@ func Vet(
 		}
 	}
 
-	if vetOpts.staleDehydrations {
-		if err := StaleDehydrations(fix); err != nil {
-			return err
-		}
-	}
-
 	if vetOpts.oldLogs {
 		if err := vets.CleanupOldLogs(fix); err != nil {
 			return err
 		}
 	}
-
-	//products with values different from redux
 
 	return nil
 }

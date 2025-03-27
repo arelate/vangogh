@@ -101,11 +101,9 @@ func vetOptions() []string {
 	return options([]string{
 		cli.VetLocalOnlyImages,
 		cli.VetRecycleBin,
-		cli.VetInvalidData,
 		cli.VetUnresolvedManualUrls,
 		cli.VetInvalidResolvedManualUrls,
 		cli.VetMissingChecksums,
-		cli.VetStaleDehydrations,
 		cli.VetOldLogs,
 	})
 }
