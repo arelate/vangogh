@@ -21,7 +21,6 @@ const (
 type vetOptions struct {
 	localOnlyImages             bool
 	recycleBin                  bool
-	invalidData                 bool
 	unresolvedManualUrls        bool
 	invalidUnresolvedManualUrls bool
 	staleDehydrations           bool
@@ -34,7 +33,6 @@ func initVetOptions(u *url.URL) *vetOptions {
 	vo := &vetOptions{
 		localOnlyImages:             vangogh_integration.FlagFromUrl(u, VetLocalOnlyImages),
 		recycleBin:                  vangogh_integration.FlagFromUrl(u, VetRecycleBin),
-		invalidData:                 vangogh_integration.FlagFromUrl(u, VetInvalidData),
 		unresolvedManualUrls:        vangogh_integration.FlagFromUrl(u, VetUnresolvedManualUrls),
 		invalidUnresolvedManualUrls: vangogh_integration.FlagFromUrl(u, VetInvalidResolvedManualUrls),
 		missingChecksums:            vangogh_integration.FlagFromUrl(u, VetMissingChecksums),
@@ -45,7 +43,6 @@ func initVetOptions(u *url.URL) *vetOptions {
 	if vangogh_integration.FlagFromUrl(u, "all") {
 		vo.localOnlyImages = !vangogh_integration.FlagFromUrl(u, NegOpt(VetLocalOnlyImages))
 		vo.recycleBin = !vangogh_integration.FlagFromUrl(u, NegOpt(VetRecycleBin))
-		vo.invalidData = !vangogh_integration.FlagFromUrl(u, NegOpt(VetInvalidData))
 		vo.unresolvedManualUrls = !vangogh_integration.FlagFromUrl(u, NegOpt(VetUnresolvedManualUrls))
 		vo.invalidUnresolvedManualUrls = !vangogh_integration.FlagFromUrl(u, NegOpt(VetInvalidResolvedManualUrls))
 		vo.missingChecksums = !vangogh_integration.FlagFromUrl(u, NegOpt(VetMissingChecksums))
@@ -88,12 +85,6 @@ func Vet(
 
 	if vetOpts.recycleBin {
 		if err := vets.FilesInRecycleBin(fix); err != nil {
-			return err
-		}
-	}
-
-	if vetOpts.invalidData {
-		if err := vets.InvalidLocalProductData(fix); err != nil {
 			return err
 		}
 	}
