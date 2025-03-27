@@ -11,9 +11,9 @@ func ProductPoster(r compton.Registrar, id string, rdx redux.Readable) compton.E
 	if imgSrc, ok := rdx.GetLastVal(vangogh_integration.ImageProperty, id); ok {
 		var poster compton.Element
 		relImgSrc := "/image?id=" + imgSrc
-		if dehydSrc, sure := rdx.GetLastVal(vangogh_integration.DehydratedImageProperty, id); sure {
+		if dehydSrc, sure := rdx.GetLastVal(vangogh_integration.DehydratedImageProperty, imgSrc); sure {
 			hydSrc := issa.HydrateColor(dehydSrc)
-			repColor, _ := rdx.GetLastVal(vangogh_integration.RepImageColorProperty, id)
+			repColor, _ := rdx.GetLastVal(vangogh_integration.RepColorProperty, imgSrc)
 			issaImg := compton.IssaImageHydrated(r, repColor, hydSrc, relImgSrc)
 			issaImg.AspectRatio(float64(13) / float64(6))
 			poster = issaImg

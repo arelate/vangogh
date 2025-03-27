@@ -87,8 +87,6 @@ func formatLabel(id, property string, owned bool, rdx redux.Readable) compton.Fo
 			break
 		}
 	case vangogh_integration.DehydratedImageProperty:
-		fallthrough
-	case vangogh_integration.DehydratedVerticalImageProperty:
 		fmtLabel.Title = property
 	case vangogh_integration.StoreTagsProperty:
 		if rdx.HasValue(vangogh_integration.StoreTagsProperty, id, "Good Old Game") {

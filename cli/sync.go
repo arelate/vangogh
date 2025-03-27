@@ -144,7 +144,8 @@ func Sync(
 			return err
 		}
 
-		if err := Dehydrate(nil, vangogh_integration.ImageTypesDehydration(), false); err != nil {
+		dehydratedImageTypes := []vangogh_integration.ImageType{vangogh_integration.Image, vangogh_integration.VerticalImage}
+		if err := Dehydrate(nil, dehydratedImageTypes, false); err != nil {
 			return err
 		}
 	}

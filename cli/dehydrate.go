@@ -5,8 +5,6 @@ import (
 	"github.com/boggydigital/issa"
 	"github.com/boggydigital/nod"
 	"net/url"
-	"strconv"
-	"time"
 )
 
 func DehydrateHandler(u *url.URL) error {
@@ -29,31 +27,27 @@ func Dehydrate(
 	di := nod.NewProgress("dehydrating images...")
 	defer di.Done()
 
-	properties := make([]string, 0, len(its)*2)
-	for _, it := range its {
-		properties = append(properties,
-			vangogh_integration.ImageTypeDehydratedProperty(it),
-			vangogh_integration.ImageTypeRepColorProperty(it))
-	}
+	dehydratedProperties := []string{vangogh_integration.DehydratedImageProperty, vangogh_integration.RepColorProperty}
 
-	rdx, err := imageTypesReduxAssets(properties, its)
+	rdx, err := imageTypesReduxAssets(dehydratedProperties, its)
 	if err != nil {
 		return err
 	}
 
 	if len(ids) == 0 {
 		for _, it := range its {
-			if !vangogh_integration.IsImageTypeDehydrationSupported(it) {
-				continue
-			}
 
-			asset := vangogh_integration.PropertyFromImageType(it)
-			dehydratedProperty := vangogh_integration.ImageTypeDehydratedProperty(it)
-			repColorProperty := vangogh_integration.ImageTypeRepColorProperty(it)
+			imageProperty := vangogh_integration.PropertyFromImageType(it)
 
-			for id := range rdx.Keys(asset) {
-				if rdx.HasKey(dehydratedProperty, id) &&
-					rdx.HasKey(repColorProperty, id) &&
+			for id := range rdx.Keys(imageProperty) {
+
+				imageId, ok := rdx.GetLastVal(imageProperty, id)
+				if !ok || imageId == "" {
+					continue
+				}
+
+				if rdx.HasKey(vangogh_integration.DehydratedImageProperty, imageId) &&
+					rdx.HasKey(vangogh_integration.RepColorProperty, imageId) &&
 					!force {
 					continue
 				}
@@ -66,19 +60,14 @@ func Dehydrate(
 
 	for _, it := range its {
 
-		if !vangogh_integration.IsImageTypeDehydrationSupported(it) {
-			continue
-		}
-
-		asset := vangogh_integration.PropertyFromImageType(it)
+		imageProperty := vangogh_integration.PropertyFromImageType(it)
 
 		dehydratedImages := make(map[string][]string)
-		dehydratedImageModified := make(map[string][]string)
 		repColors := make(map[string][]string)
 
 		for _, id := range ids {
 
-			imageId, ok := rdx.GetLastVal(asset, id)
+			imageId, ok := rdx.GetLastVal(imageProperty, id)
 			if !ok || imageId == "" {
 				continue
 			}
@@ -89,9 +78,8 @@ func Dehydrate(
 			}
 
 			if dhi, rc, err := issa.DehydrateImageRepColor(alip); err == nil {
-				dehydratedImages[id] = []string{dhi}
-				repColors[id] = []string{rc}
-				dehydratedImageModified[id] = []string{strconv.FormatInt(time.Now().Unix(), 10)}
+				dehydratedImages[imageId] = []string{dhi}
+				repColors[imageId] = []string{rc}
 			} else {
 				nod.LogError(err)
 			}
@@ -99,13 +87,11 @@ func Dehydrate(
 			di.Increment()
 		}
 
-		dehydratedProperty := vangogh_integration.ImageTypeDehydratedProperty(it)
-		if err := rdx.BatchReplaceValues(dehydratedProperty, dehydratedImages); err != nil {
+		if err = rdx.BatchReplaceValues(vangogh_integration.DehydratedImageProperty, dehydratedImages); err != nil {
 			return err
 		}
 
-		repColorProperty := vangogh_integration.ImageTypeRepColorProperty(it)
-		if err := rdx.BatchReplaceValues(repColorProperty, repColors); err != nil {
+		if err = rdx.BatchReplaceValues(vangogh_integration.RepColorProperty, repColors); err != nil {
 			return err
 		}
 	}
