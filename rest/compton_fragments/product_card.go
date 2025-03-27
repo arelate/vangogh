@@ -40,14 +40,17 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx redux.Readab
 
 	if verticalImageId, ok := rdx.GetLastVal(vangogh_integration.VerticalImageProperty, id); ok {
 
-		posterUrl := "/image?id=" + verticalImageId
-		dhSrc, _ := rdx.GetLastVal(vangogh_integration.DehydratedImageProperty, verticalImageId)
-		placeholderSrc := dhSrc
+		imageUrl := "/image?id=" + verticalImageId
+		dehydratedImage, _ := rdx.GetLastVal(vangogh_integration.DehydratedImageProperty, verticalImageId)
 
-		if repColor, sure := rdx.GetLastVal(vangogh_integration.RepColorProperty, verticalImageId); sure && repColor != issa.NeutralRepColor {
-			pc.SetAttribute("style", "--c-rep:"+repColor)
-			pc.AppendPoster(repColor, placeholderSrc, posterUrl, hydrated)
+		var repColor = issa.NeutralRepColor
+
+		if rp, sure := rdx.GetLastVal(vangogh_integration.RepColorProperty, verticalImageId); sure && rp != issa.NeutralRepColor {
+			repColor = rp
 		}
+
+		pc.SetAttribute("style", "--c-rep:"+repColor)
+		pc.AppendPoster(repColor, dehydratedImage, imageUrl, hydrated)
 
 		pc.WidthPixels(85.5)
 		pc.HeightPixels(120.5)
