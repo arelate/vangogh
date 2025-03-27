@@ -54,7 +54,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 	// tinting document background color to the representative product color
 	if imageId, ok := rdx.GetLastVal(vangogh_integration.ImageProperty, id); ok && imageId != "" {
-		if repColor, sure := rdx.GetLastVal(vangogh_integration.RepColorProperty, id); sure && repColor != issa.NeutralRepColor {
+		if repColor, sure := rdx.GetLastVal(vangogh_integration.RepColorProperty, imageId); sure && repColor != issa.NeutralRepColor {
 			p.SetAttribute("style", "--c-rep:"+repColor)
 		}
 	}
