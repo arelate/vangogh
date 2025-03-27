@@ -1,3 +1,26 @@
+.rating {
+    width: calc(11 * var(--s-n))
+}
+
+@scope (title-values) {
+
+    &.Positive .values {
+        --fg: var(--c-green);
+    }
+
+    &.Negative .values {
+        --fg: var(--c-red);
+    }
+
+    &.Mixed .values {
+        --fg: var(--c-yellow);
+    }
+
+    &.Not .Rated .values {
+        --fg: var(--c-gray);
+    }
+}
+
 fspan.symbol {
     height: var(--s-n);
 

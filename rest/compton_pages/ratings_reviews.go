@@ -5,7 +5,6 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
-	"github.com/arelate/vangogh/rest/compton_styles"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
@@ -26,13 +25,16 @@ var ratingReviewsProperties = []string{
 func RatingsReviews(id string, sar *steam_integration.AppReviews, rdx redux.Readable) compton.PageElement {
 
 	s := compton_fragments.ProductSection(compton_data.RatingsReviewsSection)
-	s.RegisterStyles(compton_styles.Styles, "ratings.css")
 
 	pageStack := compton.FlexItems(s, direction.Column).RowGap(size.Normal)
 	s.Append(pageStack)
 
+	ratingsRow := compton.FlexItems(s, direction.Row).ColumnGap(size.Normal).RowGap(size.Normal)
+	pageStack.Append(ratingsRow)
+
 	for _, rrp := range compton_fragments.ProductProperties(s, id, rdx, ratingReviewsProperties...) {
-		pageStack.Append(rrp)
+		rrp.AddClass("rating")
+		ratingsRow.Append(rrp)
 	}
 
 	if sar == nil {
