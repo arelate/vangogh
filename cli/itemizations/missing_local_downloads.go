@@ -2,6 +2,7 @@ package itemizations
 
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/redux"
 	"os"
@@ -32,14 +33,19 @@ func MissingLocalDownloads(
 		return nil, err
 	}
 
-	vrDetails, err := vangogh_integration.NewProductReader(vangogh_integration.Details)
+	detailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.Details)
+	if err != nil {
+		return nil, err
+	}
+
+	kvDetails, err := kevlar.New(detailsDir, kevlar.JsonExt)
 	if err != nil {
 		return nil, err
 	}
 
 	//1
 	var allIds []string
-	for id := range vrDetails.Keys() {
+	for id := range kvDetails.Keys() {
 		allIds = append(allIds, id)
 	}
 

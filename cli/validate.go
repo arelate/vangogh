@@ -7,6 +7,7 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/dolo"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/redux"
 	"maps"
@@ -99,15 +100,20 @@ func allNotValidIds(rdx redux.Readable) ([]string, error) {
 	avia := nod.NewProgress("itemizing all not valid products...")
 	defer avia.Done()
 
-	vrDetails, err := vangogh_integration.NewProductReader(vangogh_integration.Details)
+	detailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.Details)
 	if err != nil {
 		return nil, err
 	}
 
-	ids := make([]string, 0, vrDetails.Len())
-	avia.TotalInt(vrDetails.Len())
+	kvDetails, err := kevlar.New(detailsDir, kevlar.JsonExt)
+	if err != nil {
+		return nil, err
+	}
 
-	for id := range vrDetails.Keys() {
+	ids := make([]string, 0, kvDetails.Len())
+	avia.TotalInt(kvDetails.Len())
+
+	for id := range kvDetails.Keys() {
 
 		if pvrs, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
 			if pvr := vangogh_integration.ParseValidationResult(pvrs); pvr == vangogh_integration.ValidatedSuccessfully || pvr == vangogh_integration.ValidatedWithGeneratedChecksum {

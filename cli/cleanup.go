@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
@@ -57,11 +58,18 @@ func Cleanup(
 	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
 
 	if all {
-		vrDetails, err := vangogh_integration.NewProductReader(vangogh_integration.Details)
+
+		detailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.Details)
 		if err != nil {
 			return err
 		}
-		for id := range vrDetails.Keys() {
+
+		kvDetails, err := kevlar.New(detailsDir, kevlar.JsonExt)
+		if err != nil {
+			return err
+		}
+
+		for id := range kvDetails.Keys() {
 			ids = append(ids, id)
 		}
 	}
