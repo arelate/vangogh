@@ -1,5 +1,7 @@
 package compton_data
 
+// TODO: rename Gauging to something else
+
 const (
 	GauginGOGLinksProperty          = "gog-links"
 	GauginSteamLinksProperty        = "steam-links"
@@ -18,5 +20,6 @@ const (
 	GauginWineHQUrlProperty       = "winehq-url"
 	GauginVNDBUrlProperty         = "vndb-url"
 	GauginIGNWikiUrlProperty      = "ign-wiki-url"
+	GauginOpenCriticUrlProperty   = "opencritic-url"
 	GauginWebsiteUrlProperty      = "website"
 )

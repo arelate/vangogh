@@ -9,6 +9,7 @@ import (
 	"github.com/arelate/southern_light/igdb_integration"
 	"github.com/arelate/southern_light/ign_integration"
 	"github.com/arelate/southern_light/mobygames_integration"
+	"github.com/arelate/southern_light/opencritic_integration"
 	"github.com/arelate/southern_light/pcgw_integration"
 	"github.com/arelate/southern_light/protondb_integration"
 	"github.com/arelate/southern_light/steam_integration"
@@ -153,6 +154,14 @@ func externalLinks(id string, rdx redux.Readable) map[string][]string {
 		ign_integration.WikiUrl, rdx); ignWikiUrl != "" {
 		links[compton_data.GauginOtherLinksProperty] =
 			append(links[compton_data.GauginOtherLinksProperty], ignWikiUrl)
+	}
+
+	if openCriticId, ok := rdx.GetLastVal(vangogh_integration.OpenCriticIdProperty, id); ok {
+		if openCriticSlug, sure := rdx.GetLastVal(vangogh_integration.OpenCriticSlugProperty, id); sure {
+			openCriticUrl := fmt.Sprintf("%s=%s", compton_data.GauginOpenCriticUrlProperty, opencritic_integration.GameUrl(openCriticId, openCriticSlug))
+			links[compton_data.GauginOtherLinksProperty] =
+				append(links[compton_data.GauginOtherLinksProperty], openCriticUrl)
+		}
 	}
 
 	return links
