@@ -32,6 +32,7 @@ func SearchScopes() map[string]string {
 
 	q := make(url.Values)
 	q.Set(vangogh_integration.OwnedProperty, vangogh_integration.TrueValue)
+	q.Set(vangogh_integration.ProductTypeProperty, "GAME")
 	q.Set(vangogh_integration.SortProperty, vangogh_integration.GOGOrderDateProperty)
 	q.Set(vangogh_integration.DescendingProperty, vangogh_integration.TrueValue)
 	queries[SearchOwned] = q.Encode()
