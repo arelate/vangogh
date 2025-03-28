@@ -17,7 +17,7 @@ require (
 	github.com/boggydigital/pathways v0.1.15
 	github.com/boggydigital/redux v0.1.4
 	github.com/boggydigital/yet_urls v0.1.56
-	golang.org/x/net v0.37.0
+	golang.org/x/net v0.38.0
 )
 
 require (
