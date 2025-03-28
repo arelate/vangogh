@@ -102,6 +102,8 @@ func reduceExternalLinksProduct(gogId, pcgwPageId string, kvExternalLinks kevlar
 			values = []string{externalLinks.GetWikipediaId()}
 		case vangogh_integration.StrategyWikiIdProperty:
 			values = []string{externalLinks.GetStrategyWikiId()}
+		case vangogh_integration.OpenCriticIdProperty:
+			values = []string{externalLinks.GetOpenCriticId()}
 		}
 
 		if shared_data.IsNotEmpty(values...) {

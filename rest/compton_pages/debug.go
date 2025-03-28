@@ -107,6 +107,9 @@ func Debug(gogId string) (compton.PageElement, error) {
 	if strategyWikiId, ok := rdx.GetLastVal(vangogh_integration.StrategyWikiIdProperty, gogId); ok && strategyWikiId != "" {
 		idsFrow.PropVal("StrategyWiki", strategyWikiId)
 	}
+	if openCriticId, ok := rdx.GetLastVal(vangogh_integration.OpenCriticIdProperty, gogId); ok && openCriticId != "" {
+		idsFrow.PropVal("OpenCritic", openCriticId)
+	}
 
 	propertyProductType := map[string]vangogh_integration.ProductType{
 		vangogh_integration.CatalogPageProductsProperty: vangogh_integration.CatalogPage,
