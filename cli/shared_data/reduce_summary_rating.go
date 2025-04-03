@@ -77,6 +77,15 @@ func ReduceSummaryRatings() error {
 			}
 		}
 
+		if ocrs, ok := rdx.GetLastVal(vangogh_integration.OpenCriticMedianScoreProperty, id); ok && ocrs != "" && ocrs != "0" {
+			if ocri, err := strconv.ParseFloat(ocrs, 32); err == nil {
+				summaryRating += int(ocri)
+				summaryRatingsCount++
+			} else {
+				nod.LogError(err)
+			}
+		}
+
 		if summaryRatingsCount > 0 {
 			avgSummaryRating := summaryRating / summaryRatingsCount
 			avgSummaryRatings[id] = []string{fmt.Sprintf("%03d", avgSummaryRating)}

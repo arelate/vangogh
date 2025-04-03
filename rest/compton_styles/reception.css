@@ -21,6 +21,25 @@
     }
 }
 
+@scope (title-values) {
+
+    &.Mighty .values {
+        --fg: var(--c-green);
+    }
+
+    &.Weak .values {
+        --fg: var(--c-red);
+    }
+
+    &.Strong .values {
+        --fg: var(--c-green);
+    }
+
+    &.Fair .values {
+        --fg: var(--c-yellow);
+    }
+}
+
 fspan.symbol {
     height: var(--s-n);
 

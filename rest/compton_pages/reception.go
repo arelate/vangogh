@@ -2,7 +2,6 @@ package compton_pages
 
 import (
 	"github.com/arelate/southern_light/steam_integration"
-	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/boggydigital/compton"
@@ -12,15 +11,6 @@ import (
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/redux"
 )
-
-var receptionProperties = []string{
-	vangogh_integration.RatingProperty,
-	vangogh_integration.SteamReviewScoreProperty,
-	vangogh_integration.AggregatedRatingProperty,
-	vangogh_integration.MetacriticScoreProperty,
-	vangogh_integration.HltbReviewScoreProperty,
-	vangogh_integration.SteamReviewScoreDescProperty,
-}
 
 func Reception(id string, sar *steam_integration.AppReviews, rdx redux.Readable) compton.PageElement {
 
@@ -32,7 +22,7 @@ func Reception(id string, sar *steam_integration.AppReviews, rdx redux.Readable)
 	ratingsRow := compton.FlexItems(s, direction.Row).ColumnGap(size.Normal).RowGap(size.Normal)
 	pageStack.Append(ratingsRow)
 
-	for _, rrp := range compton_fragments.ProductProperties(s, id, rdx, receptionProperties...) {
+	for _, rrp := range compton_fragments.ProductProperties(s, id, rdx, compton_data.ReceptionProperties...) {
 		rrp.AddClass("rating")
 		ratingsRow.Append(rrp)
 	}

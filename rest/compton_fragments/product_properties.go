@@ -145,6 +145,8 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 			if value != "" {
 				fmtProperty.values[fmtSteamRating(value)] = noHref()
 			}
+		case vangogh_integration.OpenCriticMedianScoreProperty:
+			fallthrough
 		case vangogh_integration.MetacriticScoreProperty:
 			fallthrough
 		case vangogh_integration.AggregatedRatingProperty:
@@ -187,6 +189,10 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 		fmtProperty.class = reviewClass(fmtHltbRating(firstValue))
 	case vangogh_integration.SteamReviewScoreProperty:
 		fmtProperty.class = reviewClass(fmtSteamRating(firstValue))
+	case vangogh_integration.OpenCriticTierProperty:
+		fmtProperty.class = firstValue
+	case vangogh_integration.OpenCriticMedianScoreProperty:
+		fallthrough
 	case vangogh_integration.MetacriticScoreProperty:
 		fallthrough
 	case vangogh_integration.AggregatedRatingProperty:
