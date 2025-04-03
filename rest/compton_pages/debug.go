@@ -67,28 +67,25 @@ func Debug(gogId string) (compton.PageElement, error) {
 	var steamAppId string
 	if sai, ok := rdx.GetLastVal(vangogh_integration.SteamAppIdProperty, gogId); ok {
 		steamAppId = sai
-	}
-
-	if steamAppId != "" {
 		idsFrow.PropVal("Steam", steamAppId)
 	}
 
 	var pcgwPageId string
 	if pid, ok := rdx.GetLastVal(vangogh_integration.PcgwPageIdProperty, gogId); ok {
 		pcgwPageId = pid
-	}
-
-	if pcgwPageId != "" {
 		idsFrow.PropVal("PCGW", pcgwPageId)
 	}
 
 	var hltbId string
 	if hid, ok := rdx.GetLastVal(vangogh_integration.HltbIdProperty, gogId); ok {
 		hltbId = hid
+		idsFrow.PropVal("HLTB", hltbId)
 	}
 
-	if hltbId != "" {
-		idsFrow.PropVal("HLTB", hltbId)
+	var openCriticId string
+	if ocid, ok := rdx.GetLastVal(vangogh_integration.OpenCriticIdProperty, gogId); ok && ocid != "" {
+		openCriticId = ocid
+		idsFrow.PropVal("OpenCritic", openCriticId)
 	}
 
 	// various other platform ids
@@ -106,9 +103,6 @@ func Debug(gogId string) (compton.PageElement, error) {
 	}
 	if strategyWikiId, ok := rdx.GetLastVal(vangogh_integration.StrategyWikiIdProperty, gogId); ok && strategyWikiId != "" {
 		idsFrow.PropVal("StrategyWiki", strategyWikiId)
-	}
-	if openCriticId, ok := rdx.GetLastVal(vangogh_integration.OpenCriticIdProperty, gogId); ok && openCriticId != "" {
-		idsFrow.PropVal("OpenCritic", openCriticId)
 	}
 
 	propertyProductType := map[string]vangogh_integration.ProductType{
@@ -209,6 +203,22 @@ func Debug(gogId string) (compton.PageElement, error) {
 		}
 	}
 
+	openCriticProductTypes := []vangogh_integration.ProductType{
+		vangogh_integration.OpenCriticApiGame,
+		vangogh_integration.OpenCriticApiArticle,
+		vangogh_integration.OpenCriticApiRatings,
+	}
+
+	for _, pt := range openCriticProductTypes {
+		if !slices.Contains(productTypes, pt) {
+			continue
+		}
+
+		if ds := productTypeSection(p, openCriticId, pt); ds != nil {
+			pageStack.Append(ds)
+		}
+	}
+
 	reduxDs := compton.DSLarge(p, "Redux", false).BackgroundColor(color.Highlight)
 	pageStack.Append(reduxDs)
 
@@ -278,8 +288,6 @@ func Debug(gogId string) (compton.PageElement, error) {
 
 func productTypeSection(r compton.Registrar, id string, pt vangogh_integration.ProductType) compton.Element {
 	ds := compton.DSLarge(r, compton_data.TypesTitles[pt.String()], false).BackgroundColor(color.Highlight)
-
-	ds.SetLabelText(pt.String())
 
 	iframe := compton.IframeExpandHost(r, pt.String(), "/debug-data?id="+id+"&product-type="+pt.String())
 	ds.Append(iframe)

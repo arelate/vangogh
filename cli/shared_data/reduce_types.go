@@ -26,6 +26,7 @@ func ReduceTypes() error {
 	steamAppIdGogIds := GetSteamAppIdGogIds(rdx)
 	pcgwPageIdsGogIds := GetPcgwPageIdGogIds(rdx)
 	hltbIdsGogIds := GetHltbIdGogIds(rdx)
+	openCriticGogIds := GetOpenCriticIdGogIds(rdx)
 
 	idsTypes := make(map[string][]string)
 
@@ -76,6 +77,14 @@ func ReduceTypes() error {
 				for _, gogId := range hltbIdsGogIds[id] {
 					idsTypes[gogId] = append(idsTypes[gogId], pt.String())
 				}
+			case vangogh_integration.OpenCriticApiGame:
+				fallthrough
+			case vangogh_integration.OpenCriticApiArticle:
+				fallthrough
+			case vangogh_integration.OpenCriticApiRatings:
+				for _, gogId := range openCriticGogIds[id] {
+					idsTypes[gogId] = append(idsTypes[gogId], pt.String())
+				}
 			default:
 				idsTypes[id] = append(idsTypes[id], pt.String())
 			}
@@ -99,6 +108,10 @@ func GetPcgwPageIdGogIds(rdx redux.Readable) map[string][]string {
 
 func GetHltbIdGogIds(rdx redux.Readable) map[string][]string {
 	return externalIdsGogIds(vangogh_integration.HltbIdProperty, rdx)
+}
+
+func GetOpenCriticIdGogIds(rdx redux.Readable) map[string][]string {
+	return externalIdsGogIds(vangogh_integration.OpenCriticIdProperty, rdx)
 }
 
 func externalIdsGogIds(externalIdProperty string, rdx redux.Readable) map[string][]string {

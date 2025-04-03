@@ -27,6 +27,9 @@ var TypesTitles = map[string]string{
 	vangogh_integration.ProtonDbSummary.String():              "ProtonDB Summary",
 	vangogh_integration.GamesDbGogProducts.String():           "GamesDB GOG Products",
 	vangogh_integration.SteamDeckCompatibilityReport.String(): "Steam Deck Compat Report",
+	vangogh_integration.OpenCriticApiGame.String():            "OpenCritic API Game",
+	vangogh_integration.OpenCriticApiArticle.String():         "OpenCritic API Article",
+	vangogh_integration.OpenCriticApiRatings.String():         "OpenCritic API Ratings",
 }
 
 var OperatingSystemTitles = map[string]string{
