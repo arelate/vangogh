@@ -16,7 +16,7 @@ import (
 	"strconv"
 )
 
-func GetAppReviews(steamGogIds map[string]string, since int64, force bool) error {
+func GetAppReviews(steamGogIds map[string][]string, since int64, force bool) error {
 
 	gara := nod.NewProgress("getting %s...", vangogh_integration.SteamAppReviews)
 	defer gara.Done()

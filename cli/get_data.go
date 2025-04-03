@@ -145,8 +145,7 @@ func GetData(productTypes []vangogh_integration.ProductType, since int64, force 
 		}
 	}
 
-	var steamGogIds map[string]string
-
+	var steamGogIds map[string][]string
 	if requiresSteamAppIds(productTypes...) {
 		steamGogIds, err = shared_data.GetSteamGogIds(maps.Keys(catalogAccountProducts))
 		if err != nil {
@@ -192,7 +191,7 @@ func GetData(productTypes []vangogh_integration.ProductType, since int64, force 
 		}
 	}
 
-	var pcgwGogIds map[string]string
+	var pcgwGogIds map[string][]string
 	if requiresPcgwPageIds(productTypes...) {
 		pcgwGogIds, err = shared_data.GetPcgwGogIds(maps.Keys(catalogAccountProducts))
 		if err != nil {
@@ -231,7 +230,7 @@ func GetData(productTypes []vangogh_integration.ProductType, since int64, force 
 		}
 	}
 
-	var openCriticGogIds map[string]string
+	var openCriticGogIds map[string][]string
 	if requiresOpenCriticIds(productTypes...) {
 		openCriticGogIds, err = shared_data.GetOpenCriticGogIds(maps.Keys(catalogAccountProducts))
 		if err != nil {

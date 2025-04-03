@@ -9,7 +9,7 @@ import (
 	"maps"
 )
 
-func GetAppNews(steamGogIds map[string]string) error {
+func GetAppNews(steamGogIds map[string][]string) error {
 
 	gana := nod.NewProgress("getting %s...", vangogh_integration.SteamAppNews)
 	defer gana.Done()

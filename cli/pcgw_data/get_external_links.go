@@ -15,7 +15,7 @@ import (
 	"maps"
 )
 
-func GetExternalLinks(pcgwGogIds map[string]string, force bool) error {
+func GetExternalLinks(pcgwGogIds map[string][]string, force bool) error {
 
 	gea := nod.NewProgress("getting %s...", vangogh_integration.PcgwExternalLinks)
 	defer gea.Done()
@@ -39,7 +39,7 @@ func GetExternalLinks(pcgwGogIds map[string]string, force bool) error {
 	return ReduceExternalLinks(pcgwGogIds, kvExternalLinks)
 }
 
-func ReduceExternalLinks(pcgwGogIds map[string]string, kvExternalLinks kevlar.KeyValues) error {
+func ReduceExternalLinks(pcgwGogIds map[string][]string, kvExternalLinks kevlar.KeyValues) error {
 
 	dataType := vangogh_integration.PcgwExternalLinks
 
@@ -58,13 +58,13 @@ func ReduceExternalLinks(pcgwGogIds map[string]string, kvExternalLinks kevlar.Ke
 
 	externalLinksReductions := shared_data.InitReductions(vangogh_integration.PcgwExternalLinksProperties()...)
 
-	for pcgwPageId, gogId := range pcgwGogIds {
+	for pcgwPageId, gogIds := range pcgwGogIds {
 		if !kvExternalLinks.Has(pcgwPageId) {
 			nod.LogError(fmt.Errorf("%s is missing %s", dataType, pcgwPageId))
 			continue
 		}
 
-		if err = reduceExternalLinksProduct(gogId, pcgwPageId, kvExternalLinks, externalLinksReductions); err != nil {
+		if err = reduceExternalLinksProduct(gogIds, pcgwPageId, kvExternalLinks, externalLinksReductions); err != nil {
 			return err
 		}
 	}
@@ -72,7 +72,7 @@ func ReduceExternalLinks(pcgwGogIds map[string]string, kvExternalLinks kevlar.Ke
 	return shared_data.WriteReductions(rdx, externalLinksReductions)
 }
 
-func reduceExternalLinksProduct(gogId, pcgwPageId string, kvExternalLinks kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
+func reduceExternalLinksProduct(gogIds []string, pcgwPageId string, kvExternalLinks kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
 
 	rcExternalLinks, err := kvExternalLinks.Get(pcgwPageId)
 	if err != nil {
@@ -111,7 +111,9 @@ func reduceExternalLinksProduct(gogId, pcgwPageId string, kvExternalLinks kevlar
 		}
 
 		if shared_data.IsNotEmpty(values...) {
-			piv[property][gogId] = values
+			for _, gogId := range gogIds {
+				piv[property][gogId] = values
+			}
 		}
 
 	}

@@ -15,7 +15,7 @@ import (
 	"maps"
 )
 
-func GetSummary(steamGogIds map[string]string, since int64, force bool) error {
+func GetSummary(steamGogIds map[string][]string, since int64, force bool) error {
 
 	gsa := nod.NewProgress("getting %s...", vangogh_integration.ProtonDbSummary)
 	defer gsa.Done()

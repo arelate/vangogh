@@ -15,7 +15,7 @@ import (
 	"maps"
 )
 
-func GetSteamPageId(steamGogIds map[string]string, force bool) error {
+func GetSteamPageId(steamGogIds map[string][]string, force bool) error {
 
 	gspia := nod.NewProgress("getting %s...", vangogh_integration.PcgwSteamPageId)
 	defer gspia.Done()
@@ -44,7 +44,7 @@ func GetSteamPageId(steamGogIds map[string]string, force bool) error {
 	return ReduceSteamPageIds(gameSteamGogIds, kvSteamPageId)
 }
 
-func GetGameSteamGogIds(steamGogIds map[string]string) (map[string]string, error) {
+func GetGameSteamGogIds(steamGogIds map[string][]string) (map[string][]string, error) {
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {
@@ -56,18 +56,20 @@ func GetGameSteamGogIds(steamGogIds map[string]string) (map[string]string, error
 		return nil, err
 	}
 
-	gameSteamGogIds := make(map[string]string)
+	gameSteamGogIds := make(map[string][]string)
 
-	for steamAppId, gogId := range steamGogIds {
-		if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, gogId); ok && pt == "GAME" {
-			gameSteamGogIds[steamAppId] = gogId
+	for steamAppId, gogIds := range steamGogIds {
+		for _, gogId := range gogIds {
+			if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, gogId); ok && pt == "GAME" {
+				gameSteamGogIds[steamAppId] = append(gameSteamGogIds[steamAppId], gogId)
+			}
 		}
 	}
 
 	return gameSteamGogIds, nil
 }
 
-func ReduceSteamPageIds(steamGogIds map[string]string, kvPageId kevlar.KeyValues) error {
+func ReduceSteamPageIds(steamGogIds map[string][]string, kvPageId kevlar.KeyValues) error {
 
 	dataType := vangogh_integration.PcgwSteamPageId
 
@@ -86,13 +88,13 @@ func ReduceSteamPageIds(steamGogIds map[string]string, kvPageId kevlar.KeyValues
 
 	pageIdReductions := shared_data.InitReductions(vangogh_integration.PcgwPageIdProperties()...)
 
-	for steamAppId, gogId := range steamGogIds {
+	for steamAppId, gogIds := range steamGogIds {
 		if !kvPageId.Has(steamAppId) {
 			nod.LogError(fmt.Errorf("%s is missing %s", dataType, steamAppId))
 			continue
 		}
 
-		if err = reduceSteamPageIdProduct(gogId, steamAppId, kvPageId, pageIdReductions); err != nil {
+		if err = reduceSteamPageIdProduct(gogIds, steamAppId, kvPageId, pageIdReductions); err != nil {
 			return err
 		}
 	}
@@ -100,7 +102,7 @@ func ReduceSteamPageIds(steamGogIds map[string]string, kvPageId kevlar.KeyValues
 	return shared_data.WriteReductions(rdx, pageIdReductions)
 }
 
-func reduceSteamPageIdProduct(gogId, steamAppId string, kvPageId kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
+func reduceSteamPageIdProduct(gogIds []string, steamAppId string, kvPageId kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
 
 	rcPageId, err := kvPageId.Get(steamAppId)
 	if err != nil {
@@ -123,7 +125,9 @@ func reduceSteamPageIdProduct(gogId, steamAppId string, kvPageId kevlar.KeyValue
 		}
 
 		if shared_data.IsNotEmpty(values...) {
-			piv[property][gogId] = values
+			for _, gogId := range gogIds {
+				piv[property][gogId] = values
+			}
 		}
 
 	}

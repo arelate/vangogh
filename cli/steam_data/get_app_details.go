@@ -16,7 +16,7 @@ import (
 	"strconv"
 )
 
-func GetAppDetails(steamGogIds map[string]string, since int64, force bool) error {
+func GetAppDetails(steamGogIds map[string][]string, since int64, force bool) error {
 
 	gada := nod.NewProgress("getting %s...", vangogh_integration.SteamAppDetails)
 	defer gada.Done()

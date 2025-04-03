@@ -16,7 +16,7 @@ import (
 	"strconv"
 )
 
-func GetApiGame(openCriticGogIds map[string]string, force bool) error {
+func GetApiGame(openCriticGogIds map[string][]string, force bool) error {
 
 	gaga := nod.NewProgress("getting %s...", vangogh_integration.OpenCriticApiGame)
 	defer gaga.Done()
@@ -40,7 +40,7 @@ func GetApiGame(openCriticGogIds map[string]string, force bool) error {
 	return ReduceApiGame(openCriticGogIds, kvApiGame)
 }
 
-func ReduceApiGame(openCriticGogIds map[string]string, kvApiGame kevlar.KeyValues) error {
+func ReduceApiGame(openCriticGogIds map[string][]string, kvApiGame kevlar.KeyValues) error {
 
 	dataType := vangogh_integration.OpenCriticApiGame
 
@@ -59,13 +59,13 @@ func ReduceApiGame(openCriticGogIds map[string]string, kvApiGame kevlar.KeyValue
 
 	apiGameReductions := shared_data.InitReductions(vangogh_integration.OpenCriticApiGameProperties()...)
 
-	for openCriticId, gogId := range openCriticGogIds {
+	for openCriticId, gogIds := range openCriticGogIds {
 		if !kvApiGame.Has(openCriticId) {
 			nod.LogError(fmt.Errorf("%s is missing %s", dataType, openCriticId))
 			continue
 		}
 
-		if err = reduceApiGameProduct(gogId, openCriticId, kvApiGame, apiGameReductions); err != nil {
+		if err = reduceApiGameProduct(gogIds, openCriticId, kvApiGame, apiGameReductions); err != nil {
 			return err
 		}
 	}
@@ -73,7 +73,7 @@ func ReduceApiGame(openCriticGogIds map[string]string, kvApiGame kevlar.KeyValue
 	return shared_data.WriteReductions(rdx, apiGameReductions)
 }
 
-func reduceApiGameProduct(gogId, openCriticId string, kvApiGame kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
+func reduceApiGameProduct(gogIds []string, openCriticId string, kvApiGame kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
 
 	rcApiGame, err := kvApiGame.Get(openCriticId)
 	if err != nil {
@@ -102,7 +102,9 @@ func reduceApiGameProduct(gogId, openCriticId string, kvApiGame kevlar.KeyValues
 		}
 
 		if shared_data.IsNotEmpty(values...) {
-			piv[property][gogId] = values
+			for _, gogId := range gogIds {
+				piv[property][gogId] = values
+			}
 		}
 	}
 

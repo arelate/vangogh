@@ -15,7 +15,7 @@ import (
 	"maps"
 )
 
-func GetEngine(pcgwGogIds map[string]string, force bool) error {
+func GetEngine(pcgwGogIds map[string][]string, force bool) error {
 
 	gea := nod.NewProgress("getting %s...", vangogh_integration.PcgwEngine)
 	defer gea.Done()
@@ -39,25 +39,27 @@ func GetEngine(pcgwGogIds map[string]string, force bool) error {
 	return ReduceEngine(pcgwGogIds, kvEngine)
 }
 
-func getNewPcgwGogIds(pcgwGogIds map[string]string, kv kevlar.KeyValues, force bool) map[string]string {
+func getNewPcgwGogIds(pcgwGogIds map[string][]string, kv kevlar.KeyValues, force bool) map[string][]string {
 
 	if force {
 		return pcgwGogIds
 	}
 
-	npgIds := make(map[string]string)
+	npgIds := make(map[string][]string)
 
-	for pcgwPageId, gogId := range pcgwGogIds {
+	for pcgwPageId, gogIds := range pcgwGogIds {
 		if kv.Has(pcgwPageId) {
 			continue
 		}
-		npgIds[pcgwPageId] = gogId
+		for _, gogId := range gogIds {
+			npgIds[pcgwPageId] = append(npgIds[pcgwPageId], gogId)
+		}
 	}
 
 	return npgIds
 }
 
-func ReduceEngine(pcgwGogIds map[string]string, kvEngine kevlar.KeyValues) error {
+func ReduceEngine(pcgwGogIds map[string][]string, kvEngine kevlar.KeyValues) error {
 
 	dataType := vangogh_integration.PcgwEngine
 
@@ -76,13 +78,13 @@ func ReduceEngine(pcgwGogIds map[string]string, kvEngine kevlar.KeyValues) error
 
 	engineReductions := shared_data.InitReductions(vangogh_integration.PcgwEngineProperties()...)
 
-	for pcgwPageId, gogId := range pcgwGogIds {
+	for pcgwPageId, gogIds := range pcgwGogIds {
 		if !kvEngine.Has(pcgwPageId) {
 			nod.LogError(fmt.Errorf("%s is missing %s", dataType, pcgwPageId))
 			continue
 		}
 
-		if err = reduceEngineProduct(gogId, pcgwPageId, kvEngine, engineReductions); err != nil {
+		if err = reduceEngineProduct(gogIds, pcgwPageId, kvEngine, engineReductions); err != nil {
 			return err
 		}
 	}
@@ -90,7 +92,7 @@ func ReduceEngine(pcgwGogIds map[string]string, kvEngine kevlar.KeyValues) error
 	return shared_data.WriteReductions(rdx, engineReductions)
 }
 
-func reduceEngineProduct(gogId, pcgwPageId string, kvEngine kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
+func reduceEngineProduct(gogIds []string, pcgwPageId string, kvEngine kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
 
 	rcEngine, err := kvEngine.Get(pcgwPageId)
 	if err != nil {
@@ -115,7 +117,9 @@ func reduceEngineProduct(gogId, pcgwPageId string, kvEngine kevlar.KeyValues, pi
 		}
 
 		if shared_data.IsNotEmpty(values...) {
-			piv[property][gogId] = values
+			for _, gogId := range gogIds {
+				piv[property][gogId] = values
+			}
 		}
 
 	}
