@@ -37,6 +37,12 @@ var pcgwPageIdsProductTypes = []vangogh_integration.ProductType{
 	vangogh_integration.PcgwEngine,
 }
 
+var openCriticIdsProductTypes = []vangogh_integration.ProductType{
+	vangogh_integration.OpenCriticApiGame,
+	vangogh_integration.OpenCriticApiArticle,
+	vangogh_integration.OpenCriticApiArticle,
+}
+
 func GetDataHandler(u *url.URL) error {
 
 	productTypes := vangogh_integration.ProductTypesFromUrl(u)
@@ -225,10 +231,12 @@ func GetData(productTypes []vangogh_integration.ProductType, since int64, force 
 		}
 	}
 
-	// TODO: add conditional when more data types are added
-	openCriticGogIds, err := shared_data.GetOpenCriticGogIds(maps.Keys(catalogAccountProducts))
-	if err != nil {
-		return err
+	var openCriticGogIds map[string]string
+	if requiresOpenCriticIds(productTypes...) {
+		openCriticGogIds, err = shared_data.GetOpenCriticGogIds(maps.Keys(catalogAccountProducts))
+		if err != nil {
+			return err
+		}
 	}
 
 	if slices.Contains(productTypes, vangogh_integration.OpenCriticApiGame) {
@@ -276,11 +284,23 @@ func requiresPcgwPageIds(productTypes ...vangogh_integration.ProductType) bool {
 	return false
 }
 
+func requiresOpenCriticIds(productTypes ...vangogh_integration.ProductType) bool {
+	for _, opt := range openCriticIdsProductTypes {
+		if slices.Contains(productTypes, opt) {
+			return true
+		}
+	}
+	return false
+}
+
 func requiresCatalogAccountGogIds(productTypes ...vangogh_integration.ProductType) bool {
 	if requiresSteamAppIds(productTypes...) {
 		return true
 	}
 	if requiresPcgwPageIds(productTypes...) {
+		return true
+	}
+	if requiresOpenCriticIds(productTypes...) {
 		return true
 	}
 	for _, cagpt := range catalogAccountGogIdsProductTypes {
