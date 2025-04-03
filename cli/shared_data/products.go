@@ -14,49 +14,37 @@ import (
 )
 
 func GetSteamGogIds(gogIds iter.Seq[string]) (map[string]string, error) {
-
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return nil, err
-	}
-
-	rdx, err := redux.NewReader(reduxDir, vangogh_integration.SteamAppIdProperty)
-	if err != nil {
-		return nil, err
-	}
-
-	steamGogIds := make(map[string]string)
-
-	for gogId := range gogIds {
-		if steamAppId, ok := rdx.GetLastVal(vangogh_integration.SteamAppIdProperty, gogId); ok && steamAppId != "" {
-			steamGogIds[steamAppId] = gogId
-		}
-	}
-
-	return steamGogIds, nil
+	return getExternalIdGogIds(gogIds, vangogh_integration.SteamAppIdProperty)
 }
 
 func GetPcgwGogIds(gogIds iter.Seq[string]) (map[string]string, error) {
+	return getExternalIdGogIds(gogIds, vangogh_integration.PcgwPageIdProperty)
+}
 
+func GetOpenCriticGogIds(gogIds iter.Seq[string]) (map[string]string, error) {
+	return getExternalIdGogIds(gogIds, vangogh_integration.OpenCriticIdProperty)
+}
+
+func getExternalIdGogIds(gogIds iter.Seq[string], externalIdProperty string) (map[string]string, error) {
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {
 		return nil, err
 	}
 
-	rdx, err := redux.NewReader(reduxDir, vangogh_integration.PcgwPageIdProperty)
+	rdx, err := redux.NewReader(reduxDir, externalIdProperty)
 	if err != nil {
 		return nil, err
 	}
 
-	pcgwGogIds := make(map[string]string)
+	externalIdGogIds := make(map[string]string)
 
 	for gogId := range gogIds {
-		if pcgwPageId, ok := rdx.GetLastVal(vangogh_integration.PcgwPageIdProperty, gogId); ok && pcgwPageId != "" {
-			pcgwGogIds[pcgwPageId] = gogId
+		if externalId, ok := rdx.GetLastVal(externalIdProperty, gogId); ok && externalId != "" {
+			externalIdGogIds[externalId] = gogId
 		}
 	}
 
-	return pcgwGogIds, nil
+	return externalIdGogIds, nil
 }
 
 func GetCatalogAccountProducts(since int64) (map[string]any, error) {

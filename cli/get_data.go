@@ -6,6 +6,7 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/gog_data"
 	"github.com/arelate/vangogh/cli/hltb_data"
+	"github.com/arelate/vangogh/cli/opencritic_data"
 	"github.com/arelate/vangogh/cli/pcgw_data"
 	"github.com/arelate/vangogh/cli/protondb_data"
 	"github.com/arelate/vangogh/cli/shared_data"
@@ -17,6 +18,24 @@ import (
 	"net/url"
 	"slices"
 )
+
+var catalogAccountGogIdsProductTypes = []vangogh_integration.ProductType{
+	vangogh_integration.PcgwGogPageId,
+}
+
+var steamAppIdsProductTypes = []vangogh_integration.ProductType{
+	vangogh_integration.SteamAppDetails,
+	vangogh_integration.SteamAppNews,
+	vangogh_integration.SteamAppReviews,
+	vangogh_integration.SteamDeckCompatibilityReport,
+	vangogh_integration.PcgwSteamPageId,
+	vangogh_integration.ProtonDbSummary,
+}
+
+var pcgwPageIdsProductTypes = []vangogh_integration.ProductType{
+	vangogh_integration.PcgwExternalLinks,
+	vangogh_integration.PcgwEngine,
+}
 
 func GetDataHandler(u *url.URL) error {
 
@@ -112,14 +131,21 @@ func GetData(productTypes []vangogh_integration.ProductType, since int64, force 
 
 	// Steam data
 
-	catalogAccountProducts, err := shared_data.GetCatalogAccountProducts(since)
-	if err != nil {
-		return err
+	var catalogAccountProducts map[string]any
+	if requiresCatalogAccountGogIds(productTypes...) {
+		catalogAccountProducts, err = shared_data.GetCatalogAccountProducts(since)
+		if err != nil {
+			return err
+		}
 	}
 
-	steamGogIds, err := shared_data.GetSteamGogIds(maps.Keys(catalogAccountProducts))
-	if err != nil {
-		return err
+	var steamGogIds map[string]string
+
+	if requiresSteamAppIds(productTypes...) {
+		steamGogIds, err = shared_data.GetSteamGogIds(maps.Keys(catalogAccountProducts))
+		if err != nil {
+			return err
+		}
 	}
 
 	if slices.Contains(productTypes, vangogh_integration.SteamAppDetails) {
@@ -160,9 +186,12 @@ func GetData(productTypes []vangogh_integration.ProductType, since int64, force 
 		}
 	}
 
-	pcgwGogIds, err := shared_data.GetPcgwGogIds(maps.Keys(catalogAccountProducts))
-	if err != nil {
-		return err
+	var pcgwGogIds map[string]string
+	if requiresPcgwPageIds(productTypes...) {
+		pcgwGogIds, err = shared_data.GetPcgwGogIds(maps.Keys(catalogAccountProducts))
+		if err != nil {
+			return err
+		}
 	}
 
 	if slices.Contains(productTypes, vangogh_integration.PcgwExternalLinks) {
@@ -196,6 +225,18 @@ func GetData(productTypes []vangogh_integration.ProductType, since int64, force 
 		}
 	}
 
+	// TODO: add conditional when more data types are added
+	openCriticGogIds, err := shared_data.GetOpenCriticGogIds(maps.Keys(catalogAccountProducts))
+	if err != nil {
+		return err
+	}
+
+	if slices.Contains(productTypes, vangogh_integration.OpenCriticApiGame) {
+		if err = opencritic_data.GetApiGame(openCriticGogIds, force); err != nil {
+			return err
+		}
+	}
+
 	// reduce, cascade special properties - has-product-types, owned
 
 	if err = shared_data.ReduceOwned(); err != nil {
@@ -215,6 +256,39 @@ func GetData(productTypes []vangogh_integration.ProductType, since int64, force 
 	}
 
 	return nil
+}
+
+func requiresSteamAppIds(productTypes ...vangogh_integration.ProductType) bool {
+	for _, spt := range steamAppIdsProductTypes {
+		if slices.Contains(productTypes, spt) {
+			return true
+		}
+	}
+	return false
+}
+
+func requiresPcgwPageIds(productTypes ...vangogh_integration.ProductType) bool {
+	for _, ppt := range pcgwPageIdsProductTypes {
+		if slices.Contains(productTypes, ppt) {
+			return true
+		}
+	}
+	return false
+}
+
+func requiresCatalogAccountGogIds(productTypes ...vangogh_integration.ProductType) bool {
+	if requiresSteamAppIds(productTypes...) {
+		return true
+	}
+	if requiresPcgwPageIds(productTypes...) {
+		return true
+	}
+	for _, cagpt := range catalogAccountGogIdsProductTypes {
+		if slices.Contains(productTypes, cagpt) {
+			return true
+		}
+	}
+	return false
 }
 
 func gogAuthHttpClient() (*http.Client, error) {

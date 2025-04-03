@@ -3,6 +3,7 @@ package reqs
 import (
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/hltb_integration"
+	"github.com/arelate/southern_light/opencritic_integration"
 	"github.com/arelate/southern_light/pcgw_integration"
 	"github.com/arelate/southern_light/protondb_integration"
 	"github.com/arelate/southern_light/steam_integration"
@@ -206,6 +207,15 @@ func HltbRootPage() *Params {
 		HttpClient:  http.DefaultClient,
 		HttpMethod:  http.MethodGet,
 		UserAgent:   safariUserAgent,
+	}
+}
+
+func OpenCriticApiGame() *Params {
+	return &Params{
+		ProductType: vangogh_integration.OpenCriticApiGame,
+		UrlFunc:     opencritic_integration.ApiGameUrl,
+		HttpClient:  http.DefaultClient,
+		HttpMethod:  http.MethodGet,
 	}
 }
 
