@@ -13,7 +13,7 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-var ratingReviewsProperties = []string{
+var receptionProperties = []string{
 	vangogh_integration.RatingProperty,
 	vangogh_integration.SteamReviewScoreProperty,
 	vangogh_integration.AggregatedRatingProperty,
@@ -22,9 +22,9 @@ var ratingReviewsProperties = []string{
 	vangogh_integration.SteamReviewScoreDescProperty,
 }
 
-func RatingsReviews(id string, sar *steam_integration.AppReviews, rdx redux.Readable) compton.PageElement {
+func Reception(id string, sar *steam_integration.AppReviews, rdx redux.Readable) compton.PageElement {
 
-	s := compton_fragments.ProductSection(compton_data.RatingsReviewsSection)
+	s := compton_fragments.ProductSection(compton_data.ReceptionSection)
 
 	pageStack := compton.FlexItems(s, direction.Column).RowGap(size.Normal)
 	s.Append(pageStack)
@@ -32,7 +32,7 @@ func RatingsReviews(id string, sar *steam_integration.AppReviews, rdx redux.Read
 	ratingsRow := compton.FlexItems(s, direction.Row).ColumnGap(size.Normal).RowGap(size.Normal)
 	pageStack.Append(ratingsRow)
 
-	for _, rrp := range compton_fragments.ProductProperties(s, id, rdx, ratingReviewsProperties...) {
+	for _, rrp := range compton_fragments.ProductProperties(s, id, rdx, receptionProperties...) {
 		rrp.AddClass("rating")
 		ratingsRow.Append(rrp)
 	}

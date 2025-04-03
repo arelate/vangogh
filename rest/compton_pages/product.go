@@ -79,7 +79,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 		}
 	}
 
-	hasSections = append(hasSections, compton_data.RatingsReviewsSection)
+	hasSections = append(hasSections, compton_data.ReceptionSection)
 
 	if relatedProductsCount > 0 {
 		hasSections = append(hasSections, compton_data.RelatedProductsSection)
@@ -193,7 +193,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 				detailsSummary.SetLabelBackgroundColor(sdcc)
 				detailsSummary.SetLabelForegroundColor(color.Highlight)
 			}
-		case compton_data.RatingsReviewsSection:
+		case compton_data.ReceptionSection:
 			if srp, src := compton_fragments.SummaryReviews(id, rdx); srp != "" {
 				detailsSummary.SetLabelText(srp)
 				detailsSummary.SetLabelBackgroundColor(src)

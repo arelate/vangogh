@@ -11,9 +11,9 @@ import (
 	"net/http"
 )
 
-func GetRatingsReviews(w http.ResponseWriter, r *http.Request) {
+func GetReception(w http.ResponseWriter, r *http.Request) {
 
-	// GET /ratings-reviews?id
+	// GET /reception?id
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
@@ -27,7 +27,7 @@ func GetRatingsReviews(w http.ResponseWriter, r *http.Request) {
 		nod.LogError(err)
 	}
 
-	p := compton_pages.RatingsReviews(gogId, appReviews, rdx)
+	p := compton_pages.Reception(gogId, appReviews, rdx)
 
 	if err = p.Write(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
