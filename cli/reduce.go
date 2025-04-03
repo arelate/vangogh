@@ -5,6 +5,7 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/gog_data"
 	"github.com/arelate/vangogh/cli/hltb_data"
+	"github.com/arelate/vangogh/cli/opencritic_data"
 	"github.com/arelate/vangogh/cli/pcgw_data"
 	"github.com/arelate/vangogh/cli/protondb_data"
 	"github.com/arelate/vangogh/cli/shared_data"
@@ -130,6 +131,16 @@ func reduceProductType(pt vangogh_integration.ProductType) error {
 		return hltb_data.ReduceData(kvPt, -1)
 	case vangogh_integration.ProtonDbSummary:
 		return protondb_data.ReduceSummary(kvPt, -1)
+	case vangogh_integration.OpenCriticApiGame:
+		openCriticGogIds, err := shared_data.GetOpenCriticGogIds(maps.Keys(catalogAccountProducts))
+		if err != nil {
+			return err
+		}
+		return opencritic_data.ReduceApiGame(openCriticGogIds, kvPt)
+	case vangogh_integration.OpenCriticApiArticle:
+		// do nothing
+	case vangogh_integration.OpenCriticApiRatings:
+		// do nothing
 	default:
 		return errors.New("reduction is not supported for " + pt.String())
 	}

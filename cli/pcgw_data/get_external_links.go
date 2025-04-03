@@ -43,7 +43,7 @@ func ReduceExternalLinks(pcgwGogIds map[string]string, kvExternalLinks kevlar.Ke
 
 	dataType := vangogh_integration.PcgwExternalLinks
 
-	rela := nod.Begin(" reducing %s...", vangogh_integration.PcgwExternalLinks)
+	rela := nod.Begin(" reducing %s...", dataType)
 	defer rela.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
