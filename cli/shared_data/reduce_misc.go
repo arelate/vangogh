@@ -34,7 +34,7 @@ func ReduceMisc() error {
 		return err
 	}
 
-	if err = reduceTopTenPercent(rdx); err != nil {
+	if err = reduceTopPercent(rdx); err != nil {
 		return err
 	}
 

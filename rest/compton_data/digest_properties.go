@@ -22,6 +22,7 @@ var DigestProperties = []string{
 	vangogh_integration.TypesProperty,
 	vangogh_integration.SummaryReviewsProperty,
 	vangogh_integration.SteamReviewScoreDescProperty,
+	vangogh_integration.TopPercentProperty,
 	vangogh_integration.ProductValidationResultProperty,
 	vangogh_integration.SortProperty,
 }
@@ -36,5 +37,4 @@ var BinaryDigestProperties = []string{
 	vangogh_integration.InDevelopmentProperty,
 	vangogh_integration.DescendingProperty,
 	vangogh_integration.IsDemoProperty,
-	vangogh_integration.TopTenPercentProperty,
 }

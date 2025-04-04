@@ -8,20 +8,30 @@ import (
 	"strconv"
 )
 
-func reduceTopTenPercent(rdx redux.Writeable) error {
+func reduceTopPercent(rdx redux.Writeable) error {
 
-	rttpa := nod.Begin(" reducing %s...", vangogh_integration.TopTenPercentProperty)
+	rttpa := nod.Begin(" reducing %s...", vangogh_integration.TopPercentProperty)
 	defer rttpa.Done()
 
-	topTenPercent := make(map[string][]string)
+	topPercents := make(map[string][]string)
 
 	for id := range rdx.Keys(vangogh_integration.OpenCriticPercentileProperty) {
 
-		if pcts, ok := rdx.GetLastVal(vangogh_integration.OpenCriticPercentileProperty, id); ok {
-			if pcti, err := strconv.ParseInt(pcts, 10, 32); err == nil && pcti >= 90 {
-				if pt, sure := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); sure && pt == "GAME" {
-					if demo, yeah := rdx.GetLastVal(vangogh_integration.IsDemoProperty, id); yeah && demo != vangogh_integration.TrueValue {
-						topTenPercent[id] = []string{vangogh_integration.TrueValue}
+		if pt, sure := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); sure && pt == "GAME" {
+			if demo, yeah := rdx.GetLastVal(vangogh_integration.IsDemoProperty, id); yeah && demo != vangogh_integration.TrueValue {
+
+				if pcts, ok := rdx.GetLastVal(vangogh_integration.OpenCriticPercentileProperty, id); ok {
+					if pcti, err := strconv.ParseInt(pcts, 10, 32); err == nil {
+						switch {
+						case pcti >= 99:
+							topPercents[id] = []string{"1%"}
+						case pcti >= 95:
+							topPercents[id] = []string{"5%"}
+						case pcti >= 90:
+							topPercents[id] = []string{"10%"}
+						case pcti >= 80:
+							topPercents[id] = []string{"20%"}
+						}
 					}
 				}
 			}
@@ -29,10 +39,10 @@ func reduceTopTenPercent(rdx redux.Writeable) error {
 
 	}
 
-	currentTopTenPercent := slices.Collect(rdx.Keys(vangogh_integration.TopTenPercentProperty))
-	if err := rdx.CutKeys(vangogh_integration.TopTenPercentProperty, currentTopTenPercent...); err != nil {
+	currentTopPercents := slices.Collect(rdx.Keys(vangogh_integration.TopPercentProperty))
+	if err := rdx.CutKeys(vangogh_integration.TopPercentProperty, currentTopPercents...); err != nil {
 		return err
 	}
 
-	return rdx.BatchAddValues(vangogh_integration.TopTenPercentProperty, topTenPercent)
+	return rdx.BatchAddValues(vangogh_integration.TopPercentProperty, topPercents)
 }

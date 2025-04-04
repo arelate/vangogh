@@ -1,6 +1,7 @@
 package compton_fragments
 
 import (
+	"fmt"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/redux"
@@ -29,8 +30,9 @@ func SummaryReception(id string, rdx redux.Readable) (string, color.Color) {
 			ratingsReviews = fmtAggregatedRating(srap)
 		}
 
-		if ttp, sure := rdx.GetLastVal(vangogh_integration.TopTenPercentProperty, id); sure && ttp == vangogh_integration.TrueValue {
-			ratingsReviews = strings.Join([]string{ratingsReviews, "<b>Top 10%</b>"}, ", ")
+		if tp, sure := rdx.GetLastVal(vangogh_integration.TopPercentProperty, id); sure && tp != "" {
+			topPercent := fmt.Sprintf("<b>Top %s</b>", tp)
+			ratingsReviews = strings.Join([]string{ratingsReviews, topPercent}, ", ")
 		}
 
 		return ratingsReviews, c
