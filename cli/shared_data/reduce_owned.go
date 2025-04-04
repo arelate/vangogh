@@ -3,28 +3,13 @@ package shared_data
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
-func ReduceOwned() error {
+func reduceOwned(rdx redux.Writeable) error {
 
 	roa := nod.Begin("reducing owned...")
 	defer roa.Done()
-
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir,
-		vangogh_integration.LicencesProperty,
-		vangogh_integration.IncludesGamesProperty,
-		vangogh_integration.OwnedProperty,
-		vangogh_integration.TitleProperty)
-	if err != nil {
-		return err
-	}
 
 	owned := make(map[string][]string)
 
@@ -70,7 +55,7 @@ func ReduceOwned() error {
 		}
 	}
 
-	if err = rdx.BatchReplaceValues(vangogh_integration.OwnedProperty, owned); err != nil {
+	if err := rdx.BatchReplaceValues(vangogh_integration.OwnedProperty, owned); err != nil {
 		return err
 	}
 

@@ -242,25 +242,7 @@ func GetData(productTypes []vangogh_integration.ProductType, since int64, force 
 		}
 	}
 
-	// reduce, cascade special properties - has-product-types, owned
-
-	if err = shared_data.ReduceOwned(); err != nil {
-		return err
-	}
-
-	if err = shared_data.ReduceTypes(); err != nil {
-		return err
-	}
-
-	if err = shared_data.ReduceSummaryRatings(); err != nil {
-		return err
-	}
-
-	if err := shared_data.FixTestDeveloperPublisher(); err != nil {
-		return err
-	}
-
-	return nil
+	return shared_data.ReduceMisc()
 }
 
 func requiresSteamAppIds(productTypes ...vangogh_integration.ProductType) bool {

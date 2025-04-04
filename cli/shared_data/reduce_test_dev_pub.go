@@ -3,30 +3,20 @@ package shared_data
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 	"strings"
 )
 
-func FixTestDeveloperPublisher() error {
+const (
+	idUltraPackDeluxeTurboHdRemixVol2 = "1207665493" // Ultra Pack Deluxe Turbo HD Remix vol.2
+	idBuildCreator                    = "1838409417" // Build Creator
 
-	ftdpa := nod.Begin("fixing TEST DEVELOPER/PUBLISHER...")
+)
+
+func reduceDeveloperPublisherForTestValues(rdx redux.Writeable) error {
+
+	ftdpa := nod.Begin(" reducing %s, %s for TEST values...", vangogh_integration.DevelopersProperty, vangogh_integration.PublishersProperty)
 	defer ftdpa.Done()
-
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir,
-		vangogh_integration.DevelopersProperty,
-		vangogh_integration.PublishersProperty,
-		vangogh_integration.RequiresGamesProperty,
-		vangogh_integration.IsIncludedByGamesProperty,
-		vangogh_integration.IncludesGamesProperty)
-	if err != nil {
-		return err
-	}
 
 	fixedDevelopers := make(map[string][]string)
 	fixedPublishers := make(map[string][]string)
@@ -35,13 +25,11 @@ func FixTestDeveloperPublisher() error {
 
 	for id := range rdx.Match(q) {
 
-		// Ultra Pack Deluxe Turbo HD Remix vol.2
-		if id == "1207665493" {
+		if id == idUltraPackDeluxeTurboHdRemixVol2 {
 			continue
 		}
 
-		// Build Creator
-		if id == "1838409417" {
+		if id == idBuildCreator {
 			continue
 		}
 
@@ -71,11 +59,11 @@ func FixTestDeveloperPublisher() error {
 		}
 	}
 
-	if err = rdx.BatchReplaceValues(vangogh_integration.DevelopersProperty, fixedDevelopers); err != nil {
+	if err := rdx.BatchReplaceValues(vangogh_integration.DevelopersProperty, fixedDevelopers); err != nil {
 		return err
 	}
 
-	if err = rdx.BatchReplaceValues(vangogh_integration.PublishersProperty, fixedPublishers); err != nil {
+	if err := rdx.BatchReplaceValues(vangogh_integration.PublishersProperty, fixedPublishers); err != nil {
 		return err
 	}
 

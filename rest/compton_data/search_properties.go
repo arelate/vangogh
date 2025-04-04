@@ -39,6 +39,7 @@ var SearchProperties = []string{
 	vangogh_integration.SummaryReviewsProperty,
 	vangogh_integration.SteamReviewScoreDescProperty,
 	vangogh_integration.OpenCriticTierProperty,
+	vangogh_integration.TopTenPercentProperty,
 
 	vangogh_integration.GOGReleaseDateProperty,
 	vangogh_integration.GlobalReleaseDateProperty,

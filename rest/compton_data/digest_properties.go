@@ -14,6 +14,7 @@ var DigestProperties = []string{
 	vangogh_integration.StoreTagsProperty,
 	vangogh_integration.ProtonDBTierProperty,
 	vangogh_integration.ProtonDBConfidenceProperty,
+	vangogh_integration.OpenCriticTierProperty,
 	vangogh_integration.FeaturesProperty,
 	vangogh_integration.GameModesProperty,
 	vangogh_integration.LanguageCodeProperty,
@@ -35,4 +36,5 @@ var BinaryDigestProperties = []string{
 	vangogh_integration.InDevelopmentProperty,
 	vangogh_integration.DescendingProperty,
 	vangogh_integration.IsDemoProperty,
+	vangogh_integration.TopTenPercentProperty,
 }

@@ -194,7 +194,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 				detailsSummary.SetLabelForegroundColor(color.Highlight)
 			}
 		case compton_data.ReceptionSection:
-			if srp, src := compton_fragments.SummaryReviews(id, rdx); srp != "" {
+			if srp, src := compton_fragments.SummaryReception(id, rdx); srp != "" {
 				detailsSummary.SetLabelText(srp)
 				detailsSummary.SetLabelBackgroundColor(src)
 				detailsSummary.SetLabelForegroundColor(color.Highlight)

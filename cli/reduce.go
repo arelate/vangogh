@@ -38,23 +38,7 @@ func Reduce(productTypes []vangogh_integration.ProductType) error {
 		}
 	}
 
-	if err := shared_data.ReduceOwned(); err != nil {
-		return err
-	}
-
-	if err := shared_data.ReduceTypes(); err != nil {
-		return err
-	}
-
-	if err := shared_data.ReduceSummaryRatings(); err != nil {
-		return err
-	}
-
-	if err := shared_data.FixTestDeveloperPublisher(); err != nil {
-		return err
-	}
-
-	return nil
+	return shared_data.ReduceMisc()
 }
 
 func reduceProductType(pt vangogh_integration.ProductType) error {

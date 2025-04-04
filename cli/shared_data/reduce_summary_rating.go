@@ -4,25 +4,14 @@ import (
 	"fmt"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 	"strconv"
 )
 
-func ReduceSummaryRatings() error {
+func reduceSummaryRatings(rdx redux.Writeable) error {
 
 	rsra := nod.Begin(" reducing %s...", vangogh_integration.SummaryRatingProperty)
 	defer rsra.Done()
-
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.ReduxProperties()...)
-	if err != nil {
-		return err
-	}
 
 	avgSummaryRatings := make(map[string][]string)
 	avgSummaryReviews := make(map[string][]string)
@@ -93,11 +82,11 @@ func ReduceSummaryRatings() error {
 		}
 	}
 
-	if err = rdx.BatchReplaceValues(vangogh_integration.SummaryRatingProperty, avgSummaryRatings); err != nil {
+	if err := rdx.BatchReplaceValues(vangogh_integration.SummaryRatingProperty, avgSummaryRatings); err != nil {
 		return err
 	}
 
-	if err = rdx.BatchReplaceValues(vangogh_integration.SummaryReviewsProperty, avgSummaryReviews); err != nil {
+	if err := rdx.BatchReplaceValues(vangogh_integration.SummaryReviewsProperty, avgSummaryReviews); err != nil {
 		return err
 	}
 

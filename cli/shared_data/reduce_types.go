@@ -4,24 +4,13 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
-func ReduceTypes() error {
+func reduceTypes(rdx redux.Writeable) error {
 
 	rta := nod.Begin(" reducing %s...", vangogh_integration.TypesProperty)
 	defer rta.Done()
-
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.ReduxProperties()...)
-	if err != nil {
-		return err
-	}
 
 	steamAppIdGogIds := GetSteamAppIdGogIds(rdx)
 	pcgwPageIdsGogIds := GetPcgwPageIdGogIds(rdx)
@@ -87,7 +76,7 @@ func ReduceTypes() error {
 		}
 	}
 
-	if err = rdx.BatchReplaceValues(vangogh_integration.TypesProperty, idsTypes); err != nil {
+	if err := rdx.BatchReplaceValues(vangogh_integration.TypesProperty, idsTypes); err != nil {
 		return err
 	}
 

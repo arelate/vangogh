@@ -1,6 +1,6 @@
 @scope (.label) {
     :scope {
-        position:relative;
+        position: relative;
 
         &.owned {
             color: var(--c-highlight);
@@ -92,7 +92,6 @@
         &.good-old-game {
             color: var(--c-highlight);
             --label-color: var(--c-purple);
-            --o: 0.85;
         }
 
         /* TODO: move this above unconditionally, when background-clip: border-area is supported better */
