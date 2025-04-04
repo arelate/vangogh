@@ -201,6 +201,15 @@ func PcgwEngine() *Params {
 	}
 }
 
+func PcgwRaw() *Params {
+	return &Params{
+		ProductType: vangogh_integration.PcgwRaw,
+		UrlFunc:     pcgw_integration.WikiRawUrl,
+		HttpClient:  http.DefaultClient,
+		HttpMethod:  http.MethodGet,
+	}
+}
+
 func HltbRootPage() *Params {
 	return &Params{
 		ProductType: vangogh_integration.HltbRootPage,

@@ -30,7 +30,7 @@ func ReduceMisc() error {
 		return err
 	}
 
-	if err = reduceDeveloperPublisherForTestValues(rdx); err != nil {
+	if err = reduceDeveloperPublisher(rdx); err != nil {
 		return err
 	}
 

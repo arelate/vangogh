@@ -13,9 +13,11 @@ const (
 
 )
 
-func reduceDeveloperPublisherForTestValues(rdx redux.Writeable) error {
+func reduceDeveloperPublisher(rdx redux.Writeable) error {
 
-	ftdpa := nod.Begin(" reducing %s, %s for TEST values...", vangogh_integration.DevelopersProperty, vangogh_integration.PublishersProperty)
+	ftdpa := nod.Begin(" reducing %s, %s...",
+		vangogh_integration.DevelopersProperty,
+		vangogh_integration.PublishersProperty)
 	defer ftdpa.Done()
 
 	fixedDevelopers := make(map[string][]string)
