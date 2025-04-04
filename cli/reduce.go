@@ -137,10 +137,6 @@ func reduceProductType(pt vangogh_integration.ProductType) error {
 			return err
 		}
 		return opencritic_data.ReduceApiGame(openCriticGogIds, kvPt)
-	case vangogh_integration.OpenCriticApiArticle:
-		// do nothing
-	case vangogh_integration.OpenCriticApiRatings:
-		// do nothing
 	default:
 		return errors.New("reduction is not supported for " + pt.String())
 	}

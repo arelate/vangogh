@@ -39,8 +39,6 @@ var pcgwPageIdsProductTypes = []vangogh_integration.ProductType{
 
 var openCriticIdsProductTypes = []vangogh_integration.ProductType{
 	vangogh_integration.OpenCriticApiGame,
-	vangogh_integration.OpenCriticApiArticle,
-	vangogh_integration.OpenCriticApiArticle,
 }
 
 func GetDataHandler(u *url.URL) error {

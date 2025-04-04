@@ -205,8 +205,6 @@ func Debug(gogId string) (compton.PageElement, error) {
 
 	openCriticProductTypes := []vangogh_integration.ProductType{
 		vangogh_integration.OpenCriticApiGame,
-		vangogh_integration.OpenCriticApiArticle,
-		vangogh_integration.OpenCriticApiRatings,
 	}
 
 	for _, pt := range openCriticProductTypes {

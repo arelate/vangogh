@@ -78,10 +78,6 @@ func ReduceTypes() error {
 					idsTypes[gogId] = append(idsTypes[gogId], pt.String())
 				}
 			case vangogh_integration.OpenCriticApiGame:
-				fallthrough
-			case vangogh_integration.OpenCriticApiArticle:
-				fallthrough
-			case vangogh_integration.OpenCriticApiRatings:
 				for _, gogId := range openCriticGogIds[id] {
 					idsTypes[gogId] = append(idsTypes[gogId], pt.String())
 				}
