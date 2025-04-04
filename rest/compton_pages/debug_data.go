@@ -38,7 +38,15 @@ func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageEleme
 		return nil, err
 	}
 
-	element, err := formatJson(ptContent)
+	var element compton.Element
+
+	switch pt {
+	case vangogh_integration.PcgwRaw:
+		element, err = preText(ptContent)
+	default:
+		element, err = formatJson(ptContent)
+	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -69,4 +77,14 @@ func formatJson(rc io.ReadCloser) (compton.Element, error) {
 	jsonString = strings.Replace(jsonString, ">", "&gt;", -1)
 
 	return compton.PreText(jsonString), nil
+}
+
+func preText(rc io.ReadCloser) (compton.Element, error) {
+	var ptBuf bytes.Buffer
+	if _, err := io.Copy(&ptBuf, rc); err != nil {
+		return nil, err
+	}
+	defer rc.Close()
+
+	return compton.PreText(ptBuf.String()), nil
 }
