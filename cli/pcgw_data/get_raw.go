@@ -9,6 +9,10 @@ import (
 	"maps"
 )
 
+const (
+	txtExt = ".txt"
+)
+
 func GetRaw(pcgwGogIds map[string][]string, force bool) error {
 
 	gra := nod.NewProgress("getting %s...", vangogh_integration.PcgwRaw)
@@ -19,7 +23,7 @@ func GetRaw(pcgwGogIds map[string][]string, force bool) error {
 		return err
 	}
 
-	kvRaw, err := kevlar.New(rawDir, kevlar.JsonExt)
+	kvRaw, err := kevlar.New(rawDir, txtExt)
 	if err != nil {
 		return err
 	}
