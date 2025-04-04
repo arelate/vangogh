@@ -112,17 +112,11 @@ func Debug(gogId string) (compton.PageElement, error) {
 	}
 
 	for property, pt := range propertyProductType {
-
-		if !slices.Contains(productTypes, pt) {
-			continue
-		}
-
 		if page, ok := rdx.GetLastVal(property, gogId); ok && page != "" {
 			if ds := productTypeSection(p, page, pt); ds != nil {
 				pageStack.Append(ds)
 			}
 		}
-
 	}
 
 	gogProductTypes := []vangogh_integration.ProductType{
