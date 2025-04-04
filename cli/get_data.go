@@ -230,7 +230,11 @@ func GetData(productTypes []vangogh_integration.ProductType, since int64, force 
 
 	var openCriticGogIds map[string][]string
 	if requiresOpenCriticIds(productTypes...) {
-		openCriticGogIds, err = shared_data.GetOpenCriticGogIds(maps.Keys(catalogAccountProducts))
+		catalogAccountGames, err := shared_data.GetGameGogIds(catalogAccountProducts)
+		if err != nil {
+			return err
+		}
+		openCriticGogIds, err = shared_data.GetOpenCriticGogIds(maps.Keys(catalogAccountGames))
 		if err != nil {
 			return err
 		}

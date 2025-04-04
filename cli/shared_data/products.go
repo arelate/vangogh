@@ -76,6 +76,29 @@ func GetCatalogAccountProducts(since int64) (map[string]any, error) {
 	return catalogAccountProductIds, nil
 }
 
+func GetGameGogIds(gogIds map[string]any) (map[string]any, error) {
+
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return nil, err
+	}
+
+	rdx, err := redux.NewReader(reduxDir, vangogh_integration.ProductTypeProperty)
+	if err != nil {
+		return nil, err
+	}
+
+	gameGogIds := make(map[string]any)
+
+	for gogId := range gogIds {
+		if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, gogId); ok && pt == "GAME" {
+			gameGogIds[gogId] = nil
+		}
+	}
+
+	return gameGogIds, nil
+}
+
 func AppendEditions(products map[string]any) (map[string]any, error) {
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)

@@ -86,7 +86,7 @@ func reduceProductType(pt vangogh_integration.ProductType) error {
 	case vangogh_integration.SteamDeckCompatibilityReport:
 		return steam_data.ReduceDeckCompatibilityReports(kvPt, -1)
 	case vangogh_integration.PcgwGogPageId:
-		gogIds, err := pcgw_data.GetGameGogIds(catalogAccountProducts)
+		gogIds, err := shared_data.GetGameGogIds(catalogAccountProducts)
 		if err != nil {
 			return err
 		}

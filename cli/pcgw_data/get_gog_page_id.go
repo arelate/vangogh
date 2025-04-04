@@ -30,7 +30,7 @@ func GetGogPageId(gogIds map[string]any, force bool) error {
 		return err
 	}
 
-	gameGogIds, err := GetGameGogIds(gogIds)
+	gameGogIds, err := shared_data.GetGameGogIds(gogIds)
 	if err != nil {
 		return err
 	}
@@ -42,29 +42,6 @@ func GetGogPageId(gogIds map[string]any, force bool) error {
 	}
 
 	return ReduceGogPageIds(gameGogIds, kvGogPageId)
-}
-
-func GetGameGogIds(gogIds map[string]any) (map[string]any, error) {
-
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return nil, err
-	}
-
-	rdx, err := redux.NewReader(reduxDir, vangogh_integration.ProductTypeProperty)
-	if err != nil {
-		return nil, err
-	}
-
-	gameGogIds := make(map[string]any)
-
-	for gogId := range gogIds {
-		if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, gogId); ok && pt == "GAME" {
-			gameGogIds[gogId] = nil
-		}
-	}
-
-	return gameGogIds, nil
 }
 
 func ReduceGogPageIds(gogIds map[string]any, kvPageId kevlar.KeyValues) error {
