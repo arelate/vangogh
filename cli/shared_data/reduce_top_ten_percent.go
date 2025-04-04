@@ -23,7 +23,7 @@ func reduceTopPercent(rdx redux.Writeable) error {
 				if pcts, ok := rdx.GetLastVal(vangogh_integration.OpenCriticPercentileProperty, id); ok {
 					if pcti, err := strconv.ParseInt(pcts, 10, 32); err == nil {
 						switch {
-						case pcti >= 99:
+						case pcti == 99:
 							topPercents[id] = []string{"1%"}
 						case pcti >= 95:
 							topPercents[id] = []string{"5%"}
