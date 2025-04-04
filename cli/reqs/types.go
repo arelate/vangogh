@@ -207,6 +207,7 @@ func PcgwRaw() *Params {
 		UrlFunc:     pcgw_integration.WikiRawUrl,
 		HttpClient:  http.DefaultClient,
 		HttpMethod:  http.MethodGet,
+		UserAgent:   safariUserAgent,
 	}
 }
 
