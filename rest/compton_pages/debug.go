@@ -163,6 +163,7 @@ func Debug(gogId string) (compton.PageElement, error) {
 	pcgwProductTypes := []vangogh_integration.ProductType{
 		vangogh_integration.PcgwEngine,
 		vangogh_integration.PcgwExternalLinks,
+		vangogh_integration.PcgwRaw,
 	}
 
 	for _, pt := range pcgwProductTypes {

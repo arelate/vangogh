@@ -30,7 +30,12 @@ func reduceTypes(rdx redux.Writeable) error {
 			return err
 		}
 
-		kvPt, err := kevlar.New(ptDir, kevlar.JsonExt)
+		ext := kevlar.JsonExt
+		if pt == vangogh_integration.PcgwRaw {
+			ext = ".txt"
+		}
+
+		kvPt, err := kevlar.New(ptDir, ext)
 		if err != nil {
 			return err
 		}
@@ -59,6 +64,8 @@ func reduceTypes(rdx redux.Writeable) error {
 			case vangogh_integration.PcgwEngine:
 				fallthrough
 			case vangogh_integration.PcgwExternalLinks:
+				fallthrough
+			case vangogh_integration.PcgwRaw:
 				for _, gogId := range pcgwPageIdsGogIds[id] {
 					idsTypes[gogId] = append(idsTypes[gogId], pt.String())
 				}

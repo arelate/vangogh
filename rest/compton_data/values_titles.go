@@ -19,6 +19,7 @@ var TypesTitles = map[string]string{
 	vangogh_integration.OrderPage.String():                    "Order Page",
 	vangogh_integration.PcgwEngine.String():                   "PCGamingWiki Engine",
 	vangogh_integration.PcgwExternalLinks.String():            "PCGamingWiki External Links",
+	vangogh_integration.PcgwRaw.String():                      "PCGamingWiki Raw",
 	vangogh_integration.PcgwSteamPageId.String():              "PCGamingWiki Steam PageId",
 	vangogh_integration.PcgwGogPageId.String():                "PCGamingWiki GOG PageId",
 	vangogh_integration.SteamAppDetails.String():              "Steam App Details",

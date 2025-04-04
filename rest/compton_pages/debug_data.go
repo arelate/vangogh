@@ -19,7 +19,12 @@ func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageEleme
 		return nil, err
 	}
 
-	kv, err := kevlar.New(absPtDir, kevlar.JsonExt)
+	ext := kevlar.JsonExt
+	if pt == vangogh_integration.PcgwRaw {
+		ext = ".txt"
+	}
+
+	kv, err := kevlar.New(absPtDir, ext)
 	if err != nil {
 		return nil, err
 	}
