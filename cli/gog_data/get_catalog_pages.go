@@ -142,7 +142,9 @@ func reduceCatalogPage(page string, kvCatalogPages kevlar.KeyValues, piv shared_
 			case vangogh_integration.IsDemoProperty:
 				isDemo := slices.Contains(cp.GetStoreTags(), demoStoreTag)
 				if !isDemo {
-					isDemo = cp.IsFree() && strings.HasSuffix(strings.ToLower(cp.Title), "demo")
+					if titleParts := strings.Split(strings.ToLower(cp.Title), " "); len(titleParts) > 1 {
+						isDemo = titleParts[len(titleParts)-1] == "demo"
+					}
 				}
 				values = []string{strconv.FormatBool(isDemo)}
 			case vangogh_integration.EditionsProperty:
