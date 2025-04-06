@@ -32,7 +32,7 @@ func SummaryReception(id string, rdx redux.Readable) (string, color.Color) {
 
 		if tp, sure := rdx.GetLastVal(vangogh_integration.TopPercentProperty, id); sure && tp != "" {
 			topPercent := fmt.Sprintf("<b>Top %s</b>", tp)
-			ratingsReviews = strings.Join([]string{ratingsReviews, topPercent}, ", ")
+			ratingsReviews = strings.Join([]string{ratingsReviews, topPercent}, " · ")
 		}
 
 		return ratingsReviews, c

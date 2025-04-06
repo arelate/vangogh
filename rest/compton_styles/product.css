@@ -27,3 +27,9 @@ fspan.cmd {
 one-liner.short-description {
     max-width: var(--s-maxw)
 }
+
+details.larger {
+    & summary {
+        --bg: color-mix(in display-p3, var(--c-rep) var(--cma), var(--c-highlight))
+    }
+}
