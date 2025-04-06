@@ -48,12 +48,27 @@ func reduceProductType(pt vangogh_integration.ProductType) error {
 		return err
 	}
 
-	kvPt, err := kevlar.New(ptDir, kevlar.JsonExt)
+	ext := kevlar.JsonExt
+	if pt == vangogh_integration.PcgwRaw {
+		ext = ".txt"
+	}
+
+	kvPt, err := kevlar.New(ptDir, ext)
 	if err != nil {
 		return err
 	}
 
 	catalogAccountProducts, err := shared_data.GetCatalogAccountProducts(-1)
+	if err != nil {
+		return err
+	}
+
+	gogIds, err := shared_data.GetGameGogIds(catalogAccountProducts)
+	if err != nil {
+		return err
+	}
+
+	pcgwGogIds, err := shared_data.GetPcgwGogIds(maps.Keys(gogIds))
 	if err != nil {
 		return err
 	}
@@ -86,29 +101,19 @@ func reduceProductType(pt vangogh_integration.ProductType) error {
 	case vangogh_integration.SteamDeckCompatibilityReport:
 		return steam_data.ReduceDeckCompatibilityReports(kvPt, -1)
 	case vangogh_integration.PcgwGogPageId:
-		gogIds, err := shared_data.GetGameGogIds(catalogAccountProducts)
-		if err != nil {
-			return err
-		}
 		return pcgw_data.ReduceGogPageIds(gogIds, kvPt)
 	case vangogh_integration.PcgwSteamPageId:
-		steamGogIds, err := shared_data.GetSteamGogIds(maps.Keys(catalogAccountProducts))
+		steamGogIds, err := shared_data.GetSteamGogIds(maps.Keys(gogIds))
 		if err != nil {
 			return err
 		}
 		return pcgw_data.ReduceSteamPageIds(steamGogIds, kvPt)
 	case vangogh_integration.PcgwExternalLinks:
-		pcgwGogIds, err := shared_data.GetPcgwGogIds(maps.Keys(catalogAccountProducts))
-		if err != nil {
-			return err
-		}
 		return pcgw_data.ReduceExternalLinks(pcgwGogIds, kvPt)
 	case vangogh_integration.PcgwEngine:
-		pcgwGogIds, err := shared_data.GetPcgwGogIds(maps.Keys(catalogAccountProducts))
-		if err != nil {
-			return err
-		}
 		return pcgw_data.ReduceEngine(pcgwGogIds, kvPt)
+	case vangogh_integration.PcgwRaw:
+		return pcgw_data.ReduceRaw(pcgwGogIds, kvPt)
 	case vangogh_integration.HltbRootPage:
 		// do nothing
 	case vangogh_integration.HltbData:
