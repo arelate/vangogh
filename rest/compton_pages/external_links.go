@@ -28,8 +28,8 @@ import (
 	"strings"
 )
 
-func ExternalLinks(id string, rdx redux.Readable) compton.PageElement {
-	s := compton_fragments.ProductSection(compton_data.ExternalLinksSection)
+func Links(id string, rdx redux.Readable) compton.PageElement {
+	s := compton_fragments.ProductSection(compton_data.LinksSection)
 
 	stack := compton.FlexItems(s, direction.Column)
 	s.Append(stack)

@@ -6,9 +6,9 @@ import (
 	"net/http"
 )
 
-func GetExternalLinks(w http.ResponseWriter, r *http.Request) {
+func GetOfferings(w http.ResponseWriter, r *http.Request) {
 
-	// GET /external-links?id
+	// GET /offerings?id
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
@@ -17,7 +17,7 @@ func GetExternalLinks(w http.ResponseWriter, r *http.Request) {
 
 	id := r.URL.Query().Get("id")
 
-	if p := compton_pages.ExternalLinks(id, rdx); p != nil {
+	if p := compton_pages.Offerings(id, rdx); p != nil {
 		if err := p.WriteResponse(w); err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		}

@@ -1,15 +1,15 @@
 package compton_data
 
 var SectionStyles = map[string]string{
-	ProductDetailsSection:  "properties.css",
-	RelatedProductsSection: "related-products.css",
-	ExternalLinksSection:   "external-links.css",
-	DescriptionSection:     "description.css",
-	ScreenshotsSection:     "screenshots.css",
-	VideosSection:          "",
-	ChangelogSection:       "changelog.css",
-	SteamNewsSection:       "steam-news.css",
-	ReceptionSection:       "reception.css",
-	SteamDeckSection:       "steam-deck.css",
-	InstallersSection:      "downloads.css",
+	InformationSection: "information.css",
+	OfferingsSection:   "variants.css",
+	LinksSection:       "links.css",
+	DescriptionSection: "description.css",
+	ScreenshotsSection: "screenshots.css",
+	VideosSection:      "",
+	ChangelogSection:   "changelog.css",
+	SteamNewsSection:   "steam-news.css",
+	ReceptionSection:   "reception.css",
+	SteamDeckSection:   "steam-deck.css",
+	InstallersSection:  "downloads.css",
 }

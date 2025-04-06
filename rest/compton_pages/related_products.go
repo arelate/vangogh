@@ -12,8 +12,10 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-func RelatedProducts(id string, rdx redux.Readable) compton.PageElement {
-	s := compton_fragments.ProductSection(compton_data.RelatedProductsSection)
+func Offerings(id string, rdx redux.Readable) compton.PageElement {
+
+	s := compton_fragments.ProductSection(compton_data.OfferingsSection)
+
 	s.RegisterStyles(compton_styles.Styles, "product-card.css")
 	s.RegisterStyles(compton_styles.Styles, "product-labels.css")
 	s.AppendSpeculationRules("/product?id=*")
@@ -21,8 +23,8 @@ func RelatedProducts(id string, rdx redux.Readable) compton.PageElement {
 	stack := compton.FlexItems(s, direction.Column).RowGap(size.Normal)
 	s.Append(stack)
 
-	for _, rpp := range compton_data.RelatedProductsProperties {
-		if rps, ok := rdx.GetAllValues(rpp, id); ok && len(rps) > 0 {
+	for _, op := range compton_data.OfferingsProperties {
+		if rps, ok := rdx.GetAllValues(op, id); ok && len(rps) > 0 {
 			propertyTitleRow := compton.FlexItems(s, direction.Row).
 				AlignItems(align.Center).
 				JustifyContent(align.Center).
@@ -30,7 +32,7 @@ func RelatedProducts(id string, rdx redux.Readable) compton.PageElement {
 				BackgroundColor(color.Background)
 			propertyTitleRow.AddClass("property-title")
 			propertyTitleRow.Append(
-				compton.Fspan(s, compton_data.PropertyTitles[rpp]).FontSize(size.Small))
+				compton.Fspan(s, compton_data.PropertyTitles[op]).FontSize(size.Small))
 
 			stack.Append(compton.FICenter(s, propertyTitleRow))
 			stack.Append(compton_fragments.ProductsList(s, rps, 0, len(rps), rdx, true))

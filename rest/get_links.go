@@ -6,9 +6,9 @@ import (
 	"net/http"
 )
 
-func GetProductDetails(w http.ResponseWriter, r *http.Request) {
+func GetLinks(w http.ResponseWriter, r *http.Request) {
 
-	// GET /properties?id
+	// GET /links?id
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
@@ -17,7 +17,7 @@ func GetProductDetails(w http.ResponseWriter, r *http.Request) {
 
 	id := r.URL.Query().Get("id")
 
-	if p := compton_pages.ProductDetails(id, rdx); p != nil {
+	if p := compton_pages.Links(id, rdx); p != nil {
 		if err := p.WriteResponse(w); err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		}

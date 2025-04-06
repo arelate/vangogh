@@ -19,13 +19,11 @@ import (
 
 var (
 	propertiesSections = map[string]string{
-		vangogh_integration.DescriptionOverviewProperty: compton_data.DescriptionSection,
-		vangogh_integration.ChangelogProperty:           compton_data.ChangelogSection,
-		vangogh_integration.ScreenshotsProperty:         compton_data.ScreenshotsSection,
-		vangogh_integration.VideoIdProperty:             compton_data.VideosSection,
+		vangogh_integration.ChangelogProperty:   compton_data.ChangelogSection,
+		vangogh_integration.ScreenshotsProperty: compton_data.ScreenshotsSection,
+		vangogh_integration.VideoIdProperty:     compton_data.VideosSection,
 	}
 	propertiesSectionsOrder = []string{
-		vangogh_integration.DescriptionOverviewProperty,
 		vangogh_integration.ChangelogProperty,
 		vangogh_integration.ScreenshotsProperty,
 		vangogh_integration.VideoIdProperty,
@@ -69,23 +67,27 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 	hasSections := make([]string, 0)
 
-	hasSections = append(hasSections, compton_data.ProductDetailsSection)
+	hasSections = append(hasSections, compton_data.InformationSection)
 
-	relatedProductsCount := 0
-	for _, rpp := range compton_data.RelatedProductsProperties {
-		var rps []string
-		if rps, ok = rdx.GetAllValues(rpp, id); ok {
-			relatedProductsCount += len(rps)
-		}
+	if rdx.HasKey(vangogh_integration.DescriptionOverviewProperty, id) {
+		hasSections = append(hasSections, compton_data.DescriptionSection)
 	}
 
 	hasSections = append(hasSections, compton_data.ReceptionSection)
 
-	if relatedProductsCount > 0 {
-		hasSections = append(hasSections, compton_data.RelatedProductsSection)
+	offeringsCount := 0
+	for _, rpp := range compton_data.OfferingsProperties {
+		var rps []string
+		if rps, ok = rdx.GetAllValues(rpp, id); ok {
+			offeringsCount += len(rps)
+		}
 	}
 
-	hasSections = append(hasSections, compton_data.ExternalLinksSection)
+	if offeringsCount > 0 {
+		hasSections = append(hasSections, compton_data.OfferingsSection)
+	}
+
+	hasSections = append(hasSections, compton_data.LinksSection)
 
 	for _, property := range propertiesSectionsOrder {
 		if section, ok := propertiesSections[property]; ok {

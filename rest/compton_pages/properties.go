@@ -8,8 +8,8 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-func ProductDetails(id string, rdx redux.Readable) compton.PageElement {
-	s := compton_fragments.ProductSection(compton_data.ProductDetailsSection)
+func Information(id string, rdx redux.Readable) compton.PageElement {
+	s := compton_fragments.ProductSection(compton_data.InformationSection)
 
 	grid := compton.GridItems(s).JustifyContent(align.Center)
 	s.Append(grid)
