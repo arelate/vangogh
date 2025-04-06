@@ -56,7 +56,10 @@ func Debug(gogId string) (compton.PageElement, error) {
 	pageStack := compton.FlexItems(p, direction.Column)
 	p.Append(pageStack)
 
-	pageStack.Append(compton.FICenter(p, compton.H1Text(productTitle)))
+	ptHeading := compton.H1()
+	ptHeading.Append(compton.Fspan(p, productTitle).TextAlign(align.Center))
+
+	pageStack.Append(compton.FICenter(p, ptHeading))
 
 	idsFrow := compton.Frow(p)
 	pageStack.Append(compton.FICenter(p, idsFrow))
