@@ -23,6 +23,7 @@ func UpdateDownloadsHandler(u *url.URL) error {
 		vangogh_integration.ValuesFromUrl(u, vangogh_integration.LanguageCodeProperty),
 		vangogh_integration.DownloadTypesFromUrl(u),
 		vangogh_integration.FlagFromUrl(u, "no-patches"),
+		vangogh_integration.DownloadsLayoutFromUrl(u),
 		since,
 		vangogh_integration.FlagFromUrl(u, "updates-only"))
 }
@@ -33,6 +34,7 @@ func UpdateDownloads(
 	langCodes []string,
 	downloadTypes []vangogh_integration.DownloadType,
 	noPatches bool,
+	downloadsLayout vangogh_integration.DownloadsLayout,
 	since int64,
 	updatesOnly bool) error {
 
@@ -67,7 +69,7 @@ func UpdateDownloads(
 		for _, id := range ids {
 
 			if slug, ok := rdx.GetLastVal(vangogh_integration.SlugProperty, id); ok {
-				pDir, err := vangogh_integration.AbsProductDownloadsDir(slug)
+				pDir, err := vangogh_integration.AbsProductDownloadsDir(slug, downloadsLayout)
 				if err != nil {
 					return err
 				}
@@ -88,6 +90,7 @@ func UpdateDownloads(
 		langCodes,
 		downloadTypes,
 		noPatches,
+		downloadsLayout,
 		false,
 		true)
 }

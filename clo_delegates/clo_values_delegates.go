@@ -16,6 +16,7 @@ var Values = map[string]func() []string{
 	"searchable-properties": vangogh_integration.ReduxProperties,
 	"operating-systems":     operatingSystems,
 	"download-types":        downloadTypes,
+	"downloads-layouts":     downloadsLayouts,
 	"language-codes":        languageCodes,
 	"sync-options":          syncOptions,
 	"vet-options":           vetOptions,
@@ -58,6 +59,15 @@ func downloadTypes() []string {
 		dtsStr = append(dtsStr, dt.String())
 	}
 	return dtsStr
+}
+
+func downloadsLayouts() []string {
+	dls := vangogh_integration.AllDownloadsLayouts()
+	dlsStr := make([]string, 0, len(dls))
+	for _, dl := range dls {
+		dlsStr = append(dlsStr, dl.String())
+	}
+	return dlsStr
 }
 
 func languageCodes() []string {

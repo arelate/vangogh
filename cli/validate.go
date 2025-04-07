@@ -68,7 +68,7 @@ func Validate(
 		results: make(map[vangogh_integration.ValidationResult]int),
 	}
 
-	if err := vangogh_integration.MapDownloads(
+	if err = vangogh_integration.MapDownloads(
 		ids,
 		rdx,
 		operatingSystems,

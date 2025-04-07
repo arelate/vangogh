@@ -30,6 +30,7 @@ func GetDownloadsHandler(u *url.URL) error {
 		vangogh_integration.ValuesFromUrl(u, vangogh_integration.LanguageCodeProperty),
 		vangogh_integration.DownloadTypesFromUrl(u),
 		vangogh_integration.FlagFromUrl(u, "no-patches"),
+		vangogh_integration.DownloadsLayoutFromUrl(u),
 		vangogh_integration.FlagFromUrl(u, "missing"),
 		vangogh_integration.FlagFromUrl(u, "force"))
 }
@@ -40,6 +41,7 @@ func GetDownloads(
 	langCodes []string,
 	downloadTypes []vangogh_integration.DownloadType,
 	noPatches bool,
+	downloadsLayout vangogh_integration.DownloadsLayout,
 	missing,
 	force bool) error {
 
@@ -78,7 +80,8 @@ func GetDownloads(
 			operatingSystems,
 			downloadTypes,
 			langCodes,
-			noPatches)
+			noPatches,
+			downloadsLayout)
 		if err != nil {
 			return err
 		}
@@ -92,8 +95,9 @@ func GetDownloads(
 	}
 
 	gdd := &getDownloadsDelegate{
-		rdx:         rdx,
-		forceUpdate: force,
+		rdx:             rdx,
+		forceUpdate:     force,
+		downloadsLayout: downloadsLayout,
 	}
 
 	if err := vangogh_integration.MapDownloads(
@@ -112,8 +116,9 @@ func GetDownloads(
 }
 
 type getDownloadsDelegate struct {
-	rdx         redux.Writeable
-	forceUpdate bool
+	rdx             redux.Writeable
+	forceUpdate     bool
+	downloadsLayout vangogh_integration.DownloadsLayout
 }
 
 func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integration.DownloadsList) error {
@@ -245,7 +250,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	//3
 	_, filename := path.Split(resolvedUrl.Path)
 	//ProductDownloadsAbsDir would return absolute dir path, e.g. downloads/s/slug
-	absDir, err := vangogh_integration.AbsProductDownloadsDir(slug)
+	absDir, err := vangogh_integration.AbsProductDownloadsDir(slug, gdd.downloadsLayout)
 	if err != nil {
 		return err
 	}
@@ -310,7 +315,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 
 	//6
 	//ProductDownloadsRelDir would return relative (to downloads/ root) dir path, e.g. s/slug
-	pRelDir, err := vangogh_integration.RelProductDownloadsDir(slug)
+	pRelDir, err := vangogh_integration.RelProductDownloadsDir(slug, gdd.downloadsLayout)
 	//we need to add suffix to a dir path, e.g. dlc, extras - using already resolved download type relative dir
 	relDir := filepath.Join(pRelDir, relDirSuffix)
 	if err != nil {

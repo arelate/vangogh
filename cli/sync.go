@@ -78,6 +78,7 @@ func SyncHandler(u *url.URL) error {
 		vangogh_integration.ValuesFromUrl(u, vangogh_integration.LanguageCodeProperty),
 		vangogh_integration.DownloadTypesFromUrl(u),
 		vangogh_integration.FlagFromUrl(u, "no-patches"),
+		vangogh_integration.DownloadsLayoutFromUrl(u),
 		debug,
 		force)
 }
@@ -89,6 +90,7 @@ func Sync(
 	langCodes []string,
 	downloadTypes []vangogh_integration.DownloadType,
 	noPatches bool,
+	downloadsLayout vangogh_integration.DownloadsLayout,
 	debug, force bool) error {
 
 	if debug {
@@ -172,6 +174,7 @@ func Sync(
 			langCodes,
 			downloadTypes,
 			noPatches,
+			downloadsLayout,
 			since,
 			false); err != nil {
 			return err

@@ -20,6 +20,7 @@ cleanup
     lang-code&$={language-codes^}
     download-type&$={download-types^}
     no-patches$
+    downloads-layout$={downloads-layouts^}
     all
     test
     delete
@@ -47,6 +48,7 @@ get-downloads
     lang-code&$={language-codes^}
     download-type&$={download-types^}
     no-patches$
+    downloads-layout$={downloads-layouts^}
     missing
     force
 
@@ -102,6 +104,7 @@ size
     lang-code&$={language-codes^}
     download-type&$={download-types^}
     no-patches$
+    downloads-layout$={downloads-layouts^}
     missing
     all
 
@@ -114,6 +117,7 @@ sync
     lang-code&$={language-codes^}
     download-type&$={download-types^}
     no-patches$
+    downloads-layout$={downloads-layouts^}
     debug$
     force
     {sync-options^&}
@@ -129,6 +133,7 @@ update-downloads
     lang-code&$={language-codes^}
     download-type&$={download-types^}
     no-patches$
+    downloads-layout$={downloads-layouts^}
     since-hours-ago
     updates-only
 

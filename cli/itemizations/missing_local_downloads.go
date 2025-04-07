@@ -14,7 +14,8 @@ func MissingLocalDownloads(
 	operatingSystems []vangogh_integration.OperatingSystem,
 	downloadTypes []vangogh_integration.DownloadType,
 	langCodes []string,
-	noPatches bool) ([]string, error) {
+	noPatches bool,
+	downloadsLayout vangogh_integration.DownloadsLayout) ([]string, error) {
 	//enumerating missing local downloads is a bit more complicated than images
 	//due to the fact that actual filenames are resolved when downloads are processed, so we can't compare
 	//manualUrls and available files, we need to resolve manualUrls to actual local filenames first.
@@ -52,7 +53,9 @@ func MissingLocalDownloads(
 	mlda.TotalInt(len(allIds))
 
 	mdd := &missingDownloadsDelegate{
-		rdx: rdx}
+		rdx:             rdx,
+		downloadsLayout: downloadsLayout,
+	}
 
 	if err := vangogh_integration.MapDownloads(
 		allIds,
@@ -70,8 +73,9 @@ func MissingLocalDownloads(
 }
 
 type missingDownloadsDelegate struct {
-	rdx        redux.Readable
-	missingIds []string
+	rdx             redux.Readable
+	missingIds      []string
+	downloadsLayout vangogh_integration.DownloadsLayout
 }
 
 func (mdd *missingDownloadsDelegate) Process(id, slug string, list vangogh_integration.DownloadsList) error {
@@ -81,7 +85,7 @@ func (mdd *missingDownloadsDelegate) Process(id, slug string, list vangogh_integ
 	}
 
 	//pDir = s/slug
-	relDir, err := vangogh_integration.RelProductDownloadsDir(slug)
+	relDir, err := vangogh_integration.RelProductDownloadsDir(slug, mdd.downloadsLayout)
 	if err != nil {
 		return err
 	}
@@ -118,7 +122,7 @@ func (mdd *missingDownloadsDelegate) Process(id, slug string, list vangogh_integ
 	}
 
 	// 3
-	absDir, err := vangogh_integration.AbsProductDownloadsDir(slug)
+	absDir, err := vangogh_integration.AbsProductDownloadsDir(slug, mdd.downloadsLayout)
 	if err != nil {
 		return err
 	}
@@ -127,7 +131,7 @@ func (mdd *missingDownloadsDelegate) Process(id, slug string, list vangogh_integ
 		return nil
 	}
 
-	presentFiles, err := vangogh_integration.LocalSlugDownloads(slug)
+	presentFiles, err := vangogh_integration.LocalSlugDownloads(slug, mdd.downloadsLayout)
 	if err != nil {
 		return nil
 	}
