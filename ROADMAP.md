@@ -1,6 +1,12 @@
-# Future vangogh ideas and aspirations
+# vangogh future work
 
-The list below is roughly (not precisely) stack ranked. That doesn't mean that the work will likely happen in that order though.
+## Current focus (road to v1.0)
+
+1. [Effort: M] Add support for different directories partitions and allow transitioning between them (see https://github.com/arelate/vangogh/issues/92#issuecomment-2744705150).
+2. [Effort: S/M] Refactor downloads to make download queue more resilient. Currently downloads queue is created in runtime every session from the available data - e.g. new GOG.com account products, or IsNew, Updates fields in account products. Basically when you've got this data during sync - your downloads will always be this set, even if you've already downloaded them. This doesn't work great between sessions however as the data gets overwritten and IsNew, Updates fields are updated on GOG.com as soon as you request details (or open updated products in account on GOG.com). To address this we'd need to introduce a proper download queue. Upon detecting updates - products are added to download queue and only removed upon successful download (`yet` already implements this model, should be ported from there). This would make sure that downloads will be tracked between sessions and if something has interrupted the session - will continue on the next session.
+3. [Effort: M] Add CLI documentation (cli-help.txt). Might require clo fixes/changes, this is not a well tested area.
+
+## Future ideas
 
 1. [Effort: XL] Implement proper user support and permission model based on roles and capabilities (see https://github.com/arelate/vangogh/issues/91).
 2. [Effort: XL] Investigate implementing depot support (aka how Galaxy handles installations). See [this note](https://github.com/arelate/theo?tab=readme-ov-file#vangogh-technical-decisions-and-resulting-theo-behaviors) for explanation.
@@ -8,13 +14,11 @@ The list below is roughly (not precisely) stack ranked. That doesn't mean that t
 4. [Effort: XL] (Likely depends on depot work above) Investigate supporting Epic DRM-free games.
 5. [Effort: M] Integrate data from GOG Dreamlist. I've already looked into this during data refactor and added most of the bits required to implement full support. I stopped when I realized that Dreamlist is about 40K products (which is about 4x of GOG.com ~10K). I'm not excatly sure what the point of doing this would be. With that said - for Steam/Epic/other stores support - Dreamlist might be able to supply high quality assets in GOG formats that would make certain things much easier (e.g. Steam Deck required assets map pretty cleanly to types of images GOG provides).
 6. [Effort: XL] Make `vangogh` web interface feature complete, like the CLI interface. This would require `nod` changes to allow tracking (and reporting) activity status.
-7. [Effort: M] Add support for different directories partitions and allow transitioning between them (see https://github.com/arelate/vangogh/issues/92#issuecomment-2744705150).
-8. [Effort: S/M] Refactor downloads to make download queue more resilient. Currently downloads queue is created in runtime every session from the available data - e.g. new GOG.com account products, or IsNew, Updates fields in account products. Basically when you've got this data during sync - your downloads will always be this set, even if you've already downloaded them. This doesn't work great between sessions however as the data gets overwritten and IsNew, Updates fields are updated on GOG.com as soon as you request details (or open updated products in account on GOG.com). To address this we'd need to introduce a proper download queue. Upon detecting updates - products are added to download queue and only removed upon successful download (`yet` already implements this model, should be ported from there). This would make sure that downloads will be tracked between sessions and if something has interrupted the session - will continue on the next session.
-9. [Effort: S] Add various available age ratings (PEGI, etc) to product details
-10. [Effort: XL] Add support for source-ports. This might happen in stages: 1) cache GitHub releases using existing infrastructure and add a page listing those releases 2) add manual instructions 3) create scripts/manifests to install source-port and game data
-11. [Effort: XL] Add support for [32-bit Unity games](https://github.com/boggydigital/mac-gaming-guides/blob/main/common/unity-porting.md). This might happen in stages: 1) cache Unity player builds and reuse mac-gaming-guides instructions 2) create scripts/manifests to convert games to 64 bits
+7. [Effort: S] Add various available age ratings (PEGI, etc) to product details
+8. [Effort: XL] Add support for source-ports. This might happen in stages: 1) cache GitHub releases using existing infrastructure and add a page listing those releases 2) add manual instructions 3) create scripts/manifests to install source-port and game data
+9. [Effort: XL] Add support for [32-bit Unity games](https://github.com/boggydigital/mac-gaming-guides/blob/main/common/unity-porting.md). This might happen in stages: 1) cache Unity player builds and reuse mac-gaming-guides instructions 2) create scripts/manifests to convert games to 64 bits
 
-## Recently completed work
+## Completed work
 
 1. [Effort: S] Improve product lists grids - specifically situations where small number of items is displayed on a large screen (e.g. 1 DLC in Editions and DLCs section)
 2. [Effort: S] Experiment with changes to font sizes to a more well considered hierarchy. This is not vangogh specific, will need to happen in compton. Currently compton sets font sizes in 0.2rem increments (e.g. normal is 1rem, small is 0.8rem and large is 1.2rem). Given I already use colors from [Colors](https://developer.apple.com/design/human-interface-guidelines/color#Specifications), I want to try applying font sizes from [Typography](https://developer.apple.com/design/human-interface-guidelines/typography#Specifications) and compare with the current results.
