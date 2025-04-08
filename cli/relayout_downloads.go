@@ -34,7 +34,7 @@ func RelayoutDownloads(
 	noPatches bool,
 	from, to vangogh_integration.DownloadsLayout) error {
 
-	rda := nod.Begin("changing downloads layout from %s to %s...", from, to)
+	rda := nod.NewProgress("changing downloads layout from %s to %s...", from, to)
 	defer rda.Done()
 
 	if from == vangogh_integration.UnknownDownloadsLayout ||
@@ -71,40 +71,26 @@ func RelayoutDownloads(
 	}
 
 	drp := &downloadsRelayoutProcessor{
-		from: from,
-		to:   to,
-	}
-
-	mda := nod.NewProgress(" moving downloads directories to a new layout...")
-	if err = vangogh_integration.MapDownloads(ids, rdx, operatingSystems, langCodes, downloadTypes, noPatches, drp, mda); err != nil {
-		return err
-	}
-	mda.Done()
-
-	rrp := &reduxRelayoutProcessor{
 		rdx:             rdx,
-		localManualUrls: make(map[string][]string),
+		from:            from,
 		to:              to,
+		localManualUrls: make(map[string][]string),
 	}
 
-	ulmupa := nod.NewProgress(" updating %s...", vangogh_integration.LocalManualUrlProperty)
-	if err = vangogh_integration.MapDownloads(ids, rdx, operatingSystems, langCodes, downloadTypes, noPatches, rrp, ulmupa); err != nil {
-		return err
-	}
-	ulmupa.Done()
-
-	if err = rdx.BatchReplaceValues(vangogh_integration.LocalManualUrlProperty, rrp.localManualUrls); err != nil {
+	if err = vangogh_integration.MapDownloads(ids, rdx, operatingSystems, langCodes, downloadTypes, noPatches, drp, rda); err != nil {
 		return err
 	}
 
-	return nil
+	return rdx.BatchReplaceValues(vangogh_integration.LocalManualUrlProperty, drp.localManualUrls)
 }
 
 type downloadsRelayoutProcessor struct {
-	from, to vangogh_integration.DownloadsLayout
+	rdx             redux.Readable
+	localManualUrls map[string][]string
+	from, to        vangogh_integration.DownloadsLayout
 }
 
-func (drp *downloadsRelayoutProcessor) Process(_ string, slug string, _ vangogh_integration.DownloadsList) error {
+func (drp *downloadsRelayoutProcessor) Process(_ string, slug string, downloadsList vangogh_integration.DownloadsList) error {
 
 	fromDir, err := vangogh_integration.AbsProductDownloadsDir(slug, drp.from)
 	if err != nil {
@@ -129,18 +115,9 @@ func (drp *downloadsRelayoutProcessor) Process(_ string, slug string, _ vangogh_
 		return err
 	}
 
-	return nil
-}
+	// accumulating localManualUrls for this downloadsList
 
-type reduxRelayoutProcessor struct {
-	rdx             redux.Readable
-	localManualUrls map[string][]string
-	to              vangogh_integration.DownloadsLayout
-}
-
-func (rrp *reduxRelayoutProcessor) Process(_ string, slug string, downloadsList vangogh_integration.DownloadsList) error {
-
-	productRelDir, err := vangogh_integration.RelProductDownloadsDir(slug, rrp.to)
+	productRelDir, err := vangogh_integration.RelProductDownloadsDir(slug, drp.to)
 
 	for _, dl := range downloadsList {
 		relDownloadTypeDir := ""
@@ -158,11 +135,10 @@ func (rrp *reduxRelayoutProcessor) Process(_ string, slug string, downloadsList 
 
 		relDir := filepath.Join(productRelDir, relDownloadTypeDir)
 
-		if relLocalFilename, ok := rrp.rdx.GetLastVal(vangogh_integration.LocalManualUrlProperty, dl.ManualUrl); ok && relLocalFilename != "" {
+		if relLocalFilename, ok := drp.rdx.GetLastVal(vangogh_integration.LocalManualUrlProperty, dl.ManualUrl); ok && relLocalFilename != "" {
 			_, filename := filepath.Split(relLocalFilename)
-			rrp.localManualUrls[dl.ManualUrl] = []string{filepath.Join(relDir, filename)}
+			drp.localManualUrls[dl.ManualUrl] = []string{filepath.Join(relDir, filename)}
 		}
-
 	}
 
 	return nil
