@@ -17,7 +17,7 @@ import (
 	"strconv"
 )
 
-func GetGamesDbGogProducts(hc *http.Client, uat string, since int64, force bool) error {
+func GetGamesDbGogProducts(ids []string, hc *http.Client, uat string, since int64, force bool) error {
 
 	ggdpa := nod.NewProgress("getting %s...", vangogh_integration.GamesDbGogProducts)
 	defer ggdpa.Done()
@@ -32,9 +32,15 @@ func GetGamesDbGogProducts(hc *http.Client, uat string, since int64, force bool)
 		return err
 	}
 
-	catalogPagesProducts, err := shared_data.GetCatalogPagesProducts(since)
-	if err != nil {
-		return err
+	var catalogPagesProducts []string
+
+	if len(ids) > 0 {
+		catalogPagesProducts = ids
+	} else {
+		catalogPagesProducts, err = shared_data.GetCatalogPagesProducts(since)
+		if err != nil {
+			return err
+		}
 	}
 
 	ggdpa.TotalInt(len(catalogPagesProducts))

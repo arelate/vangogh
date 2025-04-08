@@ -14,7 +14,7 @@ import (
 	"net/http"
 )
 
-func GetDetails(hc *http.Client, uat string, since int64) error {
+func GetDetails(ids []string, hc *http.Client, uat string, since int64) error {
 
 	gda := nod.NewProgress("getting new or updated %s...", vangogh_integration.Details)
 	defer gda.Done()
@@ -29,7 +29,19 @@ func GetDetails(hc *http.Client, uat string, since int64) error {
 		return err
 	}
 
-	newUpdatedDetails, err := shared_data.GetDetailsUpdates(since)
+	var newUpdatedDetails map[string]any
+
+	if len(ids) > 0 {
+		newUpdatedDetails = make(map[string]any)
+		for _, id := range ids {
+			newUpdatedDetails[id] = nil
+		}
+	} else {
+		newUpdatedDetails, err = shared_data.GetDetailsUpdates(since)
+		if err != nil {
+			return err
+		}
+	}
 
 	gda.TotalInt(len(newUpdatedDetails))
 

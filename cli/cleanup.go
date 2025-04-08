@@ -28,6 +28,7 @@ func CleanupHandler(u *url.URL) error {
 		vangogh_integration.ValuesFromUrl(u, vangogh_integration.LanguageCodeProperty),
 		vangogh_integration.DownloadTypesFromUrl(u),
 		vangogh_integration.FlagFromUrl(u, "no-patches"),
+		vangogh_integration.DownloadsLayoutFromUrl(u),
 		vangogh_integration.FlagFromUrl(u, "all"),
 		vangogh_integration.FlagFromUrl(u, "test"),
 		vangogh_integration.FlagFromUrl(u, "delete"))
@@ -39,7 +40,11 @@ func Cleanup(
 	langCodes []string,
 	downloadTypes []vangogh_integration.DownloadType,
 	noPatches bool,
+	downloadsLayout vangogh_integration.DownloadsLayout,
 	all, test, delete bool) error {
+
+	ca := nod.NewProgress("cleaning up...")
+	defer ca.Done()
 
 	if test && delete {
 		return errors.New("cleanup can be either test or delete, not both at the same time")
@@ -51,9 +56,6 @@ func Cleanup(
 	if err != nil {
 		return err
 	}
-
-	ca := nod.NewProgress("cleaning up...")
-	defer ca.Done()
 
 	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
 
@@ -75,10 +77,11 @@ func Cleanup(
 	}
 
 	cd := &cleanupDelegate{
-		rdx:    rdx,
-		all:    all,
-		test:   test,
-		delete: delete,
+		rdx:             rdx,
+		all:             all,
+		test:            test,
+		delete:          delete,
+		downloadsLayout: downloadsLayout,
 	}
 
 	// cleaning files in local download directory that no longer map to downloads
@@ -106,11 +109,12 @@ func Cleanup(
 }
 
 type cleanupDelegate struct {
-	rdx        redux.Readable
-	all        bool
-	test       bool
-	delete     bool
-	totalBytes int64
+	rdx             redux.Readable
+	all             bool
+	test            bool
+	delete          bool
+	totalBytes      int64
+	downloadsLayout vangogh_integration.DownloadsLayout
 }
 
 func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_integration.DownloadsList) error {
@@ -130,7 +134,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_integrati
 	expectedSet := make(map[string]bool)
 
 	//pDir = s/slug
-	pDir, err := vangogh_integration.RelProductDownloadsDir(slug)
+	pDir, err := vangogh_integration.RelProductDownloadsDir(slug, cd.downloadsLayout)
 	if err != nil {
 		return err
 	}
@@ -148,7 +152,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_integrati
 	}
 
 	//LocalSlugDownloads returns list of files relative to s/slug product directory
-	presentSet, err := vangogh_integration.LocalSlugDownloads(slug)
+	presentSet, err := vangogh_integration.LocalSlugDownloads(slug, cd.downloadsLayout)
 	if err != nil {
 		return err
 	}

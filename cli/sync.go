@@ -78,6 +78,7 @@ func SyncHandler(u *url.URL) error {
 		vangogh_integration.ValuesFromUrl(u, vangogh_integration.LanguageCodeProperty),
 		vangogh_integration.DownloadTypesFromUrl(u),
 		vangogh_integration.FlagFromUrl(u, "no-patches"),
+		vangogh_integration.DownloadsLayoutFromUrl(u),
 		debug,
 		force)
 }
@@ -89,6 +90,7 @@ func Sync(
 	langCodes []string,
 	downloadTypes []vangogh_integration.DownloadType,
 	noPatches bool,
+	downloadsLayout vangogh_integration.DownloadsLayout,
 	debug, force bool) error {
 
 	if debug {
@@ -114,7 +116,11 @@ func Sync(
 	syncEvents := make(map[string][]string, 2)
 	syncEvents[vangogh_integration.SyncStartKey] = []string{strconv.Itoa(int(syncStart))}
 
-	if err := GetData(nil, since, force); err != nil {
+	if err := GetData(nil, nil, since, force); err != nil {
+		return err
+	}
+
+	if err := Reduce([]vangogh_integration.ProductType{vangogh_integration.UnknownProductType}); err != nil {
 		return err
 	}
 
@@ -172,6 +178,7 @@ func Sync(
 			langCodes,
 			downloadTypes,
 			noPatches,
+			downloadsLayout,
 			since,
 			false); err != nil {
 			return err
@@ -185,6 +192,41 @@ func Sync(
 			downloadTypes,
 			noPatches); err != nil {
 			return err
+		}
+
+		// process remaining queued downloads, e.g. downloads that were queued before this sync
+		// and were not completed successfully due to an interruption. Download updates
+		// itemized earlier in the sync cycle (ids) are intentionally excluded to
+		// focus on previously queued and avoid attempting to download problematic ids
+		// right after they didn't download successfully, waiting until the next sync
+		// is likely a better strategy in that case
+		queuedIds, err := getQueuedDownloads(ids...)
+		if err != nil {
+			return err
+		}
+
+		if len(queuedIds) > 0 {
+			if err = GetDownloads(
+				queuedIds,
+				operatingSystems,
+				langCodes,
+				downloadTypes,
+				noPatches,
+				downloadsLayout,
+				false,
+				force); err != nil {
+				return err
+			}
+
+			if err = Validate(
+				queuedIds,
+				operatingSystems,
+				langCodes,
+				downloadTypes,
+				noPatches,
+				false); err != nil {
+				return err
+			}
 		}
 	}
 

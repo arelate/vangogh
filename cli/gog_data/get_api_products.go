@@ -17,19 +17,28 @@ import (
 	"strconv"
 )
 
-func GetApiProducts(hc *http.Client, uat string, since int64, force bool) error {
+func GetApiProducts(ids []string, hc *http.Client, uat string, since int64, force bool) error {
 
 	gapva := nod.NewProgress("getting %s...", vangogh_integration.ApiProducts)
 	defer gapva.Done()
 
-	catalogAccountProductIds, err := shared_data.GetCatalogAccountProducts(since)
-	if err != nil {
-		return err
-	}
+	var catalogAccountProductIds map[string]any
+	var err error
 
-	catalogAccountProductIds, err = shared_data.AppendEditions(catalogAccountProductIds)
-	if err != nil {
-		return err
+	if len(ids) > 0 {
+		catalogAccountProductIds = make(map[string]any)
+		for _, id := range ids {
+			catalogAccountProductIds[id] = nil
+		}
+	} else {
+		catalogAccountProductIds, err = shared_data.GetCatalogAccountProducts(since)
+		if err != nil {
+			return err
+		}
+		catalogAccountProductIds, err = shared_data.AppendEditions(catalogAccountProductIds)
+		if err != nil {
+			return err
+		}
 	}
 
 	apiProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.ApiProducts)

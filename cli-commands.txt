@@ -20,6 +20,7 @@ cleanup
     lang-code&$={language-codes^}
     download-type&$={download-types^}
     no-patches$
+    downloads-layout$={downloads-layouts^}
     all
     test
     delete
@@ -31,6 +32,7 @@ dehydrate
     force
 
 get-data
+    id&
     product-type={all-product-types}
     since-hours-ago
     force
@@ -47,6 +49,7 @@ get-downloads
     lang-code&$={language-codes^}
     download-type&$={download-types^}
     no-patches$
+    downloads-layout$={downloads-layouts^}
     missing
     force
 
@@ -81,6 +84,14 @@ local-tag
 reduce
     product-type={all-product-types}
 
+relayout-downloads
+    os&$={operating-systems^}
+    lang-code&$={language-codes^}
+    download-type&$={download-types^}
+    no-patches$
+    from*={downloads-layouts}
+    to*={downloads-layouts}
+
 search
     {searchable-properties^&}
 
@@ -102,6 +113,7 @@ size
     lang-code&$={language-codes^}
     download-type&$={download-types^}
     no-patches$
+    downloads-layout$={downloads-layouts^}
     missing
     all
 
@@ -114,6 +126,7 @@ sync
     lang-code&$={language-codes^}
     download-type&$={download-types^}
     no-patches$
+    downloads-layout$={downloads-layouts^}
     debug$
     force
     {sync-options^&}
@@ -129,6 +142,7 @@ update-downloads
     lang-code&$={language-codes^}
     download-type&$={download-types^}
     no-patches$
+    downloads-layout$={downloads-layouts^}
     since-hours-ago
     updates-only
 

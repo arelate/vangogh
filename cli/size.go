@@ -20,6 +20,7 @@ func SizeHandler(u *url.URL) error {
 		vangogh_integration.ValuesFromUrl(u, vangogh_integration.LanguageCodeProperty),
 		vangogh_integration.DownloadTypesFromUrl(u),
 		vangogh_integration.FlagFromUrl(u, "no-patches"),
+		vangogh_integration.DownloadsLayoutFromUrl(u),
 		vangogh_integration.FlagFromUrl(u, "missing"),
 		vangogh_integration.FlagFromUrl(u, "all"))
 }
@@ -30,6 +31,7 @@ func Size(
 	langCodes []string,
 	downloadTypes []vangogh_integration.DownloadType,
 	noPatches bool,
+	downloadsLayout vangogh_integration.DownloadsLayout,
 	missing bool,
 	all bool) error {
 
@@ -40,7 +42,6 @@ func Size(
 
 	rdx, err := vangogh_integration.NewReduxReader(
 		vangogh_integration.LocalManualUrlProperty,
-		//vangogh_integration.NativeLanguageNameProperty,
 		vangogh_integration.SlugProperty,
 		vangogh_integration.DownloadStatusErrorProperty)
 	if err != nil {
@@ -53,7 +54,8 @@ func Size(
 			operatingSystems,
 			downloadTypes,
 			langCodes,
-			noPatches)
+			noPatches,
+			downloadsLayout)
 		if err != nil {
 			return err
 		}
@@ -92,7 +94,7 @@ func Size(
 
 	sa.TotalInt(len(ids))
 
-	if err := vangogh_integration.MapDownloads(
+	if err = vangogh_integration.MapDownloads(
 		ids,
 		rdx,
 		operatingSystems,

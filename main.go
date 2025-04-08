@@ -67,6 +67,7 @@ func main() {
 		"info":                   cli.InfoHandler,
 		"local-tag":              cli.LocalTagHandler,
 		"reduce":                 cli.ReduceHandler,
+		"relayout-downloads":     cli.RelayoutDownloadsHandler,
 		"search":                 cli.SearchHandler,
 		"serve":                  cli.ServeHandler,
 		"size":                   cli.SizeHandler,

@@ -19,6 +19,17 @@ import (
 	"slices"
 )
 
+var userAccessTokenTypes = []vangogh_integration.ProductType{
+	vangogh_integration.Licences,
+	vangogh_integration.UserWishlist,
+	vangogh_integration.CatalogPage,
+	vangogh_integration.AccountPage,
+	vangogh_integration.ApiProducts,
+	vangogh_integration.OrderPage,
+	vangogh_integration.Details,
+	vangogh_integration.GamesDbGogProducts,
+}
+
 var catalogAccountGogIdsProductTypes = []vangogh_integration.ProductType{
 	vangogh_integration.PcgwGogPageId,
 }
@@ -44,6 +55,11 @@ var openCriticIdsProductTypes = []vangogh_integration.ProductType{
 
 func GetDataHandler(u *url.URL) error {
 
+	ids, err := vangogh_integration.IdsFromUrl(u)
+	if err != nil {
+		return err
+	}
+
 	productTypes := vangogh_integration.ProductTypesFromUrl(u)
 
 	since, err := vangogh_integration.SinceFromUrl(u)
@@ -52,10 +68,10 @@ func GetDataHandler(u *url.URL) error {
 	}
 
 	force := u.Query().Has("force")
-	return GetData(productTypes, since, force)
+	return GetData(ids, productTypes, since, force)
 }
 
-func GetData(productTypes []vangogh_integration.ProductType, since int64, force bool) error {
+func GetData(ids []string, productTypes []vangogh_integration.ProductType, since int64, force bool) error {
 
 	if len(productTypes) == 0 {
 		productTypes = slices.Collect(vangogh_integration.AllProductTypes())
@@ -74,13 +90,17 @@ func GetData(productTypes []vangogh_integration.ProductType, since int64, force 
 		return err
 	}
 
-	if err = gog_data.GetUserAccessToken(hc); err != nil {
-		return err
-	}
+	var uat string
+	if requiresUserAccessToken(productTypes...) {
 
-	uat, err := readUserAccessToken()
-	if err != nil {
-		return err
+		if err = gog_data.GetUserAccessToken(hc); err != nil {
+			return err
+		}
+
+		uat, err = readUserAccessToken()
+		if err != nil {
+			return err
+		}
 	}
 
 	if slices.Contains(productTypes, vangogh_integration.Licences) {
@@ -108,7 +128,7 @@ func GetData(productTypes []vangogh_integration.ProductType, since int64, force 
 	}
 
 	if slices.Contains(productTypes, vangogh_integration.ApiProducts) {
-		if err = gog_data.GetApiProducts(hc, uat, since, force); err != nil {
+		if err = gog_data.GetApiProducts(ids, hc, uat, since, force); err != nil {
 			return err
 		}
 		if err = gog_data.GetRelatedApiProducts(hc, uat, since, force); err != nil {
@@ -123,13 +143,13 @@ func GetData(productTypes []vangogh_integration.ProductType, since int64, force 
 	}
 
 	if slices.Contains(productTypes, vangogh_integration.Details) {
-		if err = gog_data.GetDetails(hc, uat, since); err != nil {
+		if err = gog_data.GetDetails(ids, hc, uat, since); err != nil {
 			return err
 		}
 	}
 
 	if slices.Contains(productTypes, vangogh_integration.GamesDbGogProducts) {
-		if err = gog_data.GetGamesDbGogProducts(hc, uat, since, force); err != nil {
+		if err = gog_data.GetGamesDbGogProducts(ids, hc, uat, since, force); err != nil {
 			return err
 		}
 	}
@@ -137,7 +157,12 @@ func GetData(productTypes []vangogh_integration.ProductType, since int64, force 
 	// Steam data
 
 	var catalogAccountProducts map[string]any
-	if requiresCatalogAccountGogIds(productTypes...) {
+	if len(ids) > 0 {
+		catalogAccountProducts = make(map[string]any)
+		for _, id := range ids {
+			catalogAccountProducts[id] = nil
+		}
+	} else if requiresCatalogAccountGogIds(productTypes...) {
 		catalogAccountProducts, err = shared_data.GetCatalogAccountProducts(since)
 		if err != nil {
 			return err
@@ -222,7 +247,7 @@ func GetData(productTypes []vangogh_integration.ProductType, since int64, force 
 		if err = hltb_data.GetRootPage(); err != nil {
 			return err
 		}
-		if err = hltb_data.GetData(since, force); err != nil {
+		if err = hltb_data.GetData(ids, since, force); err != nil {
 			return err
 		}
 	}
@@ -253,7 +278,7 @@ func GetData(productTypes []vangogh_integration.ProductType, since int64, force 
 		}
 	}
 
-	return shared_data.ReduceMisc()
+	return nil
 }
 
 func requiresSteamAppIds(productTypes ...vangogh_integration.ProductType) bool {
@@ -295,6 +320,15 @@ func requiresCatalogAccountGogIds(productTypes ...vangogh_integration.ProductTyp
 	}
 	for _, cagpt := range catalogAccountGogIdsProductTypes {
 		if slices.Contains(productTypes, cagpt) {
+			return true
+		}
+	}
+	return false
+}
+
+func requiresUserAccessToken(productTypes ...vangogh_integration.ProductType) bool {
+	for _, uatt := range userAccessTokenTypes {
+		if slices.Contains(productTypes, uatt) {
 			return true
 		}
 	}

@@ -14,9 +14,9 @@ A service to sync and serve games and data from GOG.com. Can be used as a CLI ap
 
 ## Installation
 
-The recommended way to install `vangogh` is with docker-compose:
+The recommended way to install `vangogh` is with [docker compose](https://docs.docker.com/compose/):
 
-- create a `docker-compose.yml` file (this minimal example omits common settings like network, restart, etc):
+- create a `compose.yml` file (this minimal example omits common settings like network, restart, etc):
 
 ```yaml
 version: '3'
@@ -30,7 +30,11 @@ services:
       - VANGOGH_LANG-CODE=en # see all possible values in https://github.com/arelate/southern_light/blob/main/gog_integration/languages.go  
       - VANGOGH_NO-PATCHES=true # this disables individual patches downloads
     # Uncomment (remove leading # in the line below) to create a log file on every sync 
-    # - VANGOGH_SYNC_DEBUG=true    
+    # - VANGOGH_SYNC_DEBUG=true
+    # DANGER ZONE: Please read downloads layouts documentation below!
+    # Uncomment (remove leading # in the line below) to use a different downloads layout
+    # Note: `sharded` is the default behavior (downloads/s/slug) and `flat` is simpler layout (downloads/slug)
+    # - VANGOGH_DOWNLOADS-LAYOUT=sharded
     volumes:
       # cold storage - less frequently accessed data, that can be stored on hibernating HDD.
       # hot storage - frequently accessed data, that can benefit from being stored on SSD.
@@ -63,8 +67,8 @@ services:
       - "1853:1853"
 ```
 - (move it to location of your choice, e.g. `/docker/vangogh` or remote server or anywhere else)
-- while in the directory with that config - pull the image with `docker-compose pull`
-- start the service with `docker-compose up -d`
+- while in the directory with that config - pull the image with `docker compose pull`
+- start the service with `docker compose up -d`
 - assuming everything was setup correctly - `vangogh` will now be available at this location address, port 1853 (e.g. http://localhost:1853 for a local server installation)
 
 ## Browser compatibility
@@ -99,8 +103,8 @@ If you want to de-authorize `vangogh` from accessing your GOG.com data - delete 
 
 To update your data you can use `vangogh` with a CLI interface to get and maintain all the publicly available GOG.com data, including your account data (game installers):
 
-- in the same folder with `docker-compose.yaml` config use `docker-compose exec vangogh vangogh <command> <options>`
-- most commonly you would run sync `docker-compose exec vangogh vangogh sync -all` that gets all available data from GOG.com. 
+- in the same folder with `compose.yml` config use `docker compose exec vangogh vangogh <command> <options>`
+- most commonly you would run sync `docker compose exec vangogh vangogh sync -all` that gets all available data from GOG.com. 
 
 Sync is optimized to get as little data as possible on each run - only the newly added images and updated installers. There is no great way to determine if metadata was updated remotely, so all of it is fetched on each sync - however upon doing that `vangogh` would know exactly what changed and use this information to optimize decisions. You can also create scheduled runs of synchronization (e.g. with cron) to keep your data fresh. We recommend running sync no more often than every 24 hours. 
 
@@ -122,21 +126,35 @@ Here are few estimates of how much space you'll need for each type of data:
 
 `vangogh` directories allow you to use the best storage type for each data type. For example you might want to store installers, checksums and logs on slower HDDs as those are typically written and read sequentially. Metadata and images on the other hand would benefit from faster SSDs if you're using `vangogh` as a web frontend for your data.
 
+## Downloads layouts
+
+`vangogh` supports two ways product directories will be created in the downloads directory:
+- `sharded`, the default behavior. If you don't specify downloads layout - you'll get this layout. Product directories will be placed in a first-letter parent directory under downloads directory. For example for a product with a slug "abc", you'll get "{downloads directory}/a/abc". This is done to minimize the impact of large number of child objects in a directory that might impact certain filesystems. 
+- `flat`. In this layout product directories will be placed as-is in the downloads directory. For example for a product with a slug "abc", you'll get "{downloads directory}/abc". This is the default layout used by some other GOG downloads tools and might allow easier integrations. Please note that you might start experiencing performance issues with larger libraries, proceed with caution!
+
+Downloads layouts also impact `local-manual-url` property that stores GOG.com ManualUrl mapping to local files (e.g. `/slug/en1installer0` -> `s/slug/installer.exe`).
+
+In order to change download layouts please use the following steps:
+- backup local data (run `backup` on your `vangogh` instance)
+- run `relayout-downloads-layout -from {from} -to {to}`, where {from}, {to} are either `flat` or `sharded` depending on your needs
+- specify `VANGOGH_DOWNLOADS-LAYOUT={new-layout}` in the `compose.yml` (see the example [above](#Installation))
+- recreate the container and restart `vangogh`
+
 ## Setting up authentication
 
 `vangogh` requires configured usernames/password to access more sensitive data (e.g. installers downloads). Unless you set those - you won't be able to access them through the CLI. You also need to set those for `theo` to be able to download games.
 
-Here's how to do that - you need to add that to `docker-compose.yml` in the `environment:` section:
+Here's how to do that - you need to add that to `compose.yml` in the `environment:` section:
 
 ```yaml
-  # add this under environment: in docker-compose.yml
+  # add this under environment: in compose.yml
   - VANGOGH_SERVE_ADMIN-USERNAME=admin-user
   - VANGOGH_SERVE_ADMIN-PASSWORD=admin-password
   - VANGOGH_SERVE_SHARED-USERNAME=shared-user
   - VANGOGH_SERVE_SHARED-PASSWORD=shared-password
 ```
 
-After setting those values - you'll need to restart `vangogh` service with `docker compose restart` (you'll need to be in the same directory `docker-compose.yml` for `vangogh` is).
+After setting those values - you'll need to restart `vangogh` service with `docker compose restart` (you'll need to be in the same directory `compose.yml` for `vangogh` is).
 
 You can see up to date specification of what endpoints require authentication, as well as role requirements [here](https://github.com/arelate/vangogh/blob/main/rest/routing.go).
 
