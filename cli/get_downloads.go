@@ -302,11 +302,11 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	//5
 	lfa := nod.NewProgress(" - %s", resolvedFilename)
 	defer lfa.Done()
-	if err := dlClient.Download(resolvedUrl, gdd.forceUpdate, lfa, absDir, resolvedFilename); err != nil {
+	if err = dlClient.Download(resolvedUrl, gdd.forceUpdate, lfa, absDir, resolvedFilename); err != nil {
 		return err
 	}
 
-	if err := gdd.rdx.ReplaceValues(vangogh_integration.ManualUrlStatusProperty,
+	if err = gdd.rdx.ReplaceValues(vangogh_integration.ManualUrlStatusProperty,
 		dl.ManualUrl, vangogh_integration.ManualUrlDownloaded.String()); err != nil {
 		return err
 	}
@@ -314,51 +314,13 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	lfa.EndWithResult("downloaded")
 
 	//6
-	if err = replaceLocalManualUrl(dl, slug, gdd.rdx, gdd.downloadsLayout, resolvedFilename); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func replaceLocalManualUrl(dl *vangogh_integration.Download, slug string, rdx redux.Writeable, layout vangogh_integration.DownloadsLayout, resolvedFilenames ...string) error {
-
-	var resolvedFilename string
-	if len(resolvedFilenames) > 0 {
-		resolvedFilename = resolvedFilenames[0]
-	}
-
-	var err error
 	//we need to add suffix to a dir path, e.g. dlc, extras - using already resolved download type relative dir
-	relDownloadTypeDir := ""
-	switch dl.Type {
-	case vangogh_integration.DLC:
-		relDownloadTypeDir, err = pathways.GetRelDir(vangogh_integration.DLCs)
-	case vangogh_integration.Extra:
-		relDownloadTypeDir, err = pathways.GetRelDir(vangogh_integration.Extras)
-	default:
-		// do nothing - use base product downloads dir
-	}
-	if err != nil {
-		return err
-	}
-
-	productRelDir, err := vangogh_integration.RelProductDownloadsDir(slug, layout)
+	productRelDir, err := vangogh_integration.RelProductDownloadsDir(slug, gdd.downloadsLayout)
 	relDir := filepath.Join(productRelDir, relDownloadTypeDir)
 	if err != nil {
 		return err
 	}
 
-	if resolvedFilename == "" {
-		if fn, ok := rdx.GetLastVal(vangogh_integration.LocalManualUrlProperty, dl.ManualUrl); ok && fn != "" {
-			_, resolvedFilename = filepath.Split(fn)
-		} else {
-			// currently no manual-url -> local file association has been set and
-			// no resolved filename provided, nothing else we could or should do here
-			return nil
-		}
-	}
-
 	//store association for ManualUrl (/downloads/en0installer) to local file (s/slug/local_filename)
-	return rdx.ReplaceValues(vangogh_integration.LocalManualUrlProperty, dl.ManualUrl, path.Join(relDir, resolvedFilename))
+	return gdd.rdx.ReplaceValues(vangogh_integration.LocalManualUrlProperty, dl.ManualUrl, path.Join(relDir, resolvedFilename))
 }
