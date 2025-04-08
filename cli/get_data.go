@@ -19,6 +19,17 @@ import (
 	"slices"
 )
 
+var userAccessTokenTypes = []vangogh_integration.ProductType{
+	vangogh_integration.Licences,
+	vangogh_integration.UserWishlist,
+	vangogh_integration.CatalogPage,
+	vangogh_integration.AccountPage,
+	vangogh_integration.ApiProducts,
+	vangogh_integration.OrderPage,
+	vangogh_integration.Details,
+	vangogh_integration.GamesDbGogProducts,
+}
+
 var catalogAccountGogIdsProductTypes = []vangogh_integration.ProductType{
 	vangogh_integration.PcgwGogPageId,
 }
@@ -79,13 +90,17 @@ func GetData(ids []string, productTypes []vangogh_integration.ProductType, since
 		return err
 	}
 
-	if err = gog_data.GetUserAccessToken(hc); err != nil {
-		return err
-	}
+	var uat string
+	if requiresUserAccessToken(productTypes...) {
 
-	uat, err := readUserAccessToken()
-	if err != nil {
-		return err
+		if err = gog_data.GetUserAccessToken(hc); err != nil {
+			return err
+		}
+
+		uat, err = readUserAccessToken()
+		if err != nil {
+			return err
+		}
 	}
 
 	if slices.Contains(productTypes, vangogh_integration.Licences) {
@@ -263,7 +278,7 @@ func GetData(ids []string, productTypes []vangogh_integration.ProductType, since
 		}
 	}
 
-	return shared_data.ReduceMisc()
+	return nil
 }
 
 func requiresSteamAppIds(productTypes ...vangogh_integration.ProductType) bool {
@@ -305,6 +320,15 @@ func requiresCatalogAccountGogIds(productTypes ...vangogh_integration.ProductTyp
 	}
 	for _, cagpt := range catalogAccountGogIdsProductTypes {
 		if slices.Contains(productTypes, cagpt) {
+			return true
+		}
+	}
+	return false
+}
+
+func requiresUserAccessToken(productTypes ...vangogh_integration.ProductType) bool {
+	for _, uatt := range userAccessTokenTypes {
+		if slices.Contains(productTypes, uatt) {
 			return true
 		}
 	}

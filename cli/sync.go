@@ -120,6 +120,10 @@ func Sync(
 		return err
 	}
 
+	if err := Reduce([]vangogh_integration.ProductType{vangogh_integration.UnknownProductType}); err != nil {
+		return err
+	}
+
 	// summarize sync updates now, since other updates are digital artifacts
 	// and won't affect the summaries
 	if err := Summarize(syncStart); err != nil {
