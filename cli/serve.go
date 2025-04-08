@@ -18,18 +18,15 @@ func ServeHandler(u *url.URL) error {
 	}
 
 	oses := vangogh_integration.OperatingSystemsFromUrl(u)
-	langCode := vangogh_integration.ValuesFromUrl(u, vangogh_integration.LanguageCodeProperty)
+	langCodes := vangogh_integration.LanguageCodesFromUrl(u)
 
 	if len(oses) == 0 {
 		oses = []vangogh_integration.OperatingSystem{vangogh_integration.AnyOperatingSystem}
 	}
-	if len(langCode) == 0 {
-		langCode = []string{"en"}
-	}
 
 	noPatches := vangogh_integration.FlagFromUrl(u, "no-patches")
 
-	rest.SetDefaultDownloadsFilters(oses, langCode, noPatches)
+	rest.SetDefaultDownloadsFilters(oses, langCodes, noPatches)
 
 	sharedUsername := vangogh_integration.ValueFromUrl(u, "shared-username")
 	sharedPassword := vangogh_integration.ValueFromUrl(u, "shared-password")

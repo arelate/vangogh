@@ -25,7 +25,7 @@ func CleanupHandler(u *url.URL) error {
 	return Cleanup(
 		ids,
 		vangogh_integration.OperatingSystemsFromUrl(u),
-		vangogh_integration.ValuesFromUrl(u, vangogh_integration.LanguageCodeProperty),
+		vangogh_integration.LanguageCodesFromUrl(u),
 		vangogh_integration.DownloadTypesFromUrl(u),
 		vangogh_integration.FlagFromUrl(u, "no-patches"),
 		vangogh_integration.DownloadsLayoutFromUrl(u),

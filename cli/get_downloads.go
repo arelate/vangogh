@@ -30,7 +30,7 @@ func GetDownloadsHandler(u *url.URL) error {
 	return GetDownloads(
 		ids,
 		vangogh_integration.OperatingSystemsFromUrl(u),
-		vangogh_integration.ValuesFromUrl(u, vangogh_integration.LanguageCodeProperty),
+		vangogh_integration.LanguageCodesFromUrl(u),
 		vangogh_integration.DownloadTypesFromUrl(u),
 		vangogh_integration.FlagFromUrl(u, "no-patches"),
 		vangogh_integration.DownloadsLayoutFromUrl(u),

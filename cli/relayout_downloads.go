@@ -17,7 +17,7 @@ func RelayoutDownloadsHandler(u *url.URL) error {
 	q := u.Query()
 
 	operatingSystems := vangogh_integration.OperatingSystemsFromUrl(u)
-	langCodes := vangogh_integration.ValuesFromUrl(u, vangogh_integration.LanguageCodeProperty)
+	langCodes := vangogh_integration.LanguageCodesFromUrl(u)
 	downloadTypes := vangogh_integration.DownloadTypesFromUrl(u)
 	noPatches := vangogh_integration.FlagFromUrl(u, "no-patches")
 

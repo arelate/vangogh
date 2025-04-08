@@ -5,7 +5,6 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli"
 	"iter"
-	"slices"
 	"strings"
 )
 
@@ -71,20 +70,15 @@ func downloadsLayouts() []string {
 }
 
 func languageCodes() []string {
-	//defaultLangCode := "en"
-	//langCodes := []string{defaultLangCode}
-	//rdx, err := vangogh_integration.NewReduxReader(vangogh_integration.LanguageNameProperty)
-	//if err != nil {
-	//	return langCodes
-	//}
-	//for lc := range rdx.Keys(vangogh_integration.LanguageNameProperty) {
-	//	if lc == defaultLangCode {
-	//		continue
-	//	}
-	//	langCodes = append(langCodes, strings.ToLower(lc))
-	//}
-	//return langCodes
-	return slices.Collect(gog_integration.AllLanguageCodes())
+	defaultLangCode := "en"
+	langCodes := []string{defaultLangCode}
+	for lc := range gog_integration.AllLanguageCodes() {
+		if lc == defaultLangCode {
+			continue
+		}
+		langCodes = append(langCodes, lc)
+	}
+	return langCodes
 }
 
 func options(opts []string) []string {
