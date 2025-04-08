@@ -16,6 +16,8 @@ import (
 	"path"
 	"path/filepath"
 	"strconv"
+	"strings"
+	"time"
 )
 
 func GetDownloadsHandler(u *url.URL) error {
@@ -64,12 +66,18 @@ func GetDownloads(
 		return err
 	}
 
-	rdx, err := vangogh_integration.NewReduxWriter(
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return err
+	}
+
+	rdx, err := redux.NewWriter(reduxDir,
 		vangogh_integration.SlugProperty,
 		vangogh_integration.LocalManualUrlProperty,
 		vangogh_integration.ManualUrlStatusProperty,
 		vangogh_integration.DownloadStatusErrorProperty,
-		vangogh_integration.ProductValidationResultProperty)
+		vangogh_integration.ProductValidationResultProperty,
+		vangogh_integration.DownloadQueuedProperty)
 	if err != nil {
 		return err
 	}
@@ -94,13 +102,24 @@ func GetDownloads(
 		ids = append(ids, missingIds...)
 	}
 
+	// add all product ids to download queue to make sure we complete
+	// those downloads even if get-downloads is interrupted
+	downloadsQueued := make(map[string][]string)
+	for _, id := range ids {
+		downloadsQueued[id] = []string{time.Now().UTC().Format(time.RFC3339)}
+	}
+
+	if err = rdx.BatchReplaceValues(vangogh_integration.DownloadQueuedProperty, downloadsQueued); err != nil {
+		return err
+	}
+
 	gdd := &getDownloadsDelegate{
 		rdx:             rdx,
 		forceUpdate:     force,
 		downloadsLayout: downloadsLayout,
 	}
 
-	if err := vangogh_integration.MapDownloads(
+	if err = vangogh_integration.MapDownloads(
 		ids,
 		rdx,
 		operatingSystems,
@@ -177,7 +196,7 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 	dlClient := dolo.NewClient(defaultClient, dolo.Defaults())
 
 	for _, dl := range list {
-		if err := gdd.downloadManualUrl(slug, &dl, hc, dlClient); err != nil {
+		if err := gdd.downloadManualUrl(id, slug, &dl, hc, dlClient); err != nil {
 			sda.Error(err)
 		}
 	}
@@ -186,6 +205,7 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 }
 
 func (gdd *getDownloadsDelegate) downloadManualUrl(
+	id string,
 	slug string,
 	dl *vangogh_integration.Download,
 	httpClient *http.Client,
@@ -201,6 +221,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	//4 - for a given set of extensions - download validation file
 	//5 - download authorized session URL to a file
 	//6 - set association from manualUrl to a resolved resolvedFilename
+	//7 - remove product from downloads queue
 	if err := gdd.rdx.MustHave(
 		vangogh_integration.LocalManualUrlProperty,
 		vangogh_integration.DownloadStatusErrorProperty); err != nil {
@@ -322,5 +343,43 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	}
 
 	//store association for ManualUrl (/downloads/en0installer) to local file (s/slug/local_filename)
-	return gdd.rdx.ReplaceValues(vangogh_integration.LocalManualUrlProperty, dl.ManualUrl, path.Join(relDir, resolvedFilename))
+	if err = gdd.rdx.ReplaceValues(vangogh_integration.LocalManualUrlProperty, dl.ManualUrl, path.Join(relDir, resolvedFilename)); err != nil {
+		return err
+	}
+
+	//7
+	if err = gdd.rdx.CutKeys(vangogh_integration.DownloadQueuedProperty, id); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func getQueuedDownloads() ([]string, error) {
+
+	gqda := nod.Begin("getting previously queued downloads...")
+	defer gqda.Done()
+
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return nil, err
+	}
+
+	rdx, err := redux.NewReader(reduxDir, vangogh_integration.DownloadQueuedProperty)
+	if err != nil {
+		return nil, err
+	}
+
+	queuedDownloads := make([]string, 0)
+	for id := range rdx.Keys(vangogh_integration.DownloadQueuedProperty) {
+		queuedDownloads = append(queuedDownloads, id)
+	}
+
+	if len(queuedDownloads) == 0 {
+		gqda.EndWithResult("queue is empty")
+	} else {
+		gqda.EndWithResult("found: %s", strings.Join(queuedDownloads, ", "))
+	}
+
+	return queuedDownloads, nil
 }

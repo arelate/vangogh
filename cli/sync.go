@@ -193,6 +193,37 @@ func Sync(
 			noPatches); err != nil {
 			return err
 		}
+
+		// process remaining queued downloads, e.g. downloads that were queued before this sync
+		// and were not completed successfully due to an interruption
+		queuedDownloads, err := getQueuedDownloads()
+		if err != nil {
+			return err
+		}
+
+		if len(queuedDownloads) > 0 {
+			if err = GetDownloads(
+				queuedDownloads,
+				operatingSystems,
+				langCodes,
+				downloadTypes,
+				noPatches,
+				downloadsLayout,
+				false,
+				force); err != nil {
+				return err
+			}
+
+			if err = Validate(
+				queuedDownloads,
+				operatingSystems,
+				langCodes,
+				downloadTypes,
+				noPatches,
+				false); err != nil {
+				return err
+			}
+		}
 	}
 
 	if err := CacheGitHubReleases(force); err != nil {
