@@ -17,7 +17,7 @@ import (
 	"strconv"
 )
 
-func GetData(since int64, force bool) error {
+func GetData(ids []string, since int64, force bool) error {
 
 	gda := nod.NewProgress("gettings %s...", vangogh_integration.HltbData)
 	defer gda.Done()
@@ -42,7 +42,7 @@ func GetData(since int64, force bool) error {
 		return err
 	}
 
-	hltbIds := getHltbIds(rdx)
+	hltbIds := getHltbIds(ids, rdx)
 
 	gda.TotalInt(len(hltbIds))
 
@@ -58,16 +58,26 @@ func GetData(since int64, force bool) error {
 	return ReduceData(kvData, since)
 }
 
-func getHltbIds(rdx redux.Readable) []string {
-	var ids []string
+func getHltbIds(ids []string, rdx redux.Readable) []string {
+	var hltbIds []string
 
-	for gogId := range rdx.Keys(vangogh_integration.HltbIdProperty) {
-		if hltbIds, ok := rdx.GetAllValues(vangogh_integration.HltbIdProperty, gogId); ok {
-			ids = append(ids, hltbIds...)
+	var keys []string
+	if len(ids) > 0 {
+		keys = ids
+	} else {
+		keys = make([]string, 0)
+		for id := range rdx.Keys(vangogh_integration.HltbIdProperty) {
+			keys = append(keys, id)
 		}
 	}
 
-	return ids
+	for _, gogId := range keys {
+		if hids, ok := rdx.GetAllValues(vangogh_integration.HltbIdProperty, gogId); ok {
+			hltbIds = append(hltbIds, hids...)
+		}
+	}
+
+	return hltbIds
 }
 
 func readBuildId() (string, error) {
