@@ -195,15 +195,19 @@ func Sync(
 		}
 
 		// process remaining queued downloads, e.g. downloads that were queued before this sync
-		// and were not completed successfully due to an interruption
-		queuedDownloads, err := getQueuedDownloads()
+		// and were not completed successfully due to an interruption. Download updates
+		// itemized earlier in the sync cycle (ids) are intentionally excluded to
+		// focus on previously queued and avoid attempting to download problematic ids
+		// right after they didn't download successfully, waiting until the next sync
+		// is likely a better strategy in that case
+		queuedIds, err := getQueuedDownloads(ids...)
 		if err != nil {
 			return err
 		}
 
-		if len(queuedDownloads) > 0 {
+		if len(queuedIds) > 0 {
 			if err = GetDownloads(
-				queuedDownloads,
+				queuedIds,
 				operatingSystems,
 				langCodes,
 				downloadTypes,
@@ -215,7 +219,7 @@ func Sync(
 			}
 
 			if err = Validate(
-				queuedDownloads,
+				queuedIds,
 				operatingSystems,
 				langCodes,
 				downloadTypes,

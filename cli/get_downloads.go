@@ -15,6 +15,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -355,7 +356,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	return nil
 }
 
-func getQueuedDownloads() ([]string, error) {
+func getQueuedDownloads(excludeIds ...string) ([]string, error) {
 
 	gqda := nod.Begin("getting previously queued downloads...")
 	defer gqda.Done()
@@ -372,6 +373,9 @@ func getQueuedDownloads() ([]string, error) {
 
 	queuedDownloads := make([]string, 0)
 	for id := range rdx.Keys(vangogh_integration.DownloadQueuedProperty) {
+		if slices.Contains(excludeIds, id) {
+			continue
+		}
 		queuedDownloads = append(queuedDownloads, id)
 	}
 
