@@ -197,10 +197,10 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	//downloading a manual URL is the following set of steps:
 	//1 - check if local file exists (based on manualUrl -> relative localFile association) before attempting to resolve manualUrl
 	//2 - resolve the source URL to an actual session URL
-	//3 - construct local relative dir and filename based on manualUrl type (installer, movie, dlc, extra)
+	//3 - construct local relative dir and resolvedFilename based on manualUrl type (installer, movie, dlc, extra)
 	//4 - for a given set of extensions - download validation file
 	//5 - download authorized session URL to a file
-	//6 - set association from manualUrl to a resolved filename
+	//6 - set association from manualUrl to a resolved resolvedFilename
 	if err := gdd.rdx.MustHave(
 		vangogh_integration.LocalManualUrlProperty,
 		vangogh_integration.DownloadStatusErrorProperty); err != nil {
@@ -248,19 +248,19 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	}
 
 	//3
-	_, filename := path.Split(resolvedUrl.Path)
+	_, resolvedFilename := path.Split(resolvedUrl.Path)
 	//ProductDownloadsAbsDir would return absolute dir path, e.g. downloads/s/slug
 	absDir, err := vangogh_integration.AbsProductDownloadsDir(slug, gdd.downloadsLayout)
 	if err != nil {
 		return err
 	}
 	//we need to add suffix to a dir path, e.g. dlc, extras
-	relDirSuffix := ""
+	relDownloadTypeDir := ""
 	switch dl.Type {
 	case vangogh_integration.DLC:
-		relDirSuffix, err = pathways.GetRelDir(vangogh_integration.DLCs)
+		relDownloadTypeDir, err = pathways.GetRelDir(vangogh_integration.DLCs)
 	case vangogh_integration.Extra:
-		relDirSuffix, err = pathways.GetRelDir(vangogh_integration.Extras)
+		relDownloadTypeDir, err = pathways.GetRelDir(vangogh_integration.Extras)
 	default:
 		// do nothing - use base product downloads dir
 	}
@@ -269,12 +269,12 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	}
 
 	//completing absDir with download type relative suffix (e.g. /g/game + dlc = /g/game/dlc)
-	absDir = filepath.Join(absDir, relDirSuffix)
+	absDir = filepath.Join(absDir, relDownloadTypeDir)
 
 	//4
 	remoteChecksumPath := vangogh_integration.RemoteChecksumPath(resolvedUrl.Path)
 	if remoteChecksumPath != "" {
-		localChecksumPath, err := vangogh_integration.AbsLocalChecksumPath(path.Join(absDir, filename))
+		localChecksumPath, err := vangogh_integration.AbsLocalChecksumPath(path.Join(absDir, resolvedFilename))
 		if err != nil {
 			return err
 		}
@@ -300,9 +300,9 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	}
 
 	//5
-	lfa := nod.NewProgress(" - %s", filename)
+	lfa := nod.NewProgress(" - %s", resolvedFilename)
 	defer lfa.Done()
-	if err := dlClient.Download(resolvedUrl, gdd.forceUpdate, lfa, absDir, filename); err != nil {
+	if err := dlClient.Download(resolvedUrl, gdd.forceUpdate, lfa, absDir, resolvedFilename); err != nil {
 		return err
 	}
 
@@ -314,17 +314,51 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	lfa.EndWithResult("downloaded")
 
 	//6
-	//ProductDownloadsRelDir would return relative (to downloads/ root) dir path, e.g. s/slug
-	pRelDir, err := vangogh_integration.RelProductDownloadsDir(slug, gdd.downloadsLayout)
-	//we need to add suffix to a dir path, e.g. dlc, extras - using already resolved download type relative dir
-	relDir := filepath.Join(pRelDir, relDirSuffix)
-	if err != nil {
-		return err
-	}
-	//store association for ManualUrl (/downloads/en0installer) to local file (s/slug/local_filename)
-	if err := gdd.rdx.ReplaceValues(vangogh_integration.LocalManualUrlProperty, dl.ManualUrl, path.Join(relDir, filename)); err != nil {
+	if err = replaceLocalManualUrl(dl, slug, gdd.rdx, gdd.downloadsLayout, resolvedFilename); err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func replaceLocalManualUrl(dl *vangogh_integration.Download, slug string, rdx redux.Writeable, layout vangogh_integration.DownloadsLayout, resolvedFilenames ...string) error {
+
+	var resolvedFilename string
+	if len(resolvedFilenames) > 0 {
+		resolvedFilename = resolvedFilenames[0]
+	}
+
+	var err error
+	//we need to add suffix to a dir path, e.g. dlc, extras - using already resolved download type relative dir
+	relDownloadTypeDir := ""
+	switch dl.Type {
+	case vangogh_integration.DLC:
+		relDownloadTypeDir, err = pathways.GetRelDir(vangogh_integration.DLCs)
+	case vangogh_integration.Extra:
+		relDownloadTypeDir, err = pathways.GetRelDir(vangogh_integration.Extras)
+	default:
+		// do nothing - use base product downloads dir
+	}
+	if err != nil {
+		return err
+	}
+
+	productRelDir, err := vangogh_integration.RelProductDownloadsDir(slug, layout)
+	relDir := filepath.Join(productRelDir, relDownloadTypeDir)
+	if err != nil {
+		return err
+	}
+
+	if resolvedFilename == "" {
+		if fn, ok := rdx.GetLastVal(vangogh_integration.LocalManualUrlProperty, dl.ManualUrl); ok && fn != "" {
+			_, resolvedFilename = filepath.Split(fn)
+		} else {
+			// currently no manual-url -> local file association has been set and
+			// no resolved filename provided, nothing else we could or should do here
+			return nil
+		}
+	}
+
+	//store association for ManualUrl (/downloads/en0installer) to local file (s/slug/local_filename)
+	return rdx.ReplaceValues(vangogh_integration.LocalManualUrlProperty, dl.ManualUrl, path.Join(relDir, resolvedFilename))
 }

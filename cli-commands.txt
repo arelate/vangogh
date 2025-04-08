@@ -83,6 +83,14 @@ local-tag
 reduce
     product-type={all-product-types}
 
+relayout-downloads
+    os&$={operating-systems^}
+    lang-code&$={language-codes^}
+    download-type&$={download-types^}
+    no-patches$
+    from*={downloads-layouts}
+    to*={downloads-layouts}
+
 search
     {searchable-properties^&}
 

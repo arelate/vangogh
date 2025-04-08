@@ -43,6 +43,9 @@ func Cleanup(
 	downloadsLayout vangogh_integration.DownloadsLayout,
 	all, test, delete bool) error {
 
+	ca := nod.NewProgress("cleaning up...")
+	defer ca.Done()
+
 	if test && delete {
 		return errors.New("cleanup can be either test or delete, not both at the same time")
 	}
@@ -53,9 +56,6 @@ func Cleanup(
 	if err != nil {
 		return err
 	}
-
-	ca := nod.NewProgress("cleaning up...")
-	defer ca.Done()
 
 	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
 
