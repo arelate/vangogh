@@ -197,16 +197,19 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 	dlClient := dolo.NewClient(defaultClient, dolo.Defaults())
 
 	for _, dl := range list {
-		if err := gdd.downloadManualUrl(id, slug, &dl, hc, dlClient); err != nil {
+		if err := gdd.downloadManualUrl(slug, &dl, hc, dlClient); err != nil {
 			sda.Error(err)
 		}
+	}
+
+	if err = gdd.rdx.CutKeys(vangogh_integration.DownloadQueuedProperty, id); err != nil {
+		return err
 	}
 
 	return nil
 }
 
 func (gdd *getDownloadsDelegate) downloadManualUrl(
-	id string,
 	slug string,
 	dl *vangogh_integration.Download,
 	httpClient *http.Client,
@@ -222,7 +225,6 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	//4 - for a given set of extensions - download validation file
 	//5 - download authorized session URL to a file
 	//6 - set association from manualUrl to a resolved resolvedFilename
-	//7 - remove product from downloads queue
 	if err := gdd.rdx.MustHave(
 		vangogh_integration.LocalManualUrlProperty,
 		vangogh_integration.DownloadStatusErrorProperty); err != nil {
@@ -345,11 +347,6 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 
 	//store association for ManualUrl (/downloads/en0installer) to local file (s/slug/local_filename)
 	if err = gdd.rdx.ReplaceValues(vangogh_integration.LocalManualUrlProperty, dl.ManualUrl, path.Join(relDir, resolvedFilename)); err != nil {
-		return err
-	}
-
-	//7
-	if err = gdd.rdx.CutKeys(vangogh_integration.DownloadQueuedProperty, id); err != nil {
 		return err
 	}
 
