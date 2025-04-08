@@ -81,11 +81,18 @@ func RelayoutDownloads(
 		return err
 	}
 
+	if len(drp.errs) > 0 {
+		joinedErrs := errors.Join(drp.errs...)
+		rda.EndWithResult("encountered %d error(s) while moving directories: %s", len(drp.errs), joinedErrs)
+		return joinedErrs
+	}
+
 	return rdx.BatchReplaceValues(vangogh_integration.LocalManualUrlProperty, drp.localManualUrls)
 }
 
 type downloadsRelayoutProcessor struct {
 	rdx             redux.Readable
+	errs            []error
 	localManualUrls map[string][]string
 	from, to        vangogh_integration.DownloadsLayout
 }
@@ -98,7 +105,8 @@ func (drp *downloadsRelayoutProcessor) Process(_ string, slug string, downloadsL
 	}
 
 	if _, err = os.Stat(fromDir); err != nil {
-		return err
+		drp.errs = append(drp.errs, err)
+		return nil
 	}
 
 	toDir, err := vangogh_integration.AbsProductDownloadsDir(slug, drp.to)
@@ -108,11 +116,14 @@ func (drp *downloadsRelayoutProcessor) Process(_ string, slug string, downloadsL
 
 	// checking for err == nil to make sure destination directory does NOT exist
 	if _, err = os.Stat(toDir); err == nil {
-		return errors.New("destination layout directory already exist: " + toDir)
+		err = errors.New("destination layout directory already exist: " + toDir)
+		drp.errs = append(drp.errs, err)
+		return nil
 	}
 
 	if err = os.Rename(fromDir, toDir); err != nil {
-		return err
+		drp.errs = append(drp.errs, err)
+		return nil
 	}
 
 	// accumulating localManualUrls for this downloadsList
