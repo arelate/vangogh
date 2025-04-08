@@ -99,6 +99,10 @@ type downloadsRelayoutProcessor struct {
 
 func (drp *downloadsRelayoutProcessor) Process(_ string, slug string, downloadsList vangogh_integration.DownloadsList) error {
 
+	if len(downloadsList) == 0 {
+		return nil
+	}
+
 	fromDir, err := vangogh_integration.AbsProductDownloadsDir(slug, drp.from)
 	if err != nil {
 		return err
