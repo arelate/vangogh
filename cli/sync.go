@@ -200,33 +200,14 @@ func Sync(
 		// focus on previously queued and avoid attempting to download problematic ids
 		// right after they didn't download successfully, waiting until the next sync
 		// is likely a better strategy in that case
-		queuedIds, err := getQueuedDownloads(ids...)
-		if err != nil {
+		if err = ProcessQueue(
+			operatingSystems,
+			langCodes,
+			downloadTypes,
+			noPatches,
+			downloadsLayout,
+			ids...); err != nil {
 			return err
-		}
-
-		if len(queuedIds) > 0 {
-			if err = GetDownloads(
-				queuedIds,
-				operatingSystems,
-				langCodes,
-				downloadTypes,
-				noPatches,
-				downloadsLayout,
-				false,
-				force); err != nil {
-				return err
-			}
-
-			if err = Validate(
-				queuedIds,
-				operatingSystems,
-				langCodes,
-				downloadTypes,
-				noPatches,
-				false); err != nil {
-				return err
-			}
 		}
 	}
 

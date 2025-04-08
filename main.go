@@ -66,6 +66,7 @@ func main() {
 		"health":                 cli.HealthHandler,
 		"info":                   cli.InfoHandler,
 		"local-tag":              cli.LocalTagHandler,
+		"process-queue":          cli.ProcessQueueHandler,
 		"reduce":                 cli.ReduceHandler,
 		"relayout-downloads":     cli.RelayoutDownloadsHandler,
 		"search":                 cli.SearchHandler,

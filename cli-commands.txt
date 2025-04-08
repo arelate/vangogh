@@ -81,6 +81,14 @@ local-tag
     operation^=add,remove
     tag-name
 
+process-queue
+    os&$={operating-systems^}
+    lang-code&$={language-codes^}
+    download-type&$={download-types^}
+    no-patches$
+    downloads-layout$={downloads-layouts^}
+    force
+
 reduce
     product-type={all-product-types}
 
