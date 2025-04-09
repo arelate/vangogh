@@ -18,9 +18,10 @@ import (
 )
 
 type DownloadVariant struct {
-	dlType   vangogh_integration.DownloadType
-	version  string
-	langCode string
+	dlType         vangogh_integration.DownloadType
+	version        string
+	langCode       string
+	estimatedBytes int
 }
 
 var downloadTypesStrings = map[vangogh_integration.DownloadType]string{
@@ -192,6 +193,9 @@ func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 	if dv.version != "" {
 		fr.PropVal("Version", dv.version)
 	}
+	if dv.estimatedBytes > 0 {
+		fr.PropVal("Size", fmtBytes(dv.estimatedBytes))
+	}
 
 	return fr
 }
@@ -304,13 +308,13 @@ func (dv *DownloadVariant) Equals(other *DownloadVariant) bool {
 		dv.langCode == other.langCode
 }
 
-func hasDownloadVariant(dvs []*DownloadVariant, other *DownloadVariant) bool {
+func getDownloadVariant(dvs []*DownloadVariant, other *DownloadVariant) *DownloadVariant {
 	for _, dv := range dvs {
 		if dv.Equals(other) {
-			return true
+			return dv
 		}
 	}
-	return false
+	return nil
 }
 
 func getProductTitles(os vangogh_integration.OperatingSystem, dls vangogh_integration.DownloadsList) []string {
@@ -339,13 +343,16 @@ func getDownloadVariants(os vangogh_integration.OperatingSystem, title string, d
 		}
 
 		dv := &DownloadVariant{
-			dlType:   dl.Type,
-			version:  dl.Version,
-			langCode: dl.LanguageCode,
+			dlType:         dl.Type,
+			version:        dl.Version,
+			langCode:       dl.LanguageCode,
+			estimatedBytes: dl.EstimatedBytes,
 		}
 
-		if !hasDownloadVariant(variants, dv) {
+		if edv := getDownloadVariant(variants, dv); edv == nil {
 			variants = append(variants, dv)
+		} else {
+			edv.estimatedBytes += dl.EstimatedBytes
 		}
 
 	}
