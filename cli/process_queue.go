@@ -20,13 +20,12 @@ func ProcessQueue(
 	langCodes []string,
 	downloadTypes []vangogh_integration.DownloadType,
 	noPatches bool,
-	downloadsLayout vangogh_integration.DownloadsLayout,
-	excludedIds ...string) error {
+	downloadsLayout vangogh_integration.DownloadsLayout) error {
 
 	pqa := nod.Begin("processing downloads queue...")
 	defer pqa.Done()
 
-	queuedIds, err := getQueuedDownloads(excludedIds...)
+	queuedIds, err := getQueuedDownloads()
 	if err != nil {
 		return err
 	}

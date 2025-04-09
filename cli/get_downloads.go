@@ -10,14 +10,13 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
+	"iter"
 	"net/http"
 	"net/url"
 	"os"
 	"path"
 	"path/filepath"
-	"slices"
 	"strconv"
-	"strings"
 	"time"
 )
 
@@ -101,17 +100,6 @@ func GetDownloads(
 		}
 
 		ids = append(ids, missingIds...)
-	}
-
-	// add all product ids to download queue to make sure we complete
-	// those downloads even if get-downloads is interrupted
-	downloadsQueued := make(map[string][]string)
-	for _, id := range ids {
-		downloadsQueued[id] = []string{time.Now().UTC().Format(time.RFC3339)}
-	}
-
-	if err = rdx.BatchReplaceValues(vangogh_integration.DownloadQueuedProperty, downloadsQueued); err != nil {
-		return err
 	}
 
 	gdd := &getDownloadsDelegate{
@@ -353,9 +341,9 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	return nil
 }
 
-func getQueuedDownloads(excludeIds ...string) ([]string, error) {
+func getQueuedDownloads() ([]string, error) {
 
-	gqda := nod.Begin("getting previously queued downloads...")
+	gqda := nod.Begin("getting queued downloads...")
 	defer gqda.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -370,17 +358,36 @@ func getQueuedDownloads(excludeIds ...string) ([]string, error) {
 
 	queuedDownloads := make([]string, 0)
 	for id := range rdx.Keys(vangogh_integration.DownloadQueuedProperty) {
-		if slices.Contains(excludeIds, id) {
-			continue
-		}
 		queuedDownloads = append(queuedDownloads, id)
 	}
 
 	if len(queuedDownloads) == 0 {
 		gqda.EndWithResult("queue is empty")
 	} else {
-		gqda.EndWithResult("found: %s", strings.Join(queuedDownloads, ", "))
+		gqda.EndWithResult("%d downloads in the queue", len(queuedDownloads))
 	}
 
 	return queuedDownloads, nil
+}
+
+func queueDownloads(ids iter.Seq[string]) error {
+	qda := nod.Begin("adding downloads to the queue...")
+	defer qda.Done()
+
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return err
+	}
+
+	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.DownloadQueuedProperty)
+	if err != nil {
+		return err
+	}
+
+	downloadsQueued := make(map[string][]string)
+	for id := range ids {
+		downloadsQueued[id] = []string{time.Now().UTC().Format(time.RFC3339)}
+	}
+
+	return rdx.BatchReplaceValues(vangogh_integration.DownloadQueuedProperty, downloadsQueued)
 }

@@ -5,7 +5,6 @@ import (
 	"github.com/boggydigital/pathways"
 	"maps"
 	"net/url"
-	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -170,27 +169,7 @@ func Sync(
 			return err
 		}
 
-		ids := slices.Collect(maps.Keys(updatedDetails))
-
-		if err = UpdateDownloads(
-			ids,
-			operatingSystems,
-			langCodes,
-			downloadTypes,
-			noPatches,
-			downloadsLayout,
-			since,
-			false); err != nil {
-			return err
-		}
-
-		if err = validateUpdated(
-			ids,
-			since,
-			operatingSystems,
-			langCodes,
-			downloadTypes,
-			noPatches); err != nil {
+		if err = queueDownloads(maps.Keys(updatedDetails)); err != nil {
 			return err
 		}
 
@@ -205,8 +184,7 @@ func Sync(
 			langCodes,
 			downloadTypes,
 			noPatches,
-			downloadsLayout,
-			ids...); err != nil {
+			downloadsLayout); err != nil {
 			return err
 		}
 	}
