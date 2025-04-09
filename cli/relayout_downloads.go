@@ -121,6 +121,14 @@ func (drp *downloadsRelayoutProcessor) Process(_ string, slug string, downloadsL
 		return err
 	}
 
+	// currently this is required for sharded layout, but is a good practice to check in general
+	parentToDir, _ := filepath.Split(toDir)
+	if _, err = os.Stat(parentToDir); os.IsNotExist(err) {
+		if err = os.MkdirAll(parentToDir, 0755); err != nil {
+			return err
+		}
+	}
+
 	// checking for err == nil to make sure destination directory does NOT exist
 	if _, err = os.Stat(toDir); err == nil {
 		err = errors.New("destination layout directory already exist: " + toDir)
