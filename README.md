@@ -136,7 +136,7 @@ Downloads layouts also impact `local-manual-url` property that stores GOG.com Ma
 
 In order to change download layouts please use the following steps:
 - backup local data (run `backup` on your `vangogh` instance)
-- run `relayout-downloads-layout -from {from} -to {to}`, where {from}, {to} are either `flat` or `sharded` depending on your needs
+- run `relayout-downloads -from {from} -to {to}`, where {from}, {to} are either `flat` or `sharded` depending on your needs
 - specify `VANGOGH_DOWNLOADS-LAYOUT={new-layout}` in the `compose.yml` (see the example [above](#Installation))
 - recreate the container and restart `vangogh`
 
