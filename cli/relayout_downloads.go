@@ -81,13 +81,16 @@ func RelayoutDownloads(
 		return err
 	}
 
+	if err = rdx.BatchReplaceValues(vangogh_integration.LocalManualUrlProperty, drp.localManualUrls); err != nil {
+		return err
+	}
+
 	if len(drp.errs) > 0 {
 		joinedErrs := errors.Join(drp.errs...)
 		rda.EndWithResult("encountered %d error(s) while moving directories: %s", len(drp.errs), joinedErrs)
-		return joinedErrs
 	}
 
-	return rdx.BatchReplaceValues(vangogh_integration.LocalManualUrlProperty, drp.localManualUrls)
+	return nil
 }
 
 type downloadsRelayoutProcessor struct {
