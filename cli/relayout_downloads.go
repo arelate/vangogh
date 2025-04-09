@@ -133,6 +133,13 @@ func (drp *downloadsRelayoutProcessor) Process(_ string, slug string, downloadsL
 		return nil
 	}
 
+	if drp.from == vangogh_integration.ShardedDownloadsLayout {
+		shardDir, _ := filepath.Split(fromDir)
+		if err = removeDirIfEmpty(shardDir); err != nil {
+			return err
+		}
+	}
+
 	// accumulating localManualUrls for this downloadsList
 
 	productRelDir, err := vangogh_integration.RelProductDownloadsDir(slug, drp.to)
