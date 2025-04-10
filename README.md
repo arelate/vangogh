@@ -1,6 +1,6 @@
 # vangogh
 
-A service to sync and serve games and data from GOG.com. Can be used as a CLI app or a web service that provides a frontend to browse, search that data.
+`vangogh` helps you create and manage a personal, DRM-free library of your GOG game collection. It works alongside `theo`(https://github.com/arelate/theo) to simplify downloading, installing and playing games on your devices.
 
 | Dark theme                                       | Light theme                                        |
 |--------------------------------------------------|----------------------------------------------------|
