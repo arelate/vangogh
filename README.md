@@ -10,7 +10,7 @@ A service to sync and serve games and data from GOG.com. Can be used as a CLI ap
 
 ## Future vangogh ideas and aspirations
 
-`vnagogh` roadmap is available [here](ROADMAP.md).
+`vangogh` roadmap is available [here](ROADMAP.md).
 
 ## Installation
 
