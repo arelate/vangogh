@@ -2,6 +2,7 @@ package gog_data
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
@@ -66,16 +67,33 @@ func ReduceUserWishlist(kvUserWishlist kevlar.KeyValues) error {
 		return err
 	}
 
-	userWishlistMap := make(map[string][]string, len(userWishlist.Wishlist))
-	for id, flag := range userWishlist.Wishlist {
-		if flag {
-			userWishlistMap[id] = []string{vangogh_integration.TrueValue}
+	// GOG.com serves map[string]bool when user has some games wishlisted
+	// and an empty array when no game has been wishlisted
+	// so in order to process the data we attempt a type conversion
+	// and handle both known data types (and fail if data has another format)
+
+	if uwlMap, ok := userWishlist.Wishlist.(map[string]bool); ok {
+
+		userWishlistMap := make(map[string][]string, len(uwlMap))
+		for id, flag := range uwlMap {
+			if flag {
+				userWishlistMap[id] = []string{vangogh_integration.TrueValue}
+			}
 		}
-	}
 
-	if err = rdx.CutKeys(key, slices.Collect(rdx.Keys(key))...); err != nil {
-		return err
-	}
+		if err = rdx.CutKeys(key, slices.Collect(rdx.Keys(key))...); err != nil {
+			return err
+		}
 
-	return rdx.BatchAddValues(key, userWishlistMap)
+		return rdx.BatchAddValues(key, userWishlistMap)
+
+	} else if uwlSlice, sure := userWishlist.Wishlist.([]any); sure {
+		if len(uwlSlice) == 0 {
+			return nil
+		} else {
+			return errors.New("user wishlist is an unsupported slice")
+		}
+	} else {
+		return errors.New("user wishlist is an unknown format")
+	}
 }
