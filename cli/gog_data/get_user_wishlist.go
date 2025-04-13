@@ -72,11 +72,11 @@ func ReduceUserWishlist(kvUserWishlist kevlar.KeyValues) error {
 	// so in order to process the data we attempt a type conversion
 	// and handle both known data types (and fail if data has another format)
 
-	if uwlMap, ok := userWishlist.Wishlist.(map[string]bool); ok {
+	if uwlMap, ok := userWishlist.Wishlist.(map[string]any); ok {
 
 		userWishlistMap := make(map[string][]string, len(uwlMap))
 		for id, flag := range uwlMap {
-			if flag {
+			if wishlisted, sure := flag.(bool); sure && wishlisted {
 				userWishlistMap[id] = []string{vangogh_integration.TrueValue}
 			}
 		}
