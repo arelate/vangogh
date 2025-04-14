@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/itemizations"
-	"github.com/boggydigital/dolo"
+	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/redux"
 	"net/url"
@@ -170,7 +170,7 @@ func getImage(imageUrl *url.URL, force bool) error {
 		}
 	}
 
-	dc := dolo.DefaultClient
+	dc := reqs.GetDoloClient()
 
 	return dc.Download(imageUrl, force, gia, dstImageDir)
 }

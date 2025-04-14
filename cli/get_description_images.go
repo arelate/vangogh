@@ -2,7 +2,7 @@ package cli
 
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/boggydigital/dolo"
+	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"net/url"
@@ -113,7 +113,7 @@ func getDescriptionImage(descriptionImageUrl string, force bool) error {
 		}
 	}
 
-	dc := dolo.DefaultClient
+	dc := reqs.GetDoloClient()
 
 	if err = dc.Download(diu, force, gdia, adip); err != nil {
 		if ext := filepath.Ext(adip); ext != "" && strings.Contains(err.Error(), "404") {

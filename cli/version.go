@@ -2,18 +2,15 @@ package cli
 
 import (
 	"fmt"
+	"github.com/arelate/vangogh/cli/reqs"
 	"net/url"
 )
 
-var (
-	GitTag string
-)
-
 func VersionHandler(_ *url.URL) error {
-	if GitTag == "" {
-		fmt.Println("unknown version")
+	if reqs.GitTag == "" {
+		fmt.Println("development version")
 	} else {
-		fmt.Println(GitTag)
+		fmt.Println(reqs.GitTag)
 	}
 	return nil
 }

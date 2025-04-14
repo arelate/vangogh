@@ -5,6 +5,7 @@ import (
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/itemizations"
+	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/boggydigital/coost"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/nod"
@@ -179,13 +180,10 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 		return err
 	}
 
-	//there is no need to use internal httpClient with cookie support for downloading
-	//manual downloads, so we're going to rely on default http.Client
-	defaultClient := http.DefaultClient
-	dlClient := dolo.NewClient(defaultClient, dolo.Defaults())
+	dc := reqs.GetDoloClient()
 
 	for _, dl := range list {
-		if err := gdd.downloadManualUrl(slug, &dl, hc, dlClient); err != nil {
+		if err := gdd.downloadManualUrl(slug, &dl, hc, dc); err != nil {
 			sda.Error(err)
 		}
 	}

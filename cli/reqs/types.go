@@ -8,6 +8,7 @@ import (
 	"github.com/arelate/southern_light/protondb_integration"
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/dolo"
 	"net/http"
 	"net/url"
 )
@@ -15,6 +16,10 @@ import (
 const (
 	defaultRateLimitRequests = 200
 	defaultRateLimitSeconds  = 5
+)
+
+var (
+	GitTag string
 )
 
 const (
@@ -32,11 +37,24 @@ type Params struct {
 	RateLimitSeconds  float64
 }
 
+func GetDefaultUserAgent() string {
+	return "vangogh " + GitTag
+}
+
+func GetDoloClient() *dolo.Client {
+	return dolo.NewClient(http.DefaultClient, &dolo.ClientOptions{
+		UserAgent:          GetDefaultUserAgent(),
+		CheckContentLength: false,
+		ResumeDownloads:    true,
+	})
+}
+
 func UserAccessToken(authHttpClient *http.Client) *Params {
 	return &Params{
 		ProductType: vangogh_integration.UserAccessToken,
 		HttpClient:  authHttpClient,
 		HttpMethod:  http.MethodPost,
+		UserAgent:   GetDefaultUserAgent(),
 	}
 }
 
@@ -46,6 +64,7 @@ func Licenses(authHttpClient *http.Client, authBearer string) *Params {
 		HttpClient:  authHttpClient,
 		HttpMethod:  http.MethodGet,
 		AuthBearer:  authBearer,
+		UserAgent:   GetDefaultUserAgent(),
 	}
 }
 
@@ -55,6 +74,7 @@ func UserWishlist(authHttpClient *http.Client, authBearer string) *Params {
 		HttpClient:  authHttpClient,
 		HttpMethod:  http.MethodGet,
 		AuthBearer:  authBearer,
+		UserAgent:   GetDefaultUserAgent(),
 	}
 }
 
@@ -65,6 +85,7 @@ func AccountPage(authHttpClient *http.Client, authBearer string) *Params {
 		HttpClient:  authHttpClient,
 		HttpMethod:  http.MethodGet,
 		AuthBearer:  authBearer,
+		UserAgent:   GetDefaultUserAgent(),
 	}
 }
 
@@ -75,6 +96,7 @@ func CatalogPage(authHttpClient *http.Client, authBearer string) *Params {
 		HttpClient:  authHttpClient,
 		HttpMethod:  http.MethodGet,
 		AuthBearer:  authBearer,
+		UserAgent:   GetDefaultUserAgent(),
 	}
 }
 
@@ -85,6 +107,7 @@ func OrderPage(authHttpClient *http.Client, authBearer string) *Params {
 		HttpClient:  authHttpClient,
 		HttpMethod:  http.MethodGet,
 		AuthBearer:  authBearer,
+		UserAgent:   GetDefaultUserAgent(),
 	}
 }
 
@@ -95,6 +118,7 @@ func ApiProducts(authHttpClient *http.Client, authBearer string) *Params {
 		HttpClient:  authHttpClient,
 		HttpMethod:  http.MethodGet,
 		AuthBearer:  authBearer,
+		UserAgent:   GetDefaultUserAgent(),
 	}
 }
 
@@ -105,6 +129,7 @@ func Details(authHttpClient *http.Client, authBearer string) *Params {
 		HttpClient:  authHttpClient,
 		HttpMethod:  http.MethodGet,
 		AuthBearer:  authBearer,
+		UserAgent:   GetDefaultUserAgent(),
 	}
 }
 
@@ -115,6 +140,7 @@ func GamesDbGogProduct(authHttpClient *http.Client, authBearer string) *Params {
 		HttpClient:  authHttpClient,
 		HttpMethod:  http.MethodGet,
 		AuthBearer:  authBearer,
+		UserAgent:   GetDefaultUserAgent(),
 	}
 }
 
