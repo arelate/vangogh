@@ -5,6 +5,7 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
+	"github.com/boggydigital/redux"
 	"path"
 )
 
@@ -13,8 +14,12 @@ func InvalidResolvedManualUrls(fix bool) error {
 	cirmu := nod.Begin("checking invalid resolved manual-urls...")
 	defer cirmu.Done()
 
-	rdx, err := vangogh_integration.NewReduxWriter(
-		vangogh_integration.LocalManualUrlProperty)
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return err
+	}
+
+	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.LocalManualUrlProperty)
 	if err != nil {
 		return err
 	}

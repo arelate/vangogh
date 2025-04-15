@@ -8,6 +8,8 @@ import (
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/pathways"
+	"github.com/boggydigital/redux"
 	"os"
 	"path/filepath"
 )
@@ -21,12 +23,16 @@ func MissingChecksums(
 	mca := nod.NewProgress("checking for missing checksums...")
 	defer mca.Done()
 
-	rdx, err := vangogh_integration.NewReduxWriter(
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return err
+	}
+
+	rdx, err := redux.NewWriter(reduxDir,
 		vangogh_integration.LocalManualUrlProperty,
 		vangogh_integration.ManualUrlStatusProperty,
 		vangogh_integration.ManualUrlValidationResultProperty,
 		vangogh_integration.ManualUrlGeneratedChecksumProperty,
-		//vangogh_integration.NativeLanguageNameProperty,
 		vangogh_integration.ProductTypeProperty)
 	if err != nil {
 		return err

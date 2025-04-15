@@ -3,6 +3,7 @@ package cli
 import (
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/pathways"
+	"github.com/boggydigital/redux"
 	"maps"
 	"net/url"
 	"strconv"
@@ -193,7 +194,12 @@ func Sync(
 		return err
 	}
 
-	syncEventsRdx, err := vangogh_integration.NewReduxWriter(vangogh_integration.SyncEventsProperty)
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return err
+	}
+
+	syncEventsRdx, err := redux.NewWriter(reduxDir, vangogh_integration.SyncEventsProperty)
 	if err != nil {
 		return err
 	}

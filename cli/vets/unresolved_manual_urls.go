@@ -5,6 +5,8 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/pathways"
+	"github.com/boggydigital/redux"
 	"maps"
 	"slices"
 )
@@ -21,7 +23,12 @@ func UnresolvedManualUrls(
 
 	vangogh_integration.PrintParams(nil, operatingSystems, langCodes, downloadTypes, noPatches)
 
-	rdx, err := vangogh_integration.NewReduxReader(
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return err
+	}
+
+	rdx, err := redux.NewReader(reduxDir,
 		vangogh_integration.TitleProperty,
 		vangogh_integration.LocalManualUrlProperty)
 	if err != nil {

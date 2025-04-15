@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/middleware"
+	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
@@ -41,7 +42,11 @@ func SetPassword(role, p string) {
 
 func Init() error {
 
-	var err error
-	rdx, err = vangogh_integration.NewReduxReader(vangogh_integration.ReduxProperties()...)
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return err
+	}
+
+	rdx, err = redux.NewReader(reduxDir, vangogh_integration.ReduxProperties()...)
 	return err
 }

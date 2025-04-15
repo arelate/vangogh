@@ -50,7 +50,12 @@ func Cleanup(
 		return errors.New("cleanup can be either test or delete, not both at the same time")
 	}
 
-	rdx, err := vangogh_integration.NewReduxReader(
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return err
+	}
+
+	rdx, err := redux.NewReader(reduxDir,
 		vangogh_integration.SlugProperty,
 		vangogh_integration.LocalManualUrlProperty)
 	if err != nil {

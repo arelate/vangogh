@@ -5,6 +5,8 @@ import (
 	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/pathways"
+	"github.com/boggydigital/redux"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -32,7 +34,12 @@ func GetDescriptionImages(ids []string, since int64, force bool) error {
 	gdia := nod.NewProgress("getting description images...")
 	defer gdia.Done()
 
-	rdx, err := vangogh_integration.NewReduxReader(
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return err
+	}
+
+	rdx, err := redux.NewReader(reduxDir,
 		vangogh_integration.TitleProperty,
 		vangogh_integration.DescriptionOverviewProperty,
 		vangogh_integration.DescriptionFeaturesProperty)

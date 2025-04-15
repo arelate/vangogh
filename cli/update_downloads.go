@@ -4,6 +4,8 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/pathways"
+	"github.com/boggydigital/redux"
 	"maps"
 	"net/url"
 	"os"
@@ -59,7 +61,12 @@ func UpdateDownloads(
 	//filter updAccountProductIds to products that have already been downloaded
 	//note that this would exclude, for example, pre-order products automatic downloads
 	if updatesOnly {
-		rdx, err := vangogh_integration.NewReduxReader(vangogh_integration.SlugProperty)
+		reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+		if err != nil {
+			return err
+		}
+
+		rdx, err := redux.NewReader(reduxDir, vangogh_integration.SlugProperty)
 		if err != nil {
 			return err
 		}
