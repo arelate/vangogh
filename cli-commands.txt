@@ -81,6 +81,8 @@ local-tag
     operation^=add,remove
     tag-name
 
+migrate-data
+
 process-queue
     os&$={operating-systems^}
     lang-code&$={language-codes^}

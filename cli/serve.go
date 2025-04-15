@@ -49,6 +49,11 @@ func Serve(port int, stderr bool) error {
 		nod.DisableOutput(nod.StdOut)
 	}
 
+	// migrate data before starting the web server
+	if err := MigrateData(); err != nil {
+		return err
+	}
+
 	if err := rest.Init(); err != nil {
 		return err
 	}
