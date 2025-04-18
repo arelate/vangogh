@@ -8,6 +8,7 @@ import (
 	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/boggydigital/coost"
 	"github.com/boggydigital/dolo"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
@@ -74,7 +75,7 @@ func GetDownloads(
 
 	rdx, err := redux.NewWriter(reduxDir,
 		vangogh_integration.SlugProperty,
-		vangogh_integration.LocalManualUrlProperty,
+		vangogh_integration.ManualUrlFilenameProperty,
 		vangogh_integration.ManualUrlStatusProperty,
 		vangogh_integration.DownloadStatusErrorProperty,
 		vangogh_integration.ProductValidationResultProperty,
@@ -148,7 +149,7 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 	// to avoid using stale manualUrls if something goes wrong - we either get all updated values
 	// or some values stay unresolved - indicating problem with the last download operation
 	if gdd.forceUpdate {
-		if err := gdd.rdx.CutKeys(vangogh_integration.LocalManualUrlProperty, manualUrls...); err != nil {
+		if err := gdd.rdx.CutKeys(vangogh_integration.ManualUrlFilenameProperty, manualUrls...); err != nil {
 			return err
 		}
 	}
@@ -205,31 +206,25 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	defer dmua.Done()
 
 	//downloading a manual URL is the following set of steps:
-	//1 - check if local file exists (based on manualUrl -> relative localFile association) before attempting to resolve manualUrl
+	//1 - check if local file exists (based on manual-url -> filename) before attempting to resolve manual-url
 	//2 - resolve the source URL to an actual session URL
 	//3 - construct local relative dir and resolvedFilename based on manualUrl type (installer, movie, dlc, extra)
-	//4 - for a given set of extensions - download validation file
+	//4 - for a given set of extensions - download validation file for installers
 	//5 - download authorized session URL to a file
 	//6 - set association from manualUrl to a resolved resolvedFilename
-	if err := gdd.rdx.MustHave(
-		vangogh_integration.LocalManualUrlProperty,
-		vangogh_integration.DownloadStatusErrorProperty); err != nil {
-		return err
-	}
 
 	//1
 	if !gdd.forceUpdate {
-		if localPath, ok := gdd.rdx.GetLastVal(vangogh_integration.LocalManualUrlProperty, dl.ManualUrl); ok {
-			//localFilename would be a relative path for a download - s/slug,
-			//and RelToAbs would convert this to downloads/s/slug
-			addp, err := vangogh_integration.AbsDownloadDirFromRel(localPath)
+		if filename, ok := gdd.rdx.GetLastVal(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl); ok && filename != "" {
+			absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.Type, gdd.downloadsLayout)
 			if err != nil {
 				return err
 			}
-			if _, err := os.Stat(addp); err == nil {
-				_, localFilename := filepath.Split(localPath)
-				lfa := nod.Begin(" - %s", localFilename)
-				lfa.EndWithResult("already exists")
+
+			absDownloadPath := filepath.Join(absSlugDownloadDir, filename)
+
+			if _, err := os.Stat(absDownloadPath); err == nil {
+				dmua.EndWithResult("already exists: %s", filename)
 				return nil
 			} else if !os.IsNotExist(err) {
 				return err
@@ -242,6 +237,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	if err != nil {
 		return err
 	}
+
 	//check for error status codes and store them for the manualUrl to provide a hint that locally missing file
 	//is not a problem that can be solved locally (it's a remote source error)
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
@@ -259,60 +255,55 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 
 	//3
 	_, resolvedFilename := path.Split(resolvedUrl.Path)
-	//ProductDownloadsAbsDir would return absolute dir path, e.g. downloads/s/slug
-	absDir, err := vangogh_integration.AbsProductDownloadsDir(slug, gdd.downloadsLayout)
-	if err != nil {
+	if err := gdd.rdx.ReplaceValues(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl, resolvedFilename); err != nil {
 		return err
 	}
-	//we need to add suffix to a dir path, e.g. dlc, extras
-	relDownloadTypeDir := ""
-	switch dl.Type {
-	case vangogh_integration.DLC:
-		relDownloadTypeDir, err = pathways.GetRelDir(vangogh_integration.DLCs)
-	case vangogh_integration.Extra:
-		relDownloadTypeDir, err = pathways.GetRelDir(vangogh_integration.Extras)
-	default:
-		// do nothing - use base product downloads dir
-	}
+
+	absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.Type, gdd.downloadsLayout)
 	if err != nil {
 		return err
 	}
 
-	//completing absDir with download type relative suffix (e.g. /g/game + dlc = /g/game/dlc)
-	absDir = filepath.Join(absDir, relDownloadTypeDir)
+	absDownloadPath := filepath.Join(absSlugDownloadDir, resolvedFilename)
 
 	//4
-	remoteChecksumPath := vangogh_integration.RemoteChecksumPath(resolvedUrl.Path)
-	if remoteChecksumPath != "" {
-		localChecksumPath, err := vangogh_integration.AbsLocalChecksumPath(path.Join(absDir, resolvedFilename))
-		if err != nil {
-			return err
-		}
-		checksumDir, checksumFilename := filepath.Split(localChecksumPath)
-		// delete existing checksum in case the origin checksum produced 404 for a silently
-		// updated new version and we'd use a generated checksum to validate
-		if _, err := os.Stat(localChecksumPath); err == nil && gdd.forceUpdate {
-			if err := os.Remove(localChecksumPath); err != nil {
+	if dl.Type == vangogh_integration.Installer {
+		if remoteChecksumPath := resolvedUrl.Path + kevlar.XmlExt; remoteChecksumPath != "" {
+
+			absChecksumPath, err := vangogh_integration.AbsChecksumPath(absDownloadPath)
+			if err != nil {
 				return err
 			}
+
+			// delete existing checksum in case the origin checksum produced 404 for a silently
+			// updated new version and we'd use a generated checksum to validate
+			if _, err := os.Stat(absChecksumPath); err == nil && gdd.forceUpdate {
+				if err := os.Remove(absChecksumPath); err != nil {
+					return err
+				}
+			}
+
+			_, checksumFilename := filepath.Split(absChecksumPath)
+
+			dca := nod.NewProgress(" - %s", checksumFilename)
+			originalPath := resolvedUrl.Path
+			resolvedUrl.Path = remoteChecksumPath
+			if err := dlClient.Download(resolvedUrl, gdd.forceUpdate, dca, absChecksumPath); err != nil {
+				//don't interrupt normal download due to checksum download error,
+				//so don't return this error, just log it
+				dca.Error(err)
+			} else {
+				dca.EndWithResult("downloaded")
+			}
+			resolvedUrl.Path = originalPath
 		}
-		dca := nod.NewProgress(" - %s", checksumFilename)
-		originalPath := resolvedUrl.Path
-		resolvedUrl.Path = remoteChecksumPath
-		if err := dlClient.Download(resolvedUrl, gdd.forceUpdate, dca, checksumDir, checksumFilename); err != nil {
-			//don't interrupt normal download due to checksum download error,
-			//so don't return this error, just log it
-			dca.Error(err)
-		} else {
-			dca.EndWithResult("downloaded")
-		}
-		resolvedUrl.Path = originalPath
 	}
 
 	//5
 	lfa := nod.NewProgress(" - %s", resolvedFilename)
 	defer lfa.Done()
-	if err = dlClient.Download(resolvedUrl, gdd.forceUpdate, lfa, absDir, resolvedFilename); err != nil {
+
+	if err = dlClient.Download(resolvedUrl, gdd.forceUpdate, lfa, absDownloadPath); err != nil {
 		return err
 	}
 
@@ -322,19 +313,6 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	}
 
 	lfa.EndWithResult("downloaded")
-
-	//6
-	//we need to add suffix to a dir path, e.g. dlc, extras - using already resolved download type relative dir
-	productRelDir, err := vangogh_integration.RelProductDownloadsDir(slug, gdd.downloadsLayout)
-	relDir := filepath.Join(productRelDir, relDownloadTypeDir)
-	if err != nil {
-		return err
-	}
-
-	//store association for ManualUrl (/downloads/en0installer) to local file (s/slug/local_filename)
-	if err = gdd.rdx.ReplaceValues(vangogh_integration.LocalManualUrlProperty, dl.ManualUrl, path.Join(relDir, resolvedFilename)); err != nil {
-		return err
-	}
 
 	return nil
 }

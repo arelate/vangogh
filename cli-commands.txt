@@ -81,6 +81,9 @@ local-tag
     operation^=add,remove
     tag-name
 
+migrate-data
+    force
+
 process-queue
     os&$={operating-systems^}
     lang-code&$={language-codes^}
@@ -109,6 +112,7 @@ serve
     os&$
     lang-code$
     no-patches$
+    downloads-layout$={downloads-layouts^}
     admin-username$
     admin-password$
     shared-username$
@@ -161,6 +165,7 @@ validate
     lang-code&$={language-codes^}
     download-type&$={download-types^}
     no-patches$
+    downloads-layout$={downloads-layouts^}
     all-not-valid
 
 version

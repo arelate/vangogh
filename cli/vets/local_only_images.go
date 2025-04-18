@@ -4,6 +4,7 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
+	"github.com/boggydigital/redux"
 	"maps"
 	"os"
 	"slices"
@@ -29,7 +30,12 @@ func LocalOnlyImages(fix bool) error {
 
 	properties := slices.Collect(maps.Keys(propSet))
 
-	rdx, err := vangogh_integration.NewReduxReader(properties...)
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return err
+	}
+
+	rdx, err := redux.NewReader(reduxDir, properties...)
 	if err != nil {
 		return err
 	}

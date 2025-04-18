@@ -67,100 +67,100 @@ func externalLinks(id string, rdx redux.Readable) map[string][]string {
 		vangogh_integration.ForumUrlProperty,
 		vangogh_integration.SupportUrlProperty} {
 		if val, ok := rdx.GetLastVal(p, id); ok {
-			links[compton_data.GauginGOGLinksProperty] = append(links[compton_data.GauginGOGLinksProperty],
+			links[compton_data.GOGLinksProperty] = append(links[compton_data.GOGLinksProperty],
 				fmt.Sprintf("%s=%s", p, gogLink(val)))
 		}
 	}
 
 	if appId, ok := rdx.GetLastVal(vangogh_integration.SteamAppIdProperty, id); ok {
-		links[compton_data.GauginSteamLinksProperty] =
-			append(links[compton_data.GauginSteamLinksProperty],
-				fmt.Sprintf("%s=%s", compton_data.GauginSteamCommunityUrlProperty, steam_integration.SteamCommunityUrl(appId)))
-		links[compton_data.GauginSteamLinksProperty] =
-			append(links[compton_data.GauginSteamLinksProperty],
-				fmt.Sprintf("%s=%s", compton_data.GauginSteamGuidesUrlProperty, steam_integration.SteamGuidesUrl(appId)))
-		links[compton_data.GauginOtherLinksProperty] =
-			append(links[compton_data.GauginOtherLinksProperty],
-				fmt.Sprintf("%s=%s", compton_data.GauginProtonDBUrlProperty, protondb_integration.ProtonDBUrl(appId)))
+		links[compton_data.SteamLinksProperty] =
+			append(links[compton_data.SteamLinksProperty],
+				fmt.Sprintf("%s=%s", compton_data.SteamCommunityUrlProperty, steam_integration.SteamCommunityUrl(appId)))
+		links[compton_data.SteamLinksProperty] =
+			append(links[compton_data.SteamLinksProperty],
+				fmt.Sprintf("%s=%s", compton_data.SteamGuidesUrlProperty, steam_integration.SteamGuidesUrl(appId)))
+		links[compton_data.OtherLinksProperty] =
+			append(links[compton_data.OtherLinksProperty],
+				fmt.Sprintf("%s=%s", compton_data.ProtonDBUrlProperty, protondb_integration.ProtonDBUrl(appId)))
 	}
 
-	links[compton_data.GauginOtherLinksProperty] = append(links[compton_data.GauginOtherLinksProperty],
-		fmt.Sprintf("%s=%s", compton_data.GauginGOGDBUrlProperty, gogdb_integration.GOGDBUrl(id)))
+	links[compton_data.OtherLinksProperty] = append(links[compton_data.OtherLinksProperty],
+		fmt.Sprintf("%s=%s", compton_data.GOGDBUrlProperty, gogdb_integration.GOGDBUrl(id)))
 
 	if website, ok := rdx.GetLastVal(vangogh_integration.WebsiteProperty, id); ok && website != "" {
-		links[compton_data.GauginOtherLinksProperty] = append(links[compton_data.GauginOtherLinksProperty],
-			fmt.Sprintf("%s=%s", compton_data.GauginWebsiteUrlProperty, website))
+		links[compton_data.OtherLinksProperty] = append(links[compton_data.OtherLinksProperty],
+			fmt.Sprintf("%s=%s", compton_data.WebsiteUrlProperty, website))
 	}
 
 	if pcgwWikiUrl := otherLink(id,
 		vangogh_integration.PcgwPageIdProperty,
-		compton_data.GauginPCGamingWikiUrlProperty,
+		compton_data.PCGamingWikiUrlProperty,
 		pcgw_integration.WikiUrl, rdx); pcgwWikiUrl != "" {
-		links[compton_data.GauginOtherLinksProperty] =
-			append(links[compton_data.GauginOtherLinksProperty], pcgwWikiUrl)
+		links[compton_data.OtherLinksProperty] =
+			append(links[compton_data.OtherLinksProperty], pcgwWikiUrl)
 	}
 	if hltbUrl := otherLink(id,
 		vangogh_integration.HltbIdProperty,
-		compton_data.GauginHltbUrlProperty,
+		compton_data.HltbUrlProperty,
 		hltb_integration.GameUrl, rdx); hltbUrl != "" {
-		links[compton_data.GauginOtherLinksProperty] =
-			append(links[compton_data.GauginOtherLinksProperty], hltbUrl)
+		links[compton_data.OtherLinksProperty] =
+			append(links[compton_data.OtherLinksProperty], hltbUrl)
 	}
 	if igdbUrl := otherLink(id,
 		vangogh_integration.IgdbIdProperty,
-		compton_data.GauginIGDBUrlProperty,
+		compton_data.IGDBUrlProperty,
 		igdb_integration.GameUrl, rdx); igdbUrl != "" {
-		links[compton_data.GauginOtherLinksProperty] =
-			append(links[compton_data.GauginOtherLinksProperty], igdbUrl)
+		links[compton_data.OtherLinksProperty] =
+			append(links[compton_data.OtherLinksProperty], igdbUrl)
 	}
 	if strategyWikiUrl := otherLink(id,
 		vangogh_integration.StrategyWikiIdProperty,
-		compton_data.GauginStrategyWikiUrlProperty,
+		compton_data.StrategyWikiUrlProperty,
 		strategywiki_integration.WikiUrl, rdx); strategyWikiUrl != "" {
-		links[compton_data.GauginOtherLinksProperty] =
-			append(links[compton_data.GauginOtherLinksProperty], strategyWikiUrl)
+		links[compton_data.OtherLinksProperty] =
+			append(links[compton_data.OtherLinksProperty], strategyWikiUrl)
 	}
 	if mobyGamesUrl := otherLink(id,
 		vangogh_integration.MobyGamesIdProperty,
-		compton_data.GauginMobyGamesUrlProperty,
+		compton_data.MobyGamesUrlProperty,
 		mobygames_integration.GameUrl, rdx); mobyGamesUrl != "" {
-		links[compton_data.GauginOtherLinksProperty] =
-			append(links[compton_data.GauginOtherLinksProperty], mobyGamesUrl)
+		links[compton_data.OtherLinksProperty] =
+			append(links[compton_data.OtherLinksProperty], mobyGamesUrl)
 	}
 	if wikipediaUrl := otherLink(id,
 		vangogh_integration.WikipediaIdProperty,
-		compton_data.GauginWikipediaUrlProperty,
+		compton_data.WikipediaUrlProperty,
 		wikipedia_integration.WikiUrl, rdx); wikipediaUrl != "" {
-		links[compton_data.GauginOtherLinksProperty] =
-			append(links[compton_data.GauginOtherLinksProperty], wikipediaUrl)
+		links[compton_data.OtherLinksProperty] =
+			append(links[compton_data.OtherLinksProperty], wikipediaUrl)
 	}
 	if wineHqUrl := otherLink(id,
 		vangogh_integration.WineHQIdProperty,
-		compton_data.GauginWineHQUrlProperty,
+		compton_data.WineHQUrlProperty,
 		winehq_integration.WineHQUrl, rdx); wineHqUrl != "" {
-		links[compton_data.GauginOtherLinksProperty] =
-			append(links[compton_data.GauginOtherLinksProperty], wineHqUrl)
+		links[compton_data.OtherLinksProperty] =
+			append(links[compton_data.OtherLinksProperty], wineHqUrl)
 	}
 	if vndbUrl := otherLink(id,
 		vangogh_integration.VndbIdProperty,
-		compton_data.GauginVNDBUrlProperty,
+		compton_data.VNDBUrlProperty,
 		vndb_integration.ItemUrl, rdx); vndbUrl != "" {
-		links[compton_data.GauginOtherLinksProperty] =
-			append(links[compton_data.GauginOtherLinksProperty], vndbUrl)
+		links[compton_data.OtherLinksProperty] =
+			append(links[compton_data.OtherLinksProperty], vndbUrl)
 	}
 	if ignWikiUrl := otherLink(id,
 		vangogh_integration.IGNWikiSlugProperty,
-		compton_data.GauginIGNWikiUrlProperty,
+		compton_data.IGNWikiUrlProperty,
 		ign_integration.WikiUrl, rdx); ignWikiUrl != "" {
-		links[compton_data.GauginOtherLinksProperty] =
-			append(links[compton_data.GauginOtherLinksProperty], ignWikiUrl)
+		links[compton_data.OtherLinksProperty] =
+			append(links[compton_data.OtherLinksProperty], ignWikiUrl)
 	}
 
 	if openCriticId, ok := rdx.GetLastVal(vangogh_integration.OpenCriticIdProperty, id); ok {
 		if openCriticSlug, sure := rdx.GetLastVal(vangogh_integration.OpenCriticSlugProperty, id); sure {
-			openCriticUrl := fmt.Sprintf("%s=%s", compton_data.GauginOpenCriticUrlProperty, opencritic_integration.GameUrl(openCriticId, openCriticSlug))
-			links[compton_data.GauginOtherLinksProperty] =
-				append(links[compton_data.GauginOtherLinksProperty], openCriticUrl)
+			openCriticUrl := fmt.Sprintf("%s=%s", compton_data.OpenCriticUrlProperty, opencritic_integration.GameUrl(openCriticId, openCriticSlug))
+			links[compton_data.OtherLinksProperty] =
+				append(links[compton_data.OtherLinksProperty], openCriticUrl)
 		}
 	}
 

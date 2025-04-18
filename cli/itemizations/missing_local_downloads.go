@@ -29,7 +29,7 @@ func MissingLocalDownloads(
 	defer mlda.Done()
 
 	if err := rdx.MustHave(
-		vangogh_integration.LocalManualUrlProperty,
+		vangogh_integration.ManualUrlFilenameProperty,
 		vangogh_integration.DownloadStatusErrorProperty); err != nil {
 		return nil, err
 	}
@@ -84,13 +84,7 @@ func (mdd *missingDownloadsDelegate) Process(id, slug string, list vangogh_integ
 		mdd.missingIds = make([]string, 0)
 	}
 
-	//pDir = s/slug
-	relDir, err := vangogh_integration.RelProductDownloadsDir(slug, mdd.downloadsLayout)
-	if err != nil {
-		return err
-	}
-
-	expectedFiles := make(map[string]bool)
+	absExpectedFiles := make(map[string]bool)
 
 	for _, dl := range list {
 
@@ -101,51 +95,52 @@ func (mdd *missingDownloadsDelegate) Process(id, slug string, list vangogh_integ
 			continue
 		}
 
-		localFilename, ok := mdd.rdx.GetLastVal(vangogh_integration.LocalManualUrlProperty, dl.ManualUrl)
+		filename, ok := mdd.rdx.GetLastVal(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl)
 		// 2
-		if !ok || localFilename == "" {
+		if !ok || filename == "" {
 			mdd.missingIds = append(mdd.missingIds, id)
 			break
 		}
-		//local filenames are saved as relative to root downloads folder (e.g. s/slug/local_filename)
-		//so filepath.Rel would trim to local_filename (or dlc/local_filename, extra/local_filename)
-		relFilename, err := filepath.Rel(relDir, localFilename)
+
+		absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.Type, mdd.downloadsLayout)
 		if err != nil {
 			return err
 		}
 
-		expectedFiles[relFilename] = true
+		absDownloadPath := filepath.Join(absSlugDownloadDir, filename)
+
+		absExpectedFiles[absDownloadPath] = true
 	}
 
-	if len(expectedFiles) == 0 {
+	if len(absExpectedFiles) == 0 {
 		return nil
 	}
 
 	// 3
-	absDir, err := vangogh_integration.AbsProductDownloadsDir(slug, mdd.downloadsLayout)
+	absSlugDownloadsDir, err := vangogh_integration.AbsSlugDownloadDir(slug, vangogh_integration.Installer, mdd.downloadsLayout)
 	if err != nil {
 		return err
 	}
-	if _, err := os.Stat(absDir); os.IsNotExist(err) {
+	if _, err := os.Stat(absSlugDownloadsDir); os.IsNotExist(err) {
 		mdd.missingIds = append(mdd.missingIds, id)
 		return nil
 	}
 
-	presentFiles, err := vangogh_integration.LocalSlugDownloads(slug, mdd.downloadsLayout)
+	absPresentFiles, err := vangogh_integration.AbsLocalSlugDownloads(slug, mdd.downloadsLayout)
 	if err != nil {
 		return nil
 	}
 
 	// 4
-	missingFiles := make([]string, 0, len(expectedFiles))
+	absMissingFiles := make([]string, 0, len(absExpectedFiles))
 
-	for f := range expectedFiles {
-		if !presentFiles[f] {
-			missingFiles = append(missingFiles, f)
+	for f := range absExpectedFiles {
+		if _, ok := absPresentFiles[f]; !ok {
+			absMissingFiles = append(absMissingFiles, f)
 		}
 	}
 
-	if len(missingFiles) > 0 {
+	if len(absMissingFiles) > 0 {
 		mdd.missingIds = append(mdd.missingIds, id)
 	}
 

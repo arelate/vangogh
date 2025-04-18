@@ -1,25 +1,24 @@
 package compton_data
 
-// TODO: rename Gauging to something else
-
 const (
-	GauginGOGLinksProperty          = "gog-links"
-	GauginSteamLinksProperty        = "steam-links"
-	GauginOtherLinksProperty        = "other-links"
-	GauginSteamCommunityUrlProperty = "steam-community-url"
-	GauginSteamGuidesUrlProperty    = "steam-guides-url"
+	GOGLinksProperty   = "gog-links"
+	SteamLinksProperty = "steam-links"
+	OtherLinksProperty = "other-links"
 
-	GauginPCGamingWikiUrlProperty = "pcgamingwiki-url"
-	GauginGOGDBUrlProperty        = "gogdb-url"
-	GauginProtonDBUrlProperty     = "protondb-url"
-	GauginHltbUrlProperty         = "hltb-url"
-	GauginIGDBUrlProperty         = "igdb-url"
-	GauginStrategyWikiUrlProperty = "strategy-wiki-url"
-	GauginMobyGamesUrlProperty    = "moby-games-url"
-	GauginWikipediaUrlProperty    = "wikipedia-url"
-	GauginWineHQUrlProperty       = "winehq-url"
-	GauginVNDBUrlProperty         = "vndb-url"
-	GauginIGNWikiUrlProperty      = "ign-wiki-url"
-	GauginOpenCriticUrlProperty   = "opencritic-url"
-	GauginWebsiteUrlProperty      = "website"
+	SteamCommunityUrlProperty = "steam-community-url"
+	SteamGuidesUrlProperty    = "steam-guides-url"
+
+	PCGamingWikiUrlProperty = "pcgamingwiki-url"
+	GOGDBUrlProperty        = "gogdb-url"
+	ProtonDBUrlProperty     = "protondb-url"
+	HltbUrlProperty         = "hltb-url"
+	IGDBUrlProperty         = "igdb-url"
+	StrategyWikiUrlProperty = "strategy-wiki-url"
+	MobyGamesUrlProperty    = "moby-games-url"
+	WikipediaUrlProperty    = "wikipedia-url"
+	WineHQUrlProperty       = "winehq-url"
+	VNDBUrlProperty         = "vndb-url"
+	IGNWikiUrlProperty      = "ign-wiki-url"
+	OpenCriticUrlProperty   = "opencritic-url"
+	WebsiteUrlProperty      = "website"
 )

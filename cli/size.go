@@ -5,6 +5,8 @@ import (
 	"github.com/arelate/vangogh/cli/itemizations"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/pathways"
+	"github.com/boggydigital/redux"
 	"net/url"
 )
 
@@ -40,9 +42,14 @@ func Size(
 
 	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
 
-	rdx, err := vangogh_integration.NewReduxReader(
-		vangogh_integration.LocalManualUrlProperty,
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return err
+	}
+
+	rdx, err := redux.NewReader(reduxDir,
 		vangogh_integration.SlugProperty,
+		vangogh_integration.ManualUrlFilenameProperty,
 		vangogh_integration.DownloadStatusErrorProperty)
 	if err != nil {
 		return err

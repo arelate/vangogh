@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/middleware"
+	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
@@ -18,6 +19,8 @@ var (
 	operatingSystems []vangogh_integration.OperatingSystem
 	langCodes        []string
 	noPatches        bool
+
+	downloadsLayout vangogh_integration.DownloadsLayout
 
 	rdx redux.Readable
 )
@@ -39,9 +42,15 @@ func SetPassword(role, p string) {
 	middleware.SetPassword(role, sha256.Sum256([]byte(p)))
 }
 
-func Init() error {
+func Init(layout vangogh_integration.DownloadsLayout) error {
 
-	var err error
-	rdx, err = vangogh_integration.NewReduxReader(vangogh_integration.ReduxProperties()...)
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return err
+	}
+
+	downloadsLayout = layout
+
+	rdx, err = redux.NewReader(reduxDir, vangogh_integration.ReduxProperties()...)
 	return err
 }

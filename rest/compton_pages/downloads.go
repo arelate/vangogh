@@ -12,6 +12,7 @@ import (
 	"github.com/boggydigital/compton/consts/font_weight"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/redux"
+	"net/url"
 	"slices"
 	"strconv"
 	"strings"
@@ -39,14 +40,13 @@ var downloadTypesColors = map[vangogh_integration.DownloadType]color.Color{
 }
 
 var validationResultsFontWeights = map[vangogh_integration.ValidationResult]font_weight.Weight{
-	vangogh_integration.ValidationResultUnknown:        font_weight.Normal,
-	vangogh_integration.ValidatedSuccessfully:          font_weight.Bolder,
-	vangogh_integration.ValidatedWithGeneratedChecksum: font_weight.Normal,
-	vangogh_integration.ValidatedUnresolvedManualUrl:   font_weight.Normal,
-	vangogh_integration.ValidatedMissingLocalFile:      font_weight.Normal,
-	vangogh_integration.ValidatedMissingChecksum:       font_weight.Normal,
-	vangogh_integration.ValidationError:                font_weight.Bolder,
-	vangogh_integration.ValidatedChecksumMismatch:      font_weight.Bolder,
+	vangogh_integration.ValidationResultUnknown:      font_weight.Normal,
+	vangogh_integration.ValidatedSuccessfully:        font_weight.Bolder,
+	vangogh_integration.ValidatedUnresolvedManualUrl: font_weight.Normal,
+	vangogh_integration.ValidatedMissingLocalFile:    font_weight.Normal,
+	vangogh_integration.ValidatedMissingChecksum:     font_weight.Normal,
+	vangogh_integration.ValidationError:              font_weight.Bolder,
+	vangogh_integration.ValidatedChecksumMismatch:    font_weight.Bolder,
 }
 
 // Downloads will present available installers, DLCs in the following hierarchy:
@@ -93,7 +93,7 @@ func Downloads(id string, dls vangogh_integration.DownloadsList, rdx redux.Reada
 				if dv := downloadVariant(s, variant); dv != nil {
 					productStack.Append(dv)
 				}
-				if dlLinks := downloadLinks(s, os, productTitle, variant, dls, rdx); dlLinks != nil {
+				if dlLinks := downloadLinks(s, id, os, productTitle, variant, dls, rdx); dlLinks != nil {
 					productStack.Append(dlLinks)
 				}
 			}
@@ -201,6 +201,7 @@ func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 }
 
 func downloadLinks(r compton.Registrar,
+	id string,
 	os vangogh_integration.OperatingSystem,
 	productTitle string,
 	dv *DownloadVariant,
@@ -220,7 +221,7 @@ func downloadLinks(r compton.Registrar,
 	dsDownloadLinks.Append(downloadsColumn)
 
 	for ii, dl := range downloads {
-		if link := downloadLink(r, productTitle, dl, rdx); link != nil {
+		if link := downloadLink(r, id, productTitle, dl, rdx); link != nil {
 			downloadsColumn.Append(link)
 		}
 		if ii != len(downloads)-1 {
@@ -233,9 +234,18 @@ func downloadLinks(r compton.Registrar,
 	return dsDownloadLinks
 }
 
-func downloadLink(r compton.Registrar, productTitle string, dl vangogh_integration.Download, rdx redux.Readable) compton.Element {
+func downloadLink(r compton.Registrar,
+	id string,
+	productTitle string,
+	dl vangogh_integration.Download,
+	rdx redux.Readable) compton.Element {
 
-	link := compton.A("/files?manual-url=" + dl.ManualUrl)
+	q := url.Values{}
+	q.Set("id", id)
+	q.Set("download-type", dl.Type.String())
+	q.Set("manual-url", dl.ManualUrl)
+
+	link := compton.A("/files?" + q.Encode())
 	link.AddClass("download", dl.Type.String())
 
 	linkColumn := compton.FlexItems(r, direction.Column).RowGap(size.Small)
@@ -264,19 +274,22 @@ func downloadLink(r compton.Registrar, productTitle string, dl vangogh_integrati
 
 	linkColumn.Append(linkTitle)
 
-	vr := vangogh_integration.ValidationResultUnknown
+	if dl.Type == vangogh_integration.Installer || dl.Type == vangogh_integration.DLC {
 
-	if muss, ok := rdx.GetLastVal(vangogh_integration.ManualUrlStatusProperty, dl.ManualUrl); ok && vangogh_integration.ParseManualUrlStatus(muss) == vangogh_integration.ManualUrlValidated {
-		if vrs, sure := rdx.GetLastVal(vangogh_integration.ManualUrlValidationResultProperty, dl.ManualUrl); sure {
-			vr = vangogh_integration.ParseValidationResult(vrs)
+		vr := vangogh_integration.ValidationResultUnknown
+
+		if muss, ok := rdx.GetLastVal(vangogh_integration.ManualUrlStatusProperty, dl.ManualUrl); ok && vangogh_integration.ParseManualUrlStatus(muss) == vangogh_integration.ManualUrlValidated {
+			if vrs, sure := rdx.GetLastVal(vangogh_integration.ManualUrlValidationResultProperty, dl.ManualUrl); sure {
+				vr = vangogh_integration.ParseValidationResult(vrs)
+			}
 		}
-	}
 
-	validationResult := compton.Fspan(r, vr.HumanReadableString()).
-		FontSize(size.XSmall).
-		ForegroundColor(compton_fragments.ValidationResultsColors[vr]).
-		FontWeight(validationResultsFontWeights[vr])
-	linkColumn.Append(validationResult)
+		validationResult := compton.Fspan(r, vr.HumanReadableString()).
+			FontSize(size.XSmall).
+			ForegroundColor(compton_fragments.ValidationResultsColors[vr]).
+			FontWeight(validationResultsFontWeights[vr])
+		linkColumn.Append(validationResult)
+	}
 
 	sizeFr := compton.Frow(r).FontSize(size.XSmall).
 		PropVal("Size", fmtBytes(dl.EstimatedBytes))

@@ -40,7 +40,7 @@ var ProductProperties = []string{
 }
 
 var ProductExternalLinksProperties = []string{
-	GauginGOGLinksProperty,
-	GauginSteamLinksProperty,
-	GauginOtherLinksProperty,
+	GOGLinksProperty,
+	SteamLinksProperty,
+	OtherLinksProperty,
 }

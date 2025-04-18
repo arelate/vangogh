@@ -92,11 +92,17 @@ func getProductDownloadsManifest(id string, dls vangogh_integration.DownloadsLis
 			link.Name = dl.ProductTitle
 		}
 
-		if relLocalDownloadPath, ok := rdx.GetLastVal(vangogh_integration.LocalManualUrlProperty, dl.ManualUrl); ok {
-			_, filename := filepath.Split(relLocalDownloadPath)
+		absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(dm.Slug, dl.Type, downloadsLayout)
+		if err != nil {
+			return nil, err
+		}
+
+		if filename, ok := rdx.GetLastVal(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl); ok {
 			link.LocalFilename = filename
 
-			if md5, err := getMd5Checksum(relLocalDownloadPath); err == nil {
+			absDownloadPath := filepath.Join(absSlugDownloadDir, filename)
+
+			if md5, err := getMd5Checksum(absDownloadPath); err == nil {
 				link.Md5 = md5
 			}
 		}
@@ -119,9 +125,9 @@ func getProductDownloadsManifest(id string, dls vangogh_integration.DownloadsLis
 	return dm, nil
 }
 
-func getMd5Checksum(relLocalDownloadPath string) (string, error) {
+func getMd5Checksum(absDownloadPath string) (string, error) {
 
-	absChecksumPath, err := vangogh_integration.AbsLocalChecksumPath(relLocalDownloadPath)
+	absChecksumPath, err := vangogh_integration.AbsChecksumPath(absDownloadPath)
 	if err != nil {
 		return "", err
 	}

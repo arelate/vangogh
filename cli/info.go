@@ -3,6 +3,8 @@ package cli
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/pathways"
+	"github.com/boggydigital/redux"
 	"maps"
 	"net/url"
 	"slices"
@@ -30,7 +32,12 @@ func Info(ids ...string) error {
 
 	properties := slices.Collect(maps.Keys(propSet))
 
-	rdx, err := vangogh_integration.NewReduxReader(properties...)
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return err
+	}
+
+	rdx, err := redux.NewReader(reduxDir, properties...)
 	if err != nil {
 		return err
 	}

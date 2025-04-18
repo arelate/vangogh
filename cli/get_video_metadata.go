@@ -3,6 +3,7 @@ package cli
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 	"github.com/boggydigital/yet_urls/youtube_urls"
 	"net/http"
@@ -28,10 +29,15 @@ func GetVideoMetadata(ids []string, missing, force bool) error {
 	gvma := nod.NewProgress("getting video metadata...")
 	defer gvma.Done()
 
-	rdx, err := videoReduxAssets()
+	properties := vangogh_integration.VideoProperties()
+	properties = append(properties, vangogh_integration.TitleProperty)
+
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {
 		return err
 	}
+
+	rdx, err := redux.NewWriter(reduxDir, properties...)
 
 	videoIds := make([]string, 0, len(ids))
 	for _, id := range ids {
@@ -90,34 +96,17 @@ func GetVideoMetadata(ids []string, missing, force bool) error {
 		gvma.Increment()
 	}
 
-	if err := rdx.BatchAddValues(vangogh_integration.VideoTitleProperty, videoTitles); err != nil {
+	if err = rdx.BatchAddValues(vangogh_integration.VideoTitleProperty, videoTitles); err != nil {
 		return err
 	}
 
-	if err := rdx.BatchAddValues(vangogh_integration.VideoDurationProperty, videoDurations); err != nil {
+	if err = rdx.BatchAddValues(vangogh_integration.VideoDurationProperty, videoDurations); err != nil {
 		return err
 	}
 
-	if err := rdx.BatchAddValues(vangogh_integration.VideoErrorProperty, videoErrors); err != nil {
+	if err = rdx.BatchAddValues(vangogh_integration.VideoErrorProperty, videoErrors); err != nil {
 		return err
 	}
 
 	return nil
-}
-
-func videoReduxAssets() (redux.Writeable, error) {
-
-	propSet := make(map[string]bool)
-	propSet[vangogh_integration.TitleProperty] = true
-
-	for _, vp := range vangogh_integration.VideoProperties() {
-		propSet[vp] = true
-	}
-
-	properties := make([]string, len(propSet))
-	for p := range propSet {
-		properties = append(properties, p)
-	}
-
-	return vangogh_integration.NewReduxWriter(properties...)
 }

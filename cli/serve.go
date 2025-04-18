@@ -26,6 +26,8 @@ func ServeHandler(u *url.URL) error {
 
 	noPatches := vangogh_integration.FlagFromUrl(u, "no-patches")
 
+	layout := vangogh_integration.DownloadsLayoutFromUrl(u)
+
 	rest.SetDefaultDownloadsFilters(oses, langCodes, noPatches)
 
 	sharedUsername := vangogh_integration.ValueFromUrl(u, "shared-username")
@@ -38,18 +40,23 @@ func ServeHandler(u *url.URL) error {
 	rest.SetUsername(rest.AdminRole, adminUsername)
 	rest.SetPassword(rest.AdminRole, adminPassword)
 
-	return Serve(port, vangogh_integration.FlagFromUrl(u, "stderr"))
+	return Serve(port, layout, vangogh_integration.FlagFromUrl(u, "stderr"))
 }
 
 // Serve starts a web server, listening to the specified port with optional logging
-func Serve(port int, stderr bool) error {
+func Serve(port int, layout vangogh_integration.DownloadsLayout, stderr bool) error {
 
 	if stderr {
 		nod.EnableStdErrLogger()
 		nod.DisableOutput(nod.StdOut)
 	}
 
-	if err := rest.Init(); err != nil {
+	// migrate data before starting the web server
+	if err := MigrateData(false); err != nil {
+		return err
+	}
+
+	if err := rest.Init(layout); err != nil {
 		return err
 	}
 

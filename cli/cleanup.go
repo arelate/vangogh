@@ -50,9 +50,14 @@ func Cleanup(
 		return errors.New("cleanup can be either test or delete, not both at the same time")
 	}
 
-	rdx, err := vangogh_integration.NewReduxReader(
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return err
+	}
+
+	rdx, err := redux.NewReader(reduxDir,
 		vangogh_integration.SlugProperty,
-		vangogh_integration.LocalManualUrlProperty)
+		vangogh_integration.ManualUrlFilenameProperty)
 	if err != nil {
 		return err
 	}
@@ -122,7 +127,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_integrati
 	csa := nod.QueueBegin(slug)
 	defer csa.Done()
 
-	if err := cd.rdx.MustHave(vangogh_integration.LocalManualUrlProperty); err != nil {
+	if err := cd.rdx.MustHave(vangogh_integration.ManualUrlFilenameProperty); err != nil {
 		return err
 	}
 
@@ -131,40 +136,35 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_integrati
 	//2. enumerate all files present for a slug (files present in a `downloads/slug` folder)
 	//3. delete (present files).Except(expected files) and corresponding xml files
 
-	expectedSet := make(map[string]bool)
-
-	//pDir = s/slug
-	pDir, err := vangogh_integration.RelProductDownloadsDir(slug, cd.downloadsLayout)
-	if err != nil {
-		return err
-	}
+	absExpectedSet := make(map[string]any)
 
 	for _, dl := range list {
-		if localFilename, ok := cd.rdx.GetLastVal(vangogh_integration.LocalManualUrlProperty, dl.ManualUrl); ok {
-			//local filenames are saved as relative to root downloads folder (e.g. s/slug/local_filename)
-			//so filepath.Rel would trim to local_filename (or dlc/local_filename, extra/local_filename)
-			relFilename, err := filepath.Rel(pDir, localFilename)
-			if err != nil {
-				return err
-			}
-			expectedSet[relFilename] = true
+
+		absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.Type, cd.downloadsLayout)
+		if err != nil {
+			return err
+		}
+
+		if filename, ok := cd.rdx.GetLastVal(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl); ok {
+			absDownloadPath := filepath.Join(absSlugDownloadDir, filename)
+			absExpectedSet[absDownloadPath] = nil
 		}
 	}
 
 	//LocalSlugDownloads returns list of files relative to s/slug product directory
-	presentSet, err := vangogh_integration.LocalSlugDownloads(slug, cd.downloadsLayout)
+	absPresentSet, err := vangogh_integration.AbsLocalSlugDownloads(slug, cd.downloadsLayout)
 	if err != nil {
 		return err
 	}
 
-	unexpectedFiles := make([]string, 0, len(presentSet))
-	for p := range presentSet {
-		if !expectedSet[p] {
-			unexpectedFiles = append(unexpectedFiles, p)
+	absUnexpectedFiles := make([]string, 0, len(absPresentSet))
+	for p := range absPresentSet {
+		if _, ok := absExpectedSet[p]; !ok {
+			absUnexpectedFiles = append(absUnexpectedFiles, p)
 		}
 	}
 
-	if len(unexpectedFiles) == 0 {
+	if len(absUnexpectedFiles) == 0 {
 		if !cd.all {
 			csa.EndWithResult("already clean")
 			csa.Flush()
@@ -176,13 +176,9 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_integrati
 	//output next in context of a slug we've queued earlier
 	csa.Flush()
 
-	for _, unexpectedFile := range unexpectedFiles {
+	for _, absUnexpectedFile := range absUnexpectedFiles {
 		//restore absolute from local_filename to s/slug/local_filename
-		absDownloadFilename, err := vangogh_integration.AbsDownloadDirFromRel(filepath.Join(pDir, unexpectedFile))
-		if err != nil {
-			return err
-		}
-		if stat, err := os.Stat(absDownloadFilename); err == nil {
+		if stat, err := os.Stat(absUnexpectedFile); err == nil {
 			cd.totalBytes += stat.Size()
 		} else if os.IsNotExist(err) {
 			continue
@@ -206,7 +202,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_integrati
 			return err
 		}
 
-		relDownloadFilename, err := filepath.Rel(adp, absDownloadFilename)
+		relDownloadFilename, err := filepath.Rel(adp, absUnexpectedFile)
 		if err != nil {
 			return err
 		}
@@ -214,18 +210,18 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_integrati
 		dft := nod.Begin(" %s %s", prefix, relDownloadFilename)
 		if !cd.test {
 			if cd.delete {
-				if err := os.Remove(absDownloadFilename); err != nil {
+				if err := os.Remove(absUnexpectedFile); err != nil {
 					return err
 				}
 			} else {
-				if err := vangogh_integration.MoveToRecycleBin(adp, absDownloadFilename); err != nil {
+				if err := vangogh_integration.MoveToRecycleBin(adp, absUnexpectedFile); err != nil {
 					return err
 				}
 			}
 		}
 		dft.Done()
 
-		absChecksumFile, err := vangogh_integration.AbsLocalChecksumPath(absDownloadFilename)
+		absChecksumFile, err := vangogh_integration.AbsChecksumPath(absUnexpectedFile)
 		if err != nil {
 			return err
 		}

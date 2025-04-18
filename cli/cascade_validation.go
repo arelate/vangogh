@@ -3,6 +3,7 @@ package cli
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 	"net/url"
 )
@@ -16,7 +17,12 @@ func CascadeValidation() error {
 	cva := nod.NewProgress("cascading validation...")
 	defer cva.Done()
 
-	rdx, err := vangogh_integration.NewReduxWriter(
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return err
+	}
+
+	rdx, err := redux.NewWriter(reduxDir,
 		vangogh_integration.OwnedProperty,
 		vangogh_integration.IsRequiredByGamesProperty,
 		vangogh_integration.IsIncludedByGamesProperty,
