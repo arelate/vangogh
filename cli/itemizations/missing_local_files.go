@@ -6,7 +6,7 @@ import (
 
 func missingLocalFiles(
 	all iter.Seq[string],
-	localSet map[string]bool,
+	localSet map[string]any,
 	getById func(id string) ([]string, bool),
 	exclude func(id string) bool) (map[string]bool, error) {
 
@@ -23,7 +23,7 @@ func missingLocalFiles(
 			if exclude != nil && exclude(item) {
 				continue
 			}
-			if !localSet[item] {
+			if _, present := localSet[item]; !present {
 				idSet[id] = true
 				break
 			}

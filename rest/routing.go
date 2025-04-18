@@ -45,9 +45,8 @@ func HandleFuncs() {
 		"GET /local-tags/edit":  Auth(Log(http.HandlerFunc(GetLocalTagsEdit)), AdminRole),
 		"GET /tags/apply":       Auth(Log(http.HandlerFunc(GetTagsApply)), AdminRole),
 		"GET /local-tags/apply": Auth(Log(http.HandlerFunc(GetLocalTagsApply)), AdminRole),
-		// auth media endpoints
-		"GET /files":       Auth(Log(http.HandlerFunc(GetFiles)), AdminRole, SharedRole),
-		"GET /local-file/": Auth(Log(http.HandlerFunc(GetLocalFile)), AdminRole, SharedRole),
+		// auth files endpoints
+		"GET /files": Auth(Log(http.HandlerFunc(GetFiles)), AdminRole, SharedRole),
 		// products redirects
 		"GET /products": Redirect("/search", http.StatusPermanentRedirect),
 		// API

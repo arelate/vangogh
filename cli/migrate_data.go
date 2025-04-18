@@ -18,11 +18,11 @@ const (
 	latestDataSchema = 1
 )
 
-func MigrateDataHandler(_ *url.URL) error {
-	return MigrateData()
+func MigrateDataHandler(u *url.URL) error {
+	return MigrateData(u.Query().Has("force"))
 }
 
-func MigrateData() error {
+func MigrateData(force bool) error {
 	mda := nod.NewProgress("migrating data to the latest schema...")
 	defer mda.Done()
 
@@ -36,9 +36,12 @@ func MigrateData() error {
 		return err
 	}
 
-	currentDataSchema, err := getCurrentDataSchema(rdx)
-	if err != nil {
-		return err
+	var currentDataSchema int
+	if !force {
+		currentDataSchema, err = getCurrentDataSchema(rdx)
+		if err != nil {
+			return err
+		}
 	}
 
 	if currentDataSchema == latestDataSchema {

@@ -79,13 +79,9 @@ func getDownloads(id string,
 		return nil, nil
 	}
 
-	dl := make(vangogh_integration.DownloadsList, 0)
-
-	if det != nil {
-		dl, err = vangogh_integration.FromDetails(det, rdx)
-		if err != nil {
-			return nil, err
-		}
+	dl, err := vangogh_integration.FromDetails(det, rdx)
+	if err != nil {
+		return nil, err
 	}
 
 	return dl.Only(operatingSystems,

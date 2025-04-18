@@ -76,11 +76,11 @@ func UpdateDownloads(
 		for _, id := range ids {
 
 			if slug, ok := rdx.GetLastVal(vangogh_integration.SlugProperty, id); ok {
-				pDir, err := vangogh_integration.AbsProductDownloadsDir(slug, downloadsLayout)
+				absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, vangogh_integration.Installer, downloadsLayout)
 				if err != nil {
 					return err
 				}
-				if _, err := os.Stat(pDir); os.IsNotExist(err) {
+				if _, err := os.Stat(absSlugDownloadDir); os.IsNotExist(err) {
 					continue
 				}
 			}

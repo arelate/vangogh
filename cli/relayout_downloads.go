@@ -64,24 +64,18 @@ func RelayoutDownloads(
 	}
 
 	rdx, err := redux.NewWriter(reduxDir,
-		vangogh_integration.SlugProperty,
-		vangogh_integration.LocalManualUrlProperty)
+		vangogh_integration.SlugProperty)
 	if err != nil {
 		return err
 	}
 
 	drp := &downloadsRelayoutProcessor{
-		rdx:             rdx,
-		from:            from,
-		to:              to,
-		localManualUrls: make(map[string][]string),
+		rdx:  rdx,
+		from: from,
+		to:   to,
 	}
 
 	if err = vangogh_integration.MapDownloads(ids, rdx, operatingSystems, langCodes, downloadTypes, noPatches, drp, rda); err != nil {
-		return err
-	}
-
-	if err = rdx.BatchReplaceValues(vangogh_integration.LocalManualUrlProperty, drp.localManualUrls); err != nil {
 		return err
 	}
 
@@ -94,10 +88,9 @@ func RelayoutDownloads(
 }
 
 type downloadsRelayoutProcessor struct {
-	rdx             redux.Readable
-	errs            []error
-	localManualUrls map[string][]string
-	from, to        vangogh_integration.DownloadsLayout
+	rdx      redux.Readable
+	errs     []error
+	from, to vangogh_integration.DownloadsLayout
 }
 
 func (drp *downloadsRelayoutProcessor) Process(_ string, slug string, downloadsList vangogh_integration.DownloadsList) error {
@@ -106,7 +99,7 @@ func (drp *downloadsRelayoutProcessor) Process(_ string, slug string, downloadsL
 		return nil
 	}
 
-	fromDir, err := vangogh_integration.AbsProductDownloadsDir(slug, drp.from)
+	fromDir, err := vangogh_integration.AbsSlugDownloadDir(slug, vangogh_integration.Installer, drp.from)
 	if err != nil {
 		return err
 	}
@@ -116,7 +109,7 @@ func (drp *downloadsRelayoutProcessor) Process(_ string, slug string, downloadsL
 		return nil
 	}
 
-	toDir, err := vangogh_integration.AbsProductDownloadsDir(slug, drp.to)
+	toDir, err := vangogh_integration.AbsSlugDownloadDir(slug, vangogh_integration.Installer, drp.to)
 	if err != nil {
 		return err
 	}
@@ -145,32 +138,6 @@ func (drp *downloadsRelayoutProcessor) Process(_ string, slug string, downloadsL
 		shardDir, _ := filepath.Split(fromDir)
 		if err = removeDirIfEmpty(shardDir); err != nil {
 			return err
-		}
-	}
-
-	// accumulating localManualUrls for this downloadsList
-
-	productRelDir, err := vangogh_integration.RelProductDownloadsDir(slug, drp.to)
-
-	for _, dl := range downloadsList {
-		relDownloadTypeDir := ""
-		switch dl.Type {
-		case vangogh_integration.DLC:
-			relDownloadTypeDir, err = pathways.GetRelDir(vangogh_integration.DLCs)
-		case vangogh_integration.Extra:
-			relDownloadTypeDir, err = pathways.GetRelDir(vangogh_integration.Extras)
-		default:
-			// do nothing - use base product downloads dir
-		}
-		if err != nil {
-			return err
-		}
-
-		relDir := filepath.Join(productRelDir, relDownloadTypeDir)
-
-		if relLocalFilename, ok := drp.rdx.GetLastVal(vangogh_integration.LocalManualUrlProperty, dl.ManualUrl); ok && relLocalFilename != "" {
-			_, filename := filepath.Split(relLocalFilename)
-			drp.localManualUrls[dl.ManualUrl] = []string{filepath.Join(relDir, filename)}
 		}
 	}
 

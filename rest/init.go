@@ -20,6 +20,8 @@ var (
 	langCodes        []string
 	noPatches        bool
 
+	downloadsLayout vangogh_integration.DownloadsLayout
+
 	rdx redux.Readable
 )
 
@@ -40,12 +42,14 @@ func SetPassword(role, p string) {
 	middleware.SetPassword(role, sha256.Sum256([]byte(p)))
 }
 
-func Init() error {
+func Init(layout vangogh_integration.DownloadsLayout) error {
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {
 		return err
 	}
+
+	downloadsLayout = layout
 
 	rdx, err = redux.NewReader(reduxDir, vangogh_integration.ReduxProperties()...)
 	return err

@@ -49,6 +49,7 @@ func ProcessQueue(
 			langCodes,
 			downloadTypes,
 			noPatches,
+			downloadsLayout,
 			false); err != nil {
 			return err
 		}

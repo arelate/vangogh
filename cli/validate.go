@@ -5,13 +5,11 @@ import (
 	"encoding/xml"
 	"fmt"
 	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"maps"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -30,6 +28,7 @@ func ValidateHandler(u *url.URL) error {
 		vangogh_integration.LanguageCodesFromUrl(u),
 		vangogh_integration.DownloadTypesFromUrl(u),
 		vangogh_integration.FlagFromUrl(u, "no-patches"),
+		vangogh_integration.DownloadsLayoutFromUrl(u),
 		vangogh_integration.FlagFromUrl(u, "all-not-valid"))
 }
 
@@ -39,6 +38,7 @@ func Validate(
 	langCodes []string,
 	downloadTypes []vangogh_integration.DownloadType,
 	noPatches bool,
+	downloadsLayout vangogh_integration.DownloadsLayout,
 	allNotValid bool) error {
 
 	va := nod.NewProgress("validating...")
@@ -53,10 +53,9 @@ func Validate(
 
 	rdx, err := redux.NewWriter(reduxDir,
 		vangogh_integration.SlugProperty,
-		vangogh_integration.LocalManualUrlProperty,
+		vangogh_integration.ManualUrlFilenameProperty,
 		vangogh_integration.ManualUrlStatusProperty,
 		vangogh_integration.ManualUrlValidationResultProperty,
-		vangogh_integration.ManualUrlGeneratedChecksumProperty,
 		vangogh_integration.ProductValidationResultProperty)
 	if err != nil {
 		return err
@@ -70,8 +69,9 @@ func Validate(
 	}
 
 	vd := &validateDelegate{
-		rdx:     rdx,
-		results: make(map[vangogh_integration.ValidationResult]int),
+		rdx:             rdx,
+		downloadsLayout: downloadsLayout,
+		results:         make(map[vangogh_integration.ValidationResult]int),
 	}
 
 	if err = vangogh_integration.MapDownloads(
@@ -89,7 +89,6 @@ func Validate(
 	summary := map[string][]string{}
 	tp := fmt.Sprintf("%d manual-url(s) successfully validated", vd.results[vangogh_integration.ValidatedSuccessfully])
 	summary[tp] = []string{}
-	maybeAddTopic(summary, "%d manual-url(s) validated with generated checksum", vd.results, vangogh_integration.ValidatedWithGeneratedChecksum)
 	maybeAddTopic(summary, "%d manual-url(s) are unresolved (not downloaded)", vd.results, vangogh_integration.ValidatedUnresolvedManualUrl)
 	maybeAddTopic(summary, "%d manual-url(s) are missing downloads", vd.results, vangogh_integration.ValidatedMissingLocalFile)
 	maybeAddTopic(summary, "%d manual-url(s) are missing checksum", vd.results, vangogh_integration.ValidatedMissingChecksum)
@@ -122,7 +121,7 @@ func allNotValidIds(rdx redux.Readable) ([]string, error) {
 	for id := range kvDetails.Keys() {
 
 		if pvrs, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
-			if pvr := vangogh_integration.ParseValidationResult(pvrs); pvr == vangogh_integration.ValidatedSuccessfully || pvr == vangogh_integration.ValidatedWithGeneratedChecksum {
+			if pvr := vangogh_integration.ParseValidationResult(pvrs); pvr == vangogh_integration.ValidatedSuccessfully {
 				avia.Increment()
 				continue
 			}
@@ -146,38 +145,35 @@ func maybeAddTopic(summary map[string][]string,
 }
 
 func validateManualUrl(
+	slug string,
 	dl *vangogh_integration.Download,
-	rdx redux.Readable) (vangogh_integration.ValidationResult, error) {
-
-	if err := rdx.MustHave(vangogh_integration.LocalManualUrlProperty); err != nil {
-		return vangogh_integration.ValidationError, err
-	}
+	rdx redux.Readable,
+	layout vangogh_integration.DownloadsLayout) (vangogh_integration.ValidationResult, error) {
 
 	mua := nod.NewProgress(" %s:", dl.String())
 	defer mua.Done()
 
-	//local filenames are saved as relative to root downloads folder (e.g. s/slug/local_filename)
-	localFile, ok := rdx.GetLastVal(vangogh_integration.LocalManualUrlProperty, dl.ManualUrl)
-	if !ok {
+	filename, ok := rdx.GetLastVal(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl)
+	if !ok || filename == "" {
 		vr := vangogh_integration.ValidatedUnresolvedManualUrl
 		mua.EndWithResult(vr.String())
 		return vr, nil
 	}
 
-	//absolute path (given a downloads/ root) for a s/slug/local_filename,
-	//e.g. downloads/s/slug/local_filename
-	absLocalFile, err := vangogh_integration.AbsDownloadDirFromRel(localFile)
+	absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.Type, layout)
 	if err != nil {
 		return vangogh_integration.ValidationError, err
 	}
 
-	if _, err := os.Stat(absLocalFile); os.IsNotExist(err) {
+	absDownloadPath := filepath.Join(absSlugDownloadDir, filename)
+
+	if _, err := os.Stat(absDownloadPath); os.IsNotExist(err) {
 		vr := vangogh_integration.ValidatedMissingLocalFile
 		mua.EndWithResult(vr.String())
 		return vr, nil
 	}
 
-	absChecksumFile, err := vangogh_integration.AbsLocalChecksumPath(absLocalFile)
+	absChecksumFile, err := vangogh_integration.AbsChecksumPath(absDownloadPath)
 	if err != nil {
 		return vangogh_integration.ValidationError, err
 	}
@@ -199,7 +195,7 @@ func validateManualUrl(
 		return vangogh_integration.ValidationError, err
 	}
 
-	sourceFile, err := os.Open(absLocalFile)
+	sourceFile, err := os.Open(absDownloadPath)
 	if err != nil {
 		return vangogh_integration.ValidationError, err
 	}
@@ -212,7 +208,6 @@ func validateManualUrl(
 		return vangogh_integration.ValidationError, err
 	}
 
-	_, filename := filepath.Split(localFile)
 	vlfa := nod.NewProgress(" - %s", filename)
 
 	vlfa.Total(uint64(stat.Size()))
@@ -229,17 +224,15 @@ func validateManualUrl(
 		return vr, nil
 	} else {
 		vr := vangogh_integration.ValidatedSuccessfully
-		if gc, ok := rdx.GetLastVal(vangogh_integration.ManualUrlGeneratedChecksumProperty, dl.ManualUrl); ok && gc == vangogh_integration.TrueValue {
-			vr = vangogh_integration.ValidatedWithGeneratedChecksum
-		}
 		vlfa.EndWithResult(vr.String())
 		return vr, nil
 	}
 }
 
 type validateDelegate struct {
-	rdx     redux.Writeable
-	results map[vangogh_integration.ValidationResult]int
+	rdx             redux.Writeable
+	downloadsLayout vangogh_integration.DownloadsLayout
+	results         map[vangogh_integration.ValidationResult]int
 }
 
 func downloadsListIsExtrasOnly(dls vangogh_integration.DownloadsList) bool {
@@ -262,7 +255,11 @@ func (vd *validateDelegate) Process(id, slug string, list vangogh_integration.Do
 
 	for _, dl := range list {
 
-		vr, err := validateManualUrl(&dl, vd.rdx)
+		if dl.Type != vangogh_integration.Installer && dl.Type != vangogh_integration.DLC {
+			continue
+		}
+
+		vr, err := validateManualUrl(slug, &dl, vd.rdx, vd.downloadsLayout)
 		if err != nil {
 			vr = vangogh_integration.ValidationError
 			sva.Error(err)
@@ -304,23 +301,4 @@ func (vd *validateDelegate) Process(id, slug string, list vangogh_integration.Do
 	sva.EndWithResult(productValidationResult.String())
 
 	return nil
-}
-
-func validateUpdated(ids []string,
-	since int64,
-	operatingSystems []vangogh_integration.OperatingSystem,
-	langCodes []string,
-	downloadTypes []vangogh_integration.DownloadType,
-	noPatches bool) error {
-
-	if ids == nil {
-		updatedDetails, err := shared_data.GetDetailsUpdates(since)
-		if err != nil {
-			return err
-		}
-
-		ids = slices.Collect(maps.Keys(updatedDetails))
-	}
-
-	return Validate(ids, operatingSystems, langCodes, downloadTypes, noPatches, false)
 }
