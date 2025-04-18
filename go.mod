@@ -3,13 +3,13 @@ module github.com/arelate/vangogh
 go 1.24.2
 
 require (
-	github.com/arelate/southern_light v0.2.62
+	github.com/arelate/southern_light v0.2.63
 	github.com/boggydigital/atomus v0.1.10
 	github.com/boggydigital/backups v0.1.6
 	github.com/boggydigital/clo v1.0.7
 	github.com/boggydigital/compton v0.2.93
 	github.com/boggydigital/coost v0.3.10
-	github.com/boggydigital/dolo v0.2.21
+	github.com/boggydigital/dolo v0.2.22
 	github.com/boggydigital/issa v0.1.23
 	github.com/boggydigital/kevlar v0.6.6
 	github.com/boggydigital/middleware v0.1.17
