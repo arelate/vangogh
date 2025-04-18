@@ -201,6 +201,12 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 				detailsSummary.SetLabelBackgroundColor(src)
 				detailsSummary.SetLabelForegroundColor(color.Highlight)
 			}
+		case compton_data.SteamNewsSection:
+			if lcut, lcuc := compton_fragments.LastCommunityUpdate(id, rdx); lcut != "" {
+				detailsSummary.SetLabelText(lcut)
+				detailsSummary.SetLabelBackgroundColor(lcuc)
+				detailsSummary.SetLabelForegroundColor(color.Highlight)
+			}
 		case compton_data.InstallersSection:
 			if pvrt, pvrc := compton_fragments.ProductValidationResult(id, rdx); pvrt != "" {
 				detailsSummary.SetLabelText(pvrt)

@@ -95,7 +95,7 @@ func reduceProductType(pt vangogh_integration.ProductType) error {
 	case vangogh_integration.SteamAppDetails:
 		return steam_data.ReduceAppDetails(kvPt, -1)
 	case vangogh_integration.SteamAppNews:
-		// do nothing
+		return steam_data.ReduceAppNews(kvPt, -1)
 	case vangogh_integration.SteamAppReviews:
 		return steam_data.ReduceAppReviews(kvPt, -1)
 	case vangogh_integration.SteamDeckCompatibilityReport:
