@@ -19,7 +19,7 @@ import (
 )
 
 type DownloadVariant struct {
-	dlType           vangogh_integration.DownloadType
+	downloadType     vangogh_integration.DownloadType
 	version          string
 	langCode         string
 	estimatedBytes   int
@@ -185,8 +185,8 @@ func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 
 	fr := compton.Frow(r).
 		FontSize(size.XSmall).
-		IconColor(compton.Circle, downloadTypesColors[dv.dlType]).
-		Heading(downloadTypesStrings[dv.dlType])
+		IconColor(compton.Circle, downloadTypesColors[dv.downloadType]).
+		Heading(downloadTypesStrings[dv.downloadType])
 
 	if dv.langCode != "" {
 		fr.PropVal("Lang", compton_data.LanguageFlags[dv.langCode])
@@ -198,12 +198,14 @@ func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 		fr.PropVal("Size", fmtBytes(dv.estimatedBytes))
 	}
 
-	validationResult := compton.Fspan(r, dv.validationResult.HumanReadableString()).
-		FontSize(size.XSmall).
-		ForegroundColor(compton_fragments.ValidationResultsColors[dv.validationResult]).
-		FontWeight(validationResultsFontWeights[dv.validationResult])
+	if dv.downloadType == vangogh_integration.Installer || dv.downloadType == vangogh_integration.DLC {
+		validationResult := compton.Fspan(r, dv.validationResult.HumanReadableString()).
+			FontSize(size.XSmall).
+			ForegroundColor(compton_fragments.ValidationResultsColors[dv.validationResult]).
+			FontWeight(validationResultsFontWeights[dv.validationResult])
 
-	fr.Elements(validationResult)
+		fr.Elements(validationResult)
+	}
 
 	return fr
 }
@@ -324,7 +326,7 @@ func downloadsOperatingSystems(dls vangogh_integration.DownloadsList) []vangogh_
 }
 
 func (dv *DownloadVariant) Equals(other *DownloadVariant) bool {
-	return dv.dlType == other.dlType &&
+	return dv.downloadType == other.downloadType &&
 		dv.version == other.version &&
 		dv.langCode == other.langCode
 }
@@ -371,7 +373,7 @@ func getDownloadVariants(os vangogh_integration.OperatingSystem, title string, d
 		}
 
 		dv := &DownloadVariant{
-			dlType:           dl.Type,
+			downloadType:     dl.Type,
 			version:          dl.Version,
 			langCode:         dl.LanguageCode,
 			estimatedBytes:   dl.EstimatedBytes,
@@ -395,7 +397,7 @@ func filterDownloads(os vangogh_integration.OperatingSystem, dls vangogh_integra
 	downloads := make([]vangogh_integration.Download, 0)
 	for _, dl := range dls {
 		if dl.OS != os ||
-			dl.Type != dv.dlType ||
+			dl.Type != dv.downloadType ||
 			dv.version != dl.Version ||
 			dv.langCode != dl.LanguageCode ||
 			productTitle != dl.ProductTitle {
