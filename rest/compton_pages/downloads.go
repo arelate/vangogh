@@ -19,10 +19,11 @@ import (
 )
 
 type DownloadVariant struct {
-	dlType         vangogh_integration.DownloadType
-	version        string
-	langCode       string
-	estimatedBytes int
+	dlType           vangogh_integration.DownloadType
+	version          string
+	langCode         string
+	estimatedBytes   int
+	validationResult vangogh_integration.ValidationResult
 }
 
 var downloadTypesStrings = map[vangogh_integration.DownloadType]string{
@@ -87,7 +88,7 @@ func Downloads(id string, dls vangogh_integration.DownloadsList, rdx redux.Reada
 			titleHeadings := compton.H3Text(productTitle)
 			productStack.Append(titleHeadings)
 
-			variants := getDownloadVariants(os, productTitle, dls)
+			variants := getDownloadVariants(os, productTitle, dls, rdx)
 
 			for _, variant := range variants {
 				if dv := downloadVariant(s, variant); dv != nil {
@@ -196,6 +197,13 @@ func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 	if dv.estimatedBytes > 0 {
 		fr.PropVal("Size", fmtBytes(dv.estimatedBytes))
 	}
+
+	validationResult := compton.Fspan(r, dv.validationResult.HumanReadableString()).
+		FontSize(size.XSmall).
+		ForegroundColor(compton_fragments.ValidationResultsColors[dv.validationResult]).
+		FontWeight(validationResultsFontWeights[dv.validationResult])
+
+	fr.Elements(validationResult)
 
 	return fr
 }
@@ -344,7 +352,7 @@ func getProductTitles(os vangogh_integration.OperatingSystem, dls vangogh_integr
 	return titles
 }
 
-func getDownloadVariants(os vangogh_integration.OperatingSystem, title string, dls vangogh_integration.DownloadsList) []*DownloadVariant {
+func getDownloadVariants(os vangogh_integration.OperatingSystem, title string, dls vangogh_integration.DownloadsList, rdx redux.Readable) []*DownloadVariant {
 
 	variants := make([]*DownloadVariant, 0)
 	for _, dl := range dls {
@@ -355,17 +363,28 @@ func getDownloadVariants(os vangogh_integration.OperatingSystem, title string, d
 			continue
 		}
 
+		var vr vangogh_integration.ValidationResult
+		if muss, ok := rdx.GetLastVal(vangogh_integration.ManualUrlStatusProperty, dl.ManualUrl); ok && vangogh_integration.ParseManualUrlStatus(muss) == vangogh_integration.ManualUrlValidated {
+			if vrs, sure := rdx.GetLastVal(vangogh_integration.ManualUrlValidationResultProperty, dl.ManualUrl); sure {
+				vr = vangogh_integration.ParseValidationResult(vrs)
+			}
+		}
+
 		dv := &DownloadVariant{
-			dlType:         dl.Type,
-			version:        dl.Version,
-			langCode:       dl.LanguageCode,
-			estimatedBytes: dl.EstimatedBytes,
+			dlType:           dl.Type,
+			version:          dl.Version,
+			langCode:         dl.LanguageCode,
+			estimatedBytes:   dl.EstimatedBytes,
+			validationResult: vr,
 		}
 
 		if edv := getDownloadVariant(variants, dv); edv == nil {
 			variants = append(variants, dv)
 		} else {
 			edv.estimatedBytes += dl.EstimatedBytes
+			if edv.validationResult < vr {
+				edv.validationResult = vr
+			}
 		}
 
 	}
