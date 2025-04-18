@@ -5,41 +5,30 @@
         &.owned {
             color: var(--c-highlight);
             --label-color: var(--c-gray);
-        }
 
-        &.owned.valid {
-            color: var(--c-highlight);
-            --label-color: var(--c-green);
-        }
+            &.valid {
+                --label-color: var(--c-green);
+            }
 
-        &.owned.valid-with-gen-checksum {
-            color: var(--c-highlight);
-            --label-color: var(--c-green);
-        }
+            &.unresolved-manual-url {
+                --label-color: var(--c-teal);
+            }
 
-        &.owned.unresolved-manual-url {
-            color: var(--c-highlight);
-            --label-color: var(--c-teal);
-        }
+            &.missing-local-file {
+                --label-color: var(--c-teal);
+            }
 
-        &.owned.missing-local-file {
-            color: black;
-            --label-color: var(--c-teal);
-        }
+            &.missing-checksum {
+                --label-color: var(--c-teal);
+            }
 
-        &.owned.missing-checksum {
-            color: var(--c-highlight);
-            --label-color: var(--c-teal);
-        }
+            &.error {
+                --label-color: var(--c-orange);
+            }
 
-        &.owned.error {
-            color: var(--c-highlight);
-            --label-color: var(--c-orange);
-        }
-
-        &.owned.checksum-mismatch {
-            color: var(--c-highlight);
-            --label-color: var(--c-red);
+            &.checksum-mismatch {
+                --label-color: var(--c-red);
+            }
         }
 
         /* GAME, DLC, PACK */
