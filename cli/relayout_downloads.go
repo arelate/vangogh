@@ -64,7 +64,8 @@ func RelayoutDownloads(
 	}
 
 	rdx, err := redux.NewWriter(reduxDir,
-		vangogh_integration.SlugProperty)
+		vangogh_integration.SlugProperty,
+		vangogh_integration.ProductTypeProperty)
 	if err != nil {
 		return err
 	}

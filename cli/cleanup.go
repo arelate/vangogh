@@ -57,6 +57,7 @@ func Cleanup(
 
 	rdx, err := redux.NewReader(reduxDir,
 		vangogh_integration.SlugProperty,
+		vangogh_integration.ProductTypeProperty,
 		vangogh_integration.ManualUrlFilenameProperty)
 	if err != nil {
 		return err

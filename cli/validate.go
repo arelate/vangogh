@@ -53,6 +53,7 @@ func Validate(
 
 	rdx, err := redux.NewWriter(reduxDir,
 		vangogh_integration.SlugProperty,
+		vangogh_integration.ProductTypeProperty,
 		vangogh_integration.ManualUrlFilenameProperty,
 		vangogh_integration.ManualUrlStatusProperty,
 		vangogh_integration.ManualUrlValidationResultProperty,
