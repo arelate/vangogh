@@ -268,7 +268,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	absDownloadPath := filepath.Join(absSlugDownloadDir, resolvedFilename)
 
 	//4
-	if dl.Type == vangogh_integration.Installer {
+	if dl.Type == vangogh_integration.Installer || dl.Type == vangogh_integration.DLC {
 		if remoteChecksumPath := resolvedUrl.Path + kevlar.XmlExt; remoteChecksumPath != "" {
 
 			absChecksumPath, err := vangogh_integration.AbsChecksumPath(absDownloadPath)
