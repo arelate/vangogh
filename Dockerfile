@@ -6,7 +6,7 @@ RUN go get ./...
 RUN go build \
     -a -tags timetzdata \
     -o vangogh \
-    -ldflags="-s -w -X 'github.com/arelate/vangogh/cli.GitTag=`git describe --tags --abbrev=0`'" \
+    -ldflags="-s -w -X 'github.com/arelate/vangogh/reqs.GitTag=`git describe --tags --abbrev=0`'" \
     main.go
 
 FROM alpine:latest
