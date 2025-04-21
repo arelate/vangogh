@@ -132,9 +132,12 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 	/* Product labels */
 
-	fmtLabels := compton_fragments.FormatLabels(id, rdx)
-	productLabels := compton.Labels(p, fmtLabels...).FontSize(size.XXSmall).RowGap(size.XSmall).ColumnGap(size.XSmall)
-	pageStack.Append(compton.FICenter(p, productTitle, productLabels))
+	if fmtLabels := compton_fragments.FormatLabels(id, rdx); len(fmtLabels) > 0 {
+		productLabels := compton.Labels(p, fmtLabels...).FontSize(size.XXSmall).RowGap(size.XSmall).ColumnGap(size.XSmall)
+		pageStack.Append(compton.FICenter(p, productTitle, productLabels))
+	} else {
+		pageStack.Append(compton.FICenter(p, productTitle))
+	}
 
 	/* Product short description */
 

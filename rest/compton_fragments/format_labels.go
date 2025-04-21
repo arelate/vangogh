@@ -17,7 +17,9 @@ func FormatLabels(id string, rdx redux.Readable) []compton.FormattedLabel {
 	fmtLabels := make([]compton.FormattedLabel, 0, len(compton_data.LabelProperties))
 
 	for _, p := range compton_data.LabelProperties {
-		fmtLabels = append(fmtLabels, formatLabel(id, p, owned, rdx))
+		if fmtLabel := formatLabel(id, p, owned, rdx); fmtLabel.Title != "" {
+			fmtLabels = append(fmtLabels, fmtLabel)
+		}
 	}
 
 	return fmtLabels
