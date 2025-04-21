@@ -12,9 +12,7 @@ import (
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 	"net/http"
-	"slices"
 	"strconv"
-	"strings"
 )
 
 const demoStoreTag = "Demo"
@@ -139,14 +137,6 @@ func reduceCatalogPage(page string, kvCatalogPages kevlar.KeyValues, piv shared_
 				values = []string{strconv.FormatBool(cp.GetPreOrder())}
 			case vangogh_integration.InDevelopmentProperty:
 				values = []string{strconv.FormatBool(cp.GetInDevelopment())}
-			case vangogh_integration.IsDemoProperty:
-				isDemo := slices.Contains(cp.GetStoreTags(), demoStoreTag)
-				if !isDemo {
-					if titleParts := strings.Split(strings.ToLower(cp.Title), " "); len(titleParts) > 1 {
-						isDemo = titleParts[len(titleParts)-1] == "demo"
-					}
-				}
-				values = []string{strconv.FormatBool(isDemo)}
 			case vangogh_integration.EditionsProperty:
 				values = cp.GetEditions()
 			case vangogh_integration.CatalogPageProductsProperty:

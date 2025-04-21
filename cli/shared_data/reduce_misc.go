@@ -38,5 +38,9 @@ func ReduceMisc() error {
 		return err
 	}
 
+	if err = reduceDemo(rdx); err != nil {
+		return err
+	}
+
 	return nil
 }

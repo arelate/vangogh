@@ -8,7 +8,7 @@ import (
 
 func reduceOwned(rdx redux.Writeable) error {
 
-	roa := nod.Begin("reducing owned...")
+	roa := nod.Begin(" reducing %s...", vangogh_integration.OwnedProperty)
 	defer roa.Done()
 
 	owned := make(map[string][]string)
