@@ -13,9 +13,9 @@ import (
 
 const applicationJsonContentType = "application/json"
 
-func GetDownloadsManifest(w http.ResponseWriter, r *http.Request) {
+func GetProductDetails(w http.ResponseWriter, r *http.Request) {
 
-	// GET /downloads-manifest?id
+	// GET /product-details?id
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
@@ -34,7 +34,7 @@ func GetDownloadsManifest(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Content-Type", applicationJsonContentType)
 
-	pdm, err := getProductDownloadsManifest(id, dls, rdx)
+	pdm, err := getProductDetails(id, dls, rdx)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
@@ -46,53 +46,66 @@ func GetDownloadsManifest(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func getProductDownloadsManifest(id string, dls vangogh_integration.DownloadsList, rdx redux.Readable) (*vangogh_integration.DownloadsManifest, error) {
-	dm := &vangogh_integration.DownloadsManifest{Id: id}
-	if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
-		dm.Title = title
-	}
+func getProductDetails(id string, dls vangogh_integration.DownloadsList, rdx redux.Readable) (*vangogh_integration.ProductDetails, error) {
+	productDetails := &vangogh_integration.ProductDetails{Id: id}
 	if slug, ok := rdx.GetLastVal(vangogh_integration.SlugProperty, id); ok {
-		dm.Slug = slug
+		productDetails.Slug = slug
+	}
+	if steamAppId, ok := rdx.GetLastVal(vangogh_integration.SteamAppIdProperty, id); ok {
+		productDetails.SteamAppId = steamAppId
+	}
+	if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
+		productDetails.Title = title
+	}
+	if oss, ok := rdx.GetAllValues(vangogh_integration.OperatingSystemsProperty, id); ok {
+		oses := vangogh_integration.ParseManyOperatingSystems(oss)
+		productDetails.OperatingSystems = oses
+	}
+	if developers, ok := rdx.GetAllValues(vangogh_integration.DevelopersProperty, id); ok {
+		productDetails.Developers = developers
+	}
+	if publishers, ok := rdx.GetAllValues(vangogh_integration.PublishersProperty, id); ok {
+		productDetails.Publishers = publishers
 	}
 
 	if image, ok := rdx.GetLastVal(vangogh_integration.ImageProperty, id); ok {
-		dm.Images.Image = image
+		productDetails.Images.Image = image
 	}
 	if verticalImage, ok := rdx.GetLastVal(vangogh_integration.VerticalImageProperty, id); ok {
-		dm.Images.VerticalImage = verticalImage
+		productDetails.Images.VerticalImage = verticalImage
 	}
 	if hero, ok := rdx.GetLastVal(vangogh_integration.HeroProperty, id); ok {
-		dm.Images.Hero = hero
+		productDetails.Images.Hero = hero
 	}
 	if logo, ok := rdx.GetLastVal(vangogh_integration.LogoProperty, id); ok {
-		dm.Images.Logo = logo
+		productDetails.Images.Logo = logo
 	}
 	if icon, ok := rdx.GetLastVal(vangogh_integration.IconProperty, id); ok {
-		dm.Images.Icon = icon
+		productDetails.Images.Icon = icon
 	}
 	if iconSquare, ok := rdx.GetLastVal(vangogh_integration.IconSquareProperty, id); ok {
-		dm.Images.IconSquare = iconSquare
+		productDetails.Images.IconSquare = iconSquare
 	}
 	if background, ok := rdx.GetLastVal(vangogh_integration.BackgroundProperty, id); ok {
-		dm.Images.Background = background
+		productDetails.Images.Background = background
 	}
 
 	for _, dl := range dls {
-		link := vangogh_integration.ManifestDownloadLink{
-			ManualUrl:      dl.ManualUrl,
-			Name:           dl.Name,
-			OS:             dl.OS.String(),
-			Type:           dl.Type.String(),
-			LanguageCode:   dl.LanguageCode,
-			Version:        dl.Version,
-			EstimatedBytes: dl.EstimatedBytes,
+		link := vangogh_integration.ProductDownloadLink{
+			ManualUrl:       dl.ManualUrl,
+			Name:            dl.Name,
+			OperatingSystem: dl.OS,
+			Type:            dl.Type,
+			LanguageCode:    dl.LanguageCode,
+			Version:         dl.Version,
+			EstimatedBytes:  dl.EstimatedBytes,
 		}
 
 		if dl.Type == vangogh_integration.DLC {
 			link.Name = dl.ProductTitle
 		}
 
-		absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(dm.Slug, dl.Type, downloadsLayout)
+		absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(productDetails.Slug, dl.Type, downloadsLayout)
 		if err != nil {
 			return nil, err
 		}
@@ -114,15 +127,15 @@ func getProductDownloadsManifest(id string, dls vangogh_integration.DownloadsLis
 		}
 
 		if vrs, ok := rdx.GetLastVal(vangogh_integration.ManualUrlValidationResultProperty, dl.ManualUrl); ok && vrs != "" {
-			link.ValidationResult = vrs
+			link.ValidationResult = vangogh_integration.ParseValidationResult(vrs)
 		} else {
-			link.ValidationResult = vangogh_integration.ValidationResultUnknown.String()
+			link.ValidationResult = vangogh_integration.ValidationResultUnknown
 		}
 
-		dm.DownloadLinks = append(dm.DownloadLinks, link)
+		productDetails.DownloadLinks = append(productDetails.DownloadLinks, link)
 	}
 
-	return dm, nil
+	return productDetails, nil
 }
 
 func getMd5Checksum(absDownloadPath string) (string, error) {
