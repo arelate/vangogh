@@ -35,6 +35,7 @@ get-data
     id&
     product-type={all-product-types}
     since-hours-ago
+    purchases
     force
 
 get-description-images

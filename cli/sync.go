@@ -15,6 +15,7 @@ import (
 )
 
 const (
+	SyncOptionPurchases        = "purchases"
 	SyncOptionItems            = "items"
 	SyncOptionImages           = "images"
 	SyncOptionScreenshots      = "screenshots"
@@ -24,6 +25,7 @@ const (
 )
 
 type syncOptions struct {
+	purchases        bool
 	items            bool
 	images           bool
 	screenshots      bool
@@ -41,6 +43,7 @@ func NegOpt(option string) string {
 func initSyncOptions(u *url.URL) *syncOptions {
 
 	so := &syncOptions{
+		purchases:        vangogh_integration.FlagFromUrl(u, SyncOptionPurchases),
 		items:            vangogh_integration.FlagFromUrl(u, SyncOptionItems),
 		images:           vangogh_integration.FlagFromUrl(u, SyncOptionImages),
 		screenshots:      vangogh_integration.FlagFromUrl(u, SyncOptionScreenshots),
@@ -116,7 +119,7 @@ func Sync(
 	syncEvents := make(map[string][]string, 2)
 	syncEvents[vangogh_integration.SyncStartKey] = []string{strconv.Itoa(int(syncStart))}
 
-	if err := GetData(nil, nil, since, force); err != nil {
+	if err := GetData(nil, nil, since, syncOpts.purchases, force); err != nil {
 		return err
 	}
 

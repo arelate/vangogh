@@ -19,6 +19,13 @@ import (
 	"slices"
 )
 
+var purchasesTypes = []vangogh_integration.ProductType{
+	vangogh_integration.Licences,
+	vangogh_integration.AccountPage,
+	vangogh_integration.OrderPage,
+	vangogh_integration.Details,
+}
+
 var userAccessTokenTypes = []vangogh_integration.ProductType{
 	vangogh_integration.Licences,
 	vangogh_integration.UserWishlist,
@@ -67,13 +74,18 @@ func GetDataHandler(u *url.URL) error {
 		return err
 	}
 
-	force := u.Query().Has("force")
-	return GetData(ids, productTypes, since, force)
+	q := u.Query()
+
+	purchases := q.Has("purchases")
+	force := q.Has("force")
+	return GetData(ids, productTypes, since, purchases, force)
 }
 
-func GetData(ids []string, productTypes []vangogh_integration.ProductType, since int64, force bool) error {
+func GetData(ids []string, productTypes []vangogh_integration.ProductType, since int64, purchases, force bool) error {
 
-	if len(productTypes) == 0 {
+	if purchases {
+		productTypes = purchasesTypes
+	} else if len(productTypes) == 0 {
 		productTypes = slices.Collect(vangogh_integration.AllProductTypes())
 	}
 
