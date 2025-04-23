@@ -93,6 +93,7 @@ func options(opts []string) []string {
 
 func syncOptions() []string {
 	return options([]string{
+		cli.SyncOptionPurchases,
 		cli.SyncOptionItems,
 		cli.SyncOptionImages,
 		cli.SyncOptionScreenshots,
