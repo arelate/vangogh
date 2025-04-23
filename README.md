@@ -82,22 +82,20 @@ From version 128: this feature is behind the layout.css.at-scope.enabled prefere
 ```
 
 
-## Getting started
+## Setting up GOG.com authorization with cookies.txt
 
-After you've installed `vangogh`, you need to authenticate GOG.com access by providing browser cookie data. To do that you need to create `cookies.txt` in the `temporary data` folder (see [docker installation](#Installation)),
-   then follow [instructions here](https://github.com/boggydigital/coost#copying-session-cookies-from-an-existing-browser-session) to copy `gog.com` cookies into that file. When you run `vangogh` for the first time, it'll import the cookie header value and split individual parameters.
+After you've installed `vangogh`, you need to authenticate GOG.com access by providing browser cookie data. 
 
-Regardless of how you do it, the content of `cookies.txt` should look like this:
+To do that you need to create `cookies.txt` in the `input` folder (see [docker installation](#Installation) - by default that's the `vangogh` application data root folder where all other subfolders are located), then follow [instructions here](https://github.com/boggydigital/coost#copying-session-cookies-from-an-existing-browser-session) to copy GOG.com request cookies into that file.
+
+As a result, the content of `cookies.txt` should look like this:
 
 ```text
 gog.com
- cart_token=(some value)
- gog-al=(some value)
- gog_lc=(some value)
- gog_us=(some value)
+ cookie-header=(paste copied GOG.com request headers here)
 ```
 
-If you want to de-authorize `vangogh` from accessing your GOG.com data - delete the `cookies.txt` file. After that you'll still be able to download anything that does not require account authorization. All the account specific data you'll have accumulated until that point will be preserved.
+If you want to de-authorize `vangogh` from accessing your remote GOG.com data - delete the `cookies.txt` file. All the account specific data you'll have accumulated until that point will be preserved in `vangogh`.
 
 ## Updating data
 
