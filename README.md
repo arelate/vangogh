@@ -86,13 +86,13 @@ From version 128: this feature is behind the layout.css.at-scope.enabled prefere
 
 After you've installed `vangogh`, you need to authenticate GOG.com access by providing browser cookie data. 
 
-To do that you need to create `cookies.txt` in the `input` folder (see [docker installation](#Installation) - by default that's the `vangogh` application data root folder where all other subfolders are located), then follow [instructions here](https://github.com/boggydigital/coost#copying-session-cookies-from-an-existing-browser-session) to copy GOG.com request cookies into that file.
+To do that you need to create `cookies.txt` in the `input` folder (see [docker installation](#Installation) - by default that's the `vangogh` application data root folder where all other subfolders like `metadata` are located), then follow [instructions here](https://github.com/boggydigital/coost#copying-session-cookies-from-an-existing-browser-session) to copy GOG.com request cookies into that file.
 
 As a result, the content of `cookies.txt` should look like this:
 
 ```text
 gog.com
- cookie-header=(paste copied GOG.com request headers here)
+ cookie-header=paste copied GOG.com request headers here
 ```
 
 If you want to de-authorize `vangogh` from accessing your remote GOG.com data - delete the `cookies.txt` file. All the account specific data you'll have accumulated until that point will be preserved in `vangogh`.
