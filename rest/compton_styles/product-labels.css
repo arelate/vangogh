@@ -93,7 +93,6 @@
                 color: var(--c-foreground);
                 /* disable standard label border-color color-mixing by mixing two transparent colors */
                 --label-color: transparent;
-                --label-cm-color: transparent;
             }
         }
     }

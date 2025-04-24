@@ -132,12 +132,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 	/* Product labels */
 
-	if fmtLabels := compton_fragments.FormatLabels(id, rdx); len(fmtLabels) > 0 {
-		productLabels := compton.Labels(p, fmtLabels...).FontSize(size.XXXSmall).RowGap(size.XSmall).ColumnGap(size.XSmall)
-		pageStack.Append(compton.FICenter(p, productTitle, productLabels))
-	} else {
-		pageStack.Append(compton.FICenter(p, productTitle))
-	}
+	pageStack.Append(compton.FICenter(p, productTitle))
 
 	/* Product short description */
 
@@ -192,29 +187,27 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 		detailsSummary.SetTabIndex(ii + 1)
 
 		switch section {
+		case compton_data.InformationSection:
+			if fmtLabels := compton_fragments.FormatLabels(id, rdx); len(fmtLabels) > 0 {
+				productLabels := compton.Labels(p, fmtLabels...).FontSize(size.XXXSmall).RowGap(size.XSmall).ColumnGap(size.XSmall)
+				detailsSummary.AppendLabel(productLabels)
+				//pageStack.Append(compton.FICenter(p, productTitle, productLabels))
+			}
 		case compton_data.SteamDeckSection:
 			if sdct, sdcc := compton_fragments.SteamDeckCompatibility(id, rdx); sdct != "" {
-				detailsSummary.SetLabelText(sdct)
-				detailsSummary.SetLabelBackgroundColor(sdcc)
-				detailsSummary.SetLabelForegroundColor(color.Highlight)
+				detailsSummary.SetLabel(p, sdct, sdcc, color.Highlight)
 			}
 		case compton_data.ReceptionSection:
 			if srp, src := compton_fragments.SummaryReception(id, rdx); srp != "" {
-				detailsSummary.SetLabelText(srp)
-				detailsSummary.SetLabelBackgroundColor(src)
-				detailsSummary.SetLabelForegroundColor(color.Highlight)
+				detailsSummary.SetLabel(p, srp, src, color.Highlight)
 			}
 		case compton_data.SteamNewsSection:
 			if lcut, lcuc := compton_fragments.LastCommunityUpdate(id, rdx); lcut != "" {
-				detailsSummary.SetLabelText(lcut)
-				detailsSummary.SetLabelBackgroundColor(lcuc)
-				detailsSummary.SetLabelForegroundColor(color.Highlight)
+				detailsSummary.SetLabel(p, lcut, lcuc, color.Highlight)
 			}
 		case compton_data.InstallersSection:
 			if pvrt, pvrc := compton_fragments.ProductValidationResult(id, rdx); pvrt != "" {
-				detailsSummary.SetLabelText(pvrt)
-				detailsSummary.SetLabelBackgroundColor(pvrc)
-				detailsSummary.SetLabelForegroundColor(color.Highlight)
+				detailsSummary.SetLabel(p, pvrt, pvrc, color.Highlight)
 			}
 		default:
 			detailsSummary.SummaryMarginBlockEnd(size.Normal)

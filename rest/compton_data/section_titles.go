@@ -15,7 +15,7 @@ const (
 )
 
 var SectionTitles = map[string]string{
-	InformationSection: "Information",
+	InformationSection: "Info",
 	OfferingsSection:   "Offerings",
 	LinksSection:       "Links",
 	DescriptionSection: "Description",

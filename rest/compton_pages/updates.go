@@ -63,7 +63,7 @@ func Updates(sections []string,
 			compton_data.ManyItemsSinglePageTemplate,
 			compton_data.ManyItemsManyPagesTemplate)
 
-		dsSection.SetLabelText(cf.Title(0, len(ids), updateTotals[section]))
+		dsSection.SetLabel(p, cf.Title(0, len(ids), updateTotals[section]), color.Background, color.Foreground)
 
 		dsSection.SetId(section)
 		dsSection.SetTabIndex(ii + 1)
