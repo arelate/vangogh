@@ -2,6 +2,7 @@ package compton_pages
 
 import (
 	_ "embed"
+	"fmt"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
@@ -243,7 +244,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 			}
 
 			if tp, sure := rdx.GetLastVal(vangogh_integration.TopPercentProperty, id); sure && tp != "" {
-				topPercentBadge := compton.Badge(p, tp, color.Green, color.Highlight)
+				topPercentBadge := compton.Badge(p, fmt.Sprintf("Top %s", tp), color.Green, color.Highlight)
 				receptionBadges.Append(topPercentBadge)
 			}
 
