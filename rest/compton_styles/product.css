@@ -20,8 +20,8 @@ issa-image.product-poster {
     }
 }
 
-fspan.cmd {
-    font-family: monospace;
+h1.product-title {
+    font-weight: var(--fw-n);
 }
 
 one-liner.short-description {
