@@ -151,7 +151,7 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 			fallthrough
 		case vangogh_integration.AggregatedRatingProperty:
 			if value != "" {
-				fmtProperty.values[fmtAggregatedRating(value)] = noHref()
+				fmtProperty.values[FmtAggregatedRating(value)] = noHref()
 			}
 		default:
 			if value != "" {
@@ -196,7 +196,7 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 	case vangogh_integration.MetacriticScoreProperty:
 		fallthrough
 	case vangogh_integration.AggregatedRatingProperty:
-		fmtProperty.class = reviewClass(fmtAggregatedRating(firstValue))
+		fmtProperty.class = reviewClass(FmtAggregatedRating(firstValue))
 	case vangogh_integration.SteamDeckAppCompatibilityCategoryProperty:
 		fmtProperty.class = firstValue
 	}
@@ -324,7 +324,7 @@ func fmtSteamRating(rs string) string {
 
 }
 
-func fmtAggregatedRating(rs string) string {
+func FmtAggregatedRating(rs string) string {
 	rd := ""
 	if rf, err := strconv.ParseFloat(rs, 64); err == nil {
 		ri := int64(rf)

@@ -9,12 +9,14 @@ import (
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
+	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/input_types"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/issa"
 	"github.com/boggydigital/redux"
 	"slices"
 	"strings"
+	"time"
 )
 
 var (
@@ -126,7 +128,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 	/* Product title */
 
-	productTitle := compton.Heading(1)
+	productTitle := compton.Heading(2)
 	productTitle.Append(compton.Fspan(p, title).TextAlign(align.Center))
 	productTitle.AddClass("product-title")
 
@@ -188,26 +190,86 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 		switch section {
 		case compton_data.InformationSection:
-			if fmtLabels := compton_fragments.FormatLabels(id, rdx); len(fmtLabels) > 0 {
-				productLabels := compton.Labels(p, fmtLabels...).FontSize(size.XXXSmall).RowGap(size.XSmall).ColumnGap(size.XSmall)
-				detailsSummary.AppendLabel(productLabels)
-				//pageStack.Append(compton.FICenter(p, productTitle, productLabels))
+			productBadges := compton.FlexItems(p, direction.Row).ColumnGap(size.XSmall)
+			for _, fmtBadge := range compton_fragments.FormatBadges(id, rdx) {
+				badge := compton.Badge(p, fmtBadge.Title, fmtBadge.Color, color.Highlight)
+				badge.AddClass(fmtBadge.Class)
+				productBadges.Append(badge)
 			}
+			detailsSummary.AppendBadges(productBadges)
 		case compton_data.SteamDeckSection:
-			if sdct, sdcc := compton_fragments.SteamDeckCompatibility(id, rdx); sdct != "" {
-				detailsSummary.SetLabel(p, sdct, sdcc, color.Highlight)
+			if sdccp, ok := rdx.GetLastVal(vangogh_integration.SteamDeckAppCompatibilityCategoryProperty, id); ok {
+
+				var deckCompatColor color.Color
+				switch sdccp {
+				case "Verified":
+					deckCompatColor = color.Green
+				case "Playable":
+					deckCompatColor = color.Orange
+				case "Unsupported":
+					deckCompatColor = color.Red
+				default:
+					deckCompatColor = color.Gray
+				}
+
+				steamDeckBadge := compton.Badge(p, sdccp, deckCompatColor, color.Highlight)
+				detailsSummary.AppendBadges(steamDeckBadge)
 			}
 		case compton_data.ReceptionSection:
-			if srp, src := compton_fragments.SummaryReception(id, rdx); srp != "" {
-				detailsSummary.SetLabel(p, srp, src, color.Highlight)
+			receptionBadges := compton.FlexItems(p, direction.Row).ColumnGap(size.XSmall)
+
+			if srep, ok := rdx.GetLastVal(vangogh_integration.SummaryReviewsProperty, id); ok {
+
+				var receptionColor color.Color
+				switch srep {
+				case vangogh_integration.RatingPositive:
+					receptionColor = color.Green
+				case vangogh_integration.RatingNegative:
+					receptionColor = color.Red
+				case vangogh_integration.RatingMixed:
+					receptionColor = color.Yellow
+				default:
+					receptionColor = color.Gray
+				}
+
+				ratingsReviews := srep
+
+				if srap, sure := rdx.GetLastVal(vangogh_integration.SummaryRatingProperty, id); sure {
+					ratingsReviews = compton_fragments.FmtAggregatedRating(srap)
+				}
+
+				receptionBadges.Append(compton.Badge(p, ratingsReviews, receptionColor, color.Highlight))
+
 			}
+
+			if tp, sure := rdx.GetLastVal(vangogh_integration.TopPercentProperty, id); sure && tp != "" {
+				topPercentBadge := compton.Badge(p, tp, color.Green, color.Highlight)
+				receptionBadges.Append(topPercentBadge)
+			}
+
+			detailsSummary.AppendBadges(receptionBadges)
 		case compton_data.SteamNewsSection:
-			if lcut, lcuc := compton_fragments.LastCommunityUpdate(id, rdx); lcut != "" {
-				detailsSummary.SetLabel(p, lcut, lcuc, color.Highlight)
+			if lcus, ok := rdx.GetLastVal(vangogh_integration.SteamLastCommunityUpdateProperty, id); ok && lcus != "" {
+				if lcut, err := time.Parse(time.RFC3339, lcus); err == nil {
+
+					updateColor := color.Gray
+					if lcut.After(time.Now().Add(-1 * time.Hour * 24 * 30)) {
+						updateColor = color.Green
+					}
+
+					lastUpdateBadge := compton.Badge(p, lcut.Format("Jan 2, '06"), updateColor, color.Highlight)
+					detailsSummary.AppendBadges(lastUpdateBadge)
+				}
 			}
 		case compton_data.InstallersSection:
-			if pvrt, pvrc := compton_fragments.ProductValidationResult(id, rdx); pvrt != "" {
-				detailsSummary.SetLabel(p, pvrt, pvrc, color.Highlight)
+			if pvrs, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
+				pvr := vangogh_integration.ParseValidationResult(pvrs)
+
+				validationBadge := compton.Badge(p,
+					pvr.HumanReadableString(),
+					compton_fragments.ValidationResultsColors[pvr],
+					color.Highlight)
+				detailsSummary.AppendBadges(validationBadge)
 			}
 		default:
 			detailsSummary.SummaryMarginBlockEnd(size.Normal)

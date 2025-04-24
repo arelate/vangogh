@@ -8,7 +8,7 @@ import (
 
 func AppPage(current string) (p compton.PageElement, stack *compton.FlexItemsElement) {
 	p = compton.Page(current)
-	p.RegisterStyles(compton_styles.Styles, "product-labels.css")
+	p.RegisterStyles(compton_styles.Styles, "good-old-game-badge.css")
 	p.AppendIcon()
 	p.AppendManifest()
 

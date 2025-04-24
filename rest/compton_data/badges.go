@@ -4,7 +4,7 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 )
 
-var LabelProperties = []string{
+var BadgeProperties = []string{
 	vangogh_integration.StoreTagsProperty, // Good Old Game label
 	vangogh_integration.OwnedProperty,
 	vangogh_integration.ProductTypeProperty,
@@ -17,14 +17,4 @@ var LabelProperties = []string{
 	vangogh_integration.LocalTagsProperty,
 	vangogh_integration.IsDemoProperty,
 	vangogh_integration.UserWishlistProperty,
-}
-
-var LabelTitles = map[string]string{
-	vangogh_integration.OwnedProperty:         "Own",
-	vangogh_integration.ComingSoonProperty:    "Soon",
-	vangogh_integration.PreOrderProperty:      "PO",
-	vangogh_integration.InDevelopmentProperty: "In Dev",
-	vangogh_integration.IsFreeProperty:        "Free",
-	vangogh_integration.IsDemoProperty:        "Demo",
-	vangogh_integration.UserWishlistProperty:  "Wish",
 }

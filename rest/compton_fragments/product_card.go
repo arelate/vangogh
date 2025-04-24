@@ -1,10 +1,12 @@
 package compton_fragments
 
 import (
-	_ "embed"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/boggydigital/compton"
+	"github.com/boggydigital/compton/consts/align"
+	"github.com/boggydigital/compton/consts/color"
+	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/issa"
 	"github.com/boggydigital/redux"
@@ -62,12 +64,18 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx redux.Readab
 		return nil
 	}
 
-	if labels := compton.Labels(r, FormatLabels(id, rdx)...).
-		FontSize(size.XXXSmall).
+	productBadges := compton.FlexItems(r, direction.Row).
+		RowGap(size.XXSmall).
 		ColumnGap(size.XXSmall).
-		RowGap(size.XXSmall); labels != nil {
-		pc.AppendLabels(labels)
+		JustifyContent(align.Start)
+
+	for _, fmtBadge := range FormatBadges(id, rdx) {
+		badge := compton.SmallBadge(r, fmtBadge.Title, fmtBadge.Color, color.Highlight)
+		badge.AddClass(fmtBadge.Class)
+		productBadges.Append(badge)
 	}
+
+	pc.AppendBadges(productBadges)
 
 	properties, values := SummarizeProductProperties(id, rdx)
 	osSymbols := make([]compton.Element, 0, 2)

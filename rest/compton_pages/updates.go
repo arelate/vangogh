@@ -63,7 +63,8 @@ func Updates(sections []string,
 			compton_data.ManyItemsSinglePageTemplate,
 			compton_data.ManyItemsManyPagesTemplate)
 
-		dsSection.SetLabel(p, cf.Title(0, len(ids), updateTotals[section]), color.Background, color.Foreground)
+		itemsBadge := compton.Badge(p, cf.Title(0, len(ids), updateTotals[section]), color.Background, color.Foreground)
+		dsSection.AppendBadges(itemsBadge)
 
 		dsSection.SetId(section)
 		dsSection.SetTabIndex(ii + 1)
