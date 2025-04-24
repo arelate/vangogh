@@ -36,7 +36,7 @@ func TagsEditor(
 
 	// tinting document background color to the representative product color
 	if imageId, ok := rdx.GetLastVal(vangogh_integration.ImageProperty, id); ok && imageId != "" {
-		if repColor, sure := rdx.GetLastVal(vangogh_integration.RepColorProperty, id); sure && repColor != issa.NeutralRepColor {
+		if repColor, sure := rdx.GetLastVal(vangogh_integration.RepColorProperty, imageId); sure && repColor != issa.NeutralRepColor {
 			p.SetAttribute("style", "--c-rep:"+repColor)
 		}
 	}
@@ -56,7 +56,8 @@ func TagsEditor(
 	/* Product title */
 
 	productTitle, _ := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
-	productHeading := compton.HeadingText(productTitle, 1)
+	productHeading := compton.Heading(2)
+	productHeading.Append(compton.Fspan(p, productTitle).TextAlign(align.Center))
 	pageStack.Append(compton.FICenter(p, productHeading))
 
 	/* Ownership notice */
