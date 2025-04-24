@@ -137,21 +137,6 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 	pageStack.Append(compton.FICenter(p, productTitle))
 
-	/* Product short description */
-
-	if shortDesc, yes := rdx.GetLastVal(vangogh_integration.ShortDescriptionProperty, id); yes {
-		oneLiner := compton.OneLiner(p)
-
-		shortDescFspan := compton.Fspan(p, shortDesc).
-			ForegroundColor(color.Gray).
-			FontSize(size.XSmall).
-			TextAlign(align.Center)
-		oneLiner.Append(shortDescFspan)
-		oneLiner.AddClass("short-description")
-
-		pageStack.Append(compton.FICenter(p, oneLiner))
-	}
-
 	/* Product summary properties */
 
 	properties, values := compton_fragments.SummarizeProductProperties(id, rdx)
