@@ -204,6 +204,11 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 		case compton_data.ReceptionSection:
 			receptionBadges := compton.FlexItems(p, direction.Row).ColumnGap(size.XSmall)
 
+			if tp, sure := rdx.GetLastVal(vangogh_integration.TopPercentProperty, id); sure && tp != "" {
+				topPercentBadge := compton.Badge(p, fmt.Sprintf("Top %s", tp), color.Green, color.Highlight)
+				receptionBadges.Append(topPercentBadge)
+			}
+
 			if srep, ok := rdx.GetLastVal(vangogh_integration.SummaryReviewsProperty, id); ok {
 
 				var receptionColor color.Color
@@ -226,11 +231,6 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 				receptionBadges.Append(compton.Badge(p, ratingsReviews, receptionColor, color.Highlight))
 
-			}
-
-			if tp, sure := rdx.GetLastVal(vangogh_integration.TopPercentProperty, id); sure && tp != "" {
-				topPercentBadge := compton.Badge(p, fmt.Sprintf("Top %s", tp), color.Green, color.Highlight)
-				receptionBadges.Append(topPercentBadge)
 			}
 
 			detailsSummary.AppendBadges(receptionBadges)
