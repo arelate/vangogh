@@ -1,6 +1,7 @@
 package rest
 
 import (
+	_ "embed"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/boggydigital/middleware"
 	"github.com/boggydigital/nod"
@@ -49,6 +50,9 @@ func HandleFuncs() {
 		"GET /files": Auth(Log(http.HandlerFunc(GetFiles)), AdminRole, SharedRole),
 		// products redirects
 		"GET /products": Redirect("/search", http.StatusPermanentRedirect),
+		// compton fonts
+		"GET /fonts/open-sans":        Log(http.HandlerFunc(GetOpenSans)),
+		"GET /fonts/open-sans-italic": Log(http.HandlerFunc(GetOpenSansItalic)),
 		// API
 		"GET /api/health":              Log(http.HandlerFunc(GetHealth)),
 		"GET /api/health-auth":         Auth(Log(http.HandlerFunc(GetHealth)), AdminRole, SharedRole),
