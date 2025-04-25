@@ -11,7 +11,6 @@ import (
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
-	"github.com/boggydigital/compton/consts/input_types"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/issa"
 	"github.com/boggydigital/redux"
@@ -64,7 +63,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 	appNavLinks := compton_fragments.AppNavLinks(p, "")
 
-	showToc := compton.InputValue(p, input_types.Button, compton.SectionLinksTitle)
+	showTocNavLinks, showTocLink := compton_fragments.ShowToc(p)
 
 	/* Determine which sections should the product page have */
 
@@ -115,9 +114,9 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 	/* Product details sections shortcuts */
 
 	productSectionsLinks := compton.SectionsLinks(p, hasSections, compton_data.SectionTitles)
-	pageStack.Append(compton.Attach(p, showToc, productSectionsLinks))
+	pageStack.Append(compton.Attach(p, showTocLink, productSectionsLinks))
 
-	topLevelNav := []compton.Element{appNavLinks, showToc, productSectionsLinks}
+	topLevelNav := []compton.Element{appNavLinks, showTocNavLinks, productSectionsLinks}
 
 	pageStack.Append(compton.FICenter(p, topLevelNav...))
 

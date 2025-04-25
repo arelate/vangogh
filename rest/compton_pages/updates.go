@@ -7,7 +7,6 @@ import (
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
-	"github.com/boggydigital/compton/consts/input_types"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/redux"
 )
@@ -29,15 +28,16 @@ func Updates(sections []string,
 
 	var showAll compton.Element
 	if hasMoreItems(sections, updates, updateTotals) {
-		showAll = compton_fragments.Button(p, "Show all", "?show-all=true")
+		showAll = compton_fragments.ShowAll(p)
 		topLevelNav = append(topLevelNav, showAll)
 	}
 
 	if sectionNav := compton.SectionsLinks(p, sections, nil); sectionNav != nil {
-		showToc := compton.InputValue(p, input_types.Button, compton.SectionLinksTitle)
-		pageStack.Append(compton.Attach(p, showToc, sectionNav))
+		showTocNavLinks, showTocLink := compton_fragments.ShowToc(p)
 
-		topLevelNav = append(topLevelNav, showToc, sectionNav)
+		pageStack.Append(compton.Attach(p, showTocLink, sectionNav))
+
+		topLevelNav = append(topLevelNav, showTocNavLinks, sectionNav)
 	}
 
 	pageStack.Append(compton.FICenter(p, topLevelNav...))
