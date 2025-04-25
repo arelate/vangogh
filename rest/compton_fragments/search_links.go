@@ -7,15 +7,17 @@ import (
 
 func SearchLinks(r compton.Registrar, current string) compton.Element {
 
-	searchLinks := make(map[string]string)
-	for dst, q := range compton_data.SearchScopes() {
-		searchLinks[dst] = "/search?" + q
+	searchNavLinks := compton.NavLinks(r)
+
+	searchScopes := compton_data.SearchScopes()
+
+	for _, scope := range compton_data.SearchOrder {
+		searchNavLinks.AppendLink(r, &compton.NavTarget{
+			Href:     "/search?" + searchScopes[scope],
+			Title:    scope,
+			Selected: current == scope,
+		})
 	}
 
-	targets := compton.TextLinks(
-		searchLinks,
-		current,
-		compton_data.SearchOrder...)
-
-	return compton.NavLinksTargets(r, targets...)
+	return searchNavLinks
 }

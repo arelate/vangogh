@@ -28,12 +28,19 @@ func Updates(sections []string,
 
 	var showAll compton.Element
 	if hasMoreItems(sections, updates, updateTotals) {
-		showAll = compton_fragments.ShowAll(p)
-		topLevelNav = append(topLevelNav, showAll)
+		showAllNavLinks := compton.NavLinks(p)
+		showAllNavLinks.AppendLink(p, &compton.NavTarget{Href: "?show-all=true", Title: "Show all"})
+
+		topLevelNav = append(topLevelNav, showAllNavLinks)
 	}
 
 	if sectionNav := compton.SectionsLinks(p, sections, nil); sectionNav != nil {
-		showTocNavLinks, showTocLink := compton_fragments.ShowToc(p)
+
+		showTocNavLinks := compton.NavLinks(p)
+		showTocLink := showTocNavLinks.AppendLink(p, &compton.NavTarget{
+			Href:   "#",
+			Symbol: compton.DownwardArrow,
+		})
 
 		pageStack.Append(compton.Attach(p, showTocLink, sectionNav))
 

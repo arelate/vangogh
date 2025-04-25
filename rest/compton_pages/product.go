@@ -63,7 +63,11 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 	appNavLinks := compton_fragments.AppNavLinks(p, "")
 
-	showTocNavLinks, showTocLink := compton_fragments.ShowToc(p)
+	showTocNavLinks := compton.NavLinks(p)
+	showTocLink := showTocNavLinks.AppendLink(p, &compton.NavTarget{
+		Symbol: compton.DownwardArrow,
+		Href:   "#",
+	})
 
 	/* Determine which sections should the product page have */
 

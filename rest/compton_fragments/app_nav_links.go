@@ -6,11 +6,22 @@ import (
 )
 
 func AppNavLinks(r compton.Registrar, current string) compton.Element {
-	targets := compton.TextLinks(
-		compton_data.AppNavLinks,
-		current,
-		compton_data.AppNavOrder...)
-	compton.SetIcons(targets, compton_data.AppNavIcons)
 
-	return compton.NavLinksTargets(r, targets...)
+	appNavLinks := compton.NavLinks(r)
+
+	appNavLinks.AppendLink(r, &compton.NavTarget{
+		Href:     "/updates",
+		Title:    compton_data.AppNavUpdates,
+		Symbol:   compton.Sparkle,
+		Selected: current == compton_data.AppNavUpdates,
+	})
+
+	appNavLinks.AppendLink(r, &compton.NavTarget{
+		Href:     "/search",
+		Title:    compton_data.AppNavSearch,
+		Symbol:   compton.Search,
+		Selected: current == compton_data.AppNavSearch,
+	})
+
+	return appNavLinks
 }
