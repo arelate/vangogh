@@ -116,7 +116,7 @@ func formatBadge(id, property string, owned bool, rdx redux.Readable) compton.Fo
 		}
 	case vangogh_integration.StoreTagsProperty:
 		if rdx.HasValue(vangogh_integration.StoreTagsProperty, id, "Good Old Game") {
-			fmtBadge.Title = "PRESERVED"
+			fmtBadge.Title = "GOG"
 			fmtBadge.Color = color.Purple
 			fmtBadge.Class = "good-old-game"
 		} else {
