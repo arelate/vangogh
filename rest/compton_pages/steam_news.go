@@ -32,7 +32,14 @@ func SteamNews(gogId string, san *steam_integration.AppNews, all bool) compton.P
 			title = "Show only community announcements"
 			href = "/steam-news?id=" + gogId
 		}
-		pageStack.Append(compton_fragments.Button(s, title, href))
+
+		communityAnnouncementsNavLink := compton.NavLinks(s)
+		communityAnnouncementsNavLink.AppendLink(s, &compton.NavTarget{
+			Href:  href,
+			Title: title,
+		})
+
+		pageStack.Append(communityAnnouncementsNavLink)
 	}
 
 	newsItems := communityAnnouncements
