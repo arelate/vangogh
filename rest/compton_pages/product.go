@@ -134,7 +134,6 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 	productTitle := compton.Heading(2)
 	productTitle.Append(compton.Fspan(p, title).TextAlign(align.Center))
-	productTitle.AddClass("product-title")
 
 	/* Product labels */
 
