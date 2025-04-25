@@ -85,9 +85,10 @@ func Search(query map[string][]string, ids []string, from, to int, rdx redux.Rea
 		query["from"] = []string{strconv.Itoa(to)}
 		enq := compton_data.EncodeQuery(query)
 
-		href := "/search?" + enq
+		nextPageNavLink := compton.NavLinks(p)
+		nextPageNavLink.AppendLink(p, &compton.NavTarget{Href: "/search?" + enq, Title: "Next page"})
 
-		pageStack.Append(compton_fragments.Button(p, "Next page", href))
+		pageStack.Append(nextPageNavLink)
 	}
 
 	/* Standard app footer */
