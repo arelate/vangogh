@@ -1,8 +1,4 @@
 issa-image.product-poster {
-
-    --c-outline: color-mix(in display-p3, var(--c-rep) var(--cma), transparent);
-    outline: var(--s-xxs) solid var(--c-outline);
-
     & img {
         --w: 800px;
         --h: 370px;
