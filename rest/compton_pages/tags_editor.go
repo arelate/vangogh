@@ -71,8 +71,6 @@ func TagsEditor(
 
 	/* Tags Property Title */
 
-	//tagsPropertyHeading := compton.DSTitle(p, tagsPropertyTitle)
-
 	dsTags := compton.DSLarge(p, tagsPropertyTitle, true).
 		BackgroundColor(color.Highlight).
 		ForegroundColor(color.Foreground).
@@ -116,10 +114,15 @@ func TagsEditor(
 	newValueInput := compton.Input(p, input_types.Text)
 	newValueInput.SetName("new-property-value")
 	newValueInput.SetPlaceholder("Add new value")
+
 	swColumn.Append(newValueInput)
 
-	applyButton := compton.InputValue(p, input_types.Submit, "Apply")
-	swColumn.Append(applyButton)
+	applyNavLink := compton.NavLinks(p)
+	applyNavLink.AppendSubmitLink(p, &compton.NavTarget{
+		Href:  "#",
+		Title: "Apply",
+	})
+	swColumn.Append(applyNavLink)
 
 	editTagsForm.Append(swColumn)
 	dsTags.Append(editTagsForm)
