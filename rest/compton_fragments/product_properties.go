@@ -11,6 +11,7 @@ import (
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/redux"
 	"maps"
+	"net/url"
 	"slices"
 	"strconv"
 	"strings"
@@ -153,6 +154,8 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 			if value != "" {
 				fmtProperty.values[FmtAggregatedRating(value)] = noHref()
 			}
+		case vangogh_integration.TopPercentProperty:
+			fmtProperty.values[value] = searchHref(property, url.QueryEscape(value))
 		default:
 			if value != "" {
 				fmtProperty.values[value] = searchHref(property, value)
@@ -191,6 +194,8 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 		fmtProperty.class = reviewClass(fmtSteamRating(firstValue))
 	case vangogh_integration.OpenCriticTierProperty:
 		fmtProperty.class = firstValue
+	case vangogh_integration.TopPercentProperty:
+		fmtProperty.class = vangogh_integration.RatingPositive
 	case vangogh_integration.OpenCriticMedianScoreProperty:
 		fallthrough
 	case vangogh_integration.MetacriticScoreProperty:
