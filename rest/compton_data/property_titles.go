@@ -69,7 +69,7 @@ var PropertyTitles = map[string]string{
 
 	vangogh_integration.OpenCriticMedianScoreProperty: "OpenCritic Rating",
 	vangogh_integration.OpenCriticTierProperty:        "OpenCritic Tier",
-	vangogh_integration.TopPercentProperty:            "OpenCritic Top %",
+	vangogh_integration.TopPercentProperty:            "OpenCritic Top",
 
 	GOGLinksProperty:   "GOG.com Links",
 	OtherLinksProperty: "Other Links",
