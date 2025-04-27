@@ -83,7 +83,7 @@ func GetGameGogIds(gogIds map[string]any) (map[string]any, error) {
 		return nil, err
 	}
 
-	rdx, err := redux.NewReader(reduxDir, vangogh_integration.ProductTypeProperty)
+	rdx, err := redux.NewReader(reduxDir, vangogh_integration.ProductTypeProperty, vangogh_integration.IsDemoProperty)
 	if err != nil {
 		return nil, err
 	}
@@ -91,9 +91,13 @@ func GetGameGogIds(gogIds map[string]any) (map[string]any, error) {
 	gameGogIds := make(map[string]any)
 
 	for gogId := range gogIds {
-		if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, gogId); ok && pt == "GAME" {
-			gameGogIds[gogId] = nil
+		if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, gogId); ok && pt != "GAME" {
+			continue
 		}
+		if demo, ok := rdx.GetLastVal(vangogh_integration.IsDemoProperty, gogId); ok && demo == vangogh_integration.TrueValue {
+			continue
+		}
+		gameGogIds[gogId] = nil
 	}
 
 	return gameGogIds, nil
