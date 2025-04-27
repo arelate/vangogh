@@ -25,7 +25,7 @@ func Information(id string, rdx redux.Readable) compton.PageElement {
 			BorderRadius(size.XSmall).
 			PaddingInline(size.Normal).
 			PaddingBlock(size.Small).
-			FontSize(size.XSmall).
+			FontSize(size.Small).
 			TextAlign(align.Start)
 		shortDescSpan.AddClass("short-description")
 
