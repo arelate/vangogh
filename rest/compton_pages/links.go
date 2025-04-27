@@ -23,6 +23,7 @@ import (
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
+	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/redux"
 	"net/url"
 	"strings"
@@ -184,6 +185,7 @@ func linksTitleValues(r compton.Registrar, property string, links []string) comp
 	}
 	propertyTitle := compton_data.PropertyTitles[property]
 	tv := compton.TitleValues(r, propertyTitle).
+		RowGap(size.XSmall).
 		ForegroundColor(color.Cyan).
 		TitleForegroundColor(color.Foreground).
 		SetLinksTarget(compton.LinkTargetTop).
