@@ -1,8 +1,12 @@
 issa-image.product-poster {
+
+    border-radius: var(--s-s);
+
     & img {
         --w: 800px;
         --h: 370px;
-        object-fit: fill;
+        object-fit: cover;
+        border-radius: var(--s-s);
     }
 }
 
