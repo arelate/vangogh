@@ -178,6 +178,8 @@ github.com/boggydigital/compton v0.3.4 h1:SSJvhZOw1rPDJbV8vQZqsF6a1hLSTRe8E0q4Eu
 github.com/boggydigital/compton v0.3.4/go.mod h1:ZLmQ7/5KHMq4Yc+bAz7U7pyEPOy4tXclp5Orv3H0M8I=
 github.com/boggydigital/compton v0.3.6 h1:SNdbEa1NloEtP4be0+LdwLi3N6hBcd7cys7N1x5mFw8=
 github.com/boggydigital/compton v0.3.6/go.mod h1:ZLmQ7/5KHMq4Yc+bAz7U7pyEPOy4tXclp5Orv3H0M8I=
+github.com/boggydigital/compton v0.3.7 h1:xM47LC5VZ8Qq383WGbV8D+jJC7qcX2jMtha4czl6B+Q=
+github.com/boggydigital/compton v0.3.7/go.mod h1:ZLmQ7/5KHMq4Yc+bAz7U7pyEPOy4tXclp5Orv3H0M8I=
 github.com/boggydigital/coost v0.3.10 h1:F2ouJCRaUIgDGHEgX4T1nN4XdfS/9qrn/kvWq0c05cg=
 github.com/boggydigital/coost v0.3.10/go.mod h1:hDXR+PHEu2R/V5Va/GKzFEOwAtbr32JM1Bw+tC91aN0=
 github.com/boggydigital/dolo v0.2.21 h1:6GKTXjBGtyOQIt4itxuvtUFxP88TypPX5eZAck5UYBg=
