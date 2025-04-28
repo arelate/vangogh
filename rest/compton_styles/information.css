@@ -5,3 +5,8 @@ body {
 .short-description {
     max-width: var(--s-maxw);
 }
+
+.product-details {
+    max-width: var(--s-maxw);
+    width: 100%;
+}

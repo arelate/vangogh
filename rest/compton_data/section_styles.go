@@ -2,7 +2,7 @@ package compton_data
 
 var SectionStyles = map[string]string{
 	InformationSection: "information.css",
-	OfferingsSection:   "variants.css",
+	OfferingsSection:   "offerings.css",
 	LinksSection:       "links.css",
 	DescriptionSection: "description.css",
 	ScreenshotsSection: "screenshots.css",

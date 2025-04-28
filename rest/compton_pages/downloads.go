@@ -176,7 +176,10 @@ func operatingSystemHeading(r compton.Registrar, os vangogh_integration.Operatin
 	default:
 		osString = os.String()
 	}
-	osTitle := compton.Fspan(r, osString).FontSize(size.Small)
+	osTitle := compton.Fspan(r, osString).
+		FontSize(size.Small).
+		PaddingBlock(size.Small).
+		BorderRadius(size.XSmall)
 	osRow.Append(osIcon, osTitle)
 	return osRow
 }

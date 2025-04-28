@@ -18,8 +18,3 @@ a {
 hr.subtle {
     border-color: var(--c-background)
 }
-
-.operating-system-heading {
-    padding-block: var(--s-s);
-    border-radius: var(--s-xs);
-}

@@ -32,7 +32,10 @@ func Offerings(id string, rdx redux.Readable) compton.PageElement {
 				BackgroundColor(color.Background)
 			propertyTitleRow.AddClass("property-title")
 			propertyTitleRow.Append(
-				compton.Fspan(s, compton_data.PropertyTitles[op]).FontSize(size.Small))
+				compton.Fspan(s, compton_data.PropertyTitles[op]).
+					FontSize(size.Small).
+					PaddingBlock(size.Small).
+					BorderRadius(size.XSmall))
 
 			stack.Append(compton.FICenter(s, propertyTitleRow))
 			stack.Append(compton_fragments.ProductsList(s, rps, 0, len(rps), rdx, true))

@@ -38,7 +38,10 @@ func Reception(id string, sar *steam_integration.AppReviews, rdx redux.Readable)
 		BackgroundColor(color.Background)
 	steamReviewsRow.AddClass("steam-reviews")
 	steamReviewsRow.Append(
-		compton.Fspan(s, "Steam Reviews").FontSize(size.Small))
+		compton.Fspan(s, "Steam Reviews").
+			FontSize(size.Small).
+			PaddingBlock(size.Small).
+			BorderRadius(size.XSmall))
 	pageStack.Append(steamReviewsRow)
 
 	if len(sar.Reviews) == 0 {
