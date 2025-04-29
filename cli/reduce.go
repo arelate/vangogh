@@ -73,6 +73,11 @@ func reduceProductType(pt vangogh_integration.ProductType) error {
 		return err
 	}
 
+	hltbGogIds, err := shared_data.GetHltbIds(maps.Keys(gogIds))
+	if err != nil {
+		return err
+	}
+
 	switch pt {
 	case vangogh_integration.UserAccessToken:
 		// do nothing
@@ -117,7 +122,7 @@ func reduceProductType(pt vangogh_integration.ProductType) error {
 	case vangogh_integration.HltbRootPage:
 		// do nothing
 	case vangogh_integration.HltbData:
-		return hltb_data.ReduceData(kvPt, -1)
+		return hltb_data.ReduceData(hltbGogIds, kvPt)
 	case vangogh_integration.ProtonDbSummary:
 		return protondb_data.ReduceSummary(kvPt, -1)
 	case vangogh_integration.OpenCriticApiGame:

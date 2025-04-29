@@ -56,6 +56,10 @@ var pcgwPageIdsProductTypes = []vangogh_integration.ProductType{
 	vangogh_integration.PcgwRaw,
 }
 
+var hltbProductTypes = []vangogh_integration.ProductType{
+	vangogh_integration.HltbData,
+}
+
 var openCriticIdsProductTypes = []vangogh_integration.ProductType{
 	vangogh_integration.OpenCriticApiGame,
 }
@@ -260,11 +264,20 @@ func GetData(ids []string, productTypes []vangogh_integration.ProductType, since
 
 	// HLTB data
 
+	var hltbGogIds map[string][]string
+	if requiresHltbIds(productTypes...) {
+		hltbGogIds, err = shared_data.GetHltbIds(maps.Keys(catalogAccountGames))
+		if err != nil {
+			return err
+		}
+	}
+
 	if slices.Contains(productTypes, vangogh_integration.HltbData) {
 		if err = hltb_data.GetRootPage(); err != nil {
 			return err
 		}
-		if err = hltb_data.GetData(ids, since, force); err != nil {
+
+		if err = hltb_data.GetData(hltbGogIds, force); err != nil {
 			return err
 		}
 	}
@@ -306,6 +319,15 @@ func requiresSteamAppIds(productTypes ...vangogh_integration.ProductType) bool {
 func requiresPcgwPageIds(productTypes ...vangogh_integration.ProductType) bool {
 	for _, ppt := range pcgwPageIdsProductTypes {
 		if slices.Contains(productTypes, ppt) {
+			return true
+		}
+	}
+	return false
+}
+
+func requiresHltbIds(productTypes ...vangogh_integration.ProductType) bool {
+	for _, hpt := range hltbProductTypes {
+		if slices.Contains(productTypes, hpt) {
 			return true
 		}
 	}

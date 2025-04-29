@@ -13,24 +13,14 @@ import (
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 	"golang.org/x/net/html"
-	"slices"
+	"maps"
 	"strconv"
 )
 
-func GetData(ids []string, since int64, force bool) error {
+func GetData(hltbGogIds map[string][]string, force bool) error {
 
 	gda := nod.NewProgress("gettings %s...", vangogh_integration.HltbData)
 	defer gda.Done()
-
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewReader(reduxDir, vangogh_integration.HltbIdProperty)
-	if err != nil {
-		return err
-	}
 
 	dataDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.HltbData)
 	if err != nil {
@@ -42,42 +32,18 @@ func GetData(ids []string, since int64, force bool) error {
 		return err
 	}
 
-	hltbIds := getHltbIds(ids, rdx)
-
-	gda.TotalInt(len(hltbIds))
+	gda.TotalInt(len(hltbGogIds))
 
 	buildId, err := readBuildId()
 	if err != nil {
 		return err
 	}
 
-	if err = fetch.Items(slices.Values(hltbIds), reqs.HltbData(buildId), kvData, gda, force); err != nil {
+	if err = fetch.Items(maps.Keys(hltbGogIds), reqs.HltbData(buildId), kvData, gda, force); err != nil {
 		return err
 	}
 
-	return ReduceData(kvData, since)
-}
-
-func getHltbIds(ids []string, rdx redux.Readable) []string {
-	var hltbIds []string
-
-	var keys []string
-	if len(ids) > 0 {
-		keys = ids
-	} else {
-		keys = make([]string, 0)
-		for id := range rdx.Keys(vangogh_integration.HltbIdProperty) {
-			keys = append(keys, id)
-		}
-	}
-
-	for _, gogId := range keys {
-		if hids, ok := rdx.GetAllValues(vangogh_integration.HltbIdProperty, gogId); ok {
-			hltbIds = append(hltbIds, hids...)
-		}
-	}
-
-	return hltbIds
+	return ReduceData(hltbGogIds, kvData)
 }
 
 func readBuildId() (string, error) {
@@ -110,11 +76,11 @@ func readBuildId() (string, error) {
 	return rootPage.GetBuildId(), nil
 }
 
-func ReduceData(kvData kevlar.KeyValues, since int64) error {
+func ReduceData(hltbGogIds map[string][]string, kvData kevlar.KeyValues) error {
 
 	dataType := vangogh_integration.HltbData
 
-	rda := nod.Begin(" reducing %s...", dataType)
+	rda := nod.NewProgress(" reducing %s...", dataType)
 	defer rda.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -129,27 +95,25 @@ func ReduceData(kvData kevlar.KeyValues, since int64) error {
 
 	dataReductions := shared_data.InitReductions(vangogh_integration.HltbDataProperties()...)
 
-	updatedData := kvData.Since(since, kevlar.Create, kevlar.Update)
+	rda.TotalInt(len(hltbGogIds))
 
-	for hltbId := range updatedData {
+	for hltbId, gogIds := range hltbGogIds {
 		if !kvData.Has(hltbId) {
 			nod.LogError(fmt.Errorf("%s is missing %s", dataType, hltbId))
 			continue
 		}
 
-		if matches := rdx.Match(map[string][]string{vangogh_integration.HltbIdProperty: {hltbId}}, redux.FullMatch); matches != nil {
-			for gogId := range matches {
-				if err = reduceDataProduct(gogId, hltbId, kvData, dataReductions); err != nil {
-					return err
-				}
-			}
+		if err = reduceDataProduct(gogIds, hltbId, kvData, dataReductions); err != nil {
+			return err
 		}
+
+		rda.Increment()
 	}
 
 	return shared_data.WriteReductions(rdx, dataReductions)
 }
 
-func reduceDataProduct(gogId, hltbId string, kvData kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
+func reduceDataProduct(gogIds []string, hltbId string, kvData kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
 
 	rcData, err := kvData.Get(hltbId)
 	if err != nil {
@@ -164,29 +128,32 @@ func reduceDataProduct(gogId, hltbId string, kvData kevlar.KeyValues, piv shared
 
 	for property := range piv {
 
-		var values []string
+		for _, gogId := range gogIds {
 
-		switch property {
-		case vangogh_integration.HltbHoursToCompleteMainProperty:
-			values = []string{data.GetHoursToCompleteMain()}
-		case vangogh_integration.HltbHoursToCompletePlusProperty:
-			values = []string{data.GetHoursToCompletePlus()}
-		case vangogh_integration.HltbHoursToComplete100Property:
-			values = []string{data.GetHoursToComplete100()}
-		case vangogh_integration.HltbReviewScoreProperty:
-			values = []string{strconv.FormatInt(int64(data.GetReviewScore()), 10)}
-		case vangogh_integration.HltbGenresProperty:
-			values = data.GetGenres()
-		case vangogh_integration.HltbPlatformsProperty:
-			values = data.GetPlatforms()
-		case vangogh_integration.IGNWikiSlugProperty:
-			values = []string{data.GetIgnWikiSlug()}
+			var values []string
+
+			switch property {
+			case vangogh_integration.HltbHoursToCompleteMainProperty:
+				values = []string{data.GetHoursToCompleteMain()}
+			case vangogh_integration.HltbHoursToCompletePlusProperty:
+				values = []string{data.GetHoursToCompletePlus()}
+			case vangogh_integration.HltbHoursToComplete100Property:
+				values = []string{data.GetHoursToComplete100()}
+			case vangogh_integration.HltbReviewScoreProperty:
+				values = []string{strconv.FormatInt(int64(data.GetReviewScore()), 10)}
+			case vangogh_integration.HltbGenresProperty:
+				values = data.GetGenres()
+			case vangogh_integration.HltbPlatformsProperty:
+				values = data.GetPlatforms()
+			case vangogh_integration.IGNWikiSlugProperty:
+				values = []string{data.GetIgnWikiSlug()}
+			}
+
+			if shared_data.IsNotEmpty(values...) {
+				piv[property][gogId] = values
+			}
+
 		}
-
-		if shared_data.IsNotEmpty(values...) {
-			piv[property][gogId] = values
-		}
-
 	}
 
 	return nil

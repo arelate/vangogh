@@ -25,6 +25,10 @@ func GetOpenCriticGogIds(gogIds iter.Seq[string]) (map[string][]string, error) {
 	return getExternalIdGogIds(gogIds, vangogh_integration.OpenCriticIdProperty)
 }
 
+func GetHltbIds(gogIds iter.Seq[string]) (map[string][]string, error) {
+	return getExternalIdGogIds(gogIds, vangogh_integration.HltbIdProperty)
+}
+
 func getExternalIdGogIds(gogIds iter.Seq[string], externalIdProperty string) (map[string][]string, error) {
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {

@@ -77,7 +77,7 @@ func ReduceRaw(pcgwGogIds map[string][]string, kvRaw kevlar.KeyValues) error {
 			continue
 		}
 
-		if err := reduceRawProduct(gogIds, pcgwPageId, kvRaw, rawReductions); err != nil {
+		if err = reduceRawProduct(gogIds, pcgwPageId, kvRaw, rawReductions); err != nil {
 			return err
 		}
 
