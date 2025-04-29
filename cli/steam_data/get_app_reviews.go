@@ -16,7 +16,7 @@ import (
 	"strconv"
 )
 
-func GetAppReviews(steamGogIds map[string][]string, since int64, force bool) error {
+func GetAppReviews(steamGogIds map[string][]string, force bool) error {
 
 	gara := nod.NewProgress("getting %s...", vangogh_integration.SteamAppReviews)
 	defer gara.Done()
@@ -37,14 +37,14 @@ func GetAppReviews(steamGogIds map[string][]string, since int64, force bool) err
 		return err
 	}
 
-	return ReduceAppReviews(kvAppReviews, since)
+	return ReduceAppReviews(steamGogIds, kvAppReviews)
 }
 
-func ReduceAppReviews(kvAppReviews kevlar.KeyValues, since int64) error {
+func ReduceAppReviews(steamGogIds map[string][]string, kvAppReviews kevlar.KeyValues) error {
 
 	dataType := vangogh_integration.SteamAppReviews
 
-	rara := nod.Begin(" reducing %s...", dataType)
+	rara := nod.NewProgress(" reducing %s...", dataType)
 	defer rara.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -63,25 +63,23 @@ func ReduceAppReviews(kvAppReviews kevlar.KeyValues, since int64) error {
 
 	appReviewsReductions := shared_data.InitReductions(vangogh_integration.SteamAppReviewsProperties()...)
 
-	updatedAppReviews := kvAppReviews.Since(since, kevlar.Create, kevlar.Update)
+	rara.TotalInt(len(steamGogIds))
 
-	for steamAppId := range updatedAppReviews {
+	for steamAppId, gogIds := range steamGogIds {
 		if !kvAppReviews.Has(steamAppId) {
 			nod.LogError(fmt.Errorf("%s is missing %s", dataType, steamAppId))
 			continue
 		}
 
-		for gogId := range rdx.Match(map[string][]string{vangogh_integration.SteamAppIdProperty: {steamAppId}}, redux.FullMatch) {
-			if err = reduceAppReviewsProduct(gogId, steamAppId, kvAppReviews, appReviewsReductions); err != nil {
-				return err
-			}
+		if err = reduceAppReviewsProduct(gogIds, steamAppId, kvAppReviews, appReviewsReductions); err != nil {
+			return err
 		}
 	}
 
 	return shared_data.WriteReductions(rdx, appReviewsReductions)
 }
 
-func reduceAppReviewsProduct(gogId, steamAppId string, kvAppReviews kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
+func reduceAppReviewsProduct(gogIds []string, steamAppId string, kvAppReviews kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
 
 	rcAppReview, err := kvAppReviews.Get(steamAppId)
 	if err != nil {
@@ -96,17 +94,19 @@ func reduceAppReviewsProduct(gogId, steamAppId string, kvAppReviews kevlar.KeyVa
 
 	for property := range piv {
 
-		var values []string
+		for _, gogId := range gogIds {
+			var values []string
 
-		switch property {
-		case vangogh_integration.SteamReviewScoreDescProperty:
-			values = []string{sar.GetReviewScoreDesc()}
-		case vangogh_integration.SteamReviewScoreProperty:
-			values = []string{strconv.Itoa(sar.GetReviewScore())}
-		}
+			switch property {
+			case vangogh_integration.SteamReviewScoreDescProperty:
+				values = []string{sar.GetReviewScoreDesc()}
+			case vangogh_integration.SteamReviewScoreProperty:
+				values = []string{strconv.Itoa(sar.GetReviewScore())}
+			}
 
-		if shared_data.IsNotEmpty(values...) {
-			piv[property][gogId] = values
+			if shared_data.IsNotEmpty(values...) {
+				piv[property][gogId] = values
+			}
 		}
 
 	}

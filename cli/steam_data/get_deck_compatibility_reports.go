@@ -16,7 +16,7 @@ import (
 	"strings"
 )
 
-func GetDeckCompatibilityReports(steamGogIds map[string][]string, since int64, force bool) error {
+func GetDeckCompatibilityReports(steamGogIds map[string][]string, force bool) error {
 
 	gdcra := nod.NewProgress("getting %s...", vangogh_integration.SteamDeckCompatibilityReport)
 	defer gdcra.Done()
@@ -37,14 +37,14 @@ func GetDeckCompatibilityReports(steamGogIds map[string][]string, since int64, f
 		return err
 	}
 
-	return ReduceDeckCompatibilityReports(kvDeckCompatibilityReports, since)
+	return ReduceDeckCompatibilityReports(steamGogIds, kvDeckCompatibilityReports)
 }
 
-func ReduceDeckCompatibilityReports(kvDeckCompatibilityReports kevlar.KeyValues, since int64) error {
+func ReduceDeckCompatibilityReports(steamGogIds map[string][]string, kvDeckCompatibilityReports kevlar.KeyValues) error {
 
 	dataType := vangogh_integration.SteamDeckCompatibilityReport
 
-	rdcra := nod.Begin(" reducing %s...", dataType)
+	rdcra := nod.NewProgress(" reducing %s...", dataType)
 	defer rdcra.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -62,25 +62,23 @@ func ReduceDeckCompatibilityReports(kvDeckCompatibilityReports kevlar.KeyValues,
 
 	deckCompatibilityReportsReductions := shared_data.InitReductions(vangogh_integration.SteamDeckCompatibilityReportProperties()...)
 
-	updatedDeckCompatibilityReviews := kvDeckCompatibilityReports.Since(since, kevlar.Create, kevlar.Update)
+	rdcra.TotalInt(len(steamGogIds))
 
-	for steamAppId := range updatedDeckCompatibilityReviews {
+	for steamAppId, gogIds := range steamGogIds {
 		if !kvDeckCompatibilityReports.Has(steamAppId) {
 			nod.LogError(fmt.Errorf("%s is missing %s", dataType, steamAppId))
 			continue
 		}
 
-		for gogId := range rdx.Match(map[string][]string{vangogh_integration.SteamAppIdProperty: {steamAppId}}, redux.FullMatch) {
-			if err = reduceDeckCompatibilityReportsProduct(gogId, steamAppId, kvDeckCompatibilityReports, deckCompatibilityReportsReductions); err != nil {
-				return err
-			}
+		if err = reduceDeckCompatibilityReportsProduct(gogIds, steamAppId, kvDeckCompatibilityReports, deckCompatibilityReportsReductions); err != nil {
+			return err
 		}
 	}
 
 	return shared_data.WriteReductions(rdx, deckCompatibilityReportsReductions)
 }
 
-func reduceDeckCompatibilityReportsProduct(gogId, steamAppId string, kvDeckCompatibilityReports kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
+func reduceDeckCompatibilityReportsProduct(gogIds []string, steamAppId string, kvDeckCompatibilityReports kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
 
 	rcDeckCompatibilityReport, err := kvDeckCompatibilityReports.Get(steamAppId)
 	if err != nil {
@@ -99,15 +97,17 @@ func reduceDeckCompatibilityReportsProduct(gogId, steamAppId string, kvDeckCompa
 
 	for property := range piv {
 
-		var values []string
+		for _, gogId := range gogIds {
+			var values []string
 
-		switch property {
-		case vangogh_integration.SteamDeckAppCompatibilityCategoryProperty:
-			values = []string{dcr.String()}
-		}
+			switch property {
+			case vangogh_integration.SteamDeckAppCompatibilityCategoryProperty:
+				values = []string{dcr.String()}
+			}
 
-		if shared_data.IsNotEmpty(values...) {
-			piv[property][gogId] = values
+			if shared_data.IsNotEmpty(values...) {
+				piv[property][gogId] = values
+			}
 		}
 
 	}

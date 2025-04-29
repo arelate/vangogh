@@ -68,12 +68,19 @@ func reduceProductType(pt vangogh_integration.ProductType) error {
 		return err
 	}
 
+	steamGogIds, err := shared_data.GetSteamGogIds(maps.Keys(gogIds))
+
 	pcgwGogIds, err := shared_data.GetPcgwGogIds(maps.Keys(gogIds))
 	if err != nil {
 		return err
 	}
 
 	hltbGogIds, err := shared_data.GetHltbIds(maps.Keys(gogIds))
+	if err != nil {
+		return err
+	}
+
+	openCriticGogIds, err := shared_data.GetOpenCriticGogIds(maps.Keys(gogIds))
 	if err != nil {
 		return err
 	}
@@ -98,20 +105,16 @@ func reduceProductType(pt vangogh_integration.ProductType) error {
 	case vangogh_integration.GamesDbGogProducts:
 		return gog_data.ReduceGamesDbGogProducts(kvPt, -1)
 	case vangogh_integration.SteamAppDetails:
-		return steam_data.ReduceAppDetails(kvPt, -1)
+		return steam_data.ReduceAppDetails(steamGogIds, kvPt)
 	case vangogh_integration.SteamAppNews:
-		return steam_data.ReduceAppNews(kvPt, -1)
+		return steam_data.ReduceAppNews(steamGogIds, kvPt)
 	case vangogh_integration.SteamAppReviews:
-		return steam_data.ReduceAppReviews(kvPt, -1)
+		return steam_data.ReduceAppReviews(steamGogIds, kvPt)
 	case vangogh_integration.SteamDeckCompatibilityReport:
-		return steam_data.ReduceDeckCompatibilityReports(kvPt, -1)
+		return steam_data.ReduceDeckCompatibilityReports(steamGogIds, kvPt)
 	case vangogh_integration.PcgwGogPageId:
 		return pcgw_data.ReduceGogPageIds(gogIds, kvPt)
 	case vangogh_integration.PcgwSteamPageId:
-		steamGogIds, err := shared_data.GetSteamGogIds(maps.Keys(gogIds))
-		if err != nil {
-			return err
-		}
 		return pcgw_data.ReduceSteamPageIds(steamGogIds, kvPt)
 	case vangogh_integration.PcgwExternalLinks:
 		return pcgw_data.ReduceExternalLinks(pcgwGogIds, kvPt)
@@ -124,12 +127,8 @@ func reduceProductType(pt vangogh_integration.ProductType) error {
 	case vangogh_integration.HltbData:
 		return hltb_data.ReduceData(hltbGogIds, kvPt)
 	case vangogh_integration.ProtonDbSummary:
-		return protondb_data.ReduceSummary(kvPt, -1)
+		return protondb_data.ReduceSummary(steamGogIds, kvPt)
 	case vangogh_integration.OpenCriticApiGame:
-		openCriticGogIds, err := shared_data.GetOpenCriticGogIds(maps.Keys(catalogAccountProducts))
-		if err != nil {
-			return err
-		}
 		return opencritic_data.ReduceApiGame(openCriticGogIds, kvPt)
 	default:
 		return errors.New("reduction is not supported for " + pt.String())

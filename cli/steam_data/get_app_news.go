@@ -17,7 +17,7 @@ import (
 	"time"
 )
 
-func GetAppNews(steamGogIds map[string][]string, since int64) error {
+func GetAppNews(steamGogIds map[string][]string) error {
 
 	gana := nod.NewProgress("getting %s...", vangogh_integration.SteamAppNews)
 	defer gana.Done()
@@ -38,14 +38,14 @@ func GetAppNews(steamGogIds map[string][]string, since int64) error {
 		return err
 	}
 
-	return ReduceAppNews(kvAppNews, since)
+	return ReduceAppNews(steamGogIds, kvAppNews)
 }
 
-func ReduceAppNews(kvAppNews kevlar.KeyValues, since int64) error {
+func ReduceAppNews(steamGogIds map[string][]string, kvAppNews kevlar.KeyValues) error {
 
 	dataType := vangogh_integration.SteamAppNews
 
-	rana := nod.Begin(" reducing %s...", dataType)
+	rana := nod.NewProgress(" reducing %s...", dataType)
 	defer rana.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -60,25 +60,23 @@ func ReduceAppNews(kvAppNews kevlar.KeyValues, since int64) error {
 
 	appNewsReductions := shared_data.InitReductions(vangogh_integration.SteamAppNewsProperties()...)
 
-	updatedAppNews := kvAppNews.Since(since, kevlar.Create, kevlar.Update)
+	rana.TotalInt(len(steamGogIds))
 
-	for steamAppId := range updatedAppNews {
+	for steamAppId, gogIds := range steamGogIds {
 		if !kvAppNews.Has(steamAppId) {
 			nod.LogError(fmt.Errorf("%s is missing %s", dataType, steamAppId))
 			continue
 		}
 
-		for gogId := range rdx.Match(map[string][]string{vangogh_integration.SteamAppIdProperty: {steamAppId}}, redux.FullMatch) {
-			if err = reduceAppNewsProduct(gogId, steamAppId, kvAppNews, appNewsReductions); err != nil {
-				return err
-			}
+		if err = reduceAppNewsProduct(gogIds, steamAppId, kvAppNews, appNewsReductions); err != nil {
+			return err
 		}
 	}
 
 	return shared_data.WriteReductions(rdx, appNewsReductions)
 }
 
-func reduceAppNewsProduct(gogId, steamAppId string, kvAppNews kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
+func reduceAppNewsProduct(gogIds []string, steamAppId string, kvAppNews kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
 
 	rcAppNews, err := kvAppNews.Get(steamAppId)
 	if err != nil {
@@ -93,21 +91,23 @@ func reduceAppNewsProduct(gogId, steamAppId string, kvAppNews kevlar.KeyValues, 
 
 	for property := range piv {
 
-		var values []string
+		for _, gogId := range gogIds {
+			var values []string
 
-		switch property {
-		case vangogh_integration.SteamLastCommunityUpdateProperty:
-			for _, newsItem := range gnfar.AppNews.NewsItems {
-				if newsItem.FeedType != compton_data.FeedTypeCommunityAnnouncement {
-					continue
+			switch property {
+			case vangogh_integration.SteamLastCommunityUpdateProperty:
+				for _, newsItem := range gnfar.AppNews.NewsItems {
+					if newsItem.FeedType != compton_data.FeedTypeCommunityAnnouncement {
+						continue
+					}
+					values = []string{time.Unix(newsItem.Date, 0).Format(time.RFC3339)}
+					break
 				}
-				values = []string{time.Unix(newsItem.Date, 0).Format(time.RFC3339)}
-				break
 			}
-		}
 
-		if shared_data.IsNotEmpty(values...) {
-			piv[property][gogId] = values
+			if shared_data.IsNotEmpty(values...) {
+				piv[property][gogId] = values
+			}
 		}
 	}
 

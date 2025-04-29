@@ -36,14 +36,14 @@ func GetSummary(steamGogIds map[string][]string, since int64, force bool) error 
 		return err
 	}
 
-	return ReduceSummary(kvSummary, since)
+	return ReduceSummary(steamGogIds, kvSummary)
 }
 
-func ReduceSummary(kvSummary kevlar.KeyValues, since int64) error {
+func ReduceSummary(steamGogIds map[string][]string, kvSummary kevlar.KeyValues) error {
 
 	dataType := vangogh_integration.ProtonDbSummary
 
-	rsa := nod.Begin(" reducing %s...", dataType)
+	rsa := nod.NewProgress(" reducing %s...", dataType)
 	defer rsa.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -58,27 +58,23 @@ func ReduceSummary(kvSummary kevlar.KeyValues, since int64) error {
 
 	summaryReductions := shared_data.InitReductions(vangogh_integration.ProtonDbSummaryProperties()...)
 
-	updatedSummaries := kvSummary.Since(since, kevlar.Create, kevlar.Update)
+	rsa.TotalInt(len(steamGogIds))
 
-	for steamAppId := range updatedSummaries {
+	for steamAppId, gogIds := range steamGogIds {
 		if !kvSummary.Has(steamAppId) {
 			nod.LogError(fmt.Errorf("%s is missing %s", dataType, steamAppId))
 			continue
 		}
 
-		if matches := rdx.Match(map[string][]string{vangogh_integration.SteamAppIdProperty: {steamAppId}}, redux.FullMatch); matches != nil {
-			for gogId := range matches {
-				if err = reduceSummaryProduct(gogId, steamAppId, kvSummary, summaryReductions); err != nil {
-					return err
-				}
-			}
+		if err = reduceSummaryProduct(gogIds, steamAppId, kvSummary, summaryReductions); err != nil {
+			return err
 		}
 	}
 
 	return shared_data.WriteReductions(rdx, summaryReductions)
 }
 
-func reduceSummaryProduct(gogId, steamAppId string, kvSummary kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
+func reduceSummaryProduct(gogIds []string, steamAppId string, kvSummary kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
 
 	rcSummary, err := kvSummary.Get(steamAppId)
 	if err != nil {
@@ -93,19 +89,21 @@ func reduceSummaryProduct(gogId, steamAppId string, kvSummary kevlar.KeyValues, 
 
 	for property := range piv {
 
-		var values []string
+		for _, gogId := range gogIds {
 
-		switch property {
-		case vangogh_integration.ProtonDBTierProperty:
-			values = []string{sum.String()}
-		case vangogh_integration.ProtonDBConfidenceProperty:
-			values = []string{sum.GetConfidence()}
+			var values []string
+
+			switch property {
+			case vangogh_integration.ProtonDBTierProperty:
+				values = []string{sum.String()}
+			case vangogh_integration.ProtonDBConfidenceProperty:
+				values = []string{sum.GetConfidence()}
+			}
+
+			if shared_data.IsNotEmpty(values...) {
+				piv[property][gogId] = values
+			}
 		}
-
-		if shared_data.IsNotEmpty(values...) {
-			piv[property][gogId] = values
-		}
-
 	}
 
 	return nil

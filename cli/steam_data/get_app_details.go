@@ -16,7 +16,7 @@ import (
 	"strconv"
 )
 
-func GetAppDetails(steamGogIds map[string][]string, since int64, force bool) error {
+func GetAppDetails(steamGogIds map[string][]string, force bool) error {
 
 	gada := nod.NewProgress("getting %s...", vangogh_integration.SteamAppDetails)
 	defer gada.Done()
@@ -37,14 +37,14 @@ func GetAppDetails(steamGogIds map[string][]string, since int64, force bool) err
 		return err
 	}
 
-	return ReduceAppDetails(kvAppDetails, since)
+	return ReduceAppDetails(steamGogIds, kvAppDetails)
 }
 
-func ReduceAppDetails(kvAppDetails kevlar.KeyValues, since int64) error {
+func ReduceAppDetails(steamGogIds map[string][]string, kvAppDetails kevlar.KeyValues) error {
 
 	dataType := vangogh_integration.SteamAppDetails
 
-	rada := nod.Begin(" reducing %s...", dataType)
+	rada := nod.NewProgress(" reducing %s...", dataType)
 	defer rada.Done()
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -59,25 +59,23 @@ func ReduceAppDetails(kvAppDetails kevlar.KeyValues, since int64) error {
 
 	appDetailsReductions := shared_data.InitReductions(vangogh_integration.SteamAppDetailsProperties()...)
 
-	updatedAppDetails := kvAppDetails.Since(since, kevlar.Create, kevlar.Update)
+	rada.TotalInt(len(steamGogIds))
 
-	for steamAppId := range updatedAppDetails {
+	for steamAppId, gogIds := range steamGogIds {
 		if !kvAppDetails.Has(steamAppId) {
 			nod.LogError(fmt.Errorf("%s is missing %s", dataType, steamAppId))
 			continue
 		}
 
-		for gogId := range rdx.Match(map[string][]string{vangogh_integration.SteamAppIdProperty: {steamAppId}}, redux.FullMatch) {
-			if err = reduceAppDetailsProduct(gogId, steamAppId, kvAppDetails, appDetailsReductions); err != nil {
-				return err
-			}
+		if err = reduceAppDetailsProduct(gogIds, steamAppId, kvAppDetails, appDetailsReductions); err != nil {
+			return err
 		}
 	}
 
 	return shared_data.WriteReductions(rdx, appDetailsReductions)
 }
 
-func reduceAppDetailsProduct(gogId, steamAppId string, kvAppDetails kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
+func reduceAppDetailsProduct(gogIds []string, steamAppId string, kvAppDetails kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
 
 	rcSteamAppDetailsResponse, err := kvAppDetails.Get(steamAppId)
 	if err != nil {
@@ -94,33 +92,35 @@ func reduceAppDetailsProduct(gogId, steamAppId string, kvAppDetails kevlar.KeyVa
 
 	for property := range piv {
 
-		var values []string
+		for _, gogId := range gogIds {
+			var values []string
 
-		switch property {
-		case vangogh_integration.RequiredAgeProperty:
-			values = []string{strconv.FormatInt(int64(ad.GetRequiredAge()), 10)}
-		case vangogh_integration.ControllerSupportProperty:
-			values = []string{ad.GetControllerSupport()}
-		case vangogh_integration.ShortDescriptionProperty:
-			values = []string{ad.GetShortDescription()}
-		case vangogh_integration.WebsiteProperty:
-			values = []string{ad.GetWebsite()}
-		case vangogh_integration.MetacriticScoreProperty:
-			values = []string{strconv.FormatInt(int64(ad.GetMetacriticScore()), 10)}
-		case vangogh_integration.MetacriticUrlProperty:
-			values = []string{ad.GetMetacriticUrl()}
-		case vangogh_integration.SteamCategoriesProperty:
-			values = ad.GetCategories()
-		case vangogh_integration.SteamGenresProperty:
-			values = ad.GetGenres()
-		case vangogh_integration.SteamSupportUrlProperty:
-			values = []string{ad.GetSupportUrl()}
-		case vangogh_integration.SteamSupportEmailProperty:
-			values = []string{ad.GetSupportEmail()}
-		}
+			switch property {
+			case vangogh_integration.RequiredAgeProperty:
+				values = []string{strconv.FormatInt(int64(ad.GetRequiredAge()), 10)}
+			case vangogh_integration.ControllerSupportProperty:
+				values = []string{ad.GetControllerSupport()}
+			case vangogh_integration.ShortDescriptionProperty:
+				values = []string{ad.GetShortDescription()}
+			case vangogh_integration.WebsiteProperty:
+				values = []string{ad.GetWebsite()}
+			case vangogh_integration.MetacriticScoreProperty:
+				values = []string{strconv.FormatInt(int64(ad.GetMetacriticScore()), 10)}
+			case vangogh_integration.MetacriticUrlProperty:
+				values = []string{ad.GetMetacriticUrl()}
+			case vangogh_integration.SteamCategoriesProperty:
+				values = ad.GetCategories()
+			case vangogh_integration.SteamGenresProperty:
+				values = ad.GetGenres()
+			case vangogh_integration.SteamSupportUrlProperty:
+				values = []string{ad.GetSupportUrl()}
+			case vangogh_integration.SteamSupportEmailProperty:
+				values = []string{ad.GetSupportEmail()}
+			}
 
-		if shared_data.IsNotEmpty(values...) {
-			piv[property][gogId] = values
+			if shared_data.IsNotEmpty(values...) {
+				piv[property][gogId] = values
+			}
 		}
 
 	}

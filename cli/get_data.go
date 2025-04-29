@@ -199,25 +199,25 @@ func GetData(ids []string, productTypes []vangogh_integration.ProductType, since
 	}
 
 	if slices.Contains(productTypes, vangogh_integration.SteamAppDetails) {
-		if err = steam_data.GetAppDetails(steamGogIds, since, force); err != nil {
+		if err = steam_data.GetAppDetails(steamGogIds, force); err != nil {
 			return err
 		}
 	}
 
 	if slices.Contains(productTypes, vangogh_integration.SteamAppNews) {
-		if err = steam_data.GetAppNews(steamGogIds, since); err != nil {
+		if err = steam_data.GetAppNews(steamGogIds); err != nil {
 			return err
 		}
 	}
 
 	if slices.Contains(productTypes, vangogh_integration.SteamAppReviews) {
-		if err = steam_data.GetAppReviews(steamGogIds, since, force); err != nil {
+		if err = steam_data.GetAppReviews(steamGogIds, force); err != nil {
 			return err
 		}
 	}
 
 	if slices.Contains(productTypes, vangogh_integration.SteamDeckCompatibilityReport) {
-		if err = steam_data.GetDeckCompatibilityReports(steamGogIds, since, force); err != nil {
+		if err = steam_data.GetDeckCompatibilityReports(steamGogIds, force); err != nil {
 			return err
 		}
 	}
