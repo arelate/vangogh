@@ -18,14 +18,3 @@ issa-image.product-poster {
         }
     }
 }
-
-details.larger {
-    & summary {
-        --bg: color-mix(in display-p3, var(--c-rep) var(--cma), var(--c-highlight));
-
-        & .marker.closed {
-            background-color: var(--c-highlight);
-            outline-color: color-mix(in display-p3, var(--c-rep) var(--cma), var(--c-background))
-        }
-    }
-}
