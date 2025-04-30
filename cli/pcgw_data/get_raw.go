@@ -273,6 +273,9 @@ func parseInfoboxPropertyLines(lines []string) []string {
 func parseReceptionLines(line string) (id string, score string) {
 	if parts := strings.Split(line, "|"); len(parts) == 4 && parts[0] == infoboxGameRowReceptionPfx {
 		id = parts[2]
+		if id == "link" {
+			id = ""
+		}
 
 		// only valid numbers will be considered for a rating
 		score = strings.TrimSuffix(parts[3], "}}")
