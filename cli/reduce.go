@@ -116,10 +116,6 @@ func reduceProductType(pt vangogh_integration.ProductType) error {
 		return pcgw_data.ReduceGogPageIds(gogIds, kvPt)
 	case vangogh_integration.PcgwSteamPageId:
 		return pcgw_data.ReduceSteamPageIds(steamGogIds, kvPt)
-	case vangogh_integration.PcgwExternalLinks:
-		return pcgw_data.ReduceExternalLinks(pcgwGogIds, kvPt)
-	case vangogh_integration.PcgwEngine:
-		return pcgw_data.ReduceEngine(pcgwGogIds, kvPt)
 	case vangogh_integration.PcgwRaw:
 		return pcgw_data.ReduceRaw(pcgwGogIds, kvPt)
 	case vangogh_integration.HltbRootPage:

@@ -61,10 +61,6 @@ func reduceTypes(rdx redux.Writeable) error {
 				for _, gogId := range steamAppIdGogIds[id] {
 					idsTypes[gogId] = append(idsTypes[gogId], pt.String())
 				}
-			case vangogh_integration.PcgwEngine:
-				fallthrough
-			case vangogh_integration.PcgwExternalLinks:
-				fallthrough
 			case vangogh_integration.PcgwRaw:
 				for _, gogId := range pcgwPageIdsGogIds[id] {
 					idsTypes[gogId] = append(idsTypes[gogId], pt.String())

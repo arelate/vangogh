@@ -209,24 +209,6 @@ func PcgwGogPageId() *Params {
 	}
 }
 
-func PcgwExternalLinks() *Params {
-	return &Params{
-		ProductType: vangogh_integration.PcgwExternalLinks,
-		UrlFunc:     pcgw_integration.ParseExternalLinksUrl,
-		HttpClient:  http.DefaultClient,
-		HttpMethod:  http.MethodGet,
-	}
-}
-
-func PcgwEngine() *Params {
-	return &Params{
-		ProductType: vangogh_integration.PcgwEngine,
-		UrlFunc:     pcgw_integration.EngineCargoQueryUrl,
-		HttpClient:  http.DefaultClient,
-		HttpMethod:  http.MethodGet,
-	}
-}
-
 func PcgwRaw() *Params {
 	return &Params{
 		ProductType: vangogh_integration.PcgwRaw,

@@ -51,8 +51,6 @@ var steamAppIdsProductTypes = []vangogh_integration.ProductType{
 }
 
 var pcgwPageIdsProductTypes = []vangogh_integration.ProductType{
-	vangogh_integration.PcgwExternalLinks,
-	vangogh_integration.PcgwEngine,
 	vangogh_integration.PcgwRaw,
 }
 
@@ -240,18 +238,6 @@ func GetData(ids []string, productTypes []vangogh_integration.ProductType, since
 	if requiresPcgwPageIds(productTypes...) {
 		pcgwGogIds, err = shared_data.GetPcgwGogIds(maps.Keys(catalogAccountGames))
 		if err != nil {
-			return err
-		}
-	}
-
-	if slices.Contains(productTypes, vangogh_integration.PcgwExternalLinks) {
-		if err = pcgw_data.GetExternalLinks(pcgwGogIds, force); err != nil {
-			return err
-		}
-	}
-
-	if slices.Contains(productTypes, vangogh_integration.PcgwEngine) {
-		if err = pcgw_data.GetEngine(pcgwGogIds, force); err != nil {
 			return err
 		}
 	}
