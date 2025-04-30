@@ -87,11 +87,16 @@ func formatJson(rc io.ReadCloser) (compton.Element, error) {
 }
 
 func preText(rc io.ReadCloser) (compton.Element, error) {
-	var ptBuf bytes.Buffer
-	if _, err := io.Copy(&ptBuf, rc); err != nil {
+	var preBuf bytes.Buffer
+	if _, err := io.Copy(&preBuf, rc); err != nil {
 		return nil, err
 	}
 	defer rc.Close()
 
-	return compton.PreText(ptBuf.String()), nil
+	textString := preBuf.String()
+
+	textString = strings.Replace(textString, "<", "&lt;", -1)
+	textString = strings.Replace(textString, ">", "&gt;", -1)
+
+	return compton.PreText(textString), nil
 }
