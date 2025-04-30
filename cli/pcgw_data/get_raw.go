@@ -89,12 +89,12 @@ func reduceRawProduct(gogIds []string, pcgwPageId string, kvRaw kevlar.KeyValues
 	}
 	defer rcRaw.Close()
 
-	propertyLines, err := filterPropertyLines(rcRaw)
-	if err != nil {
-		return err
-	}
-
-	fmt.Println(propertyLines)
+	//propertyLines, err := filterPropertyLines(rcRaw)
+	//if err != nil {
+	//	return err
+	//}
+	//
+	//fmt.Println(propertyLines)
 
 	//for property := range piv {
 	//
