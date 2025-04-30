@@ -279,7 +279,9 @@ func parseReceptionLines(line string) (id string, score string) {
 
 		// only valid numbers will be considered for a rating
 		score = strings.TrimSuffix(parts[3], "}}")
-		if ri, err := strconv.ParseInt(score, 10, 32); err != nil && ri <= 0 {
+		if score == "tbd" || score == "rating" {
+			score = ""
+		} else if ri, err := strconv.ParseInt(score, 10, 32); err != nil && ri <= 0 {
 			score = ""
 		}
 	}
