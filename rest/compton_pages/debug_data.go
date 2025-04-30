@@ -19,9 +19,14 @@ func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageEleme
 		return nil, err
 	}
 
-	ext := kevlar.JsonExt
-	if pt == vangogh_integration.PcgwRaw {
-		ext = ".txt"
+	var ext string
+	switch pt {
+	case vangogh_integration.PcgwRaw:
+		fallthrough
+	case vangogh_integration.WikipediaRaw:
+		ext = kevlar.TxtExt
+	default:
+		ext = kevlar.JsonExt
 	}
 
 	kv, err := kevlar.New(absPtDir, ext)
@@ -42,6 +47,8 @@ func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageEleme
 
 	switch pt {
 	case vangogh_integration.PcgwRaw:
+		fallthrough
+	case vangogh_integration.WikipediaRaw:
 		element, err = preText(ptContent)
 	default:
 		element, err = formatJson(ptContent)

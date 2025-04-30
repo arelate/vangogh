@@ -14,6 +14,7 @@ func reduceTypes(rdx redux.Writeable) error {
 
 	steamAppIdGogIds := GetSteamAppIdGogIds(rdx)
 	pcgwPageIdsGogIds := GetPcgwPageIdGogIds(rdx)
+	wikipediaGogIds := GetWikipediaIdGogIds(rdx)
 	hltbIdsGogIds := GetHltbIdGogIds(rdx)
 	openCriticGogIds := GetOpenCriticIdGogIds(rdx)
 
@@ -65,6 +66,10 @@ func reduceTypes(rdx redux.Writeable) error {
 				for _, gogId := range pcgwPageIdsGogIds[id] {
 					idsTypes[gogId] = append(idsTypes[gogId], pt.String())
 				}
+			case vangogh_integration.WikipediaRaw:
+				for _, gogId := range wikipediaGogIds[id] {
+					idsTypes[gogId] = append(idsTypes[gogId], pt.String())
+				}
 			case vangogh_integration.HltbData:
 				for _, gogId := range hltbIdsGogIds[id] {
 					idsTypes[gogId] = append(idsTypes[gogId], pt.String())
@@ -92,6 +97,10 @@ func GetSteamAppIdGogIds(rdx redux.Readable) map[string][]string {
 
 func GetPcgwPageIdGogIds(rdx redux.Readable) map[string][]string {
 	return externalIdsGogIds(vangogh_integration.PcgwPageIdProperty, rdx)
+}
+
+func GetWikipediaIdGogIds(rdx redux.Readable) map[string][]string {
+	return externalIdsGogIds(vangogh_integration.WikipediaIdProperty, rdx)
 }
 
 func GetHltbIdGogIds(rdx redux.Readable) map[string][]string {

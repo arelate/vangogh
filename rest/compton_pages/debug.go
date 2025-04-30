@@ -107,7 +107,9 @@ func Debug(gogId string) (compton.PageElement, error) {
 	if vndbId, ok := rdx.GetLastVal(vangogh_integration.VndbIdProperty, gogId); ok && vndbId != "" {
 		idsFrow.PropVal("VNDB", vndbId)
 	}
-	if wikipediaId, ok := rdx.GetLastVal(vangogh_integration.WikipediaIdProperty, gogId); ok && wikipediaId != "" {
+	var wikipediaId string
+	if wid, ok := rdx.GetLastVal(vangogh_integration.WikipediaIdProperty, gogId); ok && wid != "" {
+		wikipediaId = wid
 		idsFrow.PropVal("Wikipedia", wikipediaId)
 	}
 	if strategyWikiId, ok := rdx.GetLastVal(vangogh_integration.StrategyWikiIdProperty, gogId); ok && strategyWikiId != "" {
@@ -173,6 +175,20 @@ func Debug(gogId string) (compton.PageElement, error) {
 		}
 
 		if ds := productTypeSection(p, pcgwPageId, pt); ds != nil {
+			pageStack.Append(ds)
+		}
+	}
+
+	wikipediaProductTypes := []vangogh_integration.ProductType{
+		vangogh_integration.WikipediaRaw,
+	}
+
+	for _, pt := range wikipediaProductTypes {
+		if !slices.Contains(productTypes, pt) {
+			continue
+		}
+
+		if ds := productTypeSection(p, wikipediaId, pt); ds != nil {
 			pageStack.Append(ds)
 		}
 	}
