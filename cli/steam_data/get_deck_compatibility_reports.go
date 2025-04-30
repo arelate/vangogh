@@ -67,12 +67,15 @@ func ReduceDeckCompatibilityReports(steamGogIds map[string][]string, kvDeckCompa
 	for steamAppId, gogIds := range steamGogIds {
 		if !kvDeckCompatibilityReports.Has(steamAppId) {
 			nod.LogError(fmt.Errorf("%s is missing %s", dataType, steamAppId))
+			rdcra.Increment()
 			continue
 		}
 
 		if err = reduceDeckCompatibilityReportsProduct(gogIds, steamAppId, kvDeckCompatibilityReports, deckCompatibilityReportsReductions); err != nil {
 			return err
 		}
+
+		rdcra.Increment()
 	}
 
 	return shared_data.WriteReductions(rdx, deckCompatibilityReportsReductions)

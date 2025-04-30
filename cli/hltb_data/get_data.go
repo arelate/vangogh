@@ -100,6 +100,7 @@ func ReduceData(hltbGogIds map[string][]string, kvData kevlar.KeyValues) error {
 	for hltbId, gogIds := range hltbGogIds {
 		if !kvData.Has(hltbId) {
 			nod.LogError(fmt.Errorf("%s is missing %s", dataType, hltbId))
+			rda.Increment()
 			continue
 		}
 

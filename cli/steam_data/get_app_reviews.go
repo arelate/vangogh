@@ -68,12 +68,15 @@ func ReduceAppReviews(steamGogIds map[string][]string, kvAppReviews kevlar.KeyVa
 	for steamAppId, gogIds := range steamGogIds {
 		if !kvAppReviews.Has(steamAppId) {
 			nod.LogError(fmt.Errorf("%s is missing %s", dataType, steamAppId))
+			rara.Increment()
 			continue
 		}
 
 		if err = reduceAppReviewsProduct(gogIds, steamAppId, kvAppReviews, appReviewsReductions); err != nil {
 			return err
 		}
+
+		rara.Increment()
 	}
 
 	return shared_data.WriteReductions(rdx, appReviewsReductions)

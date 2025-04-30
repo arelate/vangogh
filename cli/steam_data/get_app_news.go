@@ -65,12 +65,15 @@ func ReduceAppNews(steamGogIds map[string][]string, kvAppNews kevlar.KeyValues) 
 	for steamAppId, gogIds := range steamGogIds {
 		if !kvAppNews.Has(steamAppId) {
 			nod.LogError(fmt.Errorf("%s is missing %s", dataType, steamAppId))
+			rana.Increment()
 			continue
 		}
 
 		if err = reduceAppNewsProduct(gogIds, steamAppId, kvAppNews, appNewsReductions); err != nil {
 			return err
 		}
+
+		rana.Increment()
 	}
 
 	return shared_data.WriteReductions(rdx, appNewsReductions)

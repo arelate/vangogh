@@ -64,12 +64,15 @@ func ReduceAppDetails(steamGogIds map[string][]string, kvAppDetails kevlar.KeyVa
 	for steamAppId, gogIds := range steamGogIds {
 		if !kvAppDetails.Has(steamAppId) {
 			nod.LogError(fmt.Errorf("%s is missing %s", dataType, steamAppId))
+			rada.Increment()
 			continue
 		}
 
 		if err = reduceAppDetailsProduct(gogIds, steamAppId, kvAppDetails, appDetailsReductions); err != nil {
 			return err
 		}
+
+		rada.Increment()
 	}
 
 	return shared_data.WriteReductions(rdx, appDetailsReductions)
@@ -106,8 +109,13 @@ func reduceAppDetailsProduct(gogIds []string, steamAppId string, kvAppDetails ke
 				values = []string{ad.GetWebsite()}
 			case vangogh_integration.MetacriticScoreProperty:
 				values = []string{strconv.FormatInt(int64(ad.GetMetacriticScore()), 10)}
-			case vangogh_integration.MetacriticUrlProperty:
-				values = []string{ad.GetMetacriticUrl()}
+			case vangogh_integration.MetacriticIdProperty:
+				mid, err := ad.GetMetacriticId()
+				if err != nil {
+					return err
+				}
+
+				values = []string{mid}
 			case vangogh_integration.SteamCategoriesProperty:
 				values = ad.GetCategories()
 			case vangogh_integration.SteamGenresProperty:

@@ -20,5 +20,6 @@ const (
 	VNDBUrlProperty         = "vndb-url"
 	IGNWikiUrlProperty      = "ign-wiki-url"
 	OpenCriticUrlProperty   = "opencritic-url"
+	MetacriticUrlProperty   = "metacritic-url"
 	WebsiteUrlProperty      = "website"
 )

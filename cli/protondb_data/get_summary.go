@@ -63,12 +63,15 @@ func ReduceSummary(steamGogIds map[string][]string, kvSummary kevlar.KeyValues) 
 	for steamAppId, gogIds := range steamGogIds {
 		if !kvSummary.Has(steamAppId) {
 			nod.LogError(fmt.Errorf("%s is missing %s", dataType, steamAppId))
+			rsa.Increment()
 			continue
 		}
 
 		if err = reduceSummaryProduct(gogIds, steamAppId, kvSummary, summaryReductions); err != nil {
 			return err
 		}
+
+		rsa.Increment()
 	}
 
 	return shared_data.WriteReductions(rdx, summaryReductions)

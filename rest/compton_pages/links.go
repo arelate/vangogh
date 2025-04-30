@@ -8,6 +8,7 @@ import (
 	"github.com/arelate/southern_light/hltb_integration"
 	"github.com/arelate/southern_light/igdb_integration"
 	"github.com/arelate/southern_light/ign_integration"
+	"github.com/arelate/southern_light/metacritic_integration"
 	"github.com/arelate/southern_light/mobygames_integration"
 	"github.com/arelate/southern_light/opencritic_integration"
 	"github.com/arelate/southern_light/pcgw_integration"
@@ -163,6 +164,12 @@ func externalLinks(id string, rdx redux.Readable) map[string][]string {
 			links[compton_data.OtherLinksProperty] =
 				append(links[compton_data.OtherLinksProperty], openCriticUrl)
 		}
+	}
+
+	if metacriticId, ok := rdx.GetLastVal(vangogh_integration.MetacriticIdProperty, id); ok {
+		metacriticUrl := fmt.Sprintf("%s=%s", compton_data.MetacriticUrlProperty, metacritic_integration.GameUrl(metacriticId))
+		links[compton_data.OtherLinksProperty] =
+			append(links[compton_data.OtherLinksProperty], metacriticUrl)
 	}
 
 	return links

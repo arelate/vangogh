@@ -85,6 +85,12 @@ func Debug(gogId string) (compton.PageElement, error) {
 		idsFrow.PropVal("HLTB", hltbId)
 	}
 
+	var metacriticId string
+	if mid, ok := rdx.GetLastVal(vangogh_integration.MetacriticIdProperty, gogId); ok && mid != "" {
+		metacriticId = mid
+		idsFrow.PropVal("Metacritic", metacriticId)
+	}
+
 	var openCriticId string
 	if ocid, ok := rdx.GetLastVal(vangogh_integration.OpenCriticIdProperty, gogId); ok && ocid != "" {
 		openCriticId = ocid

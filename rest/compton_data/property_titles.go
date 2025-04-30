@@ -94,5 +94,6 @@ var PropertyTitles = map[string]string{
 	VNDBUrlProperty:         "VNDB",
 	IGNWikiUrlProperty:      "IGN Wiki",
 	OpenCriticUrlProperty:   "OpenCritic",
+	MetacriticUrlProperty:   "Metacritic",
 	WebsiteUrlProperty:      "Website",
 }
