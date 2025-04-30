@@ -21,6 +21,10 @@ func GetPcgwGogIds(gogIds iter.Seq[string]) (map[string][]string, error) {
 	return getExternalIdGogIds(gogIds, vangogh_integration.PcgwPageIdProperty)
 }
 
+func GetWikipediaIds(gogIds iter.Seq[string]) (map[string][]string, error) {
+	return getExternalIdGogIds(gogIds, vangogh_integration.WikipediaIdProperty)
+}
+
 func GetOpenCriticGogIds(gogIds iter.Seq[string]) (map[string][]string, error) {
 	return getExternalIdGogIds(gogIds, vangogh_integration.OpenCriticIdProperty)
 }

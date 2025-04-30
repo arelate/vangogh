@@ -11,6 +11,7 @@ import (
 	"github.com/arelate/vangogh/cli/protondb_data"
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/arelate/vangogh/cli/steam_data"
+	"github.com/arelate/vangogh/cli/wikipedia_data"
 	"github.com/boggydigital/coost"
 	"github.com/boggydigital/kevlar"
 	"maps"
@@ -52,6 +53,10 @@ var steamAppIdsProductTypes = []vangogh_integration.ProductType{
 
 var pcgwPageIdsProductTypes = []vangogh_integration.ProductType{
 	vangogh_integration.PcgwRaw,
+}
+
+var wikipediaProductTypes = []vangogh_integration.ProductType{
+	vangogh_integration.WikipediaRaw,
 }
 
 var hltbProductTypes = []vangogh_integration.ProductType{
@@ -248,6 +253,22 @@ func GetData(ids []string, productTypes []vangogh_integration.ProductType, since
 		}
 	}
 
+	// Wikipedia data
+
+	var wikipediaIds map[string][]string
+	if requiresWikipediaIds(productTypes...) {
+		wikipediaIds, err = shared_data.GetWikipediaIds(maps.Keys(catalogAccountGames))
+		if err != nil {
+			return err
+		}
+	}
+
+	if slices.Contains(productTypes, vangogh_integration.WikipediaRaw) {
+		if err = wikipedia_data.GetRaw(wikipediaIds, force); err != nil {
+			return err
+		}
+	}
+
 	// HLTB data
 
 	var hltbGogIds map[string][]string
@@ -311,6 +332,15 @@ func requiresPcgwPageIds(productTypes ...vangogh_integration.ProductType) bool {
 	return false
 }
 
+func requiresWikipediaIds(productTypes ...vangogh_integration.ProductType) bool {
+	for _, wpt := range wikipediaProductTypes {
+		if slices.Contains(productTypes, wpt) {
+			return true
+		}
+	}
+	return false
+}
+
 func requiresHltbIds(productTypes ...vangogh_integration.ProductType) bool {
 	for _, hpt := range hltbProductTypes {
 		if slices.Contains(productTypes, hpt) {
@@ -334,6 +364,12 @@ func requiresCatalogAccountGogIds(productTypes ...vangogh_integration.ProductTyp
 		return true
 	}
 	if requiresPcgwPageIds(productTypes...) {
+		return true
+	}
+	if requiresWikipediaIds(productTypes...) {
+		return true
+	}
+	if requiresHltbIds(productTypes...) {
 		return true
 	}
 	if requiresOpenCriticIds(productTypes...) {

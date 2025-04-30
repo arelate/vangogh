@@ -8,6 +8,7 @@ import (
 	"github.com/arelate/southern_light/protondb_integration"
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/southern_light/wikipedia_integration"
 	"github.com/boggydigital/dolo"
 	"net/http"
 	"net/url"
@@ -213,6 +214,16 @@ func PcgwRaw() *Params {
 	return &Params{
 		ProductType: vangogh_integration.PcgwRaw,
 		UrlFunc:     pcgw_integration.WikiRawUrl,
+		HttpClient:  http.DefaultClient,
+		HttpMethod:  http.MethodGet,
+		UserAgent:   safariUserAgent,
+	}
+}
+
+func WikipediaRaw() *Params {
+	return &Params{
+		ProductType: vangogh_integration.WikipediaRaw,
+		UrlFunc:     wikipedia_integration.WikiRawUrl,
 		HttpClient:  http.DefaultClient,
 		HttpMethod:  http.MethodGet,
 		UserAgent:   safariUserAgent,

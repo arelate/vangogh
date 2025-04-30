@@ -11,7 +11,7 @@ require (
 	github.com/boggydigital/coost v0.3.10
 	github.com/boggydigital/dolo v0.2.22
 	github.com/boggydigital/issa v0.1.23
-	github.com/boggydigital/kevlar v0.6.6
+	github.com/boggydigital/kevlar v0.6.7
 	github.com/boggydigital/middleware v0.1.17
 	github.com/boggydigital/nod v0.1.29
 	github.com/boggydigital/pathways v0.1.15
