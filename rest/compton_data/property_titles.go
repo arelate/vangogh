@@ -96,4 +96,14 @@ var PropertyTitles = map[string]string{
 	OpenCriticUrlProperty:   "OpenCritic",
 	MetacriticUrlProperty:   "Metacritic",
 	WebsiteUrlProperty:      "Website",
+
+	vangogh_integration.CreditsProperty:     "Credits",
+	vangogh_integration.CreatorsProperty:    "Creators",
+	vangogh_integration.DirectorsProperty:   "Directors",
+	vangogh_integration.ProducersProperty:   "Producers",
+	vangogh_integration.DesignersProperty:   "Designers",
+	vangogh_integration.ProgrammersProperty: "Programmers",
+	vangogh_integration.ArtistsProperty:     "Artists",
+	vangogh_integration.WritersProperty:     "Writers",
+	vangogh_integration.ComposersProperty:   "Composers",
 }

@@ -12,6 +12,16 @@ var ProductProperties = []string{
 	vangogh_integration.OperatingSystemsProperty,
 	vangogh_integration.DevelopersProperty,
 	vangogh_integration.PublishersProperty,
+
+	vangogh_integration.CreatorsProperty,
+	vangogh_integration.DirectorsProperty,
+	vangogh_integration.ProducersProperty,
+	vangogh_integration.DesignersProperty,
+	vangogh_integration.ProgrammersProperty,
+	vangogh_integration.ArtistsProperty,
+	vangogh_integration.WritersProperty,
+	vangogh_integration.ComposersProperty,
+
 	vangogh_integration.PriceProperty,
 	vangogh_integration.LanguageCodeProperty,
 

@@ -41,6 +41,8 @@ var SearchProperties = []string{
 	vangogh_integration.OpenCriticTierProperty,
 	vangogh_integration.TopPercentProperty,
 
+	vangogh_integration.CreditsProperty,
+
 	vangogh_integration.GOGReleaseDateProperty,
 	vangogh_integration.GlobalReleaseDateProperty,
 	vangogh_integration.GOGOrderDateProperty,

@@ -50,6 +50,10 @@ func searchHref(property, value string) string {
 	return fmt.Sprintf("/search?%s=%s", property, value)
 }
 
+func searchCreditsHref(value string) string {
+	return fmt.Sprintf("/search?credits=%s", value)
+}
+
 func grdSortedSearchHref(property, value string) string {
 	return fmt.Sprintf("/search?%s=%s&sort=global-release-date&desc=true", property, value)
 }
@@ -156,6 +160,22 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 			}
 		case vangogh_integration.TopPercentProperty:
 			fmtProperty.values[value] = searchHref(property, url.QueryEscape(value))
+		case vangogh_integration.CreatorsProperty:
+			fallthrough
+		case vangogh_integration.DirectorsProperty:
+			fallthrough
+		case vangogh_integration.ProducersProperty:
+			fallthrough
+		case vangogh_integration.DesignersProperty:
+			fallthrough
+		case vangogh_integration.ProgrammersProperty:
+			fallthrough
+		case vangogh_integration.ArtistsProperty:
+			fallthrough
+		case vangogh_integration.WritersProperty:
+			fallthrough
+		case vangogh_integration.ComposersProperty:
+			fmtProperty.values[value] = searchCreditsHref(value)
 		default:
 			if value != "" {
 				fmtProperty.values[value] = searchHref(property, value)
