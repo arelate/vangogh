@@ -10,6 +10,7 @@ import (
 	"github.com/arelate/vangogh/cli/protondb_data"
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/arelate/vangogh/cli/steam_data"
+	"github.com/arelate/vangogh/cli/wikipedia_data"
 	"github.com/boggydigital/kevlar"
 	"maps"
 	"net/url"
@@ -48,9 +49,14 @@ func reduceProductType(pt vangogh_integration.ProductType) error {
 		return err
 	}
 
-	ext := kevlar.JsonExt
-	if pt == vangogh_integration.PcgwRaw {
-		ext = ".txt"
+	var ext string
+	switch pt {
+	case vangogh_integration.PcgwRaw:
+		fallthrough
+	case vangogh_integration.WikipediaRaw:
+		ext = kevlar.TxtExt
+	default:
+		ext = kevlar.JsonExt
 	}
 
 	kvPt, err := kevlar.New(ptDir, ext)
@@ -71,6 +77,11 @@ func reduceProductType(pt vangogh_integration.ProductType) error {
 	steamGogIds, err := shared_data.GetSteamGogIds(maps.Keys(gogIds))
 
 	pcgwGogIds, err := shared_data.GetPcgwGogIds(maps.Keys(gogIds))
+	if err != nil {
+		return err
+	}
+
+	wikipediaGogIds, err := shared_data.GetWikipediaIds(maps.Keys(gogIds))
 	if err != nil {
 		return err
 	}
@@ -118,6 +129,8 @@ func reduceProductType(pt vangogh_integration.ProductType) error {
 		return pcgw_data.ReduceSteamPageIds(steamGogIds, kvPt)
 	case vangogh_integration.PcgwRaw:
 		return pcgw_data.ReduceRaw(pcgwGogIds, kvPt)
+	case vangogh_integration.WikipediaRaw:
+		return wikipedia_data.ReduceRaw(wikipediaGogIds, kvPt)
 	case vangogh_integration.HltbRootPage:
 		// do nothing
 	case vangogh_integration.HltbData:

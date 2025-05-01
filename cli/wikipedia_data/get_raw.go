@@ -1,12 +1,19 @@
 package wikipedia_data
 
 import (
+	"bufio"
+	"fmt"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
 	"github.com/arelate/vangogh/cli/reqs"
+	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/pathways"
+	"github.com/boggydigital/redux"
+	"io"
 	"maps"
+	"strings"
 )
 
 func GetRaw(wikipediaGogIds map[string][]string, force bool) error {
@@ -30,276 +37,293 @@ func GetRaw(wikipediaGogIds map[string][]string, force bool) error {
 		return err
 	}
 
-	return nil //ReduceRaw(wikipediaGogIds, kvRaw)
+	return ReduceRaw(wikipediaGogIds, kvRaw)
 }
 
-//func ReduceRaw(pcgwGogIds map[string][]string, kvRaw kevlar.KeyValues) error {
-//
-//	dataType := vangogh_integration.PcgwRaw
-//
-//	rra := nod.NewProgress(" reducing %s...", dataType)
-//	defer rra.Done()
-//
-//	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-//	if err != nil {
-//		return err
-//	}
-//
-//	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.PcgwRawProperties()...)
-//	if err != nil {
-//		return err
-//	}
-//
-//	rawReductions := shared_data.InitReductions(vangogh_integration.PcgwRawProperties()...)
-//
-//	rra.TotalInt(len(pcgwGogIds))
-//
-//	for pcgwPageId, gogIds := range pcgwGogIds {
-//		if !kvRaw.Has(pcgwPageId) {
-//			nod.LogError(fmt.Errorf("%s is missing %s", dataType, pcgwPageId))
-//			continue
-//		}
-//
-//		if err = reduceRawProduct(gogIds, pcgwPageId, kvRaw, rawReductions, rdx); err != nil {
-//			return err
-//		}
-//
-//		rra.Increment()
-//	}
-//
-//	return shared_data.WriteReductions(rdx, rawReductions)
-//}
-//
-//var newValuesOnlyProperties = []string{
-//	vangogh_integration.SteamAppIdProperty,
-//	vangogh_integration.WebsiteProperty,
-//	vangogh_integration.OpenCriticMedianScoreProperty,
-//	vangogh_integration.MetacriticScoreProperty,
-//}
-//
-//func reduceRawProduct(gogIds []string, pcgwPageId string, kvRaw kevlar.KeyValues, piv shared_data.PropertyIdValues, rdx redux.Readable) error {
-//
-//	rcRaw, err := kvRaw.Get(pcgwPageId)
-//	if err != nil {
-//		return err
-//	}
-//	defer rcRaw.Close()
-//
-//	propertyLines, err := filterPropertyLines(rcRaw)
-//	if err != nil {
-//		return err
-//	}
-//
-//	propertyValues := parsePropertyValues(propertyLines)
-//
-//	for property := range piv {
-//
-//		for _, gogId := range gogIds {
-//
-//			if slices.Contains(newValuesOnlyProperties, property) && rdx.HasKey(property, gogId) {
-//				continue
-//			}
-//
-//			if values, ok := propertyValues[property]; ok && shared_data.IsNotEmpty(values...) {
-//				piv[property][gogId] = values
-//			}
-//		}
-//
-//	}
-//
-//	return nil
-//}
-//
-//const infoboxGameRowReceptionPfx = "{{Infobox game/row/reception"
-//
-//var prefixedProperties = map[string]string{
-//	"|steam appid":   vangogh_integration.SteamAppIdProperty,
-//	"|hltb":          vangogh_integration.HltbIdProperty,
-//	"|igdb":          vangogh_integration.IgdbIdProperty,
-//	"|strategywiki":  vangogh_integration.StrategyWikiIdProperty,
-//	"|mobygames":     vangogh_integration.MobyGamesIdProperty,
-//	"|wikipedia":     vangogh_integration.WikipediaIdProperty,
-//	"|winehq":        vangogh_integration.WineHQIdProperty,
-//	"|official site": vangogh_integration.WebsiteProperty,
-//
-//	"{{mm}} [https://vndb.org/": vangogh_integration.VndbIdProperty,
-//
-//	infoboxGameRowReceptionPfx + "|Metacritic": vangogh_integration.MetacriticIdProperty,
-//	infoboxGameRowReceptionPfx + "|OpenCritic": vangogh_integration.OpenCriticIdProperty,
-//	infoboxGameRowReceptionPfx + "|IGDB":       vangogh_integration.IgdbIdProperty,
-//
-//	"{{Infobox game/row/engine": vangogh_integration.EnginesProperty,
-//}
-//
-//func filterPropertyLines(rcRaw io.Reader) (map[string][]string, error) {
-//
-//	propertyLines := make(map[string][]string)
-//
-//	rawScanner := bufio.NewScanner(rcRaw)
-//	for rawScanner.Scan() {
-//
-//		line := rawScanner.Text()
-//
-//		for prefix, property := range prefixedProperties {
-//			if strings.HasPrefix(line, prefix) {
-//				propertyLines[property] = append(propertyLines[property], line)
-//				break
-//			}
-//		}
-//
-//	}
-//
-//	if err := rawScanner.Err(); err != nil {
-//		return nil, err
-//	}
-//
-//	return propertyLines, nil
-//}
-//
-//func parsePropertyValues(propertyLines map[string][]string) map[string][]string {
-//
-//	propertyValues := make(map[string][]string)
-//
-//	for property, lines := range propertyLines {
-//		var parsedLines []string
-//		switch property {
-//		case vangogh_integration.SteamAppIdProperty:
-//			fallthrough
-//		case vangogh_integration.HltbIdProperty:
-//			fallthrough
-//		case vangogh_integration.StrategyWikiIdProperty:
-//			fallthrough
-//		case vangogh_integration.MobyGamesIdProperty:
-//			fallthrough
-//		case vangogh_integration.WikipediaIdProperty:
-//			fallthrough
-//		case vangogh_integration.WineHQIdProperty:
-//			fallthrough
-//		case vangogh_integration.WebsiteProperty:
-//			parsedLines = parseInfoboxPropertyLines(lines)
-//		case vangogh_integration.VndbIdProperty:
-//			parsedLines = parseVndbLines(lines)
-//		case vangogh_integration.EnginesProperty:
-//			for _, line := range lines {
-//				name, build := parseInfoboxEngineLine(line)
-//				if name != "" {
-//					propertyValues[vangogh_integration.EnginesProperty] =
-//						append(propertyValues[vangogh_integration.EnginesProperty], name)
-//				}
-//				if build != "" {
-//					propertyValues[vangogh_integration.EnginesBuildsProperty] =
-//						append(propertyValues[vangogh_integration.EnginesBuildsProperty], build)
-//				}
-//			}
-//		case vangogh_integration.IgdbIdProperty:
-//			if infoboxParsedLines := parseInfoboxPropertyLines(lines); len(infoboxParsedLines) > 0 {
-//				propertyValues[vangogh_integration.IgdbIdProperty] = infoboxParsedLines
-//			}
-//
-//			for _, line := range lines {
-//				if id, _ := parseReceptionLines(line); id != "" {
-//					if slices.Contains(propertyValues[vangogh_integration.IgdbIdProperty], id) {
-//						continue
-//					}
-//					propertyValues[vangogh_integration.IgdbIdProperty] =
-//						append(propertyValues[vangogh_integration.IgdbIdProperty], id)
-//				}
-//			}
-//		case vangogh_integration.MetacriticIdProperty:
-//			for _, line := range lines {
-//				id, score := parseReceptionLines(line)
-//				if id != "" {
-//					propertyValues[vangogh_integration.MetacriticIdProperty] =
-//						append(propertyValues[vangogh_integration.MetacriticIdProperty], id)
-//				}
-//				if score != "" {
-//					propertyValues[vangogh_integration.MetacriticScoreProperty] =
-//						append(propertyValues[vangogh_integration.MetacriticScoreProperty], score)
-//				}
-//			}
-//		case vangogh_integration.OpenCriticIdProperty:
-//			for _, line := range lines {
-//				idSlug, score := parseReceptionLines(line)
-//				if idSlug != "" {
-//					if id, slug, ok := strings.Cut(idSlug, "/"); ok {
-//						propertyValues[vangogh_integration.OpenCriticIdProperty] = []string{id}
-//						propertyValues[vangogh_integration.OpenCriticSlugProperty] = []string{slug}
-//
-//					}
-//				}
-//				if score != "" {
-//					propertyValues[vangogh_integration.OpenCriticMedianScoreProperty] = []string{score}
-//				}
-//			}
-//		}
-//
-//		if len(parsedLines) > 0 {
-//			propertyValues[property] = parsedLines
-//		}
-//	}
-//
-//	return propertyValues
-//}
-//
-//func parseInfoboxPropertyLines(lines []string) []string {
-//
-//	parsedLines := make([]string, 0, len(lines))
-//
-//	for _, line := range lines {
-//		if _, value, ok := strings.Cut(line, "="); ok {
-//			if tsv := strings.TrimSpace(value); tsv != "" {
-//				parsedLines = append(parsedLines, tsv)
-//			}
-//		}
-//	}
-//
-//	return parsedLines
-//}
-//
-//func parseReceptionLines(line string) (id string, score string) {
-//	if parts := strings.Split(line, "|"); len(parts) == 4 && parts[0] == infoboxGameRowReceptionPfx {
-//		id = parts[2]
-//		if id == "link" {
-//			id = ""
-//		}
-//
-//		// only valid numbers will be considered for a rating
-//		score = strings.TrimSuffix(parts[3], "}}")
-//		if score == "tbd" || score == "rating" {
-//			score = ""
-//		} else if ri, err := strconv.ParseInt(score, 10, 32); err != nil && ri <= 0 {
-//			score = ""
-//		}
-//	}
-//	return id, score
-//}
-//
-//func parseVndbLines(lines []string) []string {
-//	parsedLines := make([]string, 0, len(lines))
-//
-//	for _, line := range lines {
-//		if parts := strings.Split(line, " "); len(parts) >= 2 {
-//			if vndbUrl := strings.TrimPrefix(parts[1], "["); vndbUrl != "" {
-//				if u, err := url.Parse(vndbUrl); err == nil && u.Host == "vndb.org" {
-//					parsedLines = append(parsedLines, strings.TrimPrefix(u.Path, "/"))
-//				}
-//			}
-//		}
-//	}
-//
-//	return parsedLines
-//}
-//
-//func parseInfoboxEngineLine(line string) (name string, build string) {
-//	for _, part := range strings.Split(line, "|") {
-//		if strings.HasPrefix(part, "name=") {
-//			name = strings.TrimPrefix(part, "name=")
-//			name = strings.TrimSuffix(name, "}}")
-//		}
-//		if strings.HasPrefix(part, "build=") {
-//			build = strings.TrimPrefix(part, "build=")
-//			build = strings.TrimSuffix(build, "}}")
-//		}
-//	}
-//	return name, build
-//}
+func ReduceRaw(wikipediaGogIds map[string][]string, kvRaw kevlar.KeyValues) error {
+
+	dataType := vangogh_integration.WikipediaRaw
+
+	rra := nod.NewProgress(" reducing %s...", dataType)
+	defer rra.Done()
+
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return err
+	}
+
+	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.WikipediaRawProperties()...)
+	if err != nil {
+		return err
+	}
+
+	rawReductions := shared_data.InitReductions(vangogh_integration.WikipediaRawProperties()...)
+
+	rra.TotalInt(len(wikipediaGogIds))
+
+	for wikipediaId, gogIds := range wikipediaGogIds {
+		if !kvRaw.Has(wikipediaId) {
+			nod.LogError(fmt.Errorf("%s is missing %s", dataType, wikipediaId))
+			continue
+		}
+
+		if err = reduceRawProduct(gogIds, wikipediaId, kvRaw, rawReductions, rdx); err != nil {
+			return err
+		}
+
+		rra.Increment()
+	}
+
+	return shared_data.WriteReductions(rdx, rawReductions)
+}
+
+func reduceRawProduct(gogIds []string, wikipediaId string, kvRaw kevlar.KeyValues, piv shared_data.PropertyIdValues, rdx redux.Readable) error {
+
+	rcRaw, err := kvRaw.Get(wikipediaId)
+	if err != nil {
+		return err
+	}
+	defer rcRaw.Close()
+
+	infoboxLines, err := filterInfoboxLines(rcRaw)
+	if err != nil {
+		return err
+	}
+
+	rawCredits := reduceRawCredits(infoboxLines)
+
+	parsedCredits := parseCredits(rawCredits)
+
+	for property := range piv {
+
+		for _, gogId := range gogIds {
+			if values, ok := parsedCredits[property]; ok && shared_data.IsNotEmpty(values...) {
+				piv[property][gogId] = values
+			}
+		}
+
+	}
+
+	return nil
+}
+
+const (
+	infoboxVideoGamePfx = "{{Infobox video game"
+	infoboxVgPfx        = "{{Infobox VG"
+	listPfx             = "{{"
+	listSfx             = "}}"
+)
+
+func filterInfoboxLines(r io.Reader) ([]string, error) {
+
+	infoboxLines := make([]string, 0)
+
+	ts := bufio.NewScanner(r)
+
+	scanning := false
+	previousLine := ""
+	listCounter := 0
+
+	for ts.Scan() {
+		line := ts.Text()
+		line = strings.TrimSpace(line)
+
+		listCounter += strings.Count(line, listPfx)
+		listCounter -= strings.Count(line, listSfx)
+
+		if !scanning &&
+			(strings.Contains(line, infoboxVideoGamePfx) ||
+				strings.Contains(line, infoboxVgPfx)) {
+			scanning = true
+			continue
+		}
+		if listCounter == 0 && strings.HasPrefix(line, listSfx) {
+			break
+		}
+		if scanning && line == "" && strings.HasSuffix(previousLine, listSfx) {
+			break
+		}
+
+		if scanning {
+			infoboxLines = append(infoboxLines, line)
+		}
+
+		previousLine = line
+	}
+
+	if err := ts.Err(); err != nil {
+		return nil, err
+	}
+
+	return infoboxLines, nil
+}
+
+var prefixedProperties = map[string]string{
+	"|creator":     vangogh_integration.CreatorsProperty,
+	"| creator":    vangogh_integration.CreatorsProperty,
+	"|director":    vangogh_integration.DirectorsProperty,
+	"| director":   vangogh_integration.DirectorsProperty,
+	"|producer":    vangogh_integration.ProducersProperty,
+	"| producer":   vangogh_integration.ProducersProperty,
+	"|designer":    vangogh_integration.DesignersProperty,
+	"| designer":   vangogh_integration.DesignersProperty,
+	"|programmer":  vangogh_integration.ProgrammersProperty,
+	"| programmer": vangogh_integration.ProgrammersProperty,
+	"|artist":      vangogh_integration.ArtistsProperty,
+	"| artist":     vangogh_integration.ArtistsProperty,
+	"|writer":      vangogh_integration.WritersProperty,
+	"| writer":     vangogh_integration.WritersProperty,
+	"|composer":    vangogh_integration.ComposersProperty,
+	"| composer":   vangogh_integration.ComposersProperty,
+}
+
+var listPrefixes = []string{
+	"{{Unbulleted list",
+	"{{plainlist",
+	"{{ubl",
+}
+
+func reduceRawCredits(infoboxLines []string) map[string][]string {
+
+	rawCredits := make(map[string][]string)
+
+	list := false
+	lastProperty := ""
+
+	for _, line := range infoboxLines {
+
+		line = strings.TrimSpace(line)
+
+		if strings.HasPrefix(line, listSfx) {
+			list = false
+			lastProperty = ""
+		}
+
+		if list && lastProperty != "" {
+			rawCredits[lastProperty] = append(rawCredits[lastProperty], line)
+		}
+
+		for pfx, property := range prefixedProperties {
+			if strings.HasPrefix(line, pfx) {
+				rawCredits[property] = append(rawCredits[property], line)
+				lastProperty = property
+				break
+			}
+		}
+
+		for _, lp := range listPrefixes {
+			if strings.Contains(line, lp) && !strings.Contains(line, listSfx) {
+				list = true
+			}
+		}
+	}
+
+	return rawCredits
+}
+
+func parseCredits(rawCredits map[string][]string) map[string][]string {
+
+	parsedCredits := make(map[string][]string)
+
+	for property, rawValues := range rawCredits {
+		parsedValues := parseCreditValues(property, rawValues...)
+
+		if shared_data.IsNotEmpty(parsedValues...) {
+			parsedCredits[property] = parsedValues
+		}
+	}
+
+	return parsedCredits
+}
+
+func parseCreditValues(property string, rawValues ...string) []string {
+
+	parsedValues := make([]string, 0, len(rawValues))
+
+	for _, rv := range rawValues {
+
+		for pfx, pp := range prefixedProperties {
+			if pp == property {
+				rv = strings.TrimPrefix(rv, pfx)
+			}
+		}
+
+		if _, sp, ok := strings.Cut(rv, "="); ok {
+			rv = sp
+		}
+
+		if listItems := parseList(rv); len(listItems) > 0 {
+			parsedValues = append(parsedValues, listItems...)
+			continue
+		}
+	}
+
+	return parsedValues
+}
+
+func parseList(value string) []string {
+	value = strings.TrimSpace(value)
+
+	for _, lp := range listPrefixes {
+		value = strings.TrimPrefix(value, lp)
+	}
+	value = strings.TrimSuffix(value, listSfx)
+
+	value = replaceListSeparators(value)
+
+	if parts := strings.Split(value, "|"); len(parts) > 1 {
+		return parseListItems(parts...)
+	} else if tv := trimSpaceLinks(value); tv != "" {
+		return []string{tv}
+	} else {
+		return nil
+	}
+}
+
+func parseListItems(parts ...string) []string {
+	listItems := make([]string, 0, len(parts))
+	for _, part := range parts {
+
+		part = trimSpaceLinks(part)
+
+		if part != "" {
+			listItems = append(listItems, part)
+		}
+	}
+
+	return listItems
+}
+
+const (
+	commentPfx = "<!--"
+	commentSfx = "-->"
+)
+
+func trimSpaceLinks(value string) string {
+
+	value = strings.TrimSpace(value)
+
+	if strings.HasPrefix(value, commentPfx) &&
+		strings.HasSuffix(value, commentSfx) {
+		return ""
+	}
+
+	value = strings.Trim(value, "[]'|*")
+	value = strings.TrimSpace(value)
+
+	return value
+}
+
+var alternativeListSeparators = []string{
+	"<br>",
+	"<br >",
+	"<br/>",
+	"<br />",
+}
+
+func replaceListSeparators(value string) string {
+	for _, als := range alternativeListSeparators {
+		value = strings.Replace(value, als, "|", -1)
+	}
+	return value
+}
