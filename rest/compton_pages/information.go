@@ -20,7 +20,7 @@ func Information(id string, rdx redux.Readable) compton.PageElement {
 
 	if shortDesc, yes := rdx.GetLastVal(vangogh_integration.ShortDescriptionProperty, id); yes {
 		shortDescSpan := compton.Fspan(s, shortDesc).
-			ForegroundColor(color.Foreground).
+			ForegroundColor(color.Gray).
 			BorderRadius(size.XSmall).
 			FontSize(size.Small).
 			TextAlign(align.Start)
