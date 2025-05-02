@@ -341,9 +341,15 @@ func replaceListSeparators(value string) string {
 
 func trimEnclosed(s string, open, close string) string {
 
-	for openIndex, closeIndex := strings.Index(s, open), strings.Index(s, close); openIndex >= 0 && closeIndex >= 0; {
+	for strings.Contains(s, open) && strings.Contains(s, close) {
+		openIndex := strings.Index(s, open)
+		closeIndex := strings.Index(s, close)
 
-		s = strings.Replace(s, s[openIndex:closeIndex+len(close)], "", 1)
+		if closeIndex > openIndex {
+			s = strings.Replace(s, s[openIndex:closeIndex+len(close)], "", 1)
+		} else {
+			break
+		}
 	}
 
 	return s
