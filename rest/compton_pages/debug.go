@@ -11,6 +11,7 @@ import (
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
+	"net/url"
 	"slices"
 )
 
@@ -304,6 +305,8 @@ func Debug(gogId string) (compton.PageElement, error) {
 
 func productTypeSection(r compton.Registrar, id string, pt vangogh_integration.ProductType) compton.Element {
 	ds := compton.DSLarge(r, compton_data.TypesTitles[pt.String()], false).BackgroundColor(color.Highlight)
+
+	id = url.QueryEscape(id)
 
 	iframe := compton.IframeExpandHost(r, pt.String(), "/debug-data?id="+id+"&product-type="+pt.String())
 	ds.Append(iframe)
