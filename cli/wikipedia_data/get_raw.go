@@ -278,6 +278,9 @@ func parseList(value string) []string {
 
 	value = trimEnclosed(value, "{{efn", "}}")
 	value = trimEnclosed(value, "(", ")")
+	value = trimEnclosed(value, "<ref", "/ref>")
+
+	value = strings.Replace(value, "<ref name=\"bombinfo\"/>", "", -1)
 	//value = trimEnclosed(value, "<", "/>")
 
 	value = strings.TrimSuffix(value, listSfx)
