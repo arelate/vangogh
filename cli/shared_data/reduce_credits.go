@@ -10,7 +10,7 @@ import (
 
 func reduceCredits(rdx redux.Writeable) error {
 
-	rca := nod.Begin("reducing %s...", vangogh_integration.CreditsProperty)
+	rca := nod.Begin(" reducing %s...", vangogh_integration.CreditsProperty)
 	defer rca.Done()
 
 	if err := rdx.MustHave(vangogh_integration.WikipediaRawProperties()...); err != nil {
