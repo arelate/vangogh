@@ -276,7 +276,11 @@ func parseCreditValues(property string, rawValues ...string) []string {
 }
 
 func parseList(value string) []string {
+
 	value = strings.TrimSpace(value)
+	if value == "" {
+		return nil
+	}
 
 	for _, lp := range listPrefixes {
 		value = strings.TrimPrefix(value, lp)
@@ -284,15 +288,18 @@ func parseList(value string) []string {
 
 	value = replaceListSeparators(value)
 
-	value = trimEnclosed(value, "{{efn", "}}")
-	value = trimEnclosed(value, "{{Sfn", "}}")
-	value = trimEnclosed(value, "(", ")")
-	value = trimEnclosed(value, "<ref", "/ref>")
+	for strings.Contains(value, "<ref") && strings.Contains(value, "/ref>") {
+		value = trimEnclosed(value, "<ref", "/ref>")
+	}
 
 	value = strings.Replace(value, "<ref name=\"bombinfo\"/>", "", -1)
 	value = strings.Replace(value, "<ref name=FAQ/>", "", -1)
 	value = strings.Replace(value, "<ref name=\"DM3Manual\"/>", "", -1)
 	//value = trimEnclosed(value, "<", "/>")
+
+	value = trimEnclosed(value, "{{efn", "}}")
+	value = trimEnclosed(value, "{{Sfn", "}}")
+	value = trimEnclosed(value, "(", ")")
 
 	value = strings.TrimSuffix(value, listSfx)
 
