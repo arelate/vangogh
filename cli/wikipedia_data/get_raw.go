@@ -351,6 +351,7 @@ var alternativeListSeparators = []string{
 	"<br >",
 	"<br/>",
 	"<br />",
+	", ",
 }
 
 func replaceListSeparators(value string) string {
