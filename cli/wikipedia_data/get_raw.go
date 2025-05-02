@@ -1,9 +1,9 @@
 package wikipedia_data
 
 import (
-	"bufio"
 	"fmt"
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/southern_light/wikipedia_integration"
 	"github.com/arelate/vangogh/cli/fetch"
 	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/arelate/vangogh/cli/shared_data"
@@ -11,7 +11,6 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"io"
 	"maps"
 	"slices"
 	"strings"
@@ -86,7 +85,7 @@ func reduceRawProduct(gogIds []string, wikipediaId string, kvRaw kevlar.KeyValue
 	}
 	defer rcRaw.Close()
 
-	infoboxLines, err := filterInfoboxLines(rcRaw)
+	infoboxLines, err := wikipedia_integration.FilterInfoboxLines(rcRaw)
 	if err != nil {
 		return err
 	}
@@ -106,57 +105,6 @@ func reduceRawProduct(gogIds []string, wikipediaId string, kvRaw kevlar.KeyValue
 	}
 
 	return nil
-}
-
-const (
-	infoboxVideoGamePfx = "{{Infobox video game"
-	infoboxVgPfx        = "{{Infobox VG"
-	listPfx             = "{{"
-	listSfx             = "}}"
-)
-
-func filterInfoboxLines(r io.Reader) ([]string, error) {
-
-	infoboxLines := make([]string, 0)
-
-	ts := bufio.NewScanner(r)
-
-	scanning := false
-	previousLine := ""
-	listCounter := 0
-
-	for ts.Scan() {
-		line := ts.Text()
-		line = strings.TrimSpace(line)
-
-		listCounter += strings.Count(line, listPfx)
-		listCounter -= strings.Count(line, listSfx)
-
-		if !scanning &&
-			(strings.Contains(line, infoboxVideoGamePfx) ||
-				strings.Contains(line, infoboxVgPfx)) {
-			scanning = true
-			continue
-		}
-		if listCounter == 0 && strings.HasPrefix(line, listSfx) {
-			break
-		}
-		if scanning && line == "" && strings.HasSuffix(previousLine, listSfx) {
-			break
-		}
-
-		if scanning {
-			infoboxLines = append(infoboxLines, line)
-		}
-
-		previousLine = line
-	}
-
-	if err := ts.Err(); err != nil {
-		return nil, err
-	}
-
-	return infoboxLines, nil
 }
 
 var prefixedProperties = map[string]string{
@@ -198,7 +146,7 @@ func reduceRawCredits(infoboxLines []string) map[string][]string {
 
 		line = strings.TrimSpace(line)
 
-		if strings.HasPrefix(line, listSfx) {
+		if strings.HasPrefix(line, wikipedia_integration.ListSfx) {
 			list = false
 			lastProperty = ""
 		}
@@ -217,7 +165,7 @@ func reduceRawCredits(infoboxLines []string) map[string][]string {
 		}
 
 		for _, lp := range listPrefixes {
-			if lastProperty != "" && strings.Contains(line, lp) && !strings.Contains(line, listSfx) {
+			if lastProperty != "" && strings.Contains(line, lp) && !strings.Contains(line, wikipedia_integration.ListSfx) {
 				list = true
 			}
 		}
@@ -303,7 +251,7 @@ func parseList(value string) []string {
 
 	value = trimEnclosed(value, "(", ")")
 
-	value = strings.TrimSuffix(value, listSfx)
+	value = strings.TrimSuffix(value, wikipedia_integration.ListSfx)
 
 	if parts := strings.Split(value, "|"); len(parts) > 1 {
 		return parseListItems(parts...)

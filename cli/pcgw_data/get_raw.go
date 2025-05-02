@@ -1,9 +1,9 @@
 package pcgw_data
 
 import (
-	"bufio"
 	"fmt"
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/southern_light/wikipedia_integration"
 	"github.com/arelate/vangogh/cli/fetch"
 	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/arelate/vangogh/cli/shared_data"
@@ -11,7 +11,6 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"io"
 	"maps"
 	"net/url"
 	"slices"
@@ -95,10 +94,12 @@ func reduceRawProduct(gogIds []string, pcgwPageId string, kvRaw kevlar.KeyValues
 	}
 	defer rcRaw.Close()
 
-	propertyLines, err := filterPropertyLines(rcRaw)
+	infoboxLines, err := wikipedia_integration.FilterInfoboxLines(rcRaw)
 	if err != nil {
 		return err
 	}
+
+	propertyLines := filterPropertyLines(infoboxLines...)
 
 	propertyValues := parsePropertyValues(propertyLines)
 
@@ -141,14 +142,11 @@ var prefixedProperties = map[string]string{
 	"{{Infobox game/row/engine": vangogh_integration.EnginesProperty,
 }
 
-func filterPropertyLines(rcRaw io.Reader) (map[string][]string, error) {
+func filterPropertyLines(infoboxLines ...string) map[string][]string {
 
 	propertyLines := make(map[string][]string)
 
-	rawScanner := bufio.NewScanner(rcRaw)
-	for rawScanner.Scan() {
-
-		line := rawScanner.Text()
+	for _, line := range infoboxLines {
 
 		for prefix, property := range prefixedProperties {
 			if strings.HasPrefix(line, prefix) {
@@ -159,11 +157,7 @@ func filterPropertyLines(rcRaw io.Reader) (map[string][]string, error) {
 
 	}
 
-	if err := rawScanner.Err(); err != nil {
-		return nil, err
-	}
-
-	return propertyLines, nil
+	return propertyLines
 }
 
 func parsePropertyValues(propertyLines map[string][]string) map[string][]string {
