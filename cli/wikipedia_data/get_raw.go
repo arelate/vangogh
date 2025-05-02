@@ -271,6 +271,7 @@ func parseList(value string) []string {
 	value = replaceListSeparators(value)
 
 	value = trimEnclosed(value, "{{efn", "}}")
+	value = trimEnclosed(value, "(", ")")
 	//value = trimEnclosed(value, "<", "/>")
 
 	value = strings.TrimSuffix(value, listSfx)
