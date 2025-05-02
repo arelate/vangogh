@@ -183,6 +183,7 @@ var listPrefixes = []string{
 	"{{plainlist",
 	"{{Plainlist",
 	"{{ubl",
+	"{{Ubl",
 }
 
 func reduceRawCredits(infoboxLines []string) map[string][]string {
