@@ -267,13 +267,17 @@ func parseList(value string) []string {
 	for _, lp := range listPrefixes {
 		value = strings.TrimPrefix(value, lp)
 	}
-	value = strings.TrimSuffix(value, listSfx)
 
 	value = replaceListSeparators(value)
 
+	value = trimEnclosed(value, "{{efn", "}}")
+	//value = trimEnclosed(value, "<", "/>")
+
+	value = strings.TrimSuffix(value, listSfx)
+
 	if parts := strings.Split(value, "|"); len(parts) > 1 {
 		return parseListItems(parts...)
-	} else if tv := trimSpaceLinks(value); tv != "" {
+	} else if tv := trimWikiText(value); tv != "" {
 		return []string{tv}
 	} else {
 		return nil
@@ -284,7 +288,7 @@ func parseListItems(parts ...string) []string {
 	listItems := make([]string, 0, len(parts))
 	for _, part := range parts {
 
-		part = trimSpaceLinks(part)
+		part = trimWikiText(part)
 
 		if part != "" {
 			listItems = append(listItems, part)
@@ -299,7 +303,7 @@ const (
 	commentSfx = "-->"
 )
 
-func trimSpaceLinks(value string) string {
+func trimWikiText(value string) string {
 
 	value = strings.TrimSpace(value)
 
@@ -326,4 +330,16 @@ func replaceListSeparators(value string) string {
 		value = strings.Replace(value, als, "|", -1)
 	}
 	return value
+}
+
+func trimEnclosed(s string, open, close string) string {
+
+	for strings.Contains(s, open) && strings.Contains(s, close) {
+		firstIndex := strings.Index(s, open)
+		lastIndex := strings.Index(s, close)
+
+		s = strings.Replace(s, s[firstIndex:lastIndex+len(close)], "", 1)
+	}
+
+	return s
 }
