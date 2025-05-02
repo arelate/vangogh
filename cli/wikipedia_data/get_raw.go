@@ -290,6 +290,7 @@ func parseList(value string) []string {
 
 	value = strings.Replace(value, "<ref name=\"bombinfo\"/>", "", -1)
 	value = strings.Replace(value, "<ref name=FAQ/>", "", -1)
+	value = strings.Replace(value, "<ref name=\"DM3Manual\"/>", "", -1)
 	//value = trimEnclosed(value, "<", "/>")
 
 	value = strings.TrimSuffix(value, listSfx)
