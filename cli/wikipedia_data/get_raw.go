@@ -208,14 +208,19 @@ func reduceRawCredits(infoboxLines []string) map[string][]string {
 			if strings.HasPrefix(line, pfx) {
 				rawCredits[property] = append(rawCredits[property], line)
 				lastProperty = property
+				list = false
 				break
 			}
 		}
 
 		for _, lp := range listPrefixes {
-			if strings.Contains(line, lp) && !strings.Contains(line, listSfx) {
+			if lastProperty != "" && strings.Contains(line, lp) && !strings.Contains(line, listSfx) {
 				list = true
 			}
+		}
+
+		if !list {
+			lastProperty = ""
 		}
 	}
 
