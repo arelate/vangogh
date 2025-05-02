@@ -285,6 +285,7 @@ func parseList(value string) []string {
 	value = replaceListSeparators(value)
 
 	value = trimEnclosed(value, "{{efn", "}}")
+	value = trimEnclosed(value, "{{Sfn", "}}")
 	value = trimEnclosed(value, "(", ")")
 	value = trimEnclosed(value, "<ref", "/ref>")
 
