@@ -288,7 +288,7 @@ func parseList(value string) []string {
 
 	value = replaceListSeparators(value)
 
-	for strings.Contains(value, "<ref") && strings.Contains(value, "/ref>") {
+	for range 10 {
 		value = trimEnclosed(value, "<ref", "/ref>")
 	}
 
