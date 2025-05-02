@@ -13,6 +13,7 @@ import (
 	"github.com/boggydigital/redux"
 	"io"
 	"maps"
+	"slices"
 	"strings"
 )
 
@@ -253,7 +254,12 @@ func parseCreditValues(property string, rawValues ...string) []string {
 		}
 
 		if listItems := parseList(rv); len(listItems) > 0 {
-			parsedValues = append(parsedValues, listItems...)
+			for _, li := range listItems {
+				if slices.Contains(parsedValues, li) {
+					continue
+				}
+				parsedValues = append(parsedValues, li)
+			}
 			continue
 		}
 	}
@@ -313,7 +319,7 @@ func trimWikiText(value string) string {
 		return ""
 	}
 
-	value = strings.Trim(value, "[]'|*")
+	value = strings.Trim(value, "[]'|* ")
 	value = strings.TrimSpace(value)
 
 	return value
