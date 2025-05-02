@@ -181,6 +181,7 @@ var prefixedProperties = map[string]string{
 var listPrefixes = []string{
 	"{{Unbulleted list",
 	"{{plainlist",
+	"{{Plainlist",
 	"{{ubl",
 }
 
