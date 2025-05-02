@@ -180,10 +180,11 @@ var prefixedProperties = map[string]string{
 
 var listPrefixes = []string{
 	"{{Unbulleted list",
-	"{{plainlist",
+	"{{unbulleted list",
 	"{{Plainlist",
-	"{{ubl",
+	"{{plainlist",
 	"{{Ubl",
+	"{{ubl",
 }
 
 func reduceRawCredits(infoboxLines []string) map[string][]string {
