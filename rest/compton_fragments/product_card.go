@@ -67,7 +67,8 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx redux.Readab
 	productBadges := compton.FlexItems(r, direction.Row).
 		RowGap(size.XXSmall).
 		ColumnGap(size.XXSmall).
-		JustifyContent(align.Start)
+		JustifyContent(align.Start).
+		Width(size.FullWidth)
 
 	for _, fmtBadge := range FormatBadges(id, rdx) {
 		badge := compton.SmallBadge(r, fmtBadge.Title, fmtBadge.Color, color.Highlight)
