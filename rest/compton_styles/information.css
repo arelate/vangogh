@@ -1,12 +1,3 @@
 body {
     max-width: calc(2 * var(--s-maxw));
 }
-
-.short-description {
-    max-width: var(--s-maxw);
-}
-
-.product-details {
-    max-width: var(--s-maxw);
-    width: 100%;
-}

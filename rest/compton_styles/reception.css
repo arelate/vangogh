@@ -63,8 +63,3 @@ fspan.monochrome-emoji {
     text-shadow: 0 0 0 var(--fg);
     font-size: var(--fs-n)
 }
-
-.steam-reviews {
-    max-width: var(--s-maxw);
-    width: 100%;
-}

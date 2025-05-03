@@ -20,27 +20,30 @@ func Information(id string, rdx redux.Readable) compton.PageElement {
 
 	if shortDesc, yes := rdx.GetLastVal(vangogh_integration.ShortDescriptionProperty, id); yes {
 		shortDescSpan := compton.Fspan(s, shortDesc).
+			MaxWidth(size.MaxWidth).
 			ForegroundColor(color.Gray).
 			BorderRadius(size.XSmall).
 			FontSize(size.Small).
 			TextAlign(align.Start)
-		shortDescSpan.AddClass("short-description")
+		//shortDescSpan.AddClass("short-description")
 
 		pageStack.Append(compton.FICenter(s, shortDescSpan))
 	}
 
-	productDetailsRow := compton.FlexItems(s, direction.Row).
-		AlignItems(align.Center).
-		JustifyItems(align.Center).
-		ColumnGap(size.Small).
-		BackgroundColor(color.Background)
-	productDetailsRow.AddClass("product-details")
-	productDetailsRow.Append(
-		compton.Fspan(s, "Product Details").
-			FontSize(size.Small).
-			PaddingBlock(size.Small).
-			BorderRadius(size.XSmall))
-	pageStack.Append(compton.FICenter(s, productDetailsRow))
+	pageStack.Append(compton.SectionDivider(s, compton.Text("Product Details")))
+
+	//productDetailsRow := compton.FlexItems(s, direction.Row).
+	//	AlignItems(align.Center).
+	//	JustifyItems(align.Center).
+	//	ColumnGap(size.Small).
+	//	BackgroundColor(color.Background)
+	//productDetailsRow.AddClass("product-details")
+	//productDetailsRow.Append(
+	//	compton.Fspan(s, "Product Details").
+	//		FontSize(size.Small).
+	//		PaddingBlock(size.Small).
+	//		BorderRadius(size.XSmall))
+	//pageStack.Append(compton.FICenter(s, productDetailsRow))
 
 	grid := compton.GridItems(s).JustifyContent(align.Center).RowGap(size.Normal)
 	pageStack.Append(grid)

@@ -160,15 +160,14 @@ func operatingSystemHeading(r compton.Registrar, os vangogh_integration.Operatin
 	osRow := compton.FlexItems(r, direction.Row).
 		AlignItems(align.Center).
 		JustifyContent(align.Center).
-		ColumnGap(size.Small).
-		BackgroundColor(color.Background)
-	osRow.AddClass("operating-system-heading")
+		ColumnGap(size.Small)
+
 	osSymbol := compton.Sparkle
 	if smb, ok := compton_data.OperatingSystemSymbols[os]; ok {
 		osSymbol = smb
 	}
 	osIcon := compton.SvgUse(r, osSymbol)
-	osIcon.AddClass("operating-system")
+
 	osString := ""
 	switch os {
 	case vangogh_integration.AnyOperatingSystem:
@@ -176,12 +175,10 @@ func operatingSystemHeading(r compton.Registrar, os vangogh_integration.Operatin
 	default:
 		osString = os.String()
 	}
-	osTitle := compton.Fspan(r, osString).
-		FontSize(size.Small).
-		PaddingBlock(size.Small).
-		BorderRadius(size.XSmall)
-	osRow.Append(osIcon, osTitle)
-	return osRow
+
+	osRow.Append(osIcon, compton.Text(osString))
+
+	return compton.SectionDivider(r, osRow)
 }
 
 func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
