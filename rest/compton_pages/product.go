@@ -169,7 +169,6 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 		sectionTitle := compton_data.SectionTitles[section]
 		detailsSummary := compton.DSLarge(p, sectionTitle, false).
 			BackgroundColor(color.Highlight).
-			ForegroundColor(color.Foreground).
 			MarkerColor(color.Gray).
 			DetailsMarginBlockEnd(size.Unset).
 			SummaryMarginBlockEnd(size.Normal)
