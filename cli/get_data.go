@@ -22,6 +22,7 @@ import (
 
 var purchasesTypes = []vangogh_integration.ProductType{
 	vangogh_integration.Licences,
+	vangogh_integration.UserWishlist,
 	vangogh_integration.AccountPage,
 	vangogh_integration.OrderPage,
 	vangogh_integration.Details,
