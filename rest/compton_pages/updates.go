@@ -19,8 +19,13 @@ func Updates(sections []string,
 
 	current := compton_data.AppNavUpdates
 	p, pageStack := compton_fragments.AppPage(current)
-	p.RegisterStyles(compton_styles.Styles, "product-card.css")
+
 	p.AppendSpeculationRules("/product?id=*")
+
+	p.RegisterStyles(compton_styles.Styles, "product-card.css")
+	p.RegisterStyles(compton_styles.Styles, "good-old-game-badge.css")
+
+	p.SetAttribute("style", "--c-rep:var(--c-background)")
 
 	/* Nav stack = App navigation + Show all + (popup) Updates sections shortcuts */
 

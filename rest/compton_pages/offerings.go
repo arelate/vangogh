@@ -14,9 +14,10 @@ func Offerings(id string, rdx redux.Readable) compton.PageElement {
 
 	s := compton_fragments.ProductSection(compton_data.OfferingsSection)
 
+	s.AppendSpeculationRules("/product?id=*")
+
 	s.RegisterStyles(compton_styles.Styles, "product-card.css")
 	s.RegisterStyles(compton_styles.Styles, "good-old-game-badge.css")
-	s.AppendSpeculationRules("/product?id=*")
 
 	stack := compton.FlexItems(s, direction.Column).RowGap(size.Normal).Width(size.FullWidth)
 	s.Append(stack)
