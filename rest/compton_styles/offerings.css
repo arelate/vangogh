@@ -5,8 +5,3 @@ html {
 body {
     max-width: unset
 }
-
-.property-title {
-    max-width: var(--s-maxw);
-    width: 100%;
-}

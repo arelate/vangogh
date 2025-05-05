@@ -22,6 +22,8 @@ func Search(query map[string][]string, ids []string, from, to int, rdx redux.Rea
 	p.RegisterStyles(compton_styles.Styles, "product-card.css")
 	p.AppendSpeculationRules("/product?id=*")
 
+	p.SetAttribute("style", "--c-rep:var(--c-background)")
+
 	/* Nav stack = App navigation + Search shortcuts */
 
 	appNavLinks := compton_fragments.AppNavLinks(p, current)
