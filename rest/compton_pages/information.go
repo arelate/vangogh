@@ -25,12 +25,12 @@ func Information(id string, rdx redux.Readable) compton.PageElement {
 			BorderRadius(size.XSmall).
 			FontSize(size.Small).
 			TextAlign(align.Start)
-		//shortDescSpan.AddClass("short-description")
 
-		pageStack.Append(compton.FICenter(s, shortDescSpan))
+		pageStack.Append(
+			compton.FICenter(s, shortDescSpan),
+			compton.SectionDivider(s, compton.Text("Product Details")))
+
 	}
-
-	pageStack.Append(compton.SectionDivider(s, compton.Text("Product Details")))
 
 	grid := compton.GridItems(s).JustifyContent(align.Center).RowGap(size.Normal)
 	pageStack.Append(grid)
