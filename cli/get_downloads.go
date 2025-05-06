@@ -138,7 +138,8 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 
 	if len(list) == 0 {
 		sda.EndWithResult("no downloads for requested operating systems, download types, languages")
-		return nil
+		// if there's nothing to download - remove download from the queue, or it'll be stuck there
+		return gdd.rdx.CutKeys(vangogh_integration.DownloadQueuedProperty, id)
 	}
 
 	manualUrls := make([]string, 0, len(list))
