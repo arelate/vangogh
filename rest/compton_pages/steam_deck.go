@@ -10,7 +10,14 @@ import (
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
+	"github.com/boggydigital/compton/consts/font_weight"
 	"github.com/boggydigital/redux"
+)
+
+const (
+	additionalInfoText = "The developer has provided additional information regarding Steam Deck support for this game. " +
+		"Learn more on their Community Page. "
+	additionalInfoLink = "View Developer Post"
 )
 
 var messageByCategory = map[string]string{
@@ -49,14 +56,24 @@ func SteamDeck(id string, dacr *steam_integration.DeckAppCompatibilityReport, rd
 		pageStack.Append(divMessage)
 	}
 
+	if blogUrl := dacr.GetBlogUrl(); blogUrl != "" {
+		additionalInfo := compton.Span()
+		additionalInfo.Append(compton.Text(additionalInfoText))
+
+		link := compton.A(blogUrl)
+		link.Append(compton.Fspan(s, additionalInfoLink).
+			FontWeight(font_weight.Bolder).
+			ForegroundColor(color.Cyan))
+		link.SetAttribute("target", "_top")
+		additionalInfo.Append(link)
+
+		pageStack.Append(additionalInfo)
+	}
+
 	results := dacr.GetResults()
 
 	if len(results) > 0 {
 		pageStack.Append(compton.Hr())
-	}
-
-	if blogUrl := dacr.GetBlogUrl(); blogUrl != "" {
-		pageStack.Append(compton.AText("Read more in the Steam blog", blogUrl))
 	}
 
 	displayTypes := dacr.GetDisplayTypes()
