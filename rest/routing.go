@@ -33,7 +33,7 @@ func HandleFuncs() {
 		"GET /changelog":   Log(http.HandlerFunc(GetChangelog)),
 		"GET /screenshots": Log(http.HandlerFunc(GetScreenshots)),
 		"GET /videos":      Log(http.HandlerFunc(GetVideos)),
-		"GET /steam-news":  Log(http.HandlerFunc(GetSteamNews)),
+		"GET /news":        Log(http.HandlerFunc(GetNews)),
 		"GET /reception":   Log(http.HandlerFunc(GetReception)),
 		"GET /steam-deck":  Log(http.HandlerFunc(GetSteamDeck)),
 		// public media endpoints

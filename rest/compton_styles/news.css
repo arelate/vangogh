@@ -5,6 +5,10 @@ body {
 a {
     color: var(--c-cyan);
     font-weight: var(--fw-b);
+
+    &.internal {
+        color: var(--c-foreground)
+    }
 }
 
 ul, p {

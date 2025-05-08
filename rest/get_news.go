@@ -2,7 +2,6 @@ package rest
 
 import (
 	"encoding/json"
-	"errors"
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_pages"
@@ -11,9 +10,14 @@ import (
 	"net/http"
 )
 
-func GetSteamNews(w http.ResponseWriter, r *http.Request) {
+func GetNews(w http.ResponseWriter, r *http.Request) {
 
-	// GET /steam-news?id
+	// GET /news?id
+
+	if err := RefreshRedux(); err != nil {
+		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+		return
+	}
 
 	gogId := r.URL.Query().Get("id")
 	all := r.URL.Query().Has("all")
@@ -24,7 +28,7 @@ func GetSteamNews(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	p := compton_pages.SteamNews(gogId, appNews, all)
+	p := compton_pages.News(gogId, rdx, appNews, all)
 	if err = p.WriteResponse(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
@@ -37,7 +41,7 @@ func getAppNews(gogId string) (*steam_integration.AppNews, error) {
 	if sai, ok := rdx.GetLastVal(vangogh_integration.SteamAppIdProperty, gogId); ok && sai != "" {
 		steamAppId = sai
 	} else {
-		return nil, errors.New("no steam app id for gog id " + gogId)
+		return nil, nil
 	}
 
 	appNewsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.SteamAppNews)

@@ -19,29 +19,6 @@ import (
 	"time"
 )
 
-var (
-	propertiesSections = map[string]string{
-		vangogh_integration.ChangelogProperty:   compton_data.ChangelogSection,
-		vangogh_integration.ScreenshotsProperty: compton_data.ScreenshotsSection,
-		vangogh_integration.VideoIdProperty:     compton_data.VideosSection,
-	}
-	propertiesSectionsOrder = []string{
-		vangogh_integration.ChangelogProperty,
-		vangogh_integration.ScreenshotsProperty,
-		vangogh_integration.VideoIdProperty,
-	}
-
-	dataTypesSections = map[vangogh_integration.ProductType]string{
-		vangogh_integration.SteamAppNews:                 compton_data.SteamNewsSection,
-		vangogh_integration.SteamDeckCompatibilityReport: compton_data.SteamDeckSection,
-	}
-
-	dataTypesSectionsOrder = []vangogh_integration.ProductType{
-		vangogh_integration.SteamAppNews,
-		vangogh_integration.SteamDeckCompatibilityReport,
-	}
-)
-
 func Product(id string, rdx redux.Readable) compton.PageElement {
 
 	title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
@@ -95,20 +72,21 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 	hasSections = append(hasSections, compton_data.LinksSection)
 
-	for _, property := range propertiesSectionsOrder {
-		if section, ok := propertiesSections[property]; ok {
-			if val, sure := rdx.GetLastVal(property, id); sure && val != "" {
-				hasSections = append(hasSections, section)
-			}
-		}
+	if rdx.HasKey(vangogh_integration.ScreenshotsProperty, id) {
+		hasSections = append(hasSections, compton_data.ScreenshotsSection)
 	}
 
-	for _, dt := range dataTypesSectionsOrder {
-		if section, ok := dataTypesSections[dt]; ok {
-			if rdx.HasValue(vangogh_integration.TypesProperty, id, dt.String()) {
-				hasSections = append(hasSections, section)
-			}
-		}
+	if rdx.HasKey(vangogh_integration.VideoIdProperty, id) {
+		hasSections = append(hasSections, compton_data.VideosSection)
+	}
+
+	if rdx.HasValue(vangogh_integration.TypesProperty, id, vangogh_integration.SteamAppNews.String()) ||
+		rdx.HasKey(vangogh_integration.ChangelogProperty, id) {
+		hasSections = append(hasSections, compton_data.NewsSection)
+	}
+
+	if rdx.HasValue(vangogh_integration.TypesProperty, id, vangogh_integration.SteamDeckCompatibilityReport.String()) {
+		hasSections = append(hasSections, compton_data.SteamDeckSection)
 	}
 
 	if val, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && val == vangogh_integration.TrueValue {
@@ -237,7 +215,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 			}
 
 			detailsSummary.AppendBadges(receptionBadges)
-		case compton_data.SteamNewsSection:
+		case compton_data.NewsSection:
 			if lcus, ok := rdx.GetLastVal(vangogh_integration.SteamLastCommunityUpdateProperty, id); ok && lcus != "" {
 				if lcut, err := time.Parse(time.RFC3339, lcus); err == nil {
 

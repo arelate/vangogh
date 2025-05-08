@@ -8,7 +8,7 @@ var SectionStyles = map[string]string{
 	ScreenshotsSection: "screenshots.css",
 	VideosSection:      "",
 	ChangelogSection:   "changelog.css",
-	SteamNewsSection:   "steam-news.css",
+	NewsSection:        "news.css",
 	ReceptionSection:   "reception.css",
 	SteamDeckSection:   "steam-deck.css",
 	InstallersSection:  "downloads.css",

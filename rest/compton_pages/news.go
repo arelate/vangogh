@@ -2,19 +2,41 @@ package compton_pages
 
 import (
 	"github.com/arelate/southern_light/steam_integration"
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
+	"github.com/boggydigital/compton/consts/size"
+	"github.com/boggydigital/redux"
 )
 
-func SteamNews(gogId string, san *steam_integration.AppNews, all bool) compton.PageElement {
-	s := compton_fragments.ProductSection(compton_data.SteamNewsSection)
+func News(gogId string, rdx redux.Readable, san *steam_integration.AppNews, all bool) compton.PageElement {
+	s := compton_fragments.ProductSection(compton_data.NewsSection)
 
 	pageStack := compton.FlexItems(s, direction.Column)
 	s.Append(pageStack)
+
+	if rdx.HasKey(vangogh_integration.ChangelogProperty, gogId) {
+		changelogLink := compton.A("/changelog?id=" + gogId)
+		changelogLink.Append(compton.Fspan(s, "View GOG.com Changelog").FontSize(size.Small))
+		changelogLink.SetAttribute("target", "_top")
+		changelogLink.AddClass("internal")
+
+		steamNewsSection := compton.SectionDivider(s, compton.Text("Steam News"))
+
+		pageStack.Append(compton.FICenter(s, changelogLink))
+
+		if san != nil {
+			pageStack.Append(steamNewsSection)
+		}
+	}
+
+	if san == nil {
+		return s
+	}
 
 	communityAnnouncements := make([]steam_integration.NewsItem, 0, len(san.NewsItems))
 	for _, ni := range san.NewsItems {
@@ -27,10 +49,10 @@ func SteamNews(gogId string, san *steam_integration.AppNews, all bool) compton.P
 	if len(san.NewsItems) > 0 &&
 		len(communityAnnouncements) < len(san.NewsItems) {
 		title := "Show all news items types"
-		href := "/steam-news?id=" + gogId + "&all"
+		href := "/news?id=" + gogId + "&all"
 		if all {
 			title = "Show only community announcements"
-			href = "/steam-news?id=" + gogId
+			href = "/news?id=" + gogId
 		}
 
 		communityAnnouncementsNavLink := compton.NavLinks(s)
