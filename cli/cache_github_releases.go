@@ -21,7 +21,7 @@ import (
 	"time"
 )
 
-const forceGitHubUpdatesDays = 7
+const forceGitHubUpdatesDays = 3
 
 func CacheGitHubReleasesHandler(u *url.URL) error {
 	return CacheGitHubReleases(u.Query().Has("force"))
