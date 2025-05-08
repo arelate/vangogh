@@ -19,6 +19,10 @@ import (
 	"time"
 )
 
+var openSections = []string{
+	compton_data.InformationSection,
+}
+
 func Product(id string, rdx redux.Readable) compton.PageElement {
 
 	title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
@@ -145,7 +149,8 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 	for ii, section := range hasSections {
 
 		sectionTitle := compton_data.SectionTitles[section]
-		detailsSummary := compton.DSLarge(p, sectionTitle, false).
+		detailsSummary := compton.DSLarge(p, sectionTitle,
+			slices.Contains(openSections, section)).
 			BackgroundColor(color.Highlight).
 			MarkerColor(color.Gray).
 			DetailsMarginBlockEnd(size.Unset).
