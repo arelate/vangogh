@@ -85,6 +85,11 @@ func GetSearch(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	if len(ids) == 1 {
+		http.Redirect(w, r, "/product?id="+ids[0], http.StatusPermanentRedirect)
+		return
+	}
+
 	searchPage := compton_pages.Search(query, ids, from, to, rdx)
 	if err := searchPage.WriteResponse(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
