@@ -1,7 +1,11 @@
 body {
     word-break: break-word;
     line-height: calc(1.5 * var(--s-n));
-    max-width: calc(2 * var(--s-maxw));
+    margin-block: var(--s-l);
+
+    & h1 {
+        line-height: calc(2 * var(--s-n));
+    }
 }
 
 a {
