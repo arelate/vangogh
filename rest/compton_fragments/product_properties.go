@@ -175,7 +175,11 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 		case vangogh_integration.WritersProperty:
 			fallthrough
 		case vangogh_integration.ComposersProperty:
-			fmtProperty.values[value] = searchCreditsHref(value)
+			if has, ok := rdx.GetLastVal(vangogh_integration.HasMultipleCreditsProperty, value); ok && has == vangogh_integration.TrueValue {
+				fmtProperty.values[value] = searchCreditsHref(value)
+			} else {
+				fmtProperty.values[value] = noHref()
+			}
 		default:
 			if value != "" {
 				fmtProperty.values[value] = searchHref(property, value)
