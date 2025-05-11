@@ -13,7 +13,6 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
-	"slices"
 )
 
 func ValidateHandler(u *url.URL) error {
@@ -273,11 +272,11 @@ func (vd *validateDelegate) Process(id, slug string, list vangogh_integration.Do
 		manualUrlsValidationResults[dl.ManualUrl] = []string{vr.String()}
 		vd.results[vr] = vd.results[vr] + 1
 
-		if err := vd.rdx.BatchReplaceValues(vangogh_integration.ManualUrlValidationResultProperty, manualUrlsValidationResults); err != nil {
+		if err = vd.rdx.BatchReplaceValues(vangogh_integration.ManualUrlValidationResultProperty, manualUrlsValidationResults); err != nil {
 			return err
 		}
 
-		if err := vd.rdx.ReplaceValues(
+		if err = vd.rdx.ReplaceValues(
 			vangogh_integration.ManualUrlStatusProperty,
 			dl.ManualUrl,
 			vangogh_integration.ManualUrlValidated.String()); err != nil {
@@ -285,14 +284,12 @@ func (vd *validateDelegate) Process(id, slug string, list vangogh_integration.Do
 		}
 	}
 
-	slices.Sort(productVrs)
-
 	productValidationResult := vangogh_integration.ValidationResultUnknown
 
 	if downloadsListIsExtrasOnly(list) {
 		productValidationResult = vangogh_integration.ValidatedSuccessfully
 	} else if len(productVrs) > 0 {
-		productValidationResult = productVrs[len(productVrs)-1]
+		productValidationResult = vangogh_integration.WorstValidationResult(productVrs...)
 	}
 
 	if err := vd.rdx.ReplaceValues(vangogh_integration.ProductValidationResultProperty, id, productValidationResult.String()); err != nil {

@@ -14,7 +14,6 @@ import (
 	"github.com/boggydigital/redux"
 	"net/url"
 	"slices"
-	"strconv"
 	"strings"
 )
 
@@ -67,10 +66,6 @@ func Downloads(id string, dls vangogh_integration.DownloadsList, rdx redux.Reada
 		return s
 	}
 
-	if valRes := validationResults(s, id, dls, rdx); valRes != nil {
-		pageStack.Append(valRes)
-	}
-
 	dlOs := downloadsOperatingSystems(dls)
 
 	for _, os := range dlOs {
@@ -106,54 +101,6 @@ func Downloads(id string, dls vangogh_integration.DownloadsList, rdx redux.Reada
 	}
 
 	return s
-}
-
-func validationResults(r compton.Registrar, id string, dls vangogh_integration.DownloadsList, rdx redux.Readable) compton.Element {
-
-	hasInstallerDlcs := false
-	for _, dl := range dls {
-		if dl.Type != vangogh_integration.Extra {
-			hasInstallerDlcs = true
-			break
-		}
-	}
-
-	if !hasInstallerDlcs {
-		return nil
-	}
-
-	pvrc := color.Gray
-	if pvrs, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
-		pvr := vangogh_integration.ParseValidationResult(pvrs)
-		pvrc = compton_fragments.ValidationResultsColors[pvr]
-	}
-
-	valRes := compton.Frow(r).FontSize(size.XSmall).
-		IconColor(compton.Circle, pvrc).
-		Heading("Installers, DLC")
-	results := make(map[vangogh_integration.ValidationResult]int)
-
-	for _, dl := range dls {
-		// only display installers, DLCs validation summary
-		if dl.Type != vangogh_integration.Installer && dl.Type != vangogh_integration.DLC {
-			continue
-		}
-		vr := vangogh_integration.ValidationResultUnknown
-		if muss, ok := rdx.GetLastVal(vangogh_integration.ManualUrlStatusProperty, dl.ManualUrl); ok && vangogh_integration.ParseManualUrlStatus(muss) == vangogh_integration.ManualUrlValidated {
-			if vrs, sure := rdx.GetLastVal(vangogh_integration.ManualUrlValidationResultProperty, dl.ManualUrl); sure {
-				vr = vangogh_integration.ParseValidationResult(vrs)
-			}
-		}
-		results[vr] = results[vr] + 1
-	}
-
-	for _, vr := range vangogh_integration.ValidationResultsOrder {
-		if result, ok := results[vr]; ok && result > 0 {
-			valRes.PropVal(vr.HumanReadableString(), strconv.Itoa(result))
-		}
-	}
-
-	return compton.FICenter(r, valRes)
 }
 
 func operatingSystemHeading(r compton.Registrar, os vangogh_integration.OperatingSystem) compton.Element {
