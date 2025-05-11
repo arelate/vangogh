@@ -273,8 +273,6 @@ func propertyTitleValues(r compton.Registrar, property string, fmtProperty forma
 			tv.AppendLinkValues(fmtProperty.values)
 		} else {
 			summaryTitle := fmt.Sprintf("%d values", len(fmtProperty.values))
-			//summaryElement := compton.Fspan(r, summaryTitle).
-			//	ForegroundColor(color.Foreground)
 			ds := compton.DSSmall(r, summaryTitle, false).
 				SummaryMarginBlockEnd(size.Normal).
 				DetailsMarginBlockEnd(size.Small)
@@ -283,8 +281,13 @@ func propertyTitleValues(r compton.Registrar, property string, fmtProperty forma
 			sortedKeys := slices.Sorted(maps.Keys(fmtProperty.values))
 			for _, link := range sortedKeys {
 				href := fmtProperty.values[link]
-				anchor := compton.AText(link, href)
-				anchor.SetAttribute("target", "_top")
+				var anchor compton.Element
+				if href != "" {
+					anchor = compton.AText(link, href)
+					anchor.SetAttribute("target", "_top")
+				} else {
+					anchor = compton.SpanText(link)
+				}
 				row.Append(anchor)
 			}
 			ds.Append(row)
