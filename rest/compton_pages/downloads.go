@@ -317,6 +317,8 @@ func getDownloadVariants(os vangogh_integration.OperatingSystem, title string, d
 			if vrs, sure := rdx.GetLastVal(vangogh_integration.ManualUrlValidationResultProperty, dl.ManualUrl); sure {
 				vr = vangogh_integration.ParseValidationResult(vrs)
 			}
+		} else {
+			vr = vangogh_integration.ValidationResultUnknown
 		}
 
 		dv := &DownloadVariant{
