@@ -19,7 +19,7 @@ func reduceCredits(rdx redux.Writeable) error {
 
 	idCredits := make(map[string][]string)
 
-	authorCredits := make(map[string][]string)
+	authorIds := make(map[string][]string)
 
 	for id := range rdx.Keys(vangogh_integration.TitleProperty) {
 		credits := make(map[string]any)
@@ -33,12 +33,11 @@ func reduceCredits(rdx redux.Writeable) error {
 
 			if values, ok := rdx.GetAllValues(property, id); ok {
 				for _, value := range values {
-					if len(authorCredits[value]) == 0 {
-						authorCredits[value] = []string{vangogh_integration.FalseValue}
-					} else if len(authorCredits[value]) == 1 &&
-						authorCredits[value][0] == vangogh_integration.FalseValue {
-						authorCredits[value] = []string{vangogh_integration.TrueValue}
+
+					if !slices.Contains(authorIds[value], id) {
+						authorIds[value] = append(authorIds[value], id)
 					}
+
 					credits[value] = nil
 				}
 			}
@@ -47,7 +46,20 @@ func reduceCredits(rdx redux.Writeable) error {
 		idCredits[id] = slices.Collect(maps.Keys(credits))
 	}
 
-	if err := rdx.BatchReplaceValues(vangogh_integration.HasMultipleCreditsProperty, authorCredits); err != nil {
+	hasMultipleCredits := make(map[string][]string)
+
+	for author, ids := range authorIds {
+		switch len(ids) {
+		case 0:
+			fallthrough
+		case 1:
+			hasMultipleCredits[author] = []string{vangogh_integration.FalseValue}
+		default:
+			hasMultipleCredits[author] = []string{vangogh_integration.TrueValue}
+		}
+	}
+
+	if err := rdx.BatchReplaceValues(vangogh_integration.HasMultipleCreditsProperty, hasMultipleCredits); err != nil {
 		return err
 	}
 
