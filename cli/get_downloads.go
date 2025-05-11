@@ -19,6 +19,7 @@ import (
 	"path"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -28,12 +29,15 @@ func GetDownloadsHandler(u *url.URL) error {
 		return err
 	}
 
+	manualUrlFilter := u.Query().Get("manual-url-filter")
+
 	return GetDownloads(
 		ids,
 		vangogh_integration.OperatingSystemsFromUrl(u),
 		vangogh_integration.LanguageCodesFromUrl(u),
 		vangogh_integration.DownloadTypesFromUrl(u),
 		vangogh_integration.FlagFromUrl(u, "no-patches"),
+		manualUrlFilter,
 		vangogh_integration.DownloadsLayoutFromUrl(u),
 		vangogh_integration.FlagFromUrl(u, "missing"),
 		vangogh_integration.FlagFromUrl(u, "force"))
@@ -45,6 +49,7 @@ func GetDownloads(
 	langCodes []string,
 	downloadTypes []vangogh_integration.DownloadType,
 	noPatches bool,
+	manualUrlFilter string,
 	downloadsLayout vangogh_integration.DownloadsLayout,
 	missing,
 	force bool) error {
@@ -109,6 +114,7 @@ func GetDownloads(
 		rdx:             rdx,
 		forceUpdate:     force,
 		downloadsLayout: downloadsLayout,
+		manualUrlFilter: manualUrlFilter,
 	}
 
 	if err = vangogh_integration.MapDownloads(
@@ -130,6 +136,7 @@ type getDownloadsDelegate struct {
 	rdx             redux.Writeable
 	forceUpdate     bool
 	downloadsLayout vangogh_integration.DownloadsLayout
+	manualUrlFilter string
 }
 
 func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integration.DownloadsList) error {
@@ -144,6 +151,9 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 
 	manualUrls := make([]string, 0, len(list))
 	for _, dl := range list {
+		if gdd.manualUrlFilter == "" || !strings.Contains(dl.ManualUrl, gdd.manualUrlFilter) {
+			continue
+		}
 		manualUrls = append(manualUrls, dl.ManualUrl)
 	}
 
@@ -186,7 +196,10 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 	dc := reqs.GetDoloClient()
 
 	for _, dl := range list {
-		if err := gdd.downloadManualUrl(slug, &dl, hc, dc); err != nil {
+		if gdd.manualUrlFilter == "" || !strings.Contains(dl.ManualUrl, gdd.manualUrlFilter) {
+			continue
+		}
+		if err = gdd.downloadManualUrl(slug, &dl, hc, dc); err != nil {
 			sda.Error(err)
 		}
 	}
