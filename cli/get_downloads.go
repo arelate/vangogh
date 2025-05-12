@@ -151,7 +151,7 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 
 	manualUrls := make([]string, 0, len(list))
 	for _, dl := range list {
-		if gdd.manualUrlFilter == "" || !strings.Contains(dl.ManualUrl, gdd.manualUrlFilter) {
+		if gdd.manualUrlFilter != "" && !strings.Contains(dl.ManualUrl, gdd.manualUrlFilter) {
 			continue
 		}
 		manualUrls = append(manualUrls, dl.ManualUrl)
@@ -196,7 +196,7 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 	dc := reqs.GetDoloClient()
 
 	for _, dl := range list {
-		if gdd.manualUrlFilter == "" || !strings.Contains(dl.ManualUrl, gdd.manualUrlFilter) {
+		if gdd.manualUrlFilter != "" && !strings.Contains(dl.ManualUrl, gdd.manualUrlFilter) {
 			continue
 		}
 		if err = gdd.downloadManualUrl(slug, &dl, hc, dc); err != nil {
