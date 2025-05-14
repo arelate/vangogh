@@ -103,6 +103,8 @@ func reduceAccountPage(page string, kvAccountPages kevlar.KeyValues, piv shared_
 			case vangogh_integration.TagNameProperty:
 				// tag names are reduced at the page level, avoid resetting it here by skipping this property
 				continue
+			case vangogh_integration.SlugProperty:
+				values = []string{ap.Slug}
 			case vangogh_integration.AccountPageProductsProperty:
 				values = []string{page}
 			}
