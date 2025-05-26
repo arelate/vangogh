@@ -7,13 +7,13 @@ import (
 	"net/http"
 )
 
-func GetDebugGetDataErrors(w http.ResponseWriter, r *http.Request) {
+func GetDebugGetDataRedux(w http.ResponseWriter, r *http.Request) {
 
-	// GET /debug-get-data-errors?id
+	// GET /debug-get-data-redux?id
 
 	id := r.URL.Query().Get(vangogh_integration.IdProperty)
 
-	if debugGetDataErrorsPage, err := compton_pages.DebugGetDataErrors(id); debugGetDataErrorsPage != nil && err == nil {
+	if debugGetDataErrorsPage, err := compton_pages.DebugGetDataRedux(id); debugGetDataErrorsPage != nil && err == nil {
 		if err = debugGetDataErrorsPage.WriteResponse(w); err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 			return

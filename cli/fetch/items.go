@@ -9,7 +9,6 @@ import (
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 	"iter"
-	"path/filepath"
 	"time"
 )
 
@@ -20,42 +19,64 @@ func Items(ids iter.Seq[string], itemReq *reqs.Params, kv kevlar.KeyValues, tpw 
 		rateLimit = time.Duration(itemReq.RateLimitSeconds * float64(time.Second) / itemReq.RateLimitRequests)
 	}
 
-	perTypeReduxDir, err := pathways.GetAbsRelDir(vangogh_integration.TypeErrors)
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {
 		return err
 	}
 
-	typeReduxDir := filepath.Join(perTypeReduxDir, itemReq.ProductType.String())
-
-	rdx, err := redux.NewWriter(typeReduxDir, vangogh_integration.TypeErrorProperties()...)
+	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.GetDataProperties()...)
 	if err != nil {
 		return err
 	}
 
-	errs := make(map[string]error)
+	itemsErrMessages := make(map[string][]string)
+	itemsErrDates := make(map[string][]string)
+	itemsLastUpdated := make(map[string][]string)
 
 	for id := range ids {
 
-		if kv.Has(id) && !force {
-			if tpw != nil {
-				tpw.Increment()
-			}
-			continue
+		var ptId string
+		ptId, err = vangogh_integration.ProductTypeId(itemReq.ProductType, id)
+		if err != nil {
+			return err
 		}
 
-		if skip, skipErr := shared_data.SkipError(id, itemReq.ProductType, rdx); skip && skipErr == nil {
-			if tpw != nil {
-				tpw.Increment()
-			}
-			continue
-		} else if skipErr != nil {
+		shouldSkip, skipErr := shared_data.ShouldSkip(id, itemReq.ProductType, rdx)
+		if skipErr != nil {
 			return skipErr
 		}
 
+		if shouldSkip {
+			if tpw != nil {
+				tpw.Increment()
+			}
+			continue
+		}
+
+		if kv.Has(id) && !force {
+
+			shouldUpdate, updErr := shared_data.ShouldUpdate(id, itemReq.ProductType, rdx)
+			if updErr != nil {
+				return updErr
+			}
+
+			if !shouldUpdate {
+				if tpw != nil {
+					tpw.Increment()
+				}
+				continue
+			}
+		}
+
+		formattedNow := time.Now().UTC().Format(time.RFC3339)
+
 		productUrl := itemReq.UrlFunc(id)
 		if err = RequestSetValue(id, productUrl, itemReq, kv); err != nil {
-			errs[id] = err
+			itemsErrMessages[ptId] = []string{err.Error()}
+			itemsErrDates[ptId] = []string{formattedNow}
 		}
+
+		itemsLastUpdated[ptId] = []string{formattedNow}
 
 		if rateLimit > 0 {
 			time.Sleep(rateLimit)
@@ -66,5 +87,15 @@ func Items(ids iter.Seq[string], itemReq *reqs.Params, kv kevlar.KeyValues, tpw 
 		}
 	}
 
-	return shared_data.WriteTypeErrors(errs, rdx)
+	if err = rdx.BatchReplaceValues(vangogh_integration.GetDataLastUpdatedProperty, itemsLastUpdated); err != nil {
+		return err
+	}
+	if err = rdx.BatchReplaceValues(vangogh_integration.GetDataErrorMessageProperty, itemsErrMessages); err != nil {
+		return err
+	}
+	if err = rdx.BatchReplaceValues(vangogh_integration.GetDataErrorDateProperty, itemsErrDates); err != nil {
+		return err
+	}
+
+	return nil
 }

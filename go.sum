@@ -110,6 +110,8 @@ github.com/arelate/southern_light v0.2.75 h1:nmepm8V2U+2SBvQrEQ3kfBMC3YJl2C+qL19
 github.com/arelate/southern_light v0.2.75/go.mod h1:g2lyyOf9XMctrXBYtjzEJF6OqzgZT1lGT/u9DWVS3T8=
 github.com/arelate/southern_light v0.2.76 h1:qTMIC1xQ8YPBMcg5rtGM2uUuxl06pMaP2eABjetzII4=
 github.com/arelate/southern_light v0.2.76/go.mod h1:g2lyyOf9XMctrXBYtjzEJF6OqzgZT1lGT/u9DWVS3T8=
+github.com/arelate/southern_light v0.2.77 h1:u/y9d/96mk8oRTRcRymjKgjFAxBaKreG72pW1cIqnCA=
+github.com/arelate/southern_light v0.2.77/go.mod h1:g2lyyOf9XMctrXBYtjzEJF6OqzgZT1lGT/u9DWVS3T8=
 github.com/boggydigital/atomus v0.1.10 h1:ERmg6ncLOJ/y0B13SSRAIpjDgWQfEqfeQwFBSYgrjg0=
 github.com/boggydigital/atomus v0.1.10/go.mod h1:YK4iAWR9/+2rFhfaGLjkfoFiCPY5QNu8d23I/8wuWSY=
 github.com/boggydigital/atomus v0.1.11 h1:n9XRgPqF3OgnK8UK7yJ3aG5sQkwacBjtqzzOxCXz33A=
@@ -232,6 +234,8 @@ github.com/boggydigital/compton v0.3.19 h1:t8u3hEJluSWa/ux1TUms2BKSWr3BFR/WXFAJ/
 github.com/boggydigital/compton v0.3.19/go.mod h1:ZLmQ7/5KHMq4Yc+bAz7U7pyEPOy4tXclp5Orv3H0M8I=
 github.com/boggydigital/compton v0.3.20 h1:NVBNFtoZjSHwbnLrmA4fAK8NFvkxhcJRIGE7AbsEOYM=
 github.com/boggydigital/compton v0.3.20/go.mod h1:ZLmQ7/5KHMq4Yc+bAz7U7pyEPOy4tXclp5Orv3H0M8I=
+github.com/boggydigital/compton v0.3.21 h1:JKZYT4RVL3cUaS24ydGnnyg+gyMk489VcIOoRgguL94=
+github.com/boggydigital/compton v0.3.21/go.mod h1:zJ5nRTBWqzOUYestOQXil5d29kjQENbGd3fbNGqDi14=
 github.com/boggydigital/coost v0.3.10 h1:F2ouJCRaUIgDGHEgX4T1nN4XdfS/9qrn/kvWq0c05cg=
 github.com/boggydigital/coost v0.3.10/go.mod h1:hDXR+PHEu2R/V5Va/GKzFEOwAtbr32JM1Bw+tC91aN0=
 github.com/boggydigital/dolo v0.2.21 h1:6GKTXjBGtyOQIt4itxuvtUFxP88TypPX5eZAck5UYBg=
@@ -258,6 +262,8 @@ github.com/boggydigital/pathways v0.1.15 h1:oQwqikyCKBIvoQwUthivHyT2oseQu9zzuO4A
 github.com/boggydigital/pathways v0.1.15/go.mod h1:z7Ip2VdIJg+xhEUsfOhc9oDy31YVDAUZKlipP1AWhE0=
 github.com/boggydigital/redux v0.1.4 h1:Eal5EvfnDlVneId14inDERanhP78Q7EQlWzxlkoJK6E=
 github.com/boggydigital/redux v0.1.4/go.mod h1:N5qloppDg8HsXfDwDyWA/2m8i9IAcgr2nlm7bn/g2Cs=
+github.com/boggydigital/redux v0.1.5 h1:H8ZWMN8GxQ8oxaKixw8wnuYNs/8fAb9gQzhZsvvyanw=
+github.com/boggydigital/redux v0.1.5/go.mod h1:ZuIgU55x+sbcpeV/PfK1YEa+3eK3oKaqGjqNtdssgCE=
 github.com/boggydigital/testo v0.1.8 h1:NKuKLpWKn8gG3dYq8xNrFYHimxoCTdzLOs242q6jeQo=
 github.com/boggydigital/testo v0.1.8/go.mod h1:8JTO6UKeQPsHS82vbCH/3NLDfewmr/84vVQ6rNLdCas=
 github.com/boggydigital/wits v0.2.3 h1:Z0eB+QlIA18fJmblyV6ZJQ/swPYSFhOxfgMXOQz4/c8=

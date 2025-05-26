@@ -82,12 +82,14 @@ func getGitHubReleases(operatingSystem vangogh_integration.OperatingSystem, forc
 
 	for _, ownerRepo := range vangogh_integration.OperatingSystemGitHubRepos(operatingSystem) {
 
-		if ghsu, ok := rdx.GetLastVal(vangogh_integration.GitHubReleasesUpdatedProperty, ownerRepo); ok && ghsu != "" {
-			if ghsut, err := time.Parse(time.RFC3339, ghsu); err == nil {
-				if ghsut.AddDate(0, 0, forceGitHubUpdatesDays).Before(time.Now()) {
-					forceRepoUpdate = true
-				}
+		if ghsut, err := rdx.ParseLastValTime(ownerRepo, vangogh_integration.GitHubReleasesUpdatedProperty); err == nil {
+
+			if time.Since(ghsut).Hours()/24 > forceGitHubUpdatesDays {
+				forceRepoUpdate = true
 			}
+
+		} else {
+			return err
 		}
 
 		if err = getRepoReleases(ownerRepo, kvGitHubReleases, rdx, forceRepoUpdate); err != nil {

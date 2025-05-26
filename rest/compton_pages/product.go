@@ -13,6 +13,7 @@ import (
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/issa"
+	"github.com/boggydigital/nod"
 	"github.com/boggydigital/redux"
 	"slices"
 	"strings"
@@ -221,18 +222,22 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 			detailsSummary.AppendBadges(receptionBadges)
 		case compton_data.NewsSection:
-			if lcus, ok := rdx.GetLastVal(vangogh_integration.SteamLastCommunityUpdateProperty, id); ok && lcus != "" {
-				if lcut, err := time.Parse(time.RFC3339, lcus); err == nil {
 
-					updateColor := color.Gray
-					if lcut.After(time.Now().Add(-1 * time.Hour * 24 * 30)) {
-						updateColor = color.Green
-					}
+			if lcut, err := rdx.ParseLastValTime(id, vangogh_integration.SteamLastCommunityUpdateProperty); err == nil {
 
-					lastUpdateBadge := compton.Badge(p, lcut.Format("Jan 2, '06"), updateColor, color.Highlight)
-					detailsSummary.AppendBadges(lastUpdateBadge)
+				updateColor := color.Gray
+
+				if (time.Since(lcut).Hours() / 24) < 30 {
+					updateColor = color.Green
 				}
+
+				lastUpdateBadge := compton.Badge(p, lcut.Format("Jan 2, '06"), updateColor, color.Highlight)
+				detailsSummary.AppendBadges(lastUpdateBadge)
+
+			} else {
+				nod.LogError(err)
 			}
+
 		case compton_data.InstallersSection:
 			if pvrs, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
 				pvr := vangogh_integration.ParseValidationResult(pvrs)

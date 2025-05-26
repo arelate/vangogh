@@ -17,7 +17,7 @@ import (
 	"time"
 )
 
-func GetAppNews(steamGogIds map[string][]string) error {
+func GetAppNews(steamGogIds map[string][]string, force bool) error {
 
 	gana := nod.NewProgress("getting %s...", vangogh_integration.SteamAppNews)
 	defer gana.Done()
@@ -34,7 +34,7 @@ func GetAppNews(steamGogIds map[string][]string) error {
 
 	gana.TotalInt(len(steamGogIds))
 
-	if err = fetch.Items(maps.Keys(steamGogIds), reqs.SteamAppNews(), kvAppNews, gana, true); err != nil {
+	if err = fetch.Items(maps.Keys(steamGogIds), reqs.SteamAppNews(), kvAppNews, gana, force); err != nil {
 		return err
 	}
 

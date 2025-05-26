@@ -6,6 +6,7 @@ import (
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 	"net/url"
+	"os"
 	"path/filepath"
 	"slices"
 	"strconv"
@@ -13,10 +14,13 @@ import (
 
 // Data scheme version log:
 // 1. local-manual-url -> manual-url-filename
+// 2. rm -rf metadata/_type_errors
 
 const (
-	latestDataSchema = 1
+	latestDataSchema = 2
 )
+
+const DeprecatedTypeErrors pathways.RelDir = "_type_errors"
 
 func MigrateDataHandler(u *url.URL) error {
 	return MigrateData(u.Query().Has("force"))
@@ -55,6 +59,10 @@ func MigrateData(force bool) error {
 		switch schema {
 		case 0:
 			if err = migrateLocalManualUrlToManualUrlFilename(); err != nil {
+				return err
+			}
+		case 1:
+			if err = removeTypeErrorsDir(); err != nil {
 				return err
 			}
 		}
@@ -132,4 +140,16 @@ func migrateLocalManualUrlToManualUrlFilename() error {
 	}
 
 	return nil
+}
+
+func removeTypeErrorsDir() error {
+
+	metadataDir, err := pathways.GetAbsDir(vangogh_integration.Metadata)
+	if err != nil {
+		return err
+	}
+
+	typeErrorsDir := filepath.Join(metadataDir, string(DeprecatedTypeErrors))
+
+	return os.RemoveAll(typeErrorsDir)
 }
