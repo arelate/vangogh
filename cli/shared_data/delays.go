@@ -31,6 +31,10 @@ func ShouldUpdate(id string, pt vangogh_integration.ProductType, rdx redux.Reada
 		return false, err
 	}
 
+	if !rdx.HasKey(vangogh_integration.GetDataLastUpdatedProperty, ptId) {
+		return true, nil
+	}
+
 	var updateDelayDays int
 	if udd, sure := updatesDelayDays[pt]; sure {
 		updateDelayDays = udd
@@ -38,18 +42,18 @@ func ShouldUpdate(id string, pt vangogh_integration.ProductType, rdx redux.Reada
 		updateDelayDays = defaultDelayDays
 	}
 
-	if gdlut, err := rdx.ParseLastValTime(vangogh_integration.GetDataLastUpdatedProperty, ptId); err == nil {
-
-		if time.Since(gdlut).Hours()/24 > float64(updateDelayDays) {
-			nod.Log("updating %s %s, last update: %s", pt, id, gdlut.Format(time.RFC3339))
-			return true, nil
-		} else {
-			return false, nil
-		}
-
-	} else {
+	gdlut, err := rdx.ParseLastValTime(vangogh_integration.GetDataLastUpdatedProperty, ptId)
+	if err != nil {
 		return false, err
 	}
+
+	if time.Since(gdlut).Hours()/24 > float64(updateDelayDays) {
+		nod.Log("updating %s %s, last update: %s", pt, id, gdlut.Format(time.RFC3339))
+		return true, nil
+	} else {
+		return false, nil
+	}
+
 }
 
 func ShouldSkip(id string, pt vangogh_integration.ProductType, rdx redux.Writeable) (bool, error) {
@@ -64,6 +68,10 @@ func ShouldSkip(id string, pt vangogh_integration.ProductType, rdx redux.Writeab
 		return false, err
 	}
 
+	if !rdx.HasKey(vangogh_integration.GetDataErrorDateProperty, ptId) {
+		return false, nil
+	}
+
 	var errorDelayDays int
 	if edd, sure := errorsDelayDays[pt]; sure {
 		errorDelayDays = edd
@@ -71,28 +79,26 @@ func ShouldSkip(id string, pt vangogh_integration.ProductType, rdx redux.Writeab
 		errorDelayDays = defaultDelayDays
 	}
 
-	if gdet, err := rdx.ParseLastValTime(vangogh_integration.GetDataErrorDateProperty, ptId); err == nil {
-
-		if time.Since(gdet).Hours()/24 < float64(errorDelayDays) {
-
-			nod.Log("skipping current %s %s error last encountered: %s", pt, id, gdet.Format(time.RFC3339))
-			return true, nil
-		} else {
-
-			nod.Log("clearing %s %s error last encountered: %s", pt, id, gdet.Format(time.RFC3339))
-
-			if err = rdx.CutKeys(vangogh_integration.GetDataErrorDateProperty, ptId); err != nil {
-				return false, err
-			}
-			if err = rdx.CutKeys(vangogh_integration.GetDataErrorMessageProperty, ptId); err != nil {
-				return false, err
-			}
-
-			return false, nil
-		}
-
-	} else {
+	gdet, err := rdx.ParseLastValTime(vangogh_integration.GetDataErrorDateProperty, ptId)
+	if err != nil {
 		return false, err
 	}
 
+	if time.Since(gdet).Hours()/24 < float64(errorDelayDays) {
+
+		nod.Log("skipping current %s %s error last encountered: %s", pt, id, gdet.Format(time.RFC3339))
+		return true, nil
+	} else {
+
+		nod.Log("clearing %s %s error last encountered: %s", pt, id, gdet.Format(time.RFC3339))
+
+		if err = rdx.CutKeys(vangogh_integration.GetDataErrorDateProperty, ptId); err != nil {
+			return false, err
+		}
+		if err = rdx.CutKeys(vangogh_integration.GetDataErrorMessageProperty, ptId); err != nil {
+			return false, err
+		}
+
+		return false, nil
+	}
 }
