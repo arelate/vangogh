@@ -13,10 +13,14 @@ var errorsDelayDays = map[vangogh_integration.ProductType]int{
 	vangogh_integration.CatalogPage: 0, // this type errors are exceptional and most likely indicate transport or origin issue
 	vangogh_integration.OrderPage:   0, // same as above
 	vangogh_integration.AccountPage: 0, // same as above
-	vangogh_integration.Details:     1, // same as above
+	vangogh_integration.Details:     0, // same as above
 }
 
 var updatesDelayDays = map[vangogh_integration.ProductType]int{
+	vangogh_integration.CatalogPage:  0, // this type errors are exceptional and most likely indicate transport or origin issue
+	vangogh_integration.OrderPage:    0, // same as above
+	vangogh_integration.AccountPage:  0, // same as above
+	vangogh_integration.Details:      0, // same as above
 	vangogh_integration.SteamAppNews: 1,
 }
 

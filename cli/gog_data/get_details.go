@@ -14,7 +14,7 @@ import (
 	"net/http"
 )
 
-func GetDetails(ids []string, hc *http.Client, uat string, since int64) error {
+func GetDetails(ids []string, hc *http.Client, uat string, since int64, force bool) error {
 
 	gda := nod.NewProgress("getting new or updated %s...", vangogh_integration.Details)
 	defer gda.Done()
@@ -45,7 +45,7 @@ func GetDetails(ids []string, hc *http.Client, uat string, since int64) error {
 
 	gda.TotalInt(len(newUpdatedDetails))
 
-	if err = fetch.Items(maps.Keys(newUpdatedDetails), reqs.Details(hc, uat), kvDetails, gda, true); err != nil {
+	if err = fetch.Items(maps.Keys(newUpdatedDetails), reqs.Details(hc, uat), kvDetails, gda, force); err != nil {
 		return err
 	}
 

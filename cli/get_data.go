@@ -136,13 +136,13 @@ func GetData(ids []string, productTypes []vangogh_integration.ProductType, since
 	}
 
 	if slices.Contains(productTypes, vangogh_integration.CatalogPage) {
-		if err = gog_data.GetCatalogPages(hc, uat, since); err != nil {
+		if err = gog_data.GetCatalogPages(hc, uat, since, force); err != nil {
 			return err
 		}
 	}
 
 	if slices.Contains(productTypes, vangogh_integration.AccountPage) {
-		if err = gog_data.GetAccountPages(hc, uat, since); err != nil {
+		if err = gog_data.GetAccountPages(hc, uat, since, force); err != nil {
 			return err
 		}
 	}
@@ -163,7 +163,7 @@ func GetData(ids []string, productTypes []vangogh_integration.ProductType, since
 	}
 
 	if slices.Contains(productTypes, vangogh_integration.Details) {
-		if err = gog_data.GetDetails(ids, hc, uat, since); err != nil {
+		if err = gog_data.GetDetails(ids, hc, uat, since, force); err != nil {
 			return err
 		}
 	}

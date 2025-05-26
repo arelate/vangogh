@@ -17,7 +17,7 @@ import (
 
 const demoStoreTag = "Demo"
 
-func GetCatalogPages(hc *http.Client, uat string, since int64) error {
+func GetCatalogPages(hc *http.Client, uat string, since int64, force bool) error {
 
 	gcpa := nod.NewProgress("getting %s...", vangogh_integration.CatalogPage)
 	defer gcpa.Done()
@@ -32,7 +32,7 @@ func GetCatalogPages(hc *http.Client, uat string, since int64) error {
 		return err
 	}
 
-	if err = fetchGogPages(reqs.CatalogPage(hc, uat), kvCatalogPages, gcpa, true); err != nil {
+	if err = fetchGogPages(reqs.CatalogPage(hc, uat), kvCatalogPages, gcpa, force); err != nil {
 		return err
 	}
 
