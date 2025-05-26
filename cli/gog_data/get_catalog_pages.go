@@ -32,7 +32,7 @@ func GetCatalogPages(hc *http.Client, uat string, since int64, force bool) error
 		return err
 	}
 
-	if err = fetchGogPages(reqs.CatalogPage(hc, uat), kvCatalogPages, gcpa, force); err != nil {
+	if err = fetchGogPages(reqs.CatalogPage(hc, uat), kvCatalogPages, gcpa, true); err != nil {
 		return err
 	}
 

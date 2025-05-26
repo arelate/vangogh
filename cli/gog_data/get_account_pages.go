@@ -29,7 +29,7 @@ func GetAccountPages(hc *http.Client, uat string, since int64, force bool) error
 		return err
 	}
 
-	if err = fetchGogPages(reqs.AccountPage(hc, uat), kvAccountPages, gapa, force); err != nil {
+	if err = fetchGogPages(reqs.AccountPage(hc, uat), kvAccountPages, gapa, true); err != nil {
 		return err
 	}
 
