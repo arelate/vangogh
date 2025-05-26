@@ -57,9 +57,8 @@ func HandleFuncs() {
 		"GET /api/github-releases":     Log(http.HandlerFunc(GetGitHubReleases)),
 		"GET /api/github-latest-asset": Log(http.HandlerFunc(GetGitHubLatestAsset)),
 		// debug endpoints
-		"GET /debug":                Log(http.HandlerFunc(GetDebug)),
-		"GET /debug-data":           Auth(Log(http.HandlerFunc(GetDebugData)), AdminRole, SharedRole),
-		"GET /debug-get-data-redux": Log(http.HandlerFunc(GetDebugGetDataRedux)),
+		"GET /debug":      Log(http.HandlerFunc(GetDebug)),
+		"GET /debug-data": Auth(Log(http.HandlerFunc(GetDebugData)), AdminRole, SharedRole),
 		// start at the updates
 		"GET /": Redirect("/updates", http.StatusPermanentRedirect),
 	}

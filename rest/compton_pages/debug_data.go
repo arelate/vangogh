@@ -7,12 +7,31 @@ import (
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_styles"
 	"github.com/boggydigital/compton"
+	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/pathways"
+	"github.com/boggydigital/redux"
 	"io"
 	"strings"
+	"time"
 )
 
 func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageElement, error) {
+
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return nil, err
+	}
+
+	rdx, err := redux.NewReader(reduxDir, vangogh_integration.GetDataProperties()...)
+	if err != nil {
+		return nil, err
+	}
+
+	ptId, err := vangogh_integration.ProductTypeId(pt, id)
+	if err != nil {
+		return nil, err
+	}
 
 	absPtDir, err := vangogh_integration.AbsProductTypeDir(pt)
 	if err != nil {
@@ -37,6 +56,36 @@ func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageEleme
 	title := compton_data.TypesTitles[pt.String()] + " data for " + id
 	p := compton.IframeExpandContent(pt.String(), title)
 	p.RegisterStyles(compton_styles.Styles, "debug.css")
+
+	hasGetDataProperty := false
+	frow := compton.Frow(p).FontSize(size.Small)
+
+	if rdx.HasKey(vangogh_integration.GetDataLastUpdatedProperty, ptId) {
+		if lastUpdated, err := rdx.ParseLastValTime(vangogh_integration.GetDataLastUpdatedProperty, ptId); err == nil {
+			frow.PropVal("Last Updated", lastUpdated.Local().Format(time.RFC1123))
+			hasGetDataProperty = true
+		} else {
+			return nil, err
+		}
+	}
+
+	if rdx.HasKey(vangogh_integration.GetDataErrorDateProperty, ptId) {
+		if errorDate, err := rdx.ParseLastValTime(vangogh_integration.GetDataErrorDateProperty, ptId); err == nil {
+			frow.PropVal("Error Date", errorDate.Local().Format(time.RFC1123))
+			hasGetDataProperty = true
+		} else {
+			return nil, err
+		}
+	}
+
+	if errorMsg, ok := rdx.GetLastVal(vangogh_integration.GetDataErrorMessageProperty, ptId); ok && errorMsg != "" {
+		frow.PropVal("Error Message", errorMsg)
+		hasGetDataProperty = true
+	}
+
+	if hasGetDataProperty {
+		p.Append(frow, compton.Break())
+	}
 
 	ptContent, err := kv.Get(id)
 	if err != nil {
