@@ -11,6 +11,7 @@ import (
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
+	"maps"
 	"net/url"
 	"slices"
 )
@@ -123,7 +124,10 @@ func Debug(gogId string) (compton.PageElement, error) {
 		vangogh_integration.OrderPageProductsProperty:   vangogh_integration.OrderPage,
 	}
 
-	for property, pt := range propertyProductType {
+	sortedProperties := slices.Sorted(maps.Keys(propertyProductType))
+
+	for _, property := range sortedProperties {
+		pt := propertyProductType[property]
 		if page, ok := rdx.GetLastVal(property, gogId); ok && page != "" {
 			if ds := productTypeSection(p, page, pt); ds != nil {
 				pageStack.Append(ds)
