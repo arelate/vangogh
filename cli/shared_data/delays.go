@@ -20,11 +20,15 @@ var errorsDelayDays = map[vangogh_integration.ProductType]int{
 }
 
 var updatesDelayDays = map[vangogh_integration.ProductType]int{
-	vangogh_integration.CatalogPage:  0, // this is foundational data and should always be updated
-	vangogh_integration.OrderPage:    0, // same as above
-	vangogh_integration.AccountPage:  0, // same as above
-	vangogh_integration.Details:      0, // same as above
-	vangogh_integration.SteamAppNews: 1,
+	vangogh_integration.UserAccessToken: 0, // this is foundational "source of truth" data and should always be updated
+	vangogh_integration.CatalogPage:     0, // same as above
+	vangogh_integration.OrderPage:       0, // same as above
+	vangogh_integration.AccountPage:     0, // same as above
+	vangogh_integration.Details:         0, // same as above
+	vangogh_integration.Licences:        0, // same as above
+	vangogh_integration.UserWishlist:    0, // same as above
+	vangogh_integration.ApiProducts:     7,
+	vangogh_integration.SteamAppNews:    1,
 }
 
 func ShouldUpdate(id string, pt vangogh_integration.ProductType, rdx redux.Readable) (bool, error) {
