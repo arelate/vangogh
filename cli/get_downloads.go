@@ -18,6 +18,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -29,7 +30,12 @@ func GetDownloadsHandler(u *url.URL) error {
 		return err
 	}
 
-	manualUrlFilter := u.Query().Get("manual-url-filter")
+	q := u.Query()
+	var manualUrlFilter []string
+
+	if q.Has("manual-url-filter") {
+		manualUrlFilter = strings.Split(q.Get("manual-url-filter"), ",")
+	}
 
 	return GetDownloads(
 		ids,
@@ -37,10 +43,10 @@ func GetDownloadsHandler(u *url.URL) error {
 		vangogh_integration.LanguageCodesFromUrl(u),
 		vangogh_integration.DownloadTypesFromUrl(u),
 		vangogh_integration.FlagFromUrl(u, "no-patches"),
-		manualUrlFilter,
 		vangogh_integration.DownloadsLayoutFromUrl(u),
 		vangogh_integration.FlagFromUrl(u, "missing"),
-		vangogh_integration.FlagFromUrl(u, "force"))
+		vangogh_integration.FlagFromUrl(u, "force"),
+		manualUrlFilter...)
 }
 
 func GetDownloads(
@@ -49,10 +55,10 @@ func GetDownloads(
 	langCodes []string,
 	downloadTypes []vangogh_integration.DownloadType,
 	noPatches bool,
-	manualUrlFilter string,
 	downloadsLayout vangogh_integration.DownloadsLayout,
 	missing,
-	force bool) error {
+	force bool,
+	manualUrlFilter ...string) error {
 
 	gda := nod.NewProgress("downloading product files...")
 	defer gda.Done()
@@ -136,7 +142,7 @@ type getDownloadsDelegate struct {
 	rdx             redux.Writeable
 	forceUpdate     bool
 	downloadsLayout vangogh_integration.DownloadsLayout
-	manualUrlFilter string
+	manualUrlFilter []string
 }
 
 func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integration.DownloadsList) error {
@@ -151,7 +157,7 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 
 	manualUrls := make([]string, 0, len(list))
 	for _, dl := range list {
-		if gdd.manualUrlFilter != "" && !strings.Contains(dl.ManualUrl, gdd.manualUrlFilter) {
+		if len(gdd.manualUrlFilter) > 0 && !slices.Contains(gdd.manualUrlFilter, dl.ManualUrl) {
 			continue
 		}
 		manualUrls = append(manualUrls, dl.ManualUrl)
@@ -196,7 +202,7 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 	dc := reqs.GetDoloClient()
 
 	for _, dl := range list {
-		if gdd.manualUrlFilter != "" && !strings.Contains(dl.ManualUrl, gdd.manualUrlFilter) {
+		if len(gdd.manualUrlFilter) > 0 && !slices.Contains(gdd.manualUrlFilter, dl.ManualUrl) {
 			continue
 		}
 		if err = gdd.downloadManualUrl(slug, &dl, hc, dc); err != nil {

@@ -50,7 +50,7 @@ get-downloads
     lang-code&$={language-codes^}
     download-type&$={download-types^}
     no-patches$
-    manual-url-filter
+    manual-url-filter&
     downloads-layout$={downloads-layouts^}
     missing
     force
