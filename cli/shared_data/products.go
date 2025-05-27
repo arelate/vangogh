@@ -99,7 +99,7 @@ func GetGameGogIds(gogIds map[string]any) (map[string]any, error) {
 	gameGogIds := make(map[string]any)
 
 	for gogId := range gogIds {
-		if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, gogId); ok && pt != "GAME" {
+		if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, gogId); ok && pt != vangogh_integration.GameProductType {
 			continue
 		}
 		if demo, ok := rdx.GetLastVal(vangogh_integration.IsDemoProperty, gogId); ok && demo == vangogh_integration.TrueValue {
@@ -312,13 +312,13 @@ func getNewRequiredGameLicences(kvDetails kevlar.KeyValues) (iter.Seq[string], e
 
 			if productType, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, licenceId); ok {
 				switch productType {
-				case "GAME":
+				case vangogh_integration.GameProductType:
 					// do nothing
 					continue
-				case "PACK":
+				case vangogh_integration.PackProductType:
 					// skip, account products will have the corresponding GAME products
 					continue
-				case "DLC":
+				case vangogh_integration.DlcProductType:
 					// replace DLC licence Id with GAME product that is required for this DLC
 					if requiresGame, sure := rdx.GetLastVal(vangogh_integration.RequiresGamesProperty, licenceId); sure {
 						if !kvDetails.Has(requiresGame) && !yield(requiresGame) {

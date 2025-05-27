@@ -26,7 +26,7 @@ func GetProductDetails(w http.ResponseWriter, r *http.Request) {
 
 	id := q.Get("id")
 
-	dls, err := getInstallers(id, operatingSystems, langCodes, noPatches, rdx)
+	dls, err := getDownloadsList(id, operatingSystems, langCodes, noPatches, rdx)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return

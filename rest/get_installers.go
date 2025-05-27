@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"errors"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_pages"
 	"github.com/boggydigital/kevlar"
@@ -20,7 +21,7 @@ func GetInstallers(w http.ResponseWriter, r *http.Request) {
 
 	id := r.URL.Query().Get("id")
 
-	dls, err := getInstallers(id, operatingSystems, langCodes, noPatches, rdx)
+	dls, err := getDownloadsList(id, operatingSystems, langCodes, noPatches, rdx)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
@@ -32,11 +33,20 @@ func GetInstallers(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func getInstallers(id string,
+func getDownloadsList(id string,
 	operatingSystems []vangogh_integration.OperatingSystem,
 	langCodes []string,
 	noPatches bool,
 	rdx redux.Readable) (vangogh_integration.DownloadsList, error) {
+
+	if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); ok {
+		switch pt {
+		case vangogh_integration.PackProductType:
+			fallthrough
+		case vangogh_integration.DlcProductType:
+			return nil, nil
+		}
+	}
 
 	detailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.Details)
 	if err != nil {
@@ -57,15 +67,7 @@ func getInstallers(id string,
 	// in this case we can remove basic product metadata (title, slug, etc) and no downloads
 
 	if !kvDetails.Has(id) {
-		if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); ok {
-			switch pt {
-			case "PACK":
-				return relatedGamesDownloads(id, vangogh_integration.IncludesGamesProperty, operatingSystems, langCodes, noPatches, rdx)
-			case "DLC":
-				return relatedGamesDownloads(id, vangogh_integration.RequiresGamesProperty, operatingSystems, langCodes, noPatches, rdx)
-			}
-		}
-		return nil, nil
+		return nil, errors.New("no details found for " + id)
 	}
 
 	// at this point we know that we should have product details in storage (see above)
@@ -88,27 +90,4 @@ func getInstallers(id string,
 		langCodes,
 		[]vangogh_integration.DownloadType{vangogh_integration.AnyDownloadType},
 		noPatches), nil
-}
-
-func relatedGamesDownloads(id, property string,
-	operatingSystems []vangogh_integration.OperatingSystem,
-	langCodes []string,
-	noPatches bool,
-	rdx redux.Readable) (vangogh_integration.DownloadsList, error) {
-	if err := rdx.MustHave(property); err != nil {
-		return nil, err
-	}
-	var relatedDownloadsList vangogh_integration.DownloadsList
-	if relatedIds, ok := rdx.GetAllValues(property, id); ok {
-
-		for _, relatedId := range relatedIds {
-			if idl, err := getInstallers(relatedId, operatingSystems, langCodes, noPatches, rdx); err == nil {
-				relatedDownloadsList = append(relatedDownloadsList, idl...)
-			} else {
-				return nil, err
-			}
-		}
-		return relatedDownloadsList, nil
-	}
-	return relatedDownloadsList, nil
 }

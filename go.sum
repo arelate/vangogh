@@ -112,6 +112,8 @@ github.com/arelate/southern_light v0.2.76 h1:qTMIC1xQ8YPBMcg5rtGM2uUuxl06pMaP2eA
 github.com/arelate/southern_light v0.2.76/go.mod h1:g2lyyOf9XMctrXBYtjzEJF6OqzgZT1lGT/u9DWVS3T8=
 github.com/arelate/southern_light v0.2.77 h1:u/y9d/96mk8oRTRcRymjKgjFAxBaKreG72pW1cIqnCA=
 github.com/arelate/southern_light v0.2.77/go.mod h1:g2lyyOf9XMctrXBYtjzEJF6OqzgZT1lGT/u9DWVS3T8=
+github.com/arelate/southern_light v0.2.78 h1:SMX5nPk+ckgdwoRFLdwNBIeFZqGEGJBCXWTskiCds8s=
+github.com/arelate/southern_light v0.2.78/go.mod h1:g2lyyOf9XMctrXBYtjzEJF6OqzgZT1lGT/u9DWVS3T8=
 github.com/boggydigital/atomus v0.1.10 h1:ERmg6ncLOJ/y0B13SSRAIpjDgWQfEqfeQwFBSYgrjg0=
 github.com/boggydigital/atomus v0.1.10/go.mod h1:YK4iAWR9/+2rFhfaGLjkfoFiCPY5QNu8d23I/8wuWSY=
 github.com/boggydigital/atomus v0.1.11 h1:n9XRgPqF3OgnK8UK7yJ3aG5sQkwacBjtqzzOxCXz33A=
@@ -266,6 +268,8 @@ github.com/boggydigital/redux v0.1.5 h1:H8ZWMN8GxQ8oxaKixw8wnuYNs/8fAb9gQzhZsvvy
 github.com/boggydigital/redux v0.1.5/go.mod h1:ZuIgU55x+sbcpeV/PfK1YEa+3eK3oKaqGjqNtdssgCE=
 github.com/boggydigital/redux v0.1.6 h1:woLdaIke4HvG+jpw46HG7sb5Q9heaxpX3qIqxgNar6o=
 github.com/boggydigital/redux v0.1.6/go.mod h1:ZuIgU55x+sbcpeV/PfK1YEa+3eK3oKaqGjqNtdssgCE=
+github.com/boggydigital/redux v0.1.7 h1:iSG61wAvUDN6pwdP6Udx2jlZUzWwQXgHAZajRB7FMzU=
+github.com/boggydigital/redux v0.1.7/go.mod h1:ZuIgU55x+sbcpeV/PfK1YEa+3eK3oKaqGjqNtdssgCE=
 github.com/boggydigital/testo v0.1.8 h1:NKuKLpWKn8gG3dYq8xNrFYHimxoCTdzLOs242q6jeQo=
 github.com/boggydigital/testo v0.1.8/go.mod h1:8JTO6UKeQPsHS82vbCH/3NLDfewmr/84vVQ6rNLdCas=
 github.com/boggydigital/wits v0.2.3 h1:Z0eB+QlIA18fJmblyV6ZJQ/swPYSFhOxfgMXOQz4/c8=

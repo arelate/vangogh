@@ -15,6 +15,8 @@ const (
 	SearchAll      = "All"
 )
 
+const GogPreservationProgramTag = "Good Old Game"
+
 var SearchOrder = []string{
 	SearchNew,
 	SearchOwned,
@@ -32,7 +34,7 @@ func SearchScopes() map[string]string {
 
 	q := make(url.Values)
 	q.Set(vangogh_integration.OwnedProperty, vangogh_integration.TrueValue)
-	q.Set(vangogh_integration.ProductTypeProperty, "GAME")
+	q.Set(vangogh_integration.ProductTypeProperty, vangogh_integration.GameProductType)
 	q.Set(vangogh_integration.SortProperty, vangogh_integration.GOGOrderDateProperty)
 	q.Set(vangogh_integration.DescendingProperty, vangogh_integration.TrueValue)
 	queries[SearchOwned] = q.Encode()
@@ -58,7 +60,7 @@ func SearchScopes() map[string]string {
 	queries[SearchAll] = q.Encode()
 
 	q = make(url.Values)
-	q.Set(vangogh_integration.StoreTagsProperty, "Good Old Game")
+	q.Set(vangogh_integration.StoreTagsProperty, GogPreservationProgramTag)
 	q.Set(vangogh_integration.SortProperty, vangogh_integration.TitleProperty)
 	queries[SearchGOG] = q.Encode()
 

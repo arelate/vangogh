@@ -89,7 +89,7 @@ func formatBadge(id, property string, owned bool, rdx redux.Readable) compton.Fo
 			fmtBadge.Color = color.Teal
 		}
 	case vangogh_integration.ProductTypeProperty:
-		if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); ok && pt != "GAME" {
+		if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); ok && pt != vangogh_integration.GameProductType {
 			fmtBadge.Title = pt
 			fmtBadge.Color = color.Foreground
 		}

@@ -42,7 +42,7 @@ func Items(ids iter.Seq[string], itemReq *reqs.Params, kv kevlar.KeyValues, tpw 
 		}
 
 		itemsErrMessages[ptId] = nil
-		itemsErrDates[ptId] = nil
+		itemsErrDates[ptId] = make([]string, 0)
 
 		shouldSkip, skipErr := shared_data.ShouldSkip(id, itemReq.ProductType, rdx)
 		if skipErr != nil {

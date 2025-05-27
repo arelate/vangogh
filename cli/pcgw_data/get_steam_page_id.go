@@ -60,7 +60,7 @@ func GetGameSteamGogIds(steamGogIds map[string][]string) (map[string][]string, e
 
 	for steamAppId, gogIds := range steamGogIds {
 		for _, gogId := range gogIds {
-			if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, gogId); ok && pt == "GAME" {
+			if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, gogId); ok && pt == vangogh_integration.GameProductType {
 				gameSteamGogIds[steamAppId] = append(gameSteamGogIds[steamAppId], gogId)
 			}
 		}

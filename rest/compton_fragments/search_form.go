@@ -93,7 +93,9 @@ func sortDatalist() map[string]string {
 }
 
 func productTypesDatalist() map[string]string {
-	return propertiesDatalist([]string{"GAME", "PACK", "DLC"})
+	return propertiesDatalist([]string{vangogh_integration.GameProductType,
+		vangogh_integration.DlcProductType,
+		vangogh_integration.PackProductType})
 }
 
 func steamDeckDatalist() map[string]string {

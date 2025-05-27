@@ -17,7 +17,7 @@ func reduceTopPercent(rdx redux.Writeable) error {
 
 	for id := range rdx.Keys(vangogh_integration.OpenCriticPercentileProperty) {
 
-		if pt, sure := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); sure && pt == "GAME" {
+		if pt, sure := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); sure && pt == vangogh_integration.GameProductType {
 			if demo, yeah := rdx.GetLastVal(vangogh_integration.IsDemoProperty, id); yeah && demo != vangogh_integration.TrueValue {
 
 				if pcts, ok := rdx.GetLastVal(vangogh_integration.OpenCriticPercentileProperty, id); ok {
