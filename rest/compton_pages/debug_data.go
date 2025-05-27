@@ -69,17 +69,13 @@ func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageEleme
 		}
 	}
 
-	if rdx.HasKey(vangogh_integration.GetDataErrorDateProperty, ptId) {
+	if errorMsg, ok := rdx.GetLastVal(vangogh_integration.GetDataErrorMessageProperty, ptId); ok && errorMsg != "" {
+		frow.PropVal("Error Message", errorMsg)
 		if errorDate, err := rdx.ParseLastValTime(vangogh_integration.GetDataErrorDateProperty, ptId); err == nil {
 			frow.PropVal("Error Date", errorDate.Local().Format(time.RFC1123))
-			hasGetDataProperty = true
 		} else {
 			return nil, err
 		}
-	}
-
-	if errorMsg, ok := rdx.GetLastVal(vangogh_integration.GetDataErrorMessageProperty, ptId); ok && errorMsg != "" {
-		frow.PropVal("Error Message", errorMsg)
 		hasGetDataProperty = true
 	}
 

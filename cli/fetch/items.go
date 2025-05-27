@@ -41,12 +41,15 @@ func Items(ids iter.Seq[string], itemReq *reqs.Params, kv kevlar.KeyValues, tpw 
 			return err
 		}
 
+		itemsErrMessages[ptId] = nil
+		itemsErrDates[ptId] = nil
+
 		shouldSkip, skipErr := shared_data.ShouldSkip(id, itemReq.ProductType, rdx)
 		if skipErr != nil {
 			return skipErr
 		}
 
-		if shouldSkip {
+		if shouldSkip && !force {
 			if tpw != nil {
 				tpw.Increment()
 			}
@@ -72,12 +75,12 @@ func Items(ids iter.Seq[string], itemReq *reqs.Params, kv kevlar.KeyValues, tpw 
 
 		productUrl := itemReq.UrlFunc(id)
 		if err = RequestSetValue(id, productUrl, itemReq, kv); err != nil {
-			itemsErrMessages[ptId] = []string{err.Error()}
-			itemsErrDates[ptId] = []string{formattedNow}
+			itemsErrMessages[ptId] = append(itemsErrMessages[ptId], err.Error())
+			itemsErrDates[ptId] = append(itemsErrDates[ptId], formattedNow)
 		}
 
 		if len(itemsErrMessages[ptId]) == 0 {
-			itemsLastUpdated[ptId] = []string{formattedNow}
+			itemsLastUpdated[ptId] = append(itemsLastUpdated[ptId], formattedNow)
 		}
 
 		if rateLimitMilliseconds > 0 {
