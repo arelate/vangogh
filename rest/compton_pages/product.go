@@ -223,7 +223,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 			detailsSummary.AppendBadges(receptionBadges)
 		case compton_data.NewsSection:
 
-			if lcut, err := rdx.ParseLastValTime(id, vangogh_integration.SteamLastCommunityUpdateProperty); err == nil {
+			if lcut, err := rdx.ParseLastValTime(vangogh_integration.SteamLastCommunityUpdateProperty, id); err == nil {
 
 				updateColor := color.Gray
 

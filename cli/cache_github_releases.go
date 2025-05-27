@@ -82,7 +82,7 @@ func getGitHubReleases(operatingSystem vangogh_integration.OperatingSystem, forc
 
 	for _, ownerRepo := range vangogh_integration.OperatingSystemGitHubRepos(operatingSystem) {
 
-		if ghsut, err := rdx.ParseLastValTime(ownerRepo, vangogh_integration.GitHubReleasesUpdatedProperty); err == nil {
+		if ghsut, err := rdx.ParseLastValTime(vangogh_integration.GitHubReleasesUpdatedProperty, ownerRepo); err == nil {
 
 			if time.Since(ghsut).Hours()/24 > forceGitHubUpdatesDays {
 				forceRepoUpdate = true
