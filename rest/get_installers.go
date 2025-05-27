@@ -1,12 +1,10 @@
 package rest
 
 import (
-	"errors"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_pages"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/redux"
 	"net/http"
 )
 
@@ -21,7 +19,16 @@ func GetInstallers(w http.ResponseWriter, r *http.Request) {
 
 	id := r.URL.Query().Get("id")
 
-	dls, err := getDownloadsList(id, operatingSystems, langCodes, noPatches, rdx)
+	if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); ok {
+		switch pt {
+		case vangogh_integration.PackProductType:
+			fallthrough
+		case vangogh_integration.DlcProductType:
+			// do something meaningful here
+		}
+	}
+
+	dls, err := getDownloadsList(id, operatingSystems, langCodes, noPatches)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
@@ -36,17 +43,7 @@ func GetInstallers(w http.ResponseWriter, r *http.Request) {
 func getDownloadsList(id string,
 	operatingSystems []vangogh_integration.OperatingSystem,
 	langCodes []string,
-	noPatches bool,
-	rdx redux.Readable) (vangogh_integration.DownloadsList, error) {
-
-	if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); ok {
-		switch pt {
-		case vangogh_integration.PackProductType:
-			fallthrough
-		case vangogh_integration.DlcProductType:
-			return nil, nil
-		}
-	}
+	noPatches bool) (vangogh_integration.DownloadsList, error) {
 
 	detailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.Details)
 	if err != nil {
@@ -58,16 +55,8 @@ func getDownloadsList(id string,
 		return nil, err
 	}
 
-	// if we don't have product details for the id this can mean two things:
-	// - id represents a PACK that includes individual products (owned, not owned)
-	// in this case we can iterate over included products and combine downloads for each one of them
-	// - id represents a DLC that includes individual products (owned, not owned)
-	// in this case we can iterate over required products and combine downloads for each one of them
-	// - id represents a product that the user doesn't own
-	// in this case we can remove basic product metadata (title, slug, etc) and no downloads
-
 	if !kvDetails.Has(id) {
-		return nil, errors.New("no details found for " + id)
+		return nil, vangogh_integration.DetailsNotFoundErr(id)
 	}
 
 	// at this point we know that we should have product details in storage (see above)
@@ -78,7 +67,7 @@ func getDownloadsList(id string,
 	}
 
 	if det == nil {
-		return nil, nil
+		return nil, vangogh_integration.NilDetailsErr(id)
 	}
 
 	dl, err := vangogh_integration.FromDetails(det, rdx)

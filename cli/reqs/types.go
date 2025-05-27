@@ -17,6 +17,8 @@ import (
 const (
 	defaultRateLimitRequests     = 200
 	defaultRateLimitMilliseconds = 5000
+
+	steamAppDetailsRateLimitMilliseconds = 5 * 60 * 1000
 )
 
 var (
@@ -152,7 +154,7 @@ func SteamAppDetails() *Params {
 		HttpClient:            http.DefaultClient,
 		HttpMethod:            http.MethodGet,
 		RateLimitRequests:     defaultRateLimitRequests,
-		RateLimitMilliseconds: defaultRateLimitMilliseconds,
+		RateLimitMilliseconds: steamAppDetailsRateLimitMilliseconds,
 	}
 }
 

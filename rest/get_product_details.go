@@ -26,8 +26,15 @@ func GetProductDetails(w http.ResponseWriter, r *http.Request) {
 
 	id := q.Get("id")
 
-	dls, err := getDownloadsList(id, operatingSystems, langCodes, noPatches, rdx)
-	if err != nil {
+	dls, err := getDownloadsList(id, operatingSystems, langCodes, noPatches)
+	if err != nil && vangogh_integration.IsDetailsNotFound(err) {
+		// details not found is only a fatal error for GAME products,
+		// details don't exist for PACK and DLC products
+		if productType, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); ok && productType == vangogh_integration.GameProductType {
+			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+			return
+		}
+	} else if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
 	}
@@ -47,7 +54,9 @@ func GetProductDetails(w http.ResponseWriter, r *http.Request) {
 }
 
 func getProductDetails(id string, dls vangogh_integration.DownloadsList, rdx redux.Readable) (*vangogh_integration.ProductDetails, error) {
+
 	productDetails := &vangogh_integration.ProductDetails{Id: id}
+
 	if slug, ok := rdx.GetLastVal(vangogh_integration.SlugProperty, id); ok {
 		productDetails.Slug = slug
 	}
@@ -56,6 +65,9 @@ func getProductDetails(id string, dls vangogh_integration.DownloadsList, rdx red
 	}
 	if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
 		productDetails.Title = title
+	}
+	if productType, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); ok {
+		productDetails.ProductType = productType
 	}
 	if oss, ok := rdx.GetAllValues(vangogh_integration.OperatingSystemsProperty, id); ok {
 		oses := vangogh_integration.ParseManyOperatingSystems(oss)
@@ -133,6 +145,21 @@ func getProductDetails(id string, dls vangogh_integration.DownloadsList, rdx red
 		}
 
 		productDetails.DownloadLinks = append(productDetails.DownloadLinks, link)
+	}
+
+	switch productDetails.ProductType {
+	case vangogh_integration.PackProductType:
+		if includesGames, ok := rdx.GetAllValues(vangogh_integration.IncludesGamesProperty, id); ok {
+			productDetails.IncludesGames = includesGames
+		}
+	case vangogh_integration.DlcProductType:
+		if requiresGames, ok := rdx.GetAllValues(vangogh_integration.RequiresGamesProperty, id); ok {
+			productDetails.RequiresGames = requiresGames
+		}
+	case vangogh_integration.GameProductType:
+		fallthrough
+	default:
+		// do nothing
 	}
 
 	return productDetails, nil
