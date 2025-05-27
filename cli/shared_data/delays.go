@@ -7,7 +7,10 @@ import (
 	"time"
 )
 
-const defaultDelayDays = 7
+const (
+	defaultErrorDelayDays  = 7
+	defaultUpdateDelayDays = 30
+)
 
 var errorsDelayDays = map[vangogh_integration.ProductType]int{
 	vangogh_integration.CatalogPage: 0, // this type errors are exceptional and most likely indicate transport or origin issue
@@ -17,7 +20,7 @@ var errorsDelayDays = map[vangogh_integration.ProductType]int{
 }
 
 var updatesDelayDays = map[vangogh_integration.ProductType]int{
-	vangogh_integration.CatalogPage:  0, // this type errors are exceptional and most likely indicate transport or origin issue
+	vangogh_integration.CatalogPage:  0, // this is foundational data and should always be updated
 	vangogh_integration.OrderPage:    0, // same as above
 	vangogh_integration.AccountPage:  0, // same as above
 	vangogh_integration.Details:      0, // same as above
@@ -43,7 +46,7 @@ func ShouldUpdate(id string, pt vangogh_integration.ProductType, rdx redux.Reada
 	if udd, sure := updatesDelayDays[pt]; sure {
 		updateDelayDays = udd
 	} else {
-		updateDelayDays = defaultDelayDays
+		updateDelayDays = defaultUpdateDelayDays
 	}
 
 	gdlut, err := rdx.ParseLastValTime(vangogh_integration.GetDataLastUpdatedProperty, ptId)
@@ -80,7 +83,7 @@ func ShouldSkip(id string, pt vangogh_integration.ProductType, rdx redux.Writeab
 	if edd, sure := errorsDelayDays[pt]; sure {
 		errorDelayDays = edd
 	} else {
-		errorDelayDays = defaultDelayDays
+		errorDelayDays = defaultErrorDelayDays
 	}
 
 	gdet, err := rdx.ParseLastValTime(vangogh_integration.GetDataErrorDateProperty, ptId)

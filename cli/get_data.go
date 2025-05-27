@@ -183,7 +183,11 @@ func GetData(ids []string, productTypes []vangogh_integration.ProductType, since
 			catalogAccountProducts[id] = nil
 		}
 	} else if requiresCatalogAccountGogIds(productTypes...) {
-		catalogAccountProducts, err = shared_data.GetCatalogAccountProducts(since)
+		// fetch.Items will check if certain data type should be updated, so
+		// we shouldn't limit catalog-products and account-products only to
+		// the recently updated, instead passing all of them and let
+		// last updated check figure what needs to be updated
+		catalogAccountProducts, err = shared_data.GetCatalogAccountProducts(-1)
 		if err != nil {
 			return err
 		}
