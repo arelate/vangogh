@@ -24,7 +24,7 @@ var PropertyTitles = map[string]string{
 
 	vangogh_integration.IsIncludedByGamesProperty: "Editions",
 	vangogh_integration.IsRequiredByGamesProperty: "DLCs",
-	vangogh_integration.IncludesGamesProperty:     "This Editions Contains",
+	vangogh_integration.IncludesGamesProperty:     "This Editions Includes",
 	vangogh_integration.RequiresGamesProperty:     "This DLC Requires",
 
 	vangogh_integration.ProductTypeProperty: "Product Type",
