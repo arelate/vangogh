@@ -95,7 +95,9 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 	}
 
 	if val, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && val == vangogh_integration.TrueValue {
-		hasSections = append(hasSections, compton_data.InstallersSection)
+		if productType, sure := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); sure && productType == vangogh_integration.GameProductType {
+			hasSections = append(hasSections, compton_data.InstallersSection)
+		}
 	}
 
 	/* Product details sections shortcuts */
@@ -256,6 +258,27 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 		detailsSummary.Append(ifh)
 
 		pageStack.Append(detailsSummary)
+	}
+
+	if productType, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); ok && productType != vangogh_integration.GameProductType {
+
+		hintSentences := []string{"No installers here."}
+		switch productType {
+		case vangogh_integration.DlcProductType:
+			hintSentences = append(hintSentences, "Visit the <b>Offerings</b> section for the required product download links - including this DLC.")
+		case vangogh_integration.PackProductType:
+			hintSentences = append(hintSentences, "See the <b>Offerings</b> section for included products with downloads.")
+		}
+
+		nonGameInstallersHint := compton.Fspan(p, strings.Join(hintSentences, " ")).
+			FontSize(size.Small).
+			ForegroundColor(color.Gray).
+			TextAlign(align.Center)
+
+		pageStack.Append(
+			compton.Break(),
+			compton.FICenter(p, nonGameInstallersHint))
+
 	}
 
 	/* Standard app footer */

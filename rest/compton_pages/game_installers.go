@@ -49,10 +49,10 @@ var validationResultsFontWeights = map[vangogh_integration.ValidationResult]font
 	vangogh_integration.ValidatedChecksumMismatch:    font_weight.Bolder,
 }
 
-// Downloads will present available installers, DLCs in the following hierarchy:
+// GameInstallers will present available installers, DLCs in the following hierarchy:
 // - Operating system heading - Installers and DLCs (separately)
 // - title_values list of downloads by version
-func Downloads(id string, dls vangogh_integration.DownloadsList, rdx redux.Readable) compton.PageElement {
+func GameInstallers(id string, dls vangogh_integration.DownloadsList, rdx redux.Readable) compton.PageElement {
 
 	s := compton_fragments.ProductSection(compton_data.InstallersSection)
 
@@ -60,7 +60,7 @@ func Downloads(id string, dls vangogh_integration.DownloadsList, rdx redux.Reada
 	s.Append(pageStack)
 
 	if owned, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && owned == vangogh_integration.FalseValue {
-		ownershipRequiredNotice := compton.Fspan(s, "Downloads are available for owned products only").
+		ownershipRequiredNotice := compton.Fspan(s, "GameInstallers are available for owned products only").
 			ForegroundColor(color.Gray)
 		pageStack.Append(ownershipRequiredNotice)
 		return s

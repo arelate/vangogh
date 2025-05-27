@@ -22,21 +22,21 @@ func GetInstallers(w http.ResponseWriter, r *http.Request) {
 	if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); ok {
 		switch pt {
 		case vangogh_integration.PackProductType:
-			fallthrough
+			// do nothing
 		case vangogh_integration.DlcProductType:
-			// do something meaningful here
+			// do nothing
+		case vangogh_integration.GameProductType:
+			dls, err := getDownloadsList(id, operatingSystems, langCodes, noPatches)
+			if err != nil {
+				http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+				return
+			}
+			gameInstallersPage := compton_pages.GameInstallers(id, dls, rdx)
+			if err = gameInstallersPage.WriteResponse(w); err != nil {
+				http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+				return
+			}
 		}
-	}
-
-	dls, err := getDownloadsList(id, operatingSystems, langCodes, noPatches)
-	if err != nil {
-		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-		return
-	}
-
-	p := compton_pages.Downloads(id, dls, rdx)
-	if err := p.WriteResponse(w); err != nil {
-		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}
 }
 
