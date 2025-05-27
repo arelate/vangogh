@@ -30,7 +30,7 @@ func RequestSetValue(id string, u *url.URL, itemReq *reqs.Params, kv kevlar.KeyV
 	defer resp.Body.Close()
 
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
-		return errors.New(id + ": " + resp.Status)
+		return errors.New(resp.Status)
 	}
 
 	return kv.Set(id, resp.Body)

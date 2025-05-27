@@ -15,8 +15,8 @@ import (
 )
 
 const (
-	defaultRateLimitRequests = 200
-	defaultRateLimitSeconds  = 5
+	defaultRateLimitRequests     = 200
+	defaultRateLimitMilliseconds = 5000
 )
 
 var (
@@ -28,14 +28,14 @@ const (
 )
 
 type Params struct {
-	ProductType       vangogh_integration.ProductType
-	UrlFunc           func(id string) *url.URL
-	HttpClient        *http.Client
-	HttpMethod        string
-	AuthBearer        string
-	UserAgent         string
-	RateLimitRequests float64
-	RateLimitSeconds  float64
+	ProductType           vangogh_integration.ProductType
+	UrlFunc               func(id string) *url.URL
+	HttpClient            *http.Client
+	HttpMethod            string
+	AuthBearer            string
+	UserAgent             string
+	RateLimitRequests     int
+	RateLimitMilliseconds int
 }
 
 func GetDefaultUserAgent() string {
@@ -147,12 +147,12 @@ func GamesDbGogProduct(authHttpClient *http.Client, authBearer string) *Params {
 
 func SteamAppDetails() *Params {
 	return &Params{
-		ProductType:       vangogh_integration.SteamAppDetails,
-		UrlFunc:           steam_integration.AppDetailsUrl,
-		HttpClient:        http.DefaultClient,
-		HttpMethod:        http.MethodGet,
-		RateLimitSeconds:  defaultRateLimitSeconds,
-		RateLimitRequests: defaultRateLimitRequests,
+		ProductType:           vangogh_integration.SteamAppDetails,
+		UrlFunc:               steam_integration.AppDetailsUrl,
+		HttpClient:            http.DefaultClient,
+		HttpMethod:            http.MethodGet,
+		RateLimitRequests:     defaultRateLimitRequests,
+		RateLimitMilliseconds: defaultRateLimitMilliseconds,
 	}
 }
 
@@ -176,10 +176,12 @@ func SteamAppReviews() *Params {
 
 func SteamDeckCompatibilityReports() *Params {
 	return &Params{
-		ProductType: vangogh_integration.SteamDeckCompatibilityReport,
-		UrlFunc:     steam_integration.DeckAppCompatibilityReportUrl,
-		HttpClient:  http.DefaultClient,
-		HttpMethod:  http.MethodGet,
+		ProductType:           vangogh_integration.SteamDeckCompatibilityReport,
+		UrlFunc:               steam_integration.DeckAppCompatibilityReportUrl,
+		HttpClient:            http.DefaultClient,
+		HttpMethod:            http.MethodGet,
+		RateLimitRequests:     defaultRateLimitRequests,
+		RateLimitMilliseconds: defaultRateLimitMilliseconds,
 	}
 }
 

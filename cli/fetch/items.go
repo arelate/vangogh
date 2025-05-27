@@ -14,9 +14,9 @@ import (
 
 func Items(ids iter.Seq[string], itemReq *reqs.Params, kv kevlar.KeyValues, tpw nod.TotalProgressWriter, force bool) error {
 
-	var rateLimit time.Duration
+	var rateLimitMilliseconds int
 	if itemReq.RateLimitRequests > 0 {
-		rateLimit = time.Duration(itemReq.RateLimitSeconds * float64(time.Second) / itemReq.RateLimitRequests)
+		rateLimitMilliseconds = itemReq.RateLimitMilliseconds / itemReq.RateLimitRequests
 	}
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
@@ -76,10 +76,12 @@ func Items(ids iter.Seq[string], itemReq *reqs.Params, kv kevlar.KeyValues, tpw 
 			itemsErrDates[ptId] = []string{formattedNow}
 		}
 
-		itemsLastUpdated[ptId] = []string{formattedNow}
+		if len(itemsErrMessages[ptId]) == 0 {
+			itemsLastUpdated[ptId] = []string{formattedNow}
+		}
 
-		if rateLimit > 0 {
-			time.Sleep(rateLimit)
+		if rateLimitMilliseconds > 0 {
+			time.Sleep(time.Duration(rateLimitMilliseconds) * time.Millisecond)
 		}
 
 		if tpw != nil {

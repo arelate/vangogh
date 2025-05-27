@@ -20,7 +20,7 @@ func GetInstallers(w http.ResponseWriter, r *http.Request) {
 
 	id := r.URL.Query().Get("id")
 
-	dls, err := getDownloads(id, operatingSystems, langCodes, noPatches, rdx)
+	dls, err := getInstallers(id, operatingSystems, langCodes, noPatches, rdx)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
@@ -32,7 +32,7 @@ func GetInstallers(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func getDownloads(id string,
+func getInstallers(id string,
 	operatingSystems []vangogh_integration.OperatingSystem,
 	langCodes []string,
 	noPatches bool,
@@ -102,7 +102,7 @@ func relatedGamesDownloads(id, property string,
 	if relatedIds, ok := rdx.GetAllValues(property, id); ok {
 
 		for _, relatedId := range relatedIds {
-			if idl, err := getDownloads(relatedId, operatingSystems, langCodes, noPatches, rdx); err == nil {
+			if idl, err := getInstallers(relatedId, operatingSystems, langCodes, noPatches, rdx); err == nil {
 				relatedDownloadsList = append(relatedDownloadsList, idl...)
 			} else {
 				return nil, err
