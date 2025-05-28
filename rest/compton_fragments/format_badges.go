@@ -49,7 +49,9 @@ func formatBadge(id, property string, owned bool, rdx redux.Readable) compton.Fo
 		if owned {
 			fmtBadge.Title = "OWN"
 
-			if pvr, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
+			if rdx.HasKey(vangogh_integration.DownloadQueuedProperty, id) {
+				fmtBadge.Background = color.Yellow
+			} else if pvr, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
 				validationResult := vangogh_integration.ParseValidationResult(pvr)
 				fmtBadge.Background = ValidationResultsColors[validationResult]
 			} else {
