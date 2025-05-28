@@ -21,7 +21,7 @@ type DownloadVariant struct {
 	downloadType     vangogh_integration.DownloadType
 	version          string
 	langCode         string
-	estimatedBytes   int
+	estimatedBytes   int64
 	validationResult vangogh_integration.ValidationResult
 }
 
@@ -142,7 +142,7 @@ func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 		fr.PropVal("Version", dv.version)
 	}
 	if dv.estimatedBytes > 0 {
-		fr.PropVal("Size", fmtBytes(dv.estimatedBytes))
+		fr.PropVal("Size", vangogh_integration.FormatBytes(dv.estimatedBytes))
 	}
 
 	if dv.downloadType == vangogh_integration.Installer || dv.downloadType == vangogh_integration.DLC {
@@ -249,7 +249,7 @@ func downloadLink(r compton.Registrar,
 	}
 
 	sizeFr := compton.Frow(r).FontSize(size.XSmall).
-		PropVal("Size", fmtBytes(dl.EstimatedBytes))
+		PropVal("Size", vangogh_integration.FormatBytes(dl.EstimatedBytes))
 	linkColumn.Append(sizeFr)
 
 	link.Append(linkColumn)
@@ -357,18 +357,4 @@ func filterDownloads(os vangogh_integration.OperatingSystem, dls vangogh_integra
 		downloads = append(downloads, dl)
 	}
 	return downloads
-}
-
-func fmtBytes(b int) string {
-	const unit = 1000
-	if b < unit {
-		return fmt.Sprintf("%d B", b)
-	}
-	div, exp := int64(unit), 0
-	for n := b / unit; n >= unit; n /= unit {
-		div *= unit
-		exp++
-	}
-	return fmt.Sprintf("%.1f %cB",
-		float64(b)/float64(div), "kMGTPE"[exp])
 }
