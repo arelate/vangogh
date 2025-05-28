@@ -167,7 +167,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 				ColumnGap(size.XSmall).
 				BackgroundColor(color.Transparent)
 			for _, fmtBadge := range compton_fragments.FormatBadges(id, rdx) {
-				badge := compton.Badge(p, fmtBadge.Title, fmtBadge.Color, color.Highlight)
+				badge := compton.Badge(p, fmtBadge.Title, fmtBadge.Background, fmtBadge.Foreground)
 				badge.AddClass(fmtBadge.Class)
 				productBadges.Append(badge)
 			}

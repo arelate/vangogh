@@ -5,7 +5,6 @@ import (
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
-	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/issa"
@@ -71,7 +70,7 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx redux.Readab
 		Width(size.FullWidth)
 
 	for _, fmtBadge := range FormatBadges(id, rdx) {
-		badge := compton.SmallBadge(r, fmtBadge.Title, fmtBadge.Color, color.Highlight)
+		badge := compton.SmallBadge(r, fmtBadge.Title, fmtBadge.Background, fmtBadge.Foreground)
 		badge.AddClass(fmtBadge.Class)
 		productBadges.Append(badge)
 	}
