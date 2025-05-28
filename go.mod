@@ -15,7 +15,7 @@ require (
 	github.com/boggydigital/middleware v0.1.17
 	github.com/boggydigital/nod v0.1.29
 	github.com/boggydigital/pathways v0.1.15
-	github.com/boggydigital/redux v0.1.7
+	github.com/boggydigital/redux v0.1.8
 	github.com/boggydigital/yet_urls v0.1.57
 	golang.org/x/net v0.40.0
 )

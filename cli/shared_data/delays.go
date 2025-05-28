@@ -53,18 +53,20 @@ func ShouldUpdate(id string, pt vangogh_integration.ProductType, rdx redux.Reada
 		updateDelayDays = defaultUpdateDelayDays
 	}
 
-	gdlut, err := rdx.ParseLastValTime(vangogh_integration.GetDataLastUpdatedProperty, ptId)
-	if err != nil {
+	if gdlut, ok, err := rdx.ParseLastValTime(vangogh_integration.GetDataLastUpdatedProperty, ptId); ok && err == nil {
+
+		if time.Since(gdlut).Hours()/24 > float64(updateDelayDays) {
+			nod.Log("updating %s %s, last update: %s", pt, id, gdlut.Format(time.RFC3339))
+			return true, nil
+		} else {
+			return false, nil
+		}
+
+	} else if err != nil {
 		return false, err
 	}
 
-	if time.Since(gdlut).Hours()/24 > float64(updateDelayDays) {
-		nod.Log("updating %s %s, last update: %s", pt, id, gdlut.Format(time.RFC3339))
-		return true, nil
-	} else {
-		return false, nil
-	}
-
+	return false, nil
 }
 
 func ShouldSkip(id string, pt vangogh_integration.ProductType, rdx redux.Writeable) (bool, error) {
@@ -90,26 +92,29 @@ func ShouldSkip(id string, pt vangogh_integration.ProductType, rdx redux.Writeab
 		errorDelayDays = defaultErrorDelayDays
 	}
 
-	gdet, err := rdx.ParseLastValTime(vangogh_integration.GetDataErrorDateProperty, ptId)
-	if err != nil {
+	if gdet, ok, err := rdx.ParseLastValTime(vangogh_integration.GetDataErrorDateProperty, ptId); ok && err == nil {
+
+		if time.Since(gdet).Hours()/24 < float64(errorDelayDays) {
+
+			nod.Log("skipping current %s %s error last encountered: %s", pt, id, gdet.Format(time.RFC3339))
+			return true, nil
+		} else {
+
+			nod.Log("clearing %s %s error last encountered: %s", pt, id, gdet.Format(time.RFC3339))
+
+			if err = rdx.CutKeys(vangogh_integration.GetDataErrorDateProperty, ptId); err != nil {
+				return false, err
+			}
+			if err = rdx.CutKeys(vangogh_integration.GetDataErrorMessageProperty, ptId); err != nil {
+				return false, err
+			}
+
+			return false, nil
+		}
+
+	} else if err != nil {
 		return false, err
 	}
 
-	if time.Since(gdet).Hours()/24 < float64(errorDelayDays) {
-
-		nod.Log("skipping current %s %s error last encountered: %s", pt, id, gdet.Format(time.RFC3339))
-		return true, nil
-	} else {
-
-		nod.Log("clearing %s %s error last encountered: %s", pt, id, gdet.Format(time.RFC3339))
-
-		if err = rdx.CutKeys(vangogh_integration.GetDataErrorDateProperty, ptId); err != nil {
-			return false, err
-		}
-		if err = rdx.CutKeys(vangogh_integration.GetDataErrorMessageProperty, ptId); err != nil {
-			return false, err
-		}
-
-		return false, nil
-	}
+	return false, nil
 }

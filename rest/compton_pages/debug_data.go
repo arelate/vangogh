@@ -61,19 +61,19 @@ func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageEleme
 	frow := compton.Frow(p).FontSize(size.Small)
 
 	if rdx.HasKey(vangogh_integration.GetDataLastUpdatedProperty, ptId) {
-		if lastUpdated, err := rdx.ParseLastValTime(vangogh_integration.GetDataLastUpdatedProperty, ptId); err == nil {
+		if lastUpdated, ok, err := rdx.ParseLastValTime(vangogh_integration.GetDataLastUpdatedProperty, ptId); ok && err == nil {
 			frow.PropVal("Last Updated", lastUpdated.Local().Format(time.RFC1123))
 			hasGetDataProperty = true
-		} else {
+		} else if err != nil {
 			return nil, err
 		}
 	}
 
 	if errorMsg, ok := rdx.GetLastVal(vangogh_integration.GetDataErrorMessageProperty, ptId); ok && errorMsg != "" {
 		frow.PropVal("Error Message", errorMsg)
-		if errorDate, err := rdx.ParseLastValTime(vangogh_integration.GetDataErrorDateProperty, ptId); err == nil {
+		if errorDate, ok, err := rdx.ParseLastValTime(vangogh_integration.GetDataErrorDateProperty, ptId); ok && err == nil {
 			frow.PropVal("Error Date", errorDate.Local().Format(time.RFC1123))
-		} else {
+		} else if err != nil {
 			return nil, err
 		}
 		hasGetDataProperty = true

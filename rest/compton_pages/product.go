@@ -225,7 +225,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 			detailsSummary.AppendBadges(receptionBadges)
 		case compton_data.NewsSection:
 
-			if lcut, err := rdx.ParseLastValTime(vangogh_integration.SteamLastCommunityUpdateProperty, id); err == nil {
+			if lcut, ok, err := rdx.ParseLastValTime(vangogh_integration.SteamLastCommunityUpdateProperty, id); ok && err == nil {
 
 				updateColor := color.Gray
 
@@ -236,7 +236,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 				lastUpdateBadge := compton.Badge(p, lcut.Format("Jan 2, '06"), updateColor, color.Highlight)
 				detailsSummary.AppendBadges(lastUpdateBadge)
 
-			} else {
+			} else if err != nil {
 				nod.LogError(err)
 			}
 
