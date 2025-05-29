@@ -27,8 +27,7 @@ var updatesDelayDays = map[vangogh_integration.ProductType]int{
 	vangogh_integration.Details:         0, // same as above
 	vangogh_integration.Licences:        0, // same as above
 	vangogh_integration.UserWishlist:    0, // same as above
-	vangogh_integration.ApiProducts:     7,
-	vangogh_integration.SteamAppNews:    1,
+	vangogh_integration.SteamAppNews:    0,
 }
 
 func ShouldUpdate(id string, pt vangogh_integration.ProductType, rdx redux.Readable) (bool, error) {
