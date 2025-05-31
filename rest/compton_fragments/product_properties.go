@@ -91,7 +91,7 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 	for _, value := range values {
 		switch property {
 		case vangogh_integration.UserWishlistProperty:
-			if owned {
+			if owned && value == vangogh_integration.FalseValue {
 				break
 			}
 			title := "No"
@@ -194,7 +194,7 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 			fmtProperty.class = res
 		}
 	case vangogh_integration.UserWishlistProperty:
-		if !owned {
+		if !owned || (owned && firstValue == vangogh_integration.TrueValue) {
 			switch firstValue {
 			case vangogh_integration.TrueValue:
 				fmtProperty.actions["Remove"] = "/wishlist/remove?id=" + id
