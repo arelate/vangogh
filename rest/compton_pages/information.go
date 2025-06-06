@@ -18,7 +18,7 @@ func Information(id string, rdx redux.Readable) compton.PageElement {
 	pageStack := compton.FlexItems(s, direction.Column).RowGap(size.Normal)
 	s.Append(pageStack)
 
-	if shortDesc, yes := rdx.GetLastVal(vangogh_integration.ShortDescriptionProperty, id); yes {
+	if shortDesc, yes := rdx.GetLastVal(vangogh_integration.ShortDescriptionProperty, id); yes && shortDesc != "" {
 		shortDescSpan := compton.Fspan(s, shortDesc).
 			MaxWidth(size.MaxWidth).
 			ForegroundColor(color.Gray).
