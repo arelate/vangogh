@@ -83,8 +83,13 @@ func formatBadge(id, property string, owned bool, rdx redux.Readable) compton.Fo
 	case vangogh_integration.OwnedProperty:
 		if owned {
 			fmtBadge.Title = "OWN"
+
 			if validationResult == vangogh_integration.ValidationResultUnknown {
-				fmtBadge.Background = color.Gray
+				if downloadCompleted == "" {
+					fmtBadge.Background = color.Foreground
+				} else {
+					fmtBadge.Background = color.Gray
+				}
 			} else {
 				fmtBadge.Background = ValidationResultsColors[validationResult]
 			}
