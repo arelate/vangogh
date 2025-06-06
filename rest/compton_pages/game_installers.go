@@ -15,6 +15,7 @@ import (
 	"net/url"
 	"slices"
 	"strings"
+	"time"
 )
 
 type DownloadVariant struct {
@@ -58,6 +59,12 @@ func GameInstallers(id string, dls vangogh_integration.DownloadsList, rdx redux.
 
 	pageStack := compton.FlexItems(s, direction.Column).RowGap(size.Normal)
 	s.Append(pageStack)
+
+	if downloadCompleted, ok, err := rdx.ParseLastValTime(vangogh_integration.DownloadCompletedProperty, id); ok && err == nil {
+		dcFrow := compton.Frow(s).FontSize(size.Small)
+		dcFrow.PropVal("Downloaded", downloadCompleted.Local().Format(time.RFC1123))
+		pageStack.Append(compton.FICenter(s, dcFrow))
+	}
 
 	if owned, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && owned == vangogh_integration.FalseValue {
 		ownershipRequiredNotice := compton.Fspan(s, "GameInstallers are available for owned products only").
