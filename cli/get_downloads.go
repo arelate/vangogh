@@ -85,13 +85,10 @@ func GetDownloads(
 	}
 
 	rdx, err := redux.NewWriter(reduxDir,
-		vangogh_integration.SlugProperty,
-		vangogh_integration.ProductTypeProperty,
-		vangogh_integration.ManualUrlFilenameProperty,
-		vangogh_integration.ManualUrlStatusProperty,
-		vangogh_integration.DownloadStatusErrorProperty,
-		vangogh_integration.ProductValidationResultProperty,
-		vangogh_integration.DownloadQueuedProperty)
+		append(
+			vangogh_integration.DownloadsLifecycleProperties(),
+			vangogh_integration.SlugProperty,
+			vangogh_integration.ProductTypeProperty)...)
 	if err != nil {
 		return err
 	}
@@ -189,6 +186,12 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 		return err
 	}
 
+	formattedNow := time.Now().UTC().Format(time.RFC3339)
+
+	if err := gdd.rdx.ReplaceValues(vangogh_integration.DownloadStartedProperty, id, formattedNow); err != nil {
+		return err
+	}
+
 	acp, err := vangogh_integration.AbsCookiePath()
 	if err != nil {
 		return err
@@ -208,6 +211,12 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 		if err = gdd.downloadManualUrl(slug, &dl, hc, dc); err != nil {
 			sda.Error(err)
 		}
+	}
+
+	formattedNow = time.Now().UTC().Format(time.RFC3339)
+
+	if err = gdd.rdx.ReplaceValues(vangogh_integration.DownloadCompletedProperty, id, formattedNow); err != nil {
+		return err
 	}
 
 	if err = gdd.rdx.CutKeys(vangogh_integration.DownloadQueuedProperty, id); err != nil {

@@ -29,7 +29,7 @@ func FormatBadges(id string, rdx redux.Readable) []compton.FormattedBadge {
 	fmtBadges := make([]compton.FormattedBadge, 0, len(compton_data.BadgeProperties))
 
 	for _, p := range compton_data.BadgeProperties {
-		if fmtBadge := formatBadge(id, p, owned, rdx); fmtBadge.Title != "" {
+		if fmtBadge := formatBadge(id, p, owned, rdx); fmtBadge.Title != "" || fmtBadge.Icon != compton.NoSymbol {
 			fmtBadges = append(fmtBadges, fmtBadge)
 		}
 	}
@@ -44,18 +44,49 @@ func formatBadge(id, property string, owned bool, rdx redux.Readable) compton.Fo
 		Foreground: color.Highlight,
 	}
 
+	var downloadQueued, downloadStarted, downloadCompleted string
+	var validationResult vangogh_integration.ValidationResult
+
+	if dq, ok := rdx.GetLastVal(vangogh_integration.DownloadQueuedProperty, id); ok {
+		downloadQueued = dq
+	}
+	if ds, ok := rdx.GetLastVal(vangogh_integration.DownloadStartedProperty, id); ok {
+		downloadStarted = ds
+	}
+	if dc, ok := rdx.GetLastVal(vangogh_integration.DownloadCompletedProperty, id); ok {
+		downloadCompleted = dc
+	}
+
+	if pvr, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
+		validationResult = vangogh_integration.ParseValidationResult(pvr)
+	}
+
 	switch property {
+	case vangogh_integration.DownloadQueuedProperty:
+		if downloadQueued > downloadStarted &&
+			downloadQueued > downloadCompleted {
+			fmtBadge.Icon = compton.DownwardArrow
+			fmtBadge.Background = color.Yellow
+		}
+	case vangogh_integration.DownloadStartedProperty:
+		if downloadStarted > downloadCompleted {
+			fmtBadge.Icon = compton.DownwardArrow
+			fmtBadge.Background = color.Green
+		}
+	case vangogh_integration.DownloadCompletedProperty:
+		if downloadCompleted > downloadQueued &&
+			downloadCompleted > downloadStarted &&
+			validationResult == vangogh_integration.ValidationResultUnknown {
+			fmtBadge.Icon = compton.DownwardArrow
+			fmtBadge.Background = color.Gray
+		}
 	case vangogh_integration.OwnedProperty:
 		if owned {
 			fmtBadge.Title = "OWN"
-
-			if rdx.HasKey(vangogh_integration.DownloadQueuedProperty, id) {
-				fmtBadge.Background = color.Yellow
-			} else if pvr, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
-				validationResult := vangogh_integration.ParseValidationResult(pvr)
-				fmtBadge.Background = ValidationResultsColors[validationResult]
-			} else {
+			if validationResult == vangogh_integration.ValidationResultUnknown {
 				fmtBadge.Background = color.Gray
+			} else {
+				fmtBadge.Background = ValidationResultsColors[validationResult]
 			}
 		}
 	case vangogh_integration.UserWishlistProperty:

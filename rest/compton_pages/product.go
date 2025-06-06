@@ -47,7 +47,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 	showTocNavLinks := compton.NavLinks(p)
 	showTocLink := showTocNavLinks.AppendLink(p, &compton.NavTarget{
-		Symbol: compton.DownwardArrow,
+		Symbol: compton.RightwardDownwardArrow,
 		Href:   "#",
 	})
 
@@ -167,9 +167,17 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 				ColumnGap(size.XSmall).
 				BackgroundColor(color.Transparent)
 			for _, fmtBadge := range compton_fragments.FormatBadges(id, rdx) {
-				badge := compton.Badge(p, fmtBadge.Title, fmtBadge.Background, fmtBadge.Foreground)
-				badge.AddClass(fmtBadge.Class)
-				productBadges.Append(badge)
+
+				var badge *compton.FspanElement
+				if fmtBadge.Title != "" && fmtBadge.Icon == compton.NoSymbol {
+					badge = compton.Badge(p, fmtBadge.Title, fmtBadge.Background, fmtBadge.Foreground)
+				} else if fmtBadge.Icon != compton.NoSymbol {
+					badge = compton.BadgeIcon(p, fmtBadge.Icon, fmtBadge.Background, fmtBadge.Foreground)
+				}
+				if badge != nil {
+					badge.AddClass(fmtBadge.Class)
+					productBadges.Append(badge)
+				}
 			}
 			detailsSummary.AppendBadges(productBadges)
 		case compton_data.SteamDeckSection:

@@ -44,7 +44,7 @@ func Updates(sections []string,
 		showTocNavLinks := compton.NavLinks(p)
 		showTocLink := showTocNavLinks.AppendLink(p, &compton.NavTarget{
 			Href:   "#",
-			Symbol: compton.DownwardArrow,
+			Symbol: compton.RightwardDownwardArrow,
 		})
 
 		pageStack.Append(compton.Attach(p, showTocLink, sectionNav))

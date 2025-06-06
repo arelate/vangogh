@@ -17,4 +17,7 @@ var BadgeProperties = []string{
 	vangogh_integration.LocalTagsProperty,
 	vangogh_integration.IsDemoProperty,
 	vangogh_integration.UserWishlistProperty,
+	vangogh_integration.DownloadQueuedProperty,
+	vangogh_integration.DownloadStartedProperty,
+	vangogh_integration.DownloadCompletedProperty,
 }

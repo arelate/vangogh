@@ -70,9 +70,16 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx redux.Readab
 		Width(size.FullWidth)
 
 	for _, fmtBadge := range FormatBadges(id, rdx) {
-		badge := compton.SmallBadge(r, fmtBadge.Title, fmtBadge.Background, fmtBadge.Foreground)
-		badge.AddClass(fmtBadge.Class)
-		productBadges.Append(badge)
+		var badge *compton.FspanElement
+		if fmtBadge.Title != "" && fmtBadge.Icon == compton.NoSymbol {
+			badge = compton.SmallBadge(r, fmtBadge.Title, fmtBadge.Background, fmtBadge.Foreground)
+		} else if fmtBadge.Icon != compton.NoSymbol {
+			badge = compton.SmallBadgeIcon(r, fmtBadge.Icon, fmtBadge.Background, fmtBadge.Foreground)
+		}
+		if badge != nil {
+			badge.AddClass(fmtBadge.Class)
+			productBadges.Append(badge)
+		}
 	}
 
 	pc.AppendBadges(productBadges)
