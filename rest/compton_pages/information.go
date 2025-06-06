@@ -10,6 +10,7 @@ import (
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/redux"
+	"strings"
 )
 
 func Information(id string, rdx redux.Readable) compton.PageElement {
@@ -18,7 +19,7 @@ func Information(id string, rdx redux.Readable) compton.PageElement {
 	pageStack := compton.FlexItems(s, direction.Column).RowGap(size.Normal)
 	s.Append(pageStack)
 
-	if shortDesc, yes := rdx.GetLastVal(vangogh_integration.ShortDescriptionProperty, id); yes && shortDesc != "" {
+	if shortDesc, yes := rdx.GetLastVal(vangogh_integration.ShortDescriptionProperty, id); yes && strings.TrimSpace(shortDesc) != "" {
 		shortDescSpan := compton.Fspan(s, shortDesc).
 			MaxWidth(size.MaxWidth).
 			ForegroundColor(color.Gray).
