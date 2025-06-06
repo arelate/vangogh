@@ -45,7 +45,7 @@ func formatBadge(id, property string, owned bool, rdx redux.Readable) compton.Fo
 	}
 
 	var downloadQueued, downloadStarted, downloadCompleted string
-	var validationResult vangogh_integration.ValidationResult
+	validationResult := vangogh_integration.ValidationResultUnknown
 
 	if dq, ok := rdx.GetLastVal(vangogh_integration.DownloadQueuedProperty, id); ok {
 		downloadQueued = dq
