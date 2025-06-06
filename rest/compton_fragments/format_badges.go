@@ -85,7 +85,7 @@ func formatBadge(id, property string, owned bool, rdx redux.Readable) compton.Fo
 			fmtBadge.Title = "OWN"
 
 			if validationResult == vangogh_integration.ValidationResultUnknown {
-				if downloadCompleted == "" {
+				if downloadStarted == "" && downloadCompleted == "" {
 					fmtBadge.Background = color.Foreground
 				} else {
 					fmtBadge.Background = color.Gray
