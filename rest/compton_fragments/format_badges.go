@@ -65,19 +65,19 @@ func formatBadge(id, property string, owned bool, rdx redux.Readable) compton.Fo
 	case vangogh_integration.DownloadQueuedProperty:
 		if downloadQueued > downloadStarted &&
 			downloadQueued > downloadCompleted {
-			fmtBadge.Icon = compton.DownwardArrow
+			fmtBadge.Icon = compton.DownwardChevrons
 			fmtBadge.Background = color.Yellow
 		}
 	case vangogh_integration.DownloadStartedProperty:
 		if downloadStarted > downloadCompleted {
-			fmtBadge.Icon = compton.DownwardArrow
+			fmtBadge.Icon = compton.DownwardChevrons
 			fmtBadge.Background = color.Green
 		}
 	case vangogh_integration.DownloadCompletedProperty:
 		if downloadCompleted > downloadQueued &&
 			downloadCompleted > downloadStarted &&
 			validationResult == vangogh_integration.ValidationResultUnknown {
-			fmtBadge.Icon = compton.DownwardArrow
+			fmtBadge.Icon = compton.DownwardChevrons
 			fmtBadge.Background = color.Gray
 		}
 	case vangogh_integration.OwnedProperty:

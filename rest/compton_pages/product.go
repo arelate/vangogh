@@ -47,7 +47,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 	showTocNavLinks := compton.NavLinks(p)
 	showTocLink := showTocNavLinks.AppendLink(p, &compton.NavTarget{
-		Symbol: compton.RightwardDownwardArrow,
+		Symbol: compton.DownwardArrow,
 		Href:   "#",
 	})
 
