@@ -37,4 +37,5 @@ var BinaryDigestProperties = []string{
 	vangogh_integration.InDevelopmentProperty,
 	vangogh_integration.DescendingProperty,
 	vangogh_integration.IsDemoProperty,
+	vangogh_integration.IsModProperty,
 }

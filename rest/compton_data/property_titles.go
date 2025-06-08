@@ -34,6 +34,7 @@ var PropertyTitles = map[string]string{
 
 	vangogh_integration.IsFreeProperty:                            "Free",
 	vangogh_integration.IsDemoProperty:                            "Demo",
+	vangogh_integration.IsModProperty:                             "Mod",
 	vangogh_integration.IsDiscountedProperty:                      "On Sale",
 	vangogh_integration.PreOrderProperty:                          "Pre-order",
 	vangogh_integration.ComingSoonProperty:                        "Coming Soon",

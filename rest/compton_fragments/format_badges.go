@@ -114,6 +114,11 @@ func formatBadge(id, property string, owned bool, rdx redux.Readable) compton.Fo
 			fmtBadge.Title = "DEMO"
 			fmtBadge.Background = color.Mint
 		}
+	case vangogh_integration.IsModProperty:
+		if mod, ok := rdx.GetLastVal(vangogh_integration.IsModProperty, id); ok && mod == vangogh_integration.TrueValue {
+			fmtBadge.Title = "MOD"
+			fmtBadge.Background = color.Blue
+		}
 	case vangogh_integration.IsFreeProperty:
 		if demo, ok := rdx.GetLastVal(vangogh_integration.IsDemoProperty, id); ok && demo == vangogh_integration.TrueValue {
 			fmtBadge.Title = ""

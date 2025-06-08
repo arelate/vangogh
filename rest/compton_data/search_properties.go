@@ -31,6 +31,7 @@ var SearchProperties = []string{
 
 	vangogh_integration.IsFreeProperty,
 	vangogh_integration.IsDemoProperty,
+	vangogh_integration.IsModProperty,
 	vangogh_integration.IsDiscountedProperty,
 	vangogh_integration.PreOrderProperty,
 	vangogh_integration.ComingSoonProperty,
