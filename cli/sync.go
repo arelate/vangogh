@@ -119,7 +119,7 @@ func Sync(
 	syncEvents := make(map[string][]string, 2)
 	syncEvents[vangogh_integration.SyncStartKey] = []string{strconv.Itoa(int(syncStart))}
 
-	if err := GetData(nil, nil, since, syncOpts.purchases, force); err != nil {
+	if err := GetData(nil, nil, since, syncOpts.purchases, true, force); err != nil {
 		return err
 	}
 

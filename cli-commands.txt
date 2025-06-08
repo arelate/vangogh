@@ -36,6 +36,7 @@ get-data
     product-type={all-product-types}
     since-hours-ago
     purchases
+    related-api-products
     force
 
 get-description-images

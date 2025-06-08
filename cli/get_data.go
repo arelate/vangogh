@@ -85,11 +85,12 @@ func GetDataHandler(u *url.URL) error {
 	q := u.Query()
 
 	purchases := q.Has("purchases")
+	relatedApiProducts := q.Has("related-api-products")
 	force := q.Has("force")
-	return GetData(ids, productTypes, since, purchases, force)
+	return GetData(ids, productTypes, since, purchases, relatedApiProducts, force)
 }
 
-func GetData(ids []string, productTypes []vangogh_integration.ProductType, since int64, purchases, force bool) error {
+func GetData(ids []string, productTypes []vangogh_integration.ProductType, since int64, purchases, relatedApiProducts, force bool) error {
 
 	if purchases {
 		productTypes = purchasesTypes
@@ -151,8 +152,10 @@ func GetData(ids []string, productTypes []vangogh_integration.ProductType, since
 		if err = gog_data.GetApiProducts(ids, hc, uat, since, force); err != nil {
 			return err
 		}
-		if err = gog_data.GetRelatedApiProducts(hc, uat, since, force); err != nil {
-			return err
+		if relatedApiProducts {
+			if err = gog_data.GetRelatedApiProducts(hc, uat, since, force); err != nil {
+				return err
+			}
 		}
 	}
 

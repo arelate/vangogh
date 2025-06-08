@@ -153,6 +153,10 @@ func reduceApiProduct(id string, kvApiProduct kevlar.KeyValues, piv shared_data.
 			values = ap.GetRequiresGames()
 		case vangogh_integration.IsRequiredByGamesProperty:
 			values = ap.GetIsRequiredByGames()
+		case vangogh_integration.ModifiesGamesProperty:
+			values = ap.GetModifiesGames()
+		case vangogh_integration.IsModifiedByGamesProperty:
+			values = ap.GetIsModifiedByGames()
 		case vangogh_integration.LanguageCodeProperty:
 			values = ap.GetLanguageCodes()
 		case vangogh_integration.GlobalReleaseDateProperty:
