@@ -127,6 +127,14 @@ func reduceCatalogPage(page string, kvCatalogPages kevlar.KeyValues, piv shared_
 				values = []string{cp.GetPrice()}
 			case vangogh_integration.IsFreeProperty:
 				values = []string{strconv.FormatBool(cp.IsFree())}
+			case vangogh_integration.IsModProperty:
+				isMod := vangogh_integration.FalseValue
+				for _, tag := range cp.Tags {
+					if tag.Name == "Mod" {
+						isMod = vangogh_integration.TrueValue
+					}
+				}
+				values = []string{isMod}
 			case vangogh_integration.IsDiscountedProperty:
 				values = []string{strconv.FormatBool(cp.IsDiscounted())}
 			case vangogh_integration.DiscountPercentageProperty:
