@@ -7,4 +7,6 @@ var OfferingsProperties = []string{
 	vangogh_integration.RequiresGamesProperty,
 	vangogh_integration.IsIncludedByGamesProperty,
 	vangogh_integration.IsRequiredByGamesProperty,
+	vangogh_integration.ModifiesGamesProperty,
+	vangogh_integration.IsModifiedByGamesProperty,
 }
