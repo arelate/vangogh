@@ -61,7 +61,9 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 		hasSections = append(hasSections, compton_data.DescriptionSection)
 	}
 
-	hasSections = append(hasSections, compton_data.ReceptionSection)
+	if sr, ok := rdx.GetLastVal(vangogh_integration.SummaryRatingProperty, id); ok && sr != "" {
+		hasSections = append(hasSections, compton_data.ReceptionSection)
+	}
 
 	offeringsCount := 0
 	for _, rpp := range compton_data.OfferingsProperties {
