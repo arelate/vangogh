@@ -110,3 +110,8 @@ var PropertyTitles = map[string]string{
 	vangogh_integration.WritersProperty:     "Writers",
 	vangogh_integration.ComposersProperty:   "Composers",
 }
+
+var ShortPropertyTitles = map[string]string{
+	vangogh_integration.DevelopersProperty: "Dev.",
+	vangogh_integration.PublishersProperty: "Pub.",
+}

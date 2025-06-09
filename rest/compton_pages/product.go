@@ -144,7 +144,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 			}
 			summaryRow.PropIcons(compton_data.PropertyTitles[property], osSymbols...)
 		default:
-			summaryRow.PropVal(compton_data.PropertyTitles[property], strings.Join(values[property], ", "))
+			summaryRow.PropVal(compton_data.ShortPropertyTitles[property], strings.Join(values[property], ", "))
 		}
 	}
 	pageStack.Append(compton.FICenter(p, summaryRow))

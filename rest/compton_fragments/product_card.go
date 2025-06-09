@@ -98,7 +98,7 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx redux.Readab
 			}
 			pc.AppendProperty(compton_data.PropertyTitles[vangogh_integration.OperatingSystemsProperty], osSymbols...)
 		default:
-			pc.AppendProperty(compton_data.PropertyTitles[p], compton.Text(strings.Join(values[p], ", ")))
+			pc.AppendProperty(compton_data.ShortPropertyTitles[p], compton.Text(strings.Join(values[p], ", ")))
 		}
 	}
 
