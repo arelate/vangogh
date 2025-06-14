@@ -46,6 +46,8 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 	appNavLinks := compton_fragments.AppNavLinks(p, "")
 
 	showTocNavLinks := compton.NavLinks(p)
+	showTocNavLinks.SetAttribute("style", "view-transition-name:secondary-nav")
+
 	showTocLink := showTocNavLinks.AppendLink(p, &compton.NavTarget{
 		Symbol: compton.DownwardArrow,
 		Href:   "#",

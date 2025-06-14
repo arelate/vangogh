@@ -30,11 +30,14 @@ func Updates(sections []string,
 	/* Nav stack = App navigation + Show all + (popup) Updates sections shortcuts */
 
 	topLevelNav := []compton.Element{compton_fragments.AppNavLinks(p, current)}
+	nextNavViewTransitionName := "secondary-nav"
 
 	var showAll compton.Element
 	if hasMoreItems(sections, updates, updateTotals) {
 		showAllNavLinks := compton.NavLinks(p)
 		showAllNavLinks.AppendLink(p, &compton.NavTarget{Href: "?show-all=true", Title: "Show all"})
+		showAllNavLinks.SetAttribute("style", "view-transition-name:"+nextNavViewTransitionName)
+		nextNavViewTransitionName = "tertiary-nav"
 
 		topLevelNav = append(topLevelNav, showAllNavLinks)
 	}
@@ -46,6 +49,7 @@ func Updates(sections []string,
 			Href:   "#",
 			Symbol: compton.DownwardArrow,
 		})
+		showTocNavLinks.SetAttribute("style", "view-transition-name:"+nextNavViewTransitionName)
 
 		pageStack.Append(compton.Attach(p, showTocLink, sectionNav))
 

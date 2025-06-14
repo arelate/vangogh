@@ -68,7 +68,6 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx redux.Readab
 		ColumnGap(size.XXSmall).
 		JustifyContent(align.Start).
 		Width(size.FullWidth)
-	//productBadges.SetAttribute("style", "view-transition-name:product-badges-"+id)
 
 	for _, fmtBadge := range FormatBadges(id, rdx) {
 		var badge *compton.FspanElement
