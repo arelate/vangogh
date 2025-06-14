@@ -20,7 +20,10 @@ func ProductPoster(r compton.Registrar, id string, rdx redux.Readable) compton.E
 		} else {
 			poster = compton.IssaImageWrapper(r, relImgSrc)
 		}
+
 		poster.AddClass("product-poster")
+		poster.SetAttribute("style", "view-transition-name:product-image-"+id)
+
 		return poster
 	}
 	return nil

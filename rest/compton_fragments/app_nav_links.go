@@ -8,6 +8,7 @@ import (
 func AppNavLinks(r compton.Registrar, current string) compton.Element {
 
 	appNavLinks := compton.NavLinks(r)
+	appNavLinks.SetAttribute("style", "view-transition-name:app-nav-links")
 
 	appNavLinks.AppendLink(r, &compton.NavTarget{
 		Href:     "/updates",
