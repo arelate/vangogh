@@ -143,10 +143,13 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 					osSymbols = append(osSymbols, compton_data.OperatingSystemSymbols[os])
 				}
 			}
-			summaryRow.PropIcons(compton_data.PropertyTitles[property], osSymbols...)
+			summaryRow.PropIcons(compton_data.PropertyTitles[property], osSymbols...).
+				SetAttribute("style", "view-transition-name:"+property+id)
 		default:
-			summaryRow.PropVal(compton_data.PropertyTitles[property], strings.Join(values[property], ", "))
+			summaryRow.PropVal(compton_data.PropertyTitles[property], strings.Join(values[property], ", ")).
+				SetAttribute("style", "view-transition-name:"+property+id)
 		}
+
 	}
 	pageStack.Append(compton.FICenter(p, summaryRow))
 
@@ -169,6 +172,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 			productBadges := compton.FlexItems(p, direction.Row).
 				ColumnGap(size.XSmall).
 				BackgroundColor(color.Transparent)
+			productBadges.SetAttribute("style", "view-transition-name:product-badges-"+id)
 			for _, fmtBadge := range compton_fragments.FormatBadges(id, rdx) {
 
 				var badge *compton.FspanElement

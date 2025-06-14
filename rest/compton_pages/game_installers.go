@@ -137,10 +137,10 @@ func operatingSystemHeading(r compton.Registrar, os vangogh_integration.Operatin
 
 func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 
-	fr := compton.Frow(r).
-		FontSize(size.XSmall).
-		IconColor(compton.Circle, downloadTypesColors[dv.downloadType]).
-		Heading(downloadTypesStrings[dv.downloadType])
+	fr := compton.Frow(r).FontSize(size.XSmall)
+
+	fr.IconColor(compton.Circle, downloadTypesColors[dv.downloadType])
+	fr.Heading(downloadTypesStrings[dv.downloadType])
 
 	if dv.langCode != "" {
 		fr.PropVal("Lang", compton_data.LanguageFlags[dv.langCode])

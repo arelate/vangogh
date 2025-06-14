@@ -90,8 +90,8 @@ func SteamReview(r compton.Registrar, review steam_integration.Review) compton.E
 
 	if review.VotesUp > 0 || review.VotesFunny > 0 {
 		bottomFr := compton.Frow(r).
-			FontSize(size.XSmall).
-			Heading("Votes")
+			FontSize(size.XSmall)
+		bottomFr.Heading("Votes")
 		if review.VotesUp > 0 {
 			bottomFr.PropVal("Helpful", strconv.Itoa(review.VotesUp))
 		}

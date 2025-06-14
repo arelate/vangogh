@@ -68,6 +68,7 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx redux.Readab
 		ColumnGap(size.XXSmall).
 		JustifyContent(align.Start).
 		Width(size.FullWidth)
+	//productBadges.SetAttribute("style", "view-transition-name:product-badges-"+id)
 
 	for _, fmtBadge := range FormatBadges(id, rdx) {
 		var badge *compton.FspanElement
@@ -96,9 +97,11 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx redux.Readab
 					osSymbols = append(osSymbols, compton.SvgUse(r, compton_data.OperatingSystemSymbols[os]))
 				}
 			}
-			pc.AppendProperty(compton_data.PropertyTitles[vangogh_integration.OperatingSystemsProperty], osSymbols...)
+			pc.AppendProperty(compton_data.PropertyTitles[p], osSymbols...).
+				SetAttribute("style", "view-transition-name:"+p+id)
 		default:
-			pc.AppendProperty(compton_data.ShortPropertyTitles[p], compton.Text(strings.Join(values[p], ", ")))
+			pc.AppendProperty(compton_data.ShortPropertyTitles[p], compton.Text(strings.Join(values[p], ", "))).
+				SetAttribute("style", "view-transition-name:"+p+id)
 		}
 	}
 
