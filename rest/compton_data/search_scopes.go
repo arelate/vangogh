@@ -59,7 +59,6 @@ func SearchScopes() map[string]string {
 
 	q = make(url.Values)
 	q.Set(vangogh_integration.StoreTagsProperty, GogPreservationProgramTag)
-	q.Set(vangogh_integration.SortProperty, vangogh_integration.TitleProperty)
 	queries[SearchGogPreservationProgram] = q.Encode()
 
 	return queries
