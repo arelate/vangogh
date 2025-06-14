@@ -7,6 +7,7 @@ import (
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
+	"iter"
 	"net/url"
 	"os"
 	"slices"
@@ -81,13 +82,19 @@ func Summarize(since int64) error {
 		vangogh_integration.TitleProperty,
 		vangogh_integration.SteamAppIdProperty,
 		vangogh_integration.GOGReleaseDateProperty,
+		vangogh_integration.GlobalReleaseDateProperty,
 		vangogh_integration.LastSyncUpdatesProperty)
 	if err != nil {
 		return err
 	}
 
-	if summary[releasedTodayTitle], err = releasedToday(rdx); err != nil {
+	rt, err := releasedToday(rdx)
+	if err != nil {
 		return err
+	}
+
+	for id := range rt {
+		summary[releasedTodayTitle] = append(summary[releasedTodayTitle], id)
 	}
 
 	// updated installers
@@ -140,24 +147,28 @@ func Summarize(since int64) error {
 	return nil
 }
 
-func releasedToday(rdx redux.Readable) ([]string, error) {
+func releasedToday(rdx redux.Readable) (iter.Seq[string], error) {
 
-	if err := rdx.MustHave(vangogh_integration.GOGReleaseDateProperty); err != nil {
+	releaseProperties := []string{vangogh_integration.GOGReleaseDateProperty, vangogh_integration.GlobalReleaseDateProperty}
+
+	if err := rdx.MustHave(releaseProperties...); err != nil {
 		return nil, err
 	}
 
-	ids := make([]string, 0)
+	ids := make(map[string]any)
 	today := time.Now().Format("2006.01.02")
 
-	for id := range rdx.Keys(vangogh_integration.GOGReleaseDateProperty) {
-		if rt, ok := rdx.GetLastVal(vangogh_integration.GOGReleaseDateProperty, id); ok {
-			if rt == today {
-				ids = append(ids, id)
+	for _, property := range releaseProperties {
+		for id := range rdx.Keys(property) {
+			if rt, ok := rdx.GetLastVal(property, id); ok {
+				if rt == today {
+					ids[id] = nil
+				}
 			}
 		}
 	}
 
-	return ids, nil
+	return maps.Keys(ids), nil
 }
 
 func publishAtom(rdx redux.Readable, summary map[string][]string) error {
