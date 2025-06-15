@@ -13,37 +13,40 @@ import (
 )
 
 const (
-	updatedProductsLimit = 24 // divisible by 2,3,4,6
+	updatedProductsLimit = 10 // divisible by 2,3,4,5,6
 )
 
 func GetUpdates(w http.ResponseWriter, r *http.Request) {
 
-	// GET /updates
+	// GET /updates?section
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
 	}
 
-	showAll := r.URL.Query().Get("show-all") == "true"
+	q := r.URL.Query()
+
+	showAll := q.Get("show-all") == "true"
+	section := q.Get("section")
 
 	updates := make(map[string][]string)
 	updateTotals := make(map[string]int)
 
 	paginate := false
 
-	for section := range rdx.Keys(vangogh_integration.LastSyncUpdatesProperty) {
+	for updateSection := range rdx.Keys(vangogh_integration.LastSyncUpdatesProperty) {
 
-		ids, _ := rdx.GetAllValues(vangogh_integration.LastSyncUpdatesProperty, section)
-		updateTotals[section] = len(ids)
+		ids, _ := rdx.GetAllValues(vangogh_integration.LastSyncUpdatesProperty, updateSection)
+		updateTotals[updateSection] = len(ids)
 		// limit number of items only if there are at least x2 the limit
 		// e.g. if the limit is 24, only start limiting if there are 49 or more items
 		paginate = len(ids) > updatedProductsLimit*2
 		for _, id := range ids {
-			if paginate && !showAll && len(updates[section]) >= updatedProductsLimit {
+			if paginate && !showAll && len(updates[updateSection]) >= updatedProductsLimit {
 				continue
 			}
-			updates[section] = append(updates[section], id)
+			updates[updateSection] = append(updates[updateSection], id)
 		}
 	}
 
@@ -61,12 +64,14 @@ func GetUpdates(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// section order will be based on full title ("new in ...", "updates in ...")
-	// so the order won't be changed after expanding titles
-	sections := maps.Keys(updates)
-	sortedSections := slices.Sorted(sections)
+	if section == "" {
+		if sortedSections := slices.Sorted(maps.Keys(updates)); len(sortedSections) > 0 {
+			http.Redirect(w, r, "/updates?section="+sortedSections[0], http.StatusTemporaryRedirect)
+			return
+		}
+	}
 
-	updatesPage := compton_pages.Updates(sortedSections, updates, updateTotals, updated, rdx)
+	updatesPage := compton_pages.Updates(section, updates, updateTotals, updated, rdx)
 	if err := updatesPage.WriteResponse(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}

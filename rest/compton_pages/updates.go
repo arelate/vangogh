@@ -9,9 +9,11 @@ import (
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/redux"
+	"maps"
+	"slices"
 )
 
-func Updates(sections []string,
+func Updates(section string,
 	updates map[string][]string,
 	updateTotals map[string]int,
 	updated string,
@@ -30,73 +32,68 @@ func Updates(sections []string,
 	/* Nav stack = App navigation + Show all + (popup) Updates sections shortcuts */
 
 	topLevelNav := []compton.Element{compton_fragments.AppNavLinks(p, current)}
-	nextNavViewTransitionName := "secondary-nav"
 
-	var showAll compton.Element
-	if hasMoreItems(sections, updates, updateTotals) {
-		showAllNavLinks := compton.NavLinks(p)
-		showAllNavLinks.AppendLink(p, &compton.NavTarget{Href: "?show-all=true", Title: "Show all"})
-		showAllNavLinks.SetAttribute("style", "view-transition-name:"+nextNavViewTransitionName)
-		nextNavViewTransitionName = "tertiary-nav"
+	updateSectionLinks := compton.NavLinks(p)
+	updateSectionLinks.SetAttribute("style", "view-transition-name:secondary-nav")
+
+	for _, updateSection := range slices.Sorted(maps.Keys(updates)) {
+
+		sectionLink := updateSectionLinks.AppendLink(p, &compton.NavTarget{
+			Href:     "/updates?section=" + updateSection,
+			Title:    updateSection,
+			Selected: updateSection == section,
+		})
+
+		if updateSection == section {
+			sectionLink.SetAttribute("style", "view-transition-name:current-update-section")
+		}
+
+	}
+
+	topLevelNav = append(topLevelNav, updateSectionLinks)
+
+	var showAllNavLinks *compton.NavLinksElement
+
+	if len(updates[section]) < updateTotals[section] {
+		showAllNavLinks = compton.NavLinks(p)
+		showAllNavLinks.AppendLink(p, &compton.NavTarget{Href: "/updates?section=" + section + "&show-all=true", Title: "Show all"})
 
 		topLevelNav = append(topLevelNav, showAllNavLinks)
 	}
 
-	if sectionNav := compton.SectionsLinks(p, sections, nil); sectionNav != nil {
-
-		showTocNavLinks := compton.NavLinks(p)
-		showTocLink := showTocNavLinks.AppendLink(p, &compton.NavTarget{
-			Href:   "#",
-			Symbol: compton.DownwardArrow,
-		})
-		showTocNavLinks.SetAttribute("style", "view-transition-name:"+nextNavViewTransitionName)
-
-		pageStack.Append(compton.Attach(p, showTocLink, sectionNav))
-
-		topLevelNav = append(topLevelNav, showTocNavLinks, sectionNav)
-	}
-
 	pageStack.Append(compton.FICenter(p, topLevelNav...))
-
-	/* Show All... button */
 
 	/* Updates sections */
 
-	for ii, section := range sections {
+	ids := updates[section]
 
-		ids := updates[section]
+	//sectionHeading := compton.DSTitle(p, section)
 
-		//sectionHeading := compton.DSTitle(p, section)
+	dsSection := compton.DSLarge(p, section, true).
+		BackgroundColor(color.Highlight).
+		SummaryMarginBlockEnd(size.Normal).
+		DetailsMarginBlockEnd(size.Unset).
+		SummaryRowGap(size.XXSmall)
 
-		dsSection := compton.DSLarge(p, section, true).
-			BackgroundColor(color.Highlight).
-			SummaryMarginBlockEnd(size.Normal).
-			DetailsMarginBlockEnd(size.Unset).
-			SummaryRowGap(size.XXSmall)
+	cf := compton.NewCountFormatter(
+		compton_data.SingleItemTemplate,
+		compton_data.ManyItemsSinglePageTemplate,
+		compton_data.ManyItemsManyPagesTemplate)
 
-		cf := compton.NewCountFormatter(
-			compton_data.SingleItemTemplate,
-			compton_data.ManyItemsSinglePageTemplate,
-			compton_data.ManyItemsManyPagesTemplate)
+	itemsBadge := compton.Badge(p, cf.Title(0, len(ids), updateTotals[section]), color.Background, color.Foreground)
+	dsSection.AppendBadges(itemsBadge)
 
-		itemsBadge := compton.Badge(p, cf.Title(0, len(ids), updateTotals[section]), color.Background, color.Foreground)
-		dsSection.AppendBadges(itemsBadge)
+	dsSection.SetId(section)
+	pageStack.Append(dsSection)
 
-		dsSection.SetId(section)
-		dsSection.SetTabIndex(ii + 1)
-		pageStack.Append(dsSection)
+	sectionStack := compton.FlexItems(p, direction.Column)
+	dsSection.Append(sectionStack)
 
-		sectionStack := compton.FlexItems(p, direction.Column)
-		dsSection.Append(sectionStack)
+	productsList := compton_fragments.ProductsList(p, ids, 0, len(ids), rdx, false)
+	sectionStack.Append(productsList)
 
-		productsList := compton_fragments.ProductsList(p, ids, 0, len(ids), rdx, false)
-		sectionStack.Append(productsList)
-	}
-
-	/* Show All.. button at the bottom of the page */
-
-	if showAll != nil {
-		pageStack.Append(showAll)
+	if showAllNavLinks != nil {
+		pageStack.Append(compton.FICenter(p, showAllNavLinks))
 	}
 
 	/* Last Updated section */
@@ -108,13 +105,4 @@ func Updates(sections []string,
 	pageStack.Append(compton.Footer(p, "Arles", "https://github.com/arelate", "🇫🇷"))
 
 	return p
-}
-
-func hasMoreItems(sections []string, updates map[string][]string, updateTotals map[string]int) bool {
-	for _, section := range sections {
-		if len(updates[section]) < updateTotals[section] {
-			return true
-		}
-	}
-	return false
 }
