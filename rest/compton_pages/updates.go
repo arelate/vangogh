@@ -56,6 +56,7 @@ func Updates(section string,
 
 	if len(updates[section]) < updateTotals[section] {
 		showAllNavLinks = compton.NavLinks(p)
+		showAllNavLinks.SetAttribute("style", "view-transition-name:tertiary-nav")
 		showAllNavLinks.AppendLink(p, &compton.NavTarget{Href: "/updates?section=" + section + "&show-all=true", Title: "Show all"})
 
 		topLevelNav = append(topLevelNav, showAllNavLinks)
@@ -91,10 +92,6 @@ func Updates(section string,
 
 	productsList := compton_fragments.ProductsList(p, ids, 0, len(ids), rdx, false)
 	sectionStack.Append(productsList)
-
-	if showAllNavLinks != nil {
-		pageStack.Append(compton.FICenter(p, showAllNavLinks))
-	}
 
 	/* Last Updated section */
 
