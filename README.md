@@ -75,12 +75,25 @@ services:
 
 `vangogh` has been tested in the most popular browsers (Chrome and other Chromium-based browsers, Safari, Firefox) and should work reasonably well in all of them with minor visual differences.
 
-However, in order to make `vangogh` work in Firefox you'd need to enable [@scope](https://developer.mozilla.org/en-US/docs/Web/CSS/@scope) support if you're comfortable enabling preview Web Platform feature. Here's how to do that (copied from MDN): 
+### @scope
+
+`vangogh` uses [@scope](https://developer.mozilla.org/en-US/docs/Web/CSS/@scope) to encapsulate styles. Browser support for this feature is emerging, here's what you should expect:
+
+- Chromium-based browsers support @scope
+- Safari supports @scope
+- Firefox support for @scope is in development and requires you to manually enable it:
 
 ```text
 From version 128: this feature is behind the layout.css.at-scope.enabled preference (needs to be set to true). To change preferences in Firefox, visit about:config.
 ```
 
+### View Transitions API
+
+`vangogh` uses [View Transitions API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API) to smooth page to page navigation. Browser support for this feature is emerging, here's what you should expect:
+
+- Chromium-based browsers currently provide the best experience
+- Safari support View Transitions for forward navigation, but not backward. You can track [this bug](https://bugs.webkit.org/show_bug.cgi?id=289078) for progress.
+- Firefox doesn't support View Transitions at the moment. You can track [this bug](https://bugzilla.mozilla.org/show_bug.cgi?id=1823896) for progress.
 
 ## Setting up GOG.com authorization with cookies.txt
 
