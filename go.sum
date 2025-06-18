@@ -132,6 +132,8 @@ github.com/arelate/southern_light v0.2.92 h1:Wk8y4EmQEDf5yTxEy4yqEASM6xx47lJZsrm
 github.com/arelate/southern_light v0.2.92/go.mod h1:g2lyyOf9XMctrXBYtjzEJF6OqzgZT1lGT/u9DWVS3T8=
 github.com/arelate/southern_light v0.2.93 h1:J1U3R+B1h0dkY3Yjtkx213aG6wm1HKq0/c3SjNrmaSo=
 github.com/arelate/southern_light v0.2.93/go.mod h1:g2lyyOf9XMctrXBYtjzEJF6OqzgZT1lGT/u9DWVS3T8=
+github.com/arelate/southern_light v0.2.94 h1:yFstGLr+flfg6BuHJNqfGiz+254yJKXFChQSsn5fT5c=
+github.com/arelate/southern_light v0.2.94/go.mod h1:g2lyyOf9XMctrXBYtjzEJF6OqzgZT1lGT/u9DWVS3T8=
 github.com/boggydigital/atomus v0.1.10 h1:ERmg6ncLOJ/y0B13SSRAIpjDgWQfEqfeQwFBSYgrjg0=
 github.com/boggydigital/atomus v0.1.10/go.mod h1:YK4iAWR9/+2rFhfaGLjkfoFiCPY5QNu8d23I/8wuWSY=
 github.com/boggydigital/atomus v0.1.11 h1:n9XRgPqF3OgnK8UK7yJ3aG5sQkwacBjtqzzOxCXz33A=
@@ -274,6 +276,8 @@ github.com/boggydigital/compton v0.3.29 h1:FFSt1JR3y3imLtEdj2sfJY3SbqA7oC0oN/drv
 github.com/boggydigital/compton v0.3.29/go.mod h1:zJ5nRTBWqzOUYestOQXil5d29kjQENbGd3fbNGqDi14=
 github.com/boggydigital/compton v0.3.30 h1:gK6M/G1yEn3EYgUH7TbYeLDX6ENgTyOw8sjyC/78vRQ=
 github.com/boggydigital/compton v0.3.30/go.mod h1:zJ5nRTBWqzOUYestOQXil5d29kjQENbGd3fbNGqDi14=
+github.com/boggydigital/compton v0.3.31 h1:gHZ6vpXCeDz6DfdqHDk7BOagkbWtypwwdESC30x9C28=
+github.com/boggydigital/compton v0.3.31/go.mod h1:zJ5nRTBWqzOUYestOQXil5d29kjQENbGd3fbNGqDi14=
 github.com/boggydigital/coost v0.3.10 h1:F2ouJCRaUIgDGHEgX4T1nN4XdfS/9qrn/kvWq0c05cg=
 github.com/boggydigital/coost v0.3.10/go.mod h1:hDXR+PHEu2R/V5Va/GKzFEOwAtbr32JM1Bw+tC91aN0=
 github.com/boggydigital/dolo v0.2.21 h1:6GKTXjBGtyOQIt4itxuvtUFxP88TypPX5eZAck5UYBg=
