@@ -76,7 +76,11 @@ func EncodeQuery(query map[string][]string) string {
 func SearchScopeFromQuery(query map[string][]string) string {
 	enq := EncodeQuery(query)
 
-	searchScope := SearchNew
+	var searchScope string
+	if len(query) == 0 {
+		searchScope = SearchNew
+	}
+
 	for st, sq := range SearchScopes() {
 		if sq == enq {
 			searchScope = st
