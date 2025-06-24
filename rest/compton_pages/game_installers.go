@@ -209,8 +209,12 @@ func downloadLink(r compton.Registrar,
 	q.Set("download-type", dl.Type.String())
 	q.Set("manual-url", dl.ManualUrl)
 
+	linkContainer := compton.FlexItems(r, direction.Column).RowGap(size.Small)
+
 	link := compton.A("/files?" + q.Encode())
 	link.AddClass("download", dl.Type.String())
+
+	linkContainer.Append(link)
 
 	linkColumn := compton.FlexItems(r, direction.Column).RowGap(size.Small)
 
@@ -255,13 +259,18 @@ func downloadLink(r compton.Registrar,
 		linkColumn.Append(validationResult)
 	}
 
-	sizeFr := compton.Frow(r).FontSize(size.XSmall).
-		PropVal("Size", vangogh_integration.FormatBytes(dl.EstimatedBytes))
-	linkColumn.Append(sizeFr)
-
 	link.Append(linkColumn)
 
-	return link
+	sizeFr := compton.Frow(r).FontSize(size.XSmall)
+
+	if dl.EstimatedBytes > 0 {
+		sizeFr.PropVal("Size", vangogh_integration.FormatBytes(dl.EstimatedBytes))
+	}
+	sizeFr.PropVal("Manual URL", dl.ManualUrl)
+
+	linkContainer.Append(sizeFr)
+
+	return linkContainer
 }
 
 func downloadsOperatingSystems(dls vangogh_integration.DownloadsList) []vangogh_integration.OperatingSystem {
