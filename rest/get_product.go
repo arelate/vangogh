@@ -10,22 +10,28 @@ import (
 
 func GetProduct(w http.ResponseWriter, r *http.Request) {
 
-	// GET /product?slug -> /product?id
+	// GET /product?slug&steam-app-id -> /product?id
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
 	}
 
-	if r.URL.Query().Has(vangogh_integration.SlugProperty) {
-		if ids := rdx.Match(r.URL.Query(), redux.FullMatch); ids != nil {
-			for id := range ids {
-				http.Redirect(w, r, "/product?id="+id, http.StatusPermanentRedirect)
+	q := r.URL.Query()
+
+	redirectProperties := []string{vangogh_integration.SlugProperty, vangogh_integration.SteamAppIdProperty}
+
+	for _, rp := range redirectProperties {
+		if q.Has(rp) {
+			if ids := rdx.Match(q, redux.FullMatch); ids != nil {
+				for id := range ids {
+					http.Redirect(w, r, "/product?id="+id, http.StatusPermanentRedirect)
+					return
+				}
+			} else {
+				http.Error(w, nod.ErrorStr("unknown %s", rp), http.StatusInternalServerError)
 				return
 			}
-		} else {
-			http.Error(w, nod.ErrorStr("unknown slug"), http.StatusInternalServerError)
-			return
 		}
 	}
 
