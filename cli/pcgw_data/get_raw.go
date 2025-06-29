@@ -123,6 +123,10 @@ func reduceRawProduct(gogIds []string, pcgwPageId string, kvRaw kevlar.KeyValues
 
 const infoboxGameRowReceptionPfx = "{{Infobox game/row/reception"
 
+var ignoredPrefixes = []string{
+	"|steam appid side",
+}
+
 var prefixedProperties = map[string]string{
 	"|steam appid":   vangogh_integration.SteamAppIdProperty,
 	"|hltb":          vangogh_integration.HltbIdProperty,
@@ -147,6 +151,18 @@ func filterPropertyLines(infoboxLines ...string) map[string][]string {
 	propertyLines := make(map[string][]string)
 
 	for _, line := range infoboxLines {
+
+		ignoreLine := false
+		for _, ip := range ignoredPrefixes {
+			if strings.HasPrefix(line, ip) {
+				ignoreLine = true
+				break
+			}
+		}
+
+		if ignoreLine {
+			continue
+		}
 
 		for prefix, property := range prefixedProperties {
 			if strings.HasPrefix(line, prefix) {
