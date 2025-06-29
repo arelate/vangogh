@@ -82,41 +82,53 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 		isDiscounted = idp == vangogh_integration.TrueValue
 	}
 
-	values, _ := rdx.GetAllValues(property, id)
+	var values []string
+	if pvs, ok := rdx.GetAllValues(property, id); ok {
+		values = pvs
+	}
+
 	firstValue := ""
 	if len(values) > 0 {
 		firstValue = values[0]
 	}
 
-	for _, value := range values {
-		switch property {
-		case vangogh_integration.UserWishlistProperty:
-			if owned && value == vangogh_integration.FalseValue {
-				break
-			}
-			title := "No"
-			if value == vangogh_integration.TrueValue {
-				title = "Yes"
-			}
-			fmtProperty.values[title] = searchHref(property, value)
-		case vangogh_integration.GOGOrderDateProperty:
+	switch property {
+	case vangogh_integration.UserWishlistProperty:
+		if owned && firstValue != vangogh_integration.TrueValue {
+			break
+		}
+		title := "No"
+		if firstValue == vangogh_integration.TrueValue {
+			title = "Yes"
+		}
+		fmtProperty.values[title] = searchHref(property, firstValue)
+	case vangogh_integration.GOGOrderDateProperty:
+		for _, value := range values {
 			jtd := formatDate(value)
 			if d, _, ok := strings.Cut(value, "T"); ok {
 				fmtProperty.values[jtd] = searchHref(property, d)
 			} else {
 				fmtProperty.values[jtd] = searchHref(property, value)
 			}
-		case vangogh_integration.LanguageCodeProperty:
+		}
+	case vangogh_integration.LanguageCodeProperty:
+		for _, value := range values {
 			fmtProperty.values[compton_data.FormatLanguage(value)] = searchHref(property, value)
-		case vangogh_integration.RatingProperty:
+		}
+	case vangogh_integration.RatingProperty:
+		for _, value := range values {
 			fmtProperty.values[fmtGOGRating(value)] = noHref()
-		case vangogh_integration.TagIdProperty:
+		}
+	case vangogh_integration.TagIdProperty:
+		for _, value := range values {
 			tagName := value
 			if tnp, ok := rdx.GetLastVal(vangogh_integration.TagNameProperty, value); ok {
 				tagName = tnp
 			}
 			fmtProperty.values[tagName] = searchHref(property, value)
-		case vangogh_integration.PriceProperty:
+		}
+	case vangogh_integration.PriceProperty:
+		for _, value := range values {
 			if !isFree {
 				if isDiscounted && !owned {
 					if bpp, ok := rdx.GetLastVal(vangogh_integration.BasePriceProperty, id); ok {
@@ -127,60 +139,74 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 					fmtProperty.values[value] = noHref()
 				}
 			}
-		case vangogh_integration.HltbHoursToCompleteMainProperty:
-			fallthrough
-		case vangogh_integration.HltbHoursToCompletePlusProperty:
-			fallthrough
-		case vangogh_integration.HltbHoursToComplete100Property:
+		}
+	case vangogh_integration.HltbHoursToCompleteMainProperty:
+		fallthrough
+	case vangogh_integration.HltbHoursToCompletePlusProperty:
+		fallthrough
+	case vangogh_integration.HltbHoursToComplete100Property:
+		for _, value := range values {
 			ct := strings.TrimLeft(value, "0") + " hrs"
 			fmtProperty.values[ct] = noHref()
-		case vangogh_integration.HltbReviewScoreProperty:
-			if value != "0" {
-				fmtProperty.values[fmtHltbRating(value)] = noHref()
-			}
-		case vangogh_integration.DiscountPercentageProperty:
+		}
+	case vangogh_integration.HltbReviewScoreProperty:
+		if firstValue != "0" {
+			fmtProperty.values[fmtHltbRating(firstValue)] = noHref()
+		}
+	case vangogh_integration.DiscountPercentageProperty:
+		for _, value := range values {
 			fmtProperty.values[value] = noHref()
-		case vangogh_integration.PublishersProperty:
-			fallthrough
-		case vangogh_integration.DevelopersProperty:
+		}
+	case vangogh_integration.PublishersProperty:
+		fallthrough
+	case vangogh_integration.DevelopersProperty:
+		for _, value := range values {
 			fmtProperty.values[value] = grdSortedSearchHref(property, value)
-		case vangogh_integration.EnginesBuildsProperty:
+		}
+	case vangogh_integration.EnginesBuildsProperty:
+		for _, value := range values {
 			fmtProperty.values[value] = noHref()
-		case vangogh_integration.SteamReviewScoreProperty:
-			if value != "" {
-				fmtProperty.values[fmtSteamRating(value)] = noHref()
-			}
-		case vangogh_integration.OpenCriticMedianScoreProperty:
-			fallthrough
-		case vangogh_integration.MetacriticScoreProperty:
-			fallthrough
-		case vangogh_integration.AggregatedRatingProperty:
-			if value != "" {
-				fmtProperty.values[FmtAggregatedRating(value)] = noHref()
-			}
-		case vangogh_integration.TopPercentProperty:
-			fmtProperty.values[value] = searchHref(property, url.QueryEscape(value))
-		case vangogh_integration.CreatorsProperty:
-			fallthrough
-		case vangogh_integration.DirectorsProperty:
-			fallthrough
-		case vangogh_integration.ProducersProperty:
-			fallthrough
-		case vangogh_integration.DesignersProperty:
-			fallthrough
-		case vangogh_integration.ProgrammersProperty:
-			fallthrough
-		case vangogh_integration.ArtistsProperty:
-			fallthrough
-		case vangogh_integration.WritersProperty:
-			fallthrough
-		case vangogh_integration.ComposersProperty:
+		}
+	case vangogh_integration.SteamReviewScoreProperty:
+		if firstValue != "" {
+			fmtProperty.values[fmtSteamRating(firstValue)] = noHref()
+		}
+	case vangogh_integration.OpenCriticMedianScoreProperty:
+		fallthrough
+	case vangogh_integration.MetacriticScoreProperty:
+		fallthrough
+	case vangogh_integration.AggregatedRatingProperty:
+		if firstValue != "" {
+			fmtProperty.values[FmtAggregatedRating(firstValue)] = noHref()
+		}
+	case vangogh_integration.TopPercentProperty:
+		if firstValue != "" {
+			fmtProperty.values[firstValue] = searchHref(property, url.QueryEscape(firstValue))
+		}
+	case vangogh_integration.CreatorsProperty:
+		fallthrough
+	case vangogh_integration.DirectorsProperty:
+		fallthrough
+	case vangogh_integration.ProducersProperty:
+		fallthrough
+	case vangogh_integration.DesignersProperty:
+		fallthrough
+	case vangogh_integration.ProgrammersProperty:
+		fallthrough
+	case vangogh_integration.ArtistsProperty:
+		fallthrough
+	case vangogh_integration.WritersProperty:
+		fallthrough
+	case vangogh_integration.ComposersProperty:
+		for _, value := range values {
 			if has, ok := rdx.GetLastVal(vangogh_integration.HasMultipleCreditsProperty, value); ok && has == vangogh_integration.TrueValue {
 				fmtProperty.values[value] = searchCreditsHref(value)
 			} else {
 				fmtProperty.values[value] = noHref()
 			}
-		default:
+		}
+	default:
+		for _, value := range values {
 			if value != "" {
 				fmtProperty.values[value] = searchHref(property, value)
 			}
@@ -194,11 +220,13 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 			fmtProperty.class = res
 		}
 	case vangogh_integration.UserWishlistProperty:
-		if !owned || (owned && firstValue == vangogh_integration.TrueValue) {
+		if !owned || firstValue == vangogh_integration.TrueValue {
 			switch firstValue {
 			case vangogh_integration.TrueValue:
 				fmtProperty.actions["Remove"] = "/wishlist/remove?id=" + id
 			case vangogh_integration.FalseValue:
+				fallthrough
+			default:
 				fmtProperty.actions["Add"] = "/wishlist/add?id=" + id
 			}
 		}
