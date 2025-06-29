@@ -80,7 +80,6 @@ func ReduceRaw(pcgwGogIds map[string][]string, kvRaw kevlar.KeyValues) error {
 }
 
 var newValuesOnlyProperties = []string{
-	vangogh_integration.SteamAppIdProperty,
 	vangogh_integration.WebsiteProperty,
 	vangogh_integration.OpenCriticMedianScoreProperty,
 	vangogh_integration.MetacriticScoreProperty,
