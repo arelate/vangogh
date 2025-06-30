@@ -12,9 +12,6 @@ input
 description_images
     /var/lib/vangogh/description_images
 logs
-    # logs
     /var/lib/vangogh/logs
 metadata
     /var/lib/vangogh/metadata
-output
-    /var/lib/vangogh
