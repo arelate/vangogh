@@ -73,10 +73,6 @@ get-video-metadata
 health
     url^*
 
-info
-    id^&
-    slug&
-
 local-tag
     id^&
     slug

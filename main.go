@@ -64,7 +64,6 @@ func main() {
 		"get-summary":            cli.GetSummaryHandler,
 		"get-video-metadata":     cli.GetVideoMetadataHandler,
 		"health":                 cli.HealthHandler,
-		"info":                   cli.InfoHandler,
 		"local-tag":              cli.LocalTagHandler,
 		"migrate-data":           cli.MigrateDataHandler,
 		"process-queue":          cli.ProcessQueueHandler,
