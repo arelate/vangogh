@@ -14,23 +14,30 @@ import (
 )
 
 func SummarizeProductProperties(id string, rdx redux.Readable) ([]string, map[string][]string) {
-	properties := make([]string, 0)
+	properties := []string{
+		vangogh_integration.OperatingSystemsProperty,
+		vangogh_integration.DevelopersProperty,
+		vangogh_integration.PublishersProperty,
+	}
 	values := make(map[string][]string)
 
-	if oses, ok := rdx.GetAllValues(vangogh_integration.OperatingSystemsProperty, id); ok {
-		properties = append(properties, vangogh_integration.OperatingSystemsProperty)
-		values[vangogh_integration.OperatingSystemsProperty] = oses
+	var oses []string
+	if osp, ok := rdx.GetAllValues(vangogh_integration.OperatingSystemsProperty, id); ok {
+		oses = osp
 	}
+	values[vangogh_integration.OperatingSystemsProperty] = oses
 
-	if developers, ok := rdx.GetAllValues(vangogh_integration.DevelopersProperty, id); ok {
-		properties = append(properties, vangogh_integration.DevelopersProperty)
-		values[vangogh_integration.DevelopersProperty] = developers
+	var developers []string
+	if dp, ok := rdx.GetAllValues(vangogh_integration.DevelopersProperty, id); ok {
+		developers = dp
 	}
+	values[vangogh_integration.DevelopersProperty] = developers
 
-	if publishers, ok := rdx.GetAllValues(vangogh_integration.PublishersProperty, id); ok {
-		properties = append(properties, vangogh_integration.PublishersProperty)
-		values[vangogh_integration.PublishersProperty] = publishers
+	var publishers []string
+	if pp, ok := rdx.GetAllValues(vangogh_integration.PublishersProperty, id); ok {
+		publishers = pp
 	}
+	values[vangogh_integration.PublishersProperty] = publishers
 
 	return properties, values
 }
@@ -39,23 +46,27 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx redux.Readab
 
 	pc := compton.Card(r, id)
 
+	var repColor = issa.NeutralRepColor
+	var imageUrl string
+	var dehydratedImage string
+
 	if verticalImageId, ok := rdx.GetLastVal(vangogh_integration.VerticalImageProperty, id); ok {
 
-		imageUrl := "/image?id=" + verticalImageId
-		dehydratedImage, _ := rdx.GetLastVal(vangogh_integration.DehydratedImageProperty, verticalImageId)
-
-		var repColor = issa.NeutralRepColor
-
+		imageUrl = "/image?id=" + verticalImageId
+		if dhi, sure := rdx.GetLastVal(vangogh_integration.DehydratedImageProperty, verticalImageId); sure {
+			dehydratedImage = dhi
+		}
 		if rp, sure := rdx.GetLastVal(vangogh_integration.RepColorProperty, verticalImageId); sure && rp != issa.NeutralRepColor {
 			repColor = rp
 		}
 
-		pc.SetAttribute("style", "--c-rep:"+repColor)
-		pc.AppendPoster(repColor, dehydratedImage, imageUrl, hydrated)
-
-		pc.WidthPixels(85.5)
-		pc.HeightPixels(120.5)
 	}
+
+	pc.SetAttribute("style", "--c-rep:"+repColor)
+	poster := pc.AppendPoster(repColor, dehydratedImage, imageUrl, hydrated)
+
+	poster.WidthPixels(85.5)
+	poster.HeightPixels(120.5)
 
 	if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
 		pc.AppendTitle(title)
