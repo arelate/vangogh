@@ -36,10 +36,10 @@ func SearchForm(r compton.Registrar, query map[string][]string, searchQuery *com
 	submitRow.Append(submitNavLink)
 	formStack.Append(submitRow)
 
-	inputsGrid := compton.GridItems(r).JustifyContent(align.Center).RowGap(size.Normal)
-	formStack.Append(inputsGrid)
+	inputs := compton.FlexItems(r, direction.Row).JustifyContent(align.Center).RowGap(size.Normal).Width(size.FullWidth)
+	formStack.Append(inputs)
 
-	searchInputs(r, query, inputsGrid, rdx)
+	searchInputs(r, query, inputs, rdx)
 
 	// duplicating Submit button after inputs at the end
 	formStack.Append(submitRow)

@@ -1,0 +1,7 @@
+@container (max-width: 592px) {
+    .products-list {
+        & a {
+            width: 100%;
+        }
+    }
+}

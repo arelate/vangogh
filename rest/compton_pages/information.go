@@ -33,11 +33,13 @@ func Information(id string, rdx redux.Readable) compton.PageElement {
 
 	}
 
-	grid := compton.GridItems(s).JustifyContent(align.Center).RowGap(size.Normal)
-	pageStack.Append(grid)
+	items := compton.FlexItems(s, direction.Row).
+		JustifyContent(align.Start).
+		RowGap(size.Normal)
+	pageStack.Append(items)
 
 	for _, pp := range compton_fragments.ProductProperties(s, id, rdx, compton_data.ProductProperties...) {
-		grid.Append(pp)
+		items.Append(pp)
 	}
 
 	return s

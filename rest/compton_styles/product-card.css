@@ -1,7 +1,0 @@
-card[data-id] {
-    & > issa-image {
-        & > img {
-            object-fit: cover;
-        }
-    }
-}
