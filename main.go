@@ -72,11 +72,9 @@ func main() {
 		"size":                   cli.SizeHandler,
 		"summarize":              cli.SummarizeHandler,
 		"sync":                   cli.SyncHandler,
-		"tag":                    cli.TagHandler,
 		"update-downloads":       cli.UpdateDownloadsHandler,
 		"validate":               cli.ValidateHandler,
 		"version":                cli.VersionHandler,
-		"wishlist":               cli.WishlistHandler,
 	})
 
 	if err = defs.AssertCommandsHaveHandlers(); err != nil {

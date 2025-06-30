@@ -136,12 +136,6 @@ sync
     force
     {sync-options^&}
 
-tag
-    id^
-    slug
-    operation^=create,delete,edit,add,remove
-    tag-name
-
 update-downloads
     os&$={operating-systems^}
     lang-code&$={language-codes^}
@@ -162,7 +156,3 @@ validate
     all-not-valid
 
 version
-
-wishlist
-    add&
-    remove&
