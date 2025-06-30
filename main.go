@@ -63,7 +63,6 @@ func main() {
 		"get-images":             cli.GetImagesHandler,
 		"get-summary":            cli.GetSummaryHandler,
 		"get-video-metadata":     cli.GetVideoMetadataHandler,
-		"local-tag":              cli.LocalTagHandler,
 		"migrate-data":           cli.MigrateDataHandler,
 		"process-queue":          cli.ProcessQueueHandler,
 		"reduce":                 cli.ReduceHandler,

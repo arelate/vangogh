@@ -70,12 +70,6 @@ get-video-metadata
     missing
     force
 
-local-tag
-    id^&
-    slug
-    operation^=add,remove
-    tag-name
-
 migrate-data
     force
 
