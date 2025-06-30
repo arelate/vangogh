@@ -46,7 +46,7 @@ func main() {
 	defs, err := clo.Load(
 		bytes.NewBuffer(cliCommands),
 		bytes.NewBuffer(cliHelp),
-		clo_delegates.Values)
+		clo_delegates.FuncMap)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -70,7 +70,6 @@ func main() {
 		"process-queue":          cli.ProcessQueueHandler,
 		"reduce":                 cli.ReduceHandler,
 		"relayout-downloads":     cli.RelayoutDownloadsHandler,
-		"search":                 cli.SearchHandler,
 		"serve":                  cli.ServeHandler,
 		"size":                   cli.SizeHandler,
 		"summarize":              cli.SummarizeHandler,

@@ -105,9 +105,6 @@ relayout-downloads
     from*={downloads-layouts}
     to*={downloads-layouts}
 
-search
-    {searchable-properties^&}
-
 serve
     port$*
     stderr$

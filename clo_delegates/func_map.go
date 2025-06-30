@@ -8,16 +8,15 @@ import (
 	"strings"
 )
 
-var Values = map[string]func() []string{
-	"all-product-types":     allProductTypes,
-	"image-types":           imageTypes,
-	"redux-properties":      vangogh_integration.ReduxProperties,
-	"searchable-properties": vangogh_integration.ReduxProperties,
-	"operating-systems":     operatingSystems,
-	"download-types":        downloadTypes,
-	"downloads-layouts":     downloadsLayouts,
-	"language-codes":        languageCodes,
-	"sync-options":          syncOptions,
+var FuncMap = map[string]func() []string{
+	"all-product-types": allProductTypes,
+	"image-types":       imageTypes,
+	"redux-properties":  vangogh_integration.ReduxProperties,
+	"operating-systems": operatingSystems,
+	"download-types":    downloadTypes,
+	"downloads-layouts": downloadsLayouts,
+	"language-codes":    languageCodes,
+	"sync-options":      syncOptions,
 }
 
 func allProductTypes() []string {
