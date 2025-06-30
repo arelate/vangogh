@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"errors"
 	"fmt"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
@@ -30,8 +29,7 @@ func CleanupHandler(u *url.URL) error {
 		vangogh_integration.FlagFromUrl(u, "no-patches"),
 		vangogh_integration.DownloadsLayoutFromUrl(u),
 		vangogh_integration.FlagFromUrl(u, "all"),
-		vangogh_integration.FlagFromUrl(u, "test"),
-		vangogh_integration.FlagFromUrl(u, "delete"))
+		vangogh_integration.FlagFromUrl(u, "test"))
 }
 
 func Cleanup(
@@ -41,14 +39,10 @@ func Cleanup(
 	downloadTypes []vangogh_integration.DownloadType,
 	noPatches bool,
 	downloadsLayout vangogh_integration.DownloadsLayout,
-	all, test, delete bool) error {
+	all, test bool) error {
 
 	ca := nod.NewProgress("cleaning up...")
 	defer ca.Done()
-
-	if test && delete {
-		return errors.New("cleanup can be either test or delete, not both at the same time")
-	}
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {
@@ -86,7 +80,6 @@ func Cleanup(
 		rdx:             rdx,
 		all:             all,
 		test:            test,
-		delete:          delete,
 		downloadsLayout: downloadsLayout,
 	}
 
@@ -118,7 +111,6 @@ type cleanupDelegate struct {
 	rdx             redux.Readable
 	all             bool
 	test            bool
-	delete          bool
 	totalBytes      int64
 	downloadsLayout vangogh_integration.DownloadsLayout
 }
@@ -191,11 +183,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_integrati
 		if cd.test {
 			prefix = "TEST"
 		} else {
-			if cd.delete {
-				prefix = "DELETE"
-			} else {
-				prefix = "RECYCLE"
-			}
+			prefix = "DELETE"
 		}
 
 		adp, err := pathways.GetAbsDir(vangogh_integration.Downloads)
@@ -210,14 +198,8 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_integrati
 
 		dft := nod.Begin(" %s %s", prefix, relDownloadFilename)
 		if !cd.test {
-			if cd.delete {
-				if err := os.Remove(absUnexpectedFile); err != nil {
-					return err
-				}
-			} else {
-				if err := vangogh_integration.MoveToRecycleBin(adp, absUnexpectedFile); err != nil {
-					return err
-				}
+			if err = os.Remove(absUnexpectedFile); err != nil {
+				return err
 			}
 		}
 		dft.Done()
@@ -246,7 +228,7 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_integrati
 
 		cft := nod.Begin(" %s %s", prefix, relChecksumFile)
 		if !cd.test {
-			if err := vangogh_integration.MoveToRecycleBin(acp, absChecksumFile); err != nil {
+			if err = os.Remove(absChecksumFile); err != nil {
 				return err
 			}
 		}

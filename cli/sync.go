@@ -74,6 +74,8 @@ func SyncHandler(u *url.URL) error {
 
 	force := u.Query().Has("force")
 
+	cleanup := !vangogh_integration.FlagFromUrl(u, "no-cleanup")
+
 	return Sync(
 		since,
 		syncOpts,
@@ -82,6 +84,7 @@ func SyncHandler(u *url.URL) error {
 		vangogh_integration.DownloadTypesFromUrl(u),
 		vangogh_integration.FlagFromUrl(u, "no-patches"),
 		vangogh_integration.DownloadsLayoutFromUrl(u),
+		cleanup,
 		debug,
 		force)
 }
@@ -94,6 +97,7 @@ func Sync(
 	downloadTypes []vangogh_integration.DownloadType,
 	noPatches bool,
 	downloadsLayout vangogh_integration.DownloadsLayout,
+	cleanup bool,
 	debug, force bool) error {
 
 	if debug {
@@ -191,6 +195,20 @@ func Sync(
 			downloadsLayout); err != nil {
 			return err
 		}
+
+		if cleanup {
+			if err = Cleanup(nil,
+				operatingSystems,
+				langCodes,
+				downloadTypes,
+				noPatches,
+				downloadsLayout,
+				true,
+				false); err != nil {
+				return err
+			}
+		}
+
 	}
 
 	if err := CacheGitHubReleases(force); err != nil {

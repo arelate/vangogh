@@ -18,5 +18,3 @@ metadata
     /var/lib/vangogh/metadata
 output
     /var/lib/vangogh
-recycle_bin
-    /var/lib/vangogh/recycle_bin

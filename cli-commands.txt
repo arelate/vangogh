@@ -23,7 +23,6 @@ cleanup
     downloads-layout$={downloads-layouts^}
     all
     test
-    delete
 
 dehydrate
     id&
@@ -143,6 +142,7 @@ sync
     no-patches$
     downloads-layout$={downloads-layouts^}
     debug$
+    no-cleanup
     force
     {sync-options^&}
 
@@ -172,14 +172,6 @@ validate
     all-not-valid
 
 version
-
-vet
-    os&$={operating-systems^}
-    lang-code&$={language-codes^}
-    download-type&$={download-types^}
-    no-patches$
-    fix
-    {vet-options^&}
 
 wishlist
     add&

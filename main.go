@@ -79,7 +79,6 @@ func main() {
 		"update-downloads":       cli.UpdateDownloadsHandler,
 		"validate":               cli.ValidateHandler,
 		"version":                cli.VersionHandler,
-		"vet":                    cli.VetHandler,
 		"wishlist":               cli.WishlistHandler,
 	})
 

@@ -18,7 +18,6 @@ var Values = map[string]func() []string{
 	"downloads-layouts":     downloadsLayouts,
 	"language-codes":        languageCodes,
 	"sync-options":          syncOptions,
-	"vet-options":           vetOptions,
 }
 
 func allProductTypes() []string {
@@ -99,13 +98,5 @@ func syncOptions() []string {
 		cli.SyncOptionScreenshots,
 		cli.SyncOptionVideosMetadata,
 		cli.SyncOptionDownloadsUpdates,
-	})
-}
-
-func vetOptions() []string {
-	return options([]string{
-		cli.VetLocalOnlyImages,
-		cli.VetRecycleBin,
-		cli.VetOldLogs,
 	})
 }
