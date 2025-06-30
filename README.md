@@ -119,7 +119,7 @@ Sync is optimized to get as little data as possible on each run - only the newly
 
 ### Disk space requirements
 
-Please note that all data === a lot of data, so make sure you have space available or use specific options to get what you need (any combination of `-data -images -screenshots -thumbnails -downloads`)
+Please note that all data === a lot of data, so make sure you have space available for `-all` or use specific options to get what you need (any combination of `-description-images -images -screenshots -videos-metadata -downloads-updates`)
 
 Here are few estimates of how much space you'll need for each type of data:
 
@@ -138,10 +138,8 @@ Here are few estimates of how much space you'll need for each type of data:
 ## Downloads layouts
 
 `vangogh` supports two ways product directories will be created in the downloads directory:
-- `sharded`, the default behavior. If you don't specify downloads layout - you'll get this layout. Product directories will be placed in a first-letter parent directory under downloads directory. For example for a product with a slug "abc", you'll get "{downloads directory}/a/abc". This is done to minimize the impact of large number of child objects in a directory that might impact certain filesystems. 
-- `flat`. In this layout product directories will be placed as-is in the downloads directory. For example for a product with a slug "abc", you'll get "{downloads directory}/abc". This is the default layout used by some other GOG downloads tools and might allow easier integrations. Please note that you might start experiencing performance issues with larger libraries, proceed with caution!
-
-Downloads layouts also impact `local-manual-url` property that stores GOG.com ManualUrl mapping to local files (e.g. `/slug/en1installer0` -> `s/slug/installer.exe`).
+- `flat`, the default behavior. If you don't specify downloads layout - you'll get this layout. In this layout product directories will be placed as-is in the downloads directory. For example for a product with a slug "abc", you'll get "{downloads directory}/abc". This is the default layout used by some other GOG downloads tools and might allow easier integrations. Please note that you might start experiencing performance issues with larger libraries, proceed with caution!
+- `sharded`. Product directories will be placed in a first-letter parent directory under downloads directory. For example for a product with a slug "abc", you'll get "{downloads directory}/a/abc". This is done to minimize the impact of large number of child objects in a directory that might impact certain filesystems.
 
 In order to change download layouts please use the following steps:
 - backup local data (run `backup` on your `vangogh` instance)

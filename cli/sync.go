@@ -15,22 +15,22 @@ import (
 )
 
 const (
-	SyncOptionPurchases        = "purchases"
-	SyncOptionItems            = "items"
-	SyncOptionImages           = "images"
-	SyncOptionScreenshots      = "screenshots"
-	SyncOptionVideosMetadata   = "videos-metadata"
-	SyncOptionDownloadsUpdates = "downloads-updates"
-	negativePrefix             = "no-"
+	SyncOptionPurchases         = "purchases"
+	SyncOptionDescriptionImages = "description-images"
+	SyncOptionImages            = "images"
+	SyncOptionScreenshots       = "screenshots"
+	SyncOptionVideosMetadata    = "videos-metadata"
+	SyncOptionDownloadsUpdates  = "downloads-updates"
+	negativePrefix              = "no-"
 )
 
 type syncOptions struct {
-	purchases        bool
-	items            bool
-	images           bool
-	screenshots      bool
-	videosMetadata   bool
-	downloadsUpdates bool
+	purchases         bool
+	descriptionImages bool
+	images            bool
+	screenshots       bool
+	videosMetadata    bool
+	downloadsUpdates  bool
 }
 
 func NegOpt(option string) string {
@@ -43,16 +43,16 @@ func NegOpt(option string) string {
 func initSyncOptions(u *url.URL) *syncOptions {
 
 	so := &syncOptions{
-		purchases:        vangogh_integration.FlagFromUrl(u, SyncOptionPurchases),
-		items:            vangogh_integration.FlagFromUrl(u, SyncOptionItems),
-		images:           vangogh_integration.FlagFromUrl(u, SyncOptionImages),
-		screenshots:      vangogh_integration.FlagFromUrl(u, SyncOptionScreenshots),
-		videosMetadata:   vangogh_integration.FlagFromUrl(u, SyncOptionVideosMetadata),
-		downloadsUpdates: vangogh_integration.FlagFromUrl(u, SyncOptionDownloadsUpdates),
+		purchases:         vangogh_integration.FlagFromUrl(u, SyncOptionPurchases),
+		descriptionImages: vangogh_integration.FlagFromUrl(u, SyncOptionDescriptionImages),
+		images:            vangogh_integration.FlagFromUrl(u, SyncOptionImages),
+		screenshots:       vangogh_integration.FlagFromUrl(u, SyncOptionScreenshots),
+		videosMetadata:    vangogh_integration.FlagFromUrl(u, SyncOptionVideosMetadata),
+		downloadsUpdates:  vangogh_integration.FlagFromUrl(u, SyncOptionDownloadsUpdates),
 	}
 
 	if vangogh_integration.FlagFromUrl(u, "all") {
-		so.items = !vangogh_integration.FlagFromUrl(u, NegOpt(SyncOptionItems))
+		so.descriptionImages = !vangogh_integration.FlagFromUrl(u, NegOpt(SyncOptionDescriptionImages))
 		so.images = !vangogh_integration.FlagFromUrl(u, NegOpt(SyncOptionImages))
 		so.screenshots = !vangogh_integration.FlagFromUrl(u, NegOpt(SyncOptionScreenshots))
 		so.videosMetadata = !vangogh_integration.FlagFromUrl(u, NegOpt(SyncOptionVideosMetadata))
@@ -137,8 +137,8 @@ func Sync(
 		return err
 	}
 
-	// get items (embedded into descriptions)
-	if syncOpts.items {
+	// get description images
+	if syncOpts.descriptionImages {
 		if err := GetDescriptionImages(nil, since, force); err != nil {
 			return err
 		}
@@ -227,14 +227,14 @@ func Sync(
 
 	syncEvents[vangogh_integration.SyncCompleteKey] = []string{strconv.Itoa(int(time.Now().Unix()))}
 
-	if err := syncEventsRdx.BatchReplaceValues(
+	if err = syncEventsRdx.BatchReplaceValues(
 		vangogh_integration.SyncEventsProperty,
 		syncEvents); err != nil {
 		return err
 	}
 
 	// backing up data
-	if err := Backup(); err != nil {
+	if err = Backup(); err != nil {
 		return err
 	}
 
