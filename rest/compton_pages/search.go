@@ -22,7 +22,6 @@ func Search(query map[string][]string, ids []string, from, to int, rdx redux.Rea
 
 	p.AppendSpeculationRules("/product?id=*")
 
-	p.RegisterStyles(compton_styles.Styles, "product-card.css")
 	p.RegisterStyles(compton_styles.Styles, "good-old-game-badge.css")
 
 	p.SetAttribute("style", "--c-rep:var(--c-background)")
