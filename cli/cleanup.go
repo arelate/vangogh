@@ -117,8 +117,8 @@ type cleanupDelegate struct {
 
 func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_integration.DownloadsList) error {
 
-	csa := nod.QueueBegin(slug)
-	defer csa.Done()
+	//csa := nod.QueueBegin(slug)
+	//defer csa.Done()
 
 	if err := cd.rdx.MustHave(vangogh_integration.ManualUrlFilenameProperty); err != nil {
 		return err
@@ -158,16 +158,16 @@ func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_integrati
 	}
 
 	if len(absUnexpectedFiles) == 0 {
-		if !cd.all {
-			csa.EndWithResult("already clean")
-			csa.Flush()
-		}
+		//if !cd.all {
+		//	csa.EndWithResult("already clean")
+		//	csa.Flush()
+		//}
 		return nil
 	}
 
 	//given some unexpected files - flush message queue to output slug and put the files
 	//output next in context of a slug we've queued earlier
-	csa.Flush()
+	//csa.Flush()
 
 	for _, absUnexpectedFile := range absUnexpectedFiles {
 		//restore absolute from local_filename to s/slug/local_filename
