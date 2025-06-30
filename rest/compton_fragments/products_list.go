@@ -7,7 +7,6 @@ import (
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/redux"
-	"strconv"
 )
 
 const dehydratedCount = 3
@@ -18,10 +17,6 @@ func ProductsList(r compton.Registrar, ids []string, from, to int, rdx redux.Rea
 
 	productCards := compton.FlexItems(r, direction.Row).JustifyContent(align.Center).Width(size.FullWidth)
 	productCards.AddClass("products-list")
-
-	if (to - from) < 10 {
-		productCards.AddClass("items-" + strconv.Itoa(to-from))
-	}
 
 	for ii := from; ii < to; ii++ {
 		id := ids[ii]
