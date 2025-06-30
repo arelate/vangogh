@@ -70,9 +70,6 @@ get-video-metadata
     missing
     force
 
-health
-    url^*
-
 local-tag
     id^&
     slug
