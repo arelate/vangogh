@@ -35,7 +35,9 @@ func Information(id string, rdx redux.Readable) compton.PageElement {
 
 	items := compton.FlexItems(s, direction.Row).
 		JustifyContent(align.Start).
-		RowGap(size.Normal)
+		RowGap(size.Normal).
+		ColumnGap(size.Large)
+
 	pageStack.Append(items)
 
 	for _, pp := range compton_fragments.ProductProperties(s, id, rdx, compton_data.ProductProperties...) {

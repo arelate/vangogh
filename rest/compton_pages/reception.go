@@ -17,9 +17,10 @@ func Reception(id string, sar *steam_integration.AppReviews, rdx redux.Readable)
 	s := compton_fragments.ProductSection(compton_data.ReceptionSection)
 
 	pageStack := compton.FlexItems(s, direction.Column).RowGap(size.Normal)
+
 	s.Append(pageStack)
 
-	ratingsRow := compton.FlexItems(s, direction.Row).ColumnGap(size.Normal).RowGap(size.Normal)
+	ratingsRow := compton.FlexItems(s, direction.Row).RowGap(size.Normal).ColumnGap(size.Large)
 	pageStack.Append(ratingsRow)
 
 	for _, rrp := range compton_fragments.ProductProperties(s, id, rdx, compton_data.ReceptionProperties...) {
