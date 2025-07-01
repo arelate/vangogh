@@ -5,8 +5,6 @@ import (
 	"maps"
 	"net/http"
 	"slices"
-	"strconv"
-	"time"
 
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
@@ -56,13 +54,6 @@ func GetUpdates(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	updated := "recently"
-	if scs, ok := rdx.GetLastVal(vangogh_integration.SyncEventsProperty, vangogh_integration.SyncCompleteKey); ok {
-		if sci, err := strconv.ParseInt(scs, 10, 64); err == nil {
-			updated = time.Unix(sci, 0).Format(time.RFC1123)
-		}
-	}
-
 	if section == "" {
 		if sortedSections := slices.Sorted(maps.Keys(updates)); len(sortedSections) > 0 {
 			http.Redirect(w, r, "/updates?section="+sortedSections[0], http.StatusTemporaryRedirect)
@@ -70,7 +61,7 @@ func GetUpdates(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	updatesPage := compton_pages.Updates(section, updates, updateTotals, updated, rdx)
+	updatesPage := compton_pages.Updates(section, updates, updateTotals, rdx)
 	if err := updatesPage.WriteResponse(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}

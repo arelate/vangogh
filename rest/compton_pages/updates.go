@@ -15,7 +15,6 @@ import (
 func Updates(section string,
 	updates map[string][]string,
 	updateTotals map[string]int,
-	updated string,
 	rdx redux.Readable) compton.PageElement {
 
 	current := compton_data.AppNavUpdates
@@ -91,7 +90,7 @@ func Updates(section string,
 
 	/* Last Updated section */
 
-	pageStack.Append(compton.Br(), compton_fragments.Updated(p, updated))
+	pageStack.Append(compton.Br(), compton_fragments.Updated(p, rdx))
 
 	/* Standard app footer */
 
