@@ -20,7 +20,7 @@ func Updates(section string,
 	current := compton_data.AppNavUpdates
 	p, pageStack := compton_fragments.AppPage(current)
 
-	p.AppendSpeculationRules("/product?id=*")
+	p.AppendSpeculationRules("/*")
 
 	p.SetAttribute("style", "--c-rep:var(--c-background)")
 

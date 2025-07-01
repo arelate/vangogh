@@ -13,7 +13,7 @@ func Offerings(id string, rdx redux.Readable) compton.PageElement {
 
 	s := compton_fragments.ProductSection(compton_data.OfferingsSection)
 
-	s.AppendSpeculationRules("/product?id=*")
+	s.AppendSpeculationRules("/*")
 
 	stack := compton.FlexItems(s, direction.Column).RowGap(size.Normal).Width(size.FullWidth)
 	s.Append(stack)

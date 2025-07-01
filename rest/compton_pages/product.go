@@ -32,6 +32,9 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 	}
 
 	p, pageStack := compton_fragments.AppPage(title)
+
+	p.AppendSpeculationRules("/*")
+
 	p.RegisterStyles(compton_styles.Styles, "product.css")
 
 	// tinting document background color to the representative product color

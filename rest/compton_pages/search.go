@@ -19,7 +19,7 @@ func Search(query map[string][]string, ids []string, from, to int, rdx redux.Rea
 	current := compton_data.AppNavSearch
 	p, pageStack := compton_fragments.AppPage(current)
 
-	p.AppendSpeculationRules("/product?id=*")
+	p.AppendSpeculationRules("/*")
 
 	p.SetAttribute("style", "--c-rep:var(--c-background)")
 
