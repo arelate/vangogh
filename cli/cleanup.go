@@ -52,7 +52,8 @@ func Cleanup(
 	rdx, err := redux.NewReader(reduxDir,
 		vangogh_integration.SlugProperty,
 		vangogh_integration.ProductTypeProperty,
-		vangogh_integration.ManualUrlFilenameProperty)
+		vangogh_integration.ManualUrlFilenameProperty,
+		vangogh_integration.ProductValidationResultProperty)
 	if err != nil {
 		return err
 	}
@@ -115,16 +116,29 @@ type cleanupDelegate struct {
 	downloadsLayout vangogh_integration.DownloadsLayout
 }
 
-func (cd *cleanupDelegate) Process(_ string, slug string, list vangogh_integration.DownloadsList) error {
+func (cd *cleanupDelegate) Process(id string, slug string, list vangogh_integration.DownloadsList) error {
 
-	if err := cd.rdx.MustHave(vangogh_integration.ManualUrlFilenameProperty); err != nil {
+	if err := cd.rdx.MustHave(
+		vangogh_integration.ManualUrlFilenameProperty,
+		vangogh_integration.ProductValidationResultProperty); err != nil {
 		return err
 	}
 
 	//cleanup process:
+	//0. for products that have been successfully validated
 	//1. enumerate all expected files for a downloadList
 	//2. enumerate all files present for a slug (files present in a `downloads/slug` folder)
 	//3. delete (present files).Except(expected files) and corresponding xml files
+
+	if pvr, ok := cd.rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
+		pv := vangogh_integration.ParseValidationResult(pvr)
+		if pv != vangogh_integration.ValidatedSuccessfully && pv != vangogh_integration.ValidatedMissingChecksum {
+			// don't cleanup the product unless it's been validated, meaning we've got the latest version downloaded
+			// and it passed checksum validation (or at worst is missing checksum). Don't remove (previous versions of)
+			// installers for products that have validation issues
+			return nil
+		}
+	}
 
 	absExpectedSet := make(map[string]any)
 
