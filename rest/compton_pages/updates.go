@@ -3,7 +3,6 @@ package compton_pages
 import (
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
-	"github.com/arelate/vangogh/rest/compton_styles"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
@@ -23,8 +22,6 @@ func Updates(section string,
 	p, pageStack := compton_fragments.AppPage(current)
 
 	p.AppendSpeculationRules("/product?id=*")
-
-	p.RegisterStyles(compton_styles.Styles, "good-old-game-badge.css")
 
 	p.SetAttribute("style", "--c-rep:var(--c-background)")
 

@@ -3,6 +3,7 @@ package compton_fragments
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
+	"github.com/arelate/vangogh/rest/compton_styles"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/direction"
@@ -43,6 +44,8 @@ func SummarizeProductProperties(id string, rdx redux.Readable) ([]string, map[st
 }
 
 func ProductCard(r compton.Registrar, id string, hydrated bool, rdx redux.Readable) compton.Element {
+
+	r.RegisterStyles(compton_styles.Styles, "gpp-badge.css")
 
 	pc := compton.Card(r, id)
 

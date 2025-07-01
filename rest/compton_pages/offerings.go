@@ -3,7 +3,6 @@ package compton_pages
 import (
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
-	"github.com/arelate/vangogh/rest/compton_styles"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/size"
@@ -15,8 +14,6 @@ func Offerings(id string, rdx redux.Readable) compton.PageElement {
 	s := compton_fragments.ProductSection(compton_data.OfferingsSection)
 
 	s.AppendSpeculationRules("/product?id=*")
-
-	s.RegisterStyles(compton_styles.Styles, "good-old-game-badge.css")
 
 	stack := compton.FlexItems(s, direction.Column).RowGap(size.Normal).Width(size.FullWidth)
 	s.Append(stack)
