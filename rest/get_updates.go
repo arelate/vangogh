@@ -39,9 +39,8 @@ func GetUpdates(w http.ResponseWriter, r *http.Request) {
 
 		ids, _ := rdx.GetAllValues(vangogh_integration.LastSyncUpdatesProperty, updateSection)
 		updateTotals[updateSection] = len(ids)
-		// limit number of items only if there are at least x2 the limit
-		// e.g. if the limit is 24, only start limiting if there are 49 or more items
-		paginate = len(ids) > updatedProductsLimit*2
+
+		paginate = len(ids) > updatedProductsLimit
 		for _, id := range ids {
 			if paginate && !showAll && len(updates[updateSection]) >= updatedProductsLimit {
 				continue
