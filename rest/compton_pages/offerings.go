@@ -11,7 +11,7 @@ import (
 
 func Offerings(id string, rdx redux.Readable) compton.PageElement {
 
-	s := compton_fragments.ProductSection(compton_data.OfferingsSection)
+	s := compton_fragments.ProductSection(compton_data.OfferingsSection, id, rdx)
 
 	s.AppendSpeculationRules("/*")
 

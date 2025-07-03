@@ -264,8 +264,8 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 func operatingSystemsTitleValues(r compton.Registrar, id string, rdx redux.Readable) compton.Element {
 	property := vangogh_integration.OperatingSystemsProperty
 	propertyTitle := compton_data.PropertyTitles[property]
-	tv := compton.TitleValues(r, propertyTitle).RowGap(size.XSmall).TitleForegroundColor(color.Gray)
-	row := compton.FlexItems(r, direction.Row).JustifyContent(align.Start)
+	tv := compton.TitleValues(r, propertyTitle).RowGap(size.XSmall).TitleForegroundColor(color.RepGray)
+	row := compton.FlexItems(r, direction.Row).JustifyContent(align.Start).ColumnGap(size.Normal)
 	tv.Append(row)
 	if values, ok := rdx.GetAllValues(property, id); ok {
 		oses := vangogh_integration.ParseManyOperatingSystems(values)
@@ -291,8 +291,8 @@ func propertyTitleValues(r compton.Registrar, property string, fmtProperty forma
 
 	tv := compton.TitleValues(r, compton_data.PropertyTitles[property]).
 		SetLinksTarget(compton.LinkTargetTop).
-		ForegroundColor(color.Foreground).
-		TitleForegroundColor(color.Gray).
+		ForegroundColor(color.Inherit).
+		TitleForegroundColor(color.RepGray).
 		RowGap(size.XSmall)
 
 	if len(fmtProperty.values) > 0 {

@@ -14,7 +14,14 @@ import (
 )
 
 func Information(id string, rdx redux.Readable) compton.PageElement {
-	s := compton_fragments.ProductSection(compton_data.InformationSection)
+
+	s := compton_fragments.ProductSection(compton_data.InformationSection, id, rdx)
+
+	if imageId, ok := rdx.GetLastVal(vangogh_integration.ImageProperty, id); ok && imageId != "" {
+		if rc, sure := rdx.GetLastVal(vangogh_integration.RepColorProperty, imageId); sure && rc != "" {
+			s.SetAttribute("style", "--c-rep:"+rc)
+		}
+	}
 
 	pageStack := compton.FlexItems(s, direction.Column).RowGap(size.Normal)
 	s.Append(pageStack)
@@ -22,7 +29,7 @@ func Information(id string, rdx redux.Readable) compton.PageElement {
 	if shortDesc, yes := rdx.GetLastVal(vangogh_integration.ShortDescriptionProperty, id); yes && strings.TrimSpace(shortDesc) != "" {
 		shortDescSpan := compton.Fspan(s, shortDesc).
 			MaxWidth(size.MaxWidth).
-			ForegroundColor(color.Gray).
+			ForegroundColor(color.RepGray).
 			BorderRadius(size.XSmall).
 			FontSize(size.Small).
 			TextAlign(align.Start)

@@ -31,7 +31,8 @@ import (
 )
 
 func Links(id string, rdx redux.Readable) compton.PageElement {
-	s := compton_fragments.ProductSection(compton_data.LinksSection)
+
+	s := compton_fragments.ProductSection(compton_data.LinksSection, id, rdx)
 
 	stack := compton.FlexItems(s, direction.Column)
 	s.Append(stack)
@@ -194,7 +195,7 @@ func linksTitleValues(r compton.Registrar, property string, links []string) comp
 	tv := compton.TitleValues(r, propertyTitle).
 		RowGap(size.XSmall).
 		ForegroundColor(color.Cyan).
-		TitleForegroundColor(color.Foreground).
+		TitleForegroundColor(color.Inherit).
 		SetLinksTarget(compton.LinkTargetTop).
 		AppendLinkValues(linksHrefs)
 	return tv

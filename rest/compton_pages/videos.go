@@ -7,11 +7,12 @@ import (
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
+	"github.com/boggydigital/redux"
 )
 
-func Videos(videoIds []string, videoTitles, videoDurations map[string]string) compton.PageElement {
+func Videos(id string, videoIds []string, videoTitles, videoDurations map[string]string, rdx redux.Readable) compton.PageElement {
 
-	s := compton_fragments.ProductSection(compton_data.VideosSection)
+	s := compton_fragments.ProductSection(compton_data.VideosSection, id, rdx)
 
 	pageStack := compton.FlexItems(s, direction.Column)
 

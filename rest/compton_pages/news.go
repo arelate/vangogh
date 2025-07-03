@@ -14,7 +14,8 @@ import (
 )
 
 func News(gogId string, rdx redux.Readable, san *steam_integration.AppNews, all bool) compton.PageElement {
-	s := compton_fragments.ProductSection(compton_data.NewsSection)
+
+	s := compton_fragments.ProductSection(compton_data.NewsSection, gogId, rdx)
 
 	pageStack := compton.FlexItems(s, direction.Column)
 	s.Append(pageStack)

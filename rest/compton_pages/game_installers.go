@@ -55,7 +55,7 @@ var validationResultsFontWeights = map[vangogh_integration.ValidationResult]font
 // - title_values list of downloads by version
 func GameInstallers(id string, dls vangogh_integration.DownloadsList, rdx redux.Readable) compton.PageElement {
 
-	s := compton_fragments.ProductSection(compton_data.InstallersSection)
+	s := compton_fragments.ProductSection(compton_data.InstallersSection, id, rdx)
 
 	pageStack := compton.FlexItems(s, direction.Column).RowGap(size.Normal)
 	s.Append(pageStack)

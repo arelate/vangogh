@@ -19,7 +19,7 @@ func Description(id string, rdx redux.Readable) compton.PageElement {
 		desc = dop
 	}
 
-	s := compton_fragments.ProductSection(compton_data.DescriptionSection)
+	s := compton_fragments.ProductSection(compton_data.DescriptionSection, id, rdx)
 
 	descriptionDiv := compton.Div()
 	descriptionDiv.AddClass("description")

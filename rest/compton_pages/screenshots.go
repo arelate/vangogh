@@ -17,7 +17,7 @@ func Screenshots(id string, rdx redux.Readable) compton.PageElement {
 
 	screenshots, _ := rdx.GetAllValues(vangogh_integration.ScreenshotsProperty, id)
 
-	s := compton_fragments.ProductSection(compton_data.ScreenshotsSection)
+	s := compton_fragments.ProductSection(compton_data.ScreenshotsSection, id, rdx)
 
 	pageStack := compton.FlexItems(s, direction.Column)
 	s.Append(pageStack)

@@ -44,7 +44,7 @@ var displayTypeColors = map[string]color.Color{
 func SteamDeck(id string, dacr *steam_integration.DeckAppCompatibilityReport, rdx redux.Readable) compton.PageElement {
 	title, _ := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
 
-	s := compton_fragments.ProductSection(compton_data.SteamDeckSection)
+	s := compton_fragments.ProductSection(compton_data.SteamDeckSection, id, rdx)
 
 	pageStack := compton.FlexItems(s, direction.Column)
 	s.Append(pageStack)
