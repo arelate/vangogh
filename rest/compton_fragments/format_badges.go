@@ -11,7 +11,7 @@ import (
 )
 
 var ValidationResultsColors = map[vangogh_integration.ValidationResult]color.Color{
-	vangogh_integration.ValidationResultUnknown:      color.Gray,
+	vangogh_integration.ValidationResultUnknown:      color.RepGray,
 	vangogh_integration.ValidatedSuccessfully:        color.Green,
 	vangogh_integration.ValidatedUnresolvedManualUrl: color.Teal,
 	vangogh_integration.ValidatedMissingLocalFile:    color.Teal,
@@ -78,7 +78,7 @@ func formatBadge(id, property string, owned bool, rdx redux.Readable) compton.Fo
 			downloadCompleted > downloadStarted &&
 			validationResult == vangogh_integration.ValidationResultUnknown {
 			fmtBadge.Icon = compton.DownwardChevrons
-			fmtBadge.Background = color.Gray
+			fmtBadge.Background = color.RepGray
 		}
 	case vangogh_integration.OwnedProperty:
 		if owned {
@@ -88,7 +88,7 @@ func formatBadge(id, property string, owned bool, rdx redux.Readable) compton.Fo
 				if downloadStarted == "" && downloadCompleted == "" {
 					fmtBadge.Background = color.Foreground
 				} else {
-					fmtBadge.Background = color.Gray
+					fmtBadge.Background = color.RepGray
 				}
 			} else {
 				fmtBadge.Background = ValidationResultsColors[validationResult]

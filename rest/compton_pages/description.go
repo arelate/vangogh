@@ -27,7 +27,7 @@ func Description(id string, rdx redux.Readable) compton.PageElement {
 
 	if desc == "" {
 		fs := compton.Fspan(s, "Description is not available for this product").
-			ForegroundColor(color.Gray).
+			ForegroundColor(color.RepGray).
 			TextAlign(align.Center)
 		descriptionDiv.Append(compton.FICenter(s, fs))
 	} else {

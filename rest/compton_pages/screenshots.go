@@ -24,7 +24,7 @@ func Screenshots(id string, rdx redux.Readable) compton.PageElement {
 
 	if len(screenshots) == 0 {
 		fs := compton.Fspan(s, "Screenshots are not available for this product").
-			ForegroundColor(color.Gray).
+			ForegroundColor(color.RepGray).
 			TextAlign(align.Center)
 		pageStack.Append(compton.FICenter(s, fs))
 	}

@@ -38,7 +38,7 @@ var displayTypeColors = map[string]color.Color{
 	"Verified":    color.Green,
 	"Playable":    color.Orange,
 	"Unsupported": color.Red,
-	"Unknown":     color.Gray,
+	"Unknown":     color.RepGray,
 }
 
 func SteamDeck(id string, dacr *steam_integration.DeckAppCompatibilityReport, rdx redux.Readable) compton.PageElement {
@@ -95,7 +95,7 @@ func SteamDeck(id string, dacr *steam_integration.DeckAppCompatibilityReport, rd
 			}
 			displayTypeMessage := compton.Fspan(s, decodedResult)
 			if dt == "Unknown" {
-				displayTypeMessage.ForegroundColor(color.Gray)
+				displayTypeMessage.ForegroundColor(color.RepGray)
 			}
 			resultRow.Append(displayTypeIcon, displayTypeMessage)
 

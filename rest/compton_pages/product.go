@@ -35,7 +35,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 	p.AppendSpeculationRules("/*")
 
-	p.RegisterStyles(compton_styles.Styles, "product.css")
+	p.RegisterStyles(compton_styles.Styles, "product.css", "gpp-badge.css")
 
 	// tinting document background color to the representative product color
 	if imageId, ok := rdx.GetLastVal(vangogh_integration.ImageProperty, id); ok && imageId != "" {
@@ -166,7 +166,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 		detailsSummary := compton.DSLarge(p, sectionTitle,
 			slices.Contains(openSections, section)).
 			BackgroundColor(color.Highlight).
-			MarkerColor(color.Gray).
+			MarkerColor(color.RepGray).
 			DetailsMarginBlockEnd(size.Unset).
 			SummaryMarginBlockEnd(size.Normal)
 		detailsSummary.SetId(sectionTitle)
@@ -204,7 +204,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 				case "Unsupported":
 					deckCompatColor = color.Red
 				default:
-					deckCompatColor = color.Gray
+					deckCompatColor = color.RepGray
 				}
 
 				steamDeckBadge := compton.Badge(p, sdccp, deckCompatColor, color.Highlight)
@@ -229,7 +229,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 				case vangogh_integration.RatingMixed:
 					receptionColor = color.Yellow
 				default:
-					receptionColor = color.Gray
+					receptionColor = color.RepGray
 				}
 
 				ratingsReviews := srep
@@ -247,7 +247,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 			if lcut, ok, err := rdx.ParseLastValTime(vangogh_integration.SteamLastCommunityUpdateProperty, id); ok && err == nil {
 
-				updateColor := color.Gray
+				updateColor := color.RepGray
 
 				if (time.Since(lcut).Hours() / 24) < 30 {
 					updateColor = color.Green
@@ -293,7 +293,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 			nonGameInstallersHint := compton.Fspan(p, strings.Join(hintSentences, " ")).
 				FontSize(size.Small).
-				ForegroundColor(color.Gray).
+				ForegroundColor(color.RepGray).
 				TextAlign(align.Center)
 
 			pageStack.Append(

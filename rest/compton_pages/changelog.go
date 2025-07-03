@@ -44,7 +44,7 @@ func Changelog(id string, rdx redux.Readable) compton.PageElement {
 
 	if changelog, ok := rdx.GetAllValues(vangogh_integration.ChangelogProperty, id); !ok || len(changelog) == 0 {
 		fs := compton.Fspan(p, "Changelog is not available for this product").
-			ForegroundColor(color.Gray).
+			ForegroundColor(color.RepGray).
 			TextAlign(align.Center)
 		pageStack.Append(compton.FICenter(p, fs))
 	} else {

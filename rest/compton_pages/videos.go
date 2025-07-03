@@ -20,7 +20,7 @@ func Videos(id string, videoIds []string, videoTitles, videoDurations map[string
 
 	if len(videoIds) == 0 {
 		fs := compton.Fspan(s, "Videos are not available for this product").
-			ForegroundColor(color.Gray).
+			ForegroundColor(color.RepGray).
 			TextAlign(align.Center)
 		pageStack.Append(compton.FICenter(s, fs))
 	}

@@ -76,7 +76,7 @@ func News(gogId string, rdx redux.Readable, san *steam_integration.AppNews, all 
 			title = "Steam news are not available for this product"
 		}
 		fs := compton.Fspan(s, title).
-			ForegroundColor(color.Gray).
+			ForegroundColor(color.RepGray).
 			TextAlign(align.Center)
 		pageStack.Append(compton.FICenter(s, fs))
 	}

@@ -47,7 +47,7 @@ func Reception(id string, sar *steam_integration.AppReviews, rdx redux.Readable)
 
 	if len(sar.Reviews) == 0 {
 		fs := compton.Fspan(s, "Steam reviews are not available for this product").
-			ForegroundColor(color.Gray).
+			ForegroundColor(color.RepGray).
 			TextAlign(align.Center)
 		pageStack.Append(compton.FICenter(s, fs))
 	}

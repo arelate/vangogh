@@ -68,7 +68,7 @@ func GameInstallers(id string, dls vangogh_integration.DownloadsList, rdx redux.
 
 	if owned, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && owned == vangogh_integration.FalseValue {
 		ownershipRequiredNotice := compton.Fspan(s, "GameInstallers are available for owned products only").
-			ForegroundColor(color.Gray)
+			ForegroundColor(color.RepGray)
 		pageStack.Append(ownershipRequiredNotice)
 		return s
 	}
@@ -232,7 +232,7 @@ func downloadLink(r compton.Registrar,
 	linkTitle := compton.FlexItems(r, direction.Row).ColumnGap(size.XSmall).FontWeight(font_weight.Normal)
 
 	if namePrefix != "" {
-		linkPrefix := compton.Fspan(r, namePrefix).ForegroundColor(color.Gray)
+		linkPrefix := compton.Fspan(r, namePrefix).ForegroundColor(color.RepGray)
 		linkTitle.Append(linkPrefix)
 	}
 	if nameSuffix != "" {
