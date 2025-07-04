@@ -22,7 +22,9 @@ func News(gogId string, rdx redux.Readable, san *steam_integration.AppNews, all 
 
 	if rdx.HasKey(vangogh_integration.ChangelogProperty, gogId) {
 		changelogLink := compton.A("/changelog?id=" + gogId)
-		changelogLink.Append(compton.Fspan(s, "View GOG.com Changelog").FontSize(size.Small))
+		changelogLink.Append(compton.Fspan(s, "View GOG.com Changelog").
+			FontSize(size.Small).
+			ForegroundColor(color.RepForeground))
 		changelogLink.SetAttribute("target", "_top")
 		changelogLink.AddClass("internal")
 
