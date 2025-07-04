@@ -93,6 +93,14 @@ From version 128: this feature is behind the layout.css.at-scope.enabled prefere
 - Safari support View Transitions for forward navigation, but not backward. You can track [this bug](https://bugs.webkit.org/show_bug.cgi?id=289078) for progress.
 - Firefox doesn't support View Transitions at the moment. You can track [this bug](https://bugzilla.mozilla.org/show_bug.cgi?id=1823896) for progress.
 
+### CSS gap decorations
+
+`vangogh` implements [CSS gap decorations](https://blogs.windows.com/msedgedev/2025/03/19/minding-the-gaps-a-new-way-to-draw-separators-in-css/) in the Information and Reception sections on the product pages. Browser support for this feature is emerging, here's what you should expect:
+
+- Chromium-based browser currently implement this in Canary version, when chrome://flags/#enable-experimental-web-platform-features is enabled
+- Safari doesn't support CSS gap decorations. You can track [this issue](https://github.com/WebKit/standards-positions/issues/444) for progress on their position.
+- Firefox doesn't support CSS gap decoration, but have positive intent to implement. See [this issue](https://github.com/mozilla/standards-positions/issues/1158) for more details. 
+
 ## Setting up GOG.com authorization with cookies.txt
 
 After you've installed `vangogh`, you need to authenticate GOG.com access by providing browser cookie data. 
