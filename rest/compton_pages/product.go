@@ -186,6 +186,32 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 				}
 			}
 			detailsSummary.AppendBadges(productBadges)
+		case compton_data.MediaSection:
+			var videos, images int
+			if vp, sure := rdx.GetAllValues(vangogh_integration.VideoIdProperty, id); sure {
+				videos = len(vp)
+			}
+			if sp, sure := rdx.GetAllValues(vangogh_integration.ScreenshotsProperty, id); sure {
+				images = len(sp)
+			}
+
+			mediaCounts := make([]string, 0)
+			if videos == 1 {
+				mediaCounts = append(mediaCounts, "1 video")
+			} else if videos > 1 {
+				mediaCounts = append(mediaCounts, fmt.Sprintf("%d videos", videos))
+			}
+			if images == 1 {
+				mediaCounts = append(mediaCounts, "1 image")
+			} else if images > 1 {
+				mediaCounts = append(mediaCounts, fmt.Sprintf("%d images", images))
+			}
+
+			if len(mediaCounts) > 0 {
+				mediaBadge := compton.Badge(p, strings.Join(mediaCounts, ", "), color.RepGray, color.Highlight)
+				detailsSummary.AppendBadges(mediaBadge)
+			}
+
 		case compton_data.SteamDeckSection:
 			if sdccp, ok := rdx.GetLastVal(vangogh_integration.SteamDeckAppCompatibilityCategoryProperty, id); ok {
 
