@@ -83,8 +83,6 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 		hasSections = append(hasSections, compton_data.OfferingsSection)
 	}
 
-	hasSections = append(hasSections, compton_data.LinksSection)
-
 	if rdx.HasKey(vangogh_integration.ScreenshotsProperty, id) {
 		hasSections = append(hasSections, compton_data.ScreenshotsSection)
 	}

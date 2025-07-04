@@ -3,7 +3,6 @@ package compton_data
 const (
 	InformationSection = "information"
 	OfferingsSection   = "offerings"
-	LinksSection       = "links"
 	DescriptionSection = "description"
 	ChangelogSection   = "changelog"
 	ScreenshotsSection = "screenshots"
@@ -17,7 +16,6 @@ const (
 var SectionTitles = map[string]string{
 	InformationSection: "Info",
 	OfferingsSection:   "Offerings",
-	LinksSection:       "Links",
 	DescriptionSection: "Description",
 	ChangelogSection:   "Changelog",
 	ScreenshotsSection: "Screenshots",

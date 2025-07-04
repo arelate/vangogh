@@ -265,7 +265,7 @@ func operatingSystemsTitleValues(r compton.Registrar, id string, rdx redux.Reada
 	property := vangogh_integration.OperatingSystemsProperty
 	propertyTitle := compton_data.PropertyTitles[property]
 	tv := compton.TitleValues(r, propertyTitle).RowGap(size.XSmall).TitleForegroundColor(color.RepGray)
-	row := compton.FlexItems(r, direction.Row).JustifyContent(align.Start).ColumnGap(size.Normal)
+	row := compton.FlexItems(r, direction.Row).JustifyContent(align.Start).ColumnGap(size.Normal).ColumnWidthRule(size.Unset)
 	tv.Append(row)
 	if values, ok := rdx.GetAllValues(property, id); ok {
 		oses := vangogh_integration.ParseManyOperatingSystems(values)

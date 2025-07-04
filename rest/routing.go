@@ -27,7 +27,6 @@ func HandleFuncs() {
 		"GET /search":      Log(http.HandlerFunc(GetSearch)),
 		"GET /information": Log(http.HandlerFunc(GetInformation)),
 		"GET /offerings":   Log(http.HandlerFunc(GetOfferings)),
-		"GET /links":       Log(http.HandlerFunc(GetLinks)),
 		"GET /description": Log(http.HandlerFunc(GetDescription)),
 		"GET /installers":  Log(http.HandlerFunc(GetInstallers)),
 		"GET /changelog":   Log(http.HandlerFunc(GetChangelog)),
