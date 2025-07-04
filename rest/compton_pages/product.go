@@ -264,7 +264,25 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 			detailsSummary.AppendBadges(receptionBadges)
 		case compton_data.OfferingsSection:
+			offerings := make([]string, 0)
+			ops := []string{
+				vangogh_integration.IsIncludedByGamesProperty,
+				vangogh_integration.IsRequiredByGamesProperty,
+				vangogh_integration.IsModifiedByGamesProperty,
+				vangogh_integration.IncludesGamesProperty,
+				vangogh_integration.RequiresGamesProperty,
+				vangogh_integration.ModifiesGamesProperty}
 
+			for _, op := range ops {
+				if games, sure := rdx.GetAllValues(op, id); sure && len(games) > 0 {
+					offerings = append(offerings, compton_data.PropertyTitles[op])
+				}
+			}
+
+			if len(offerings) > 0 {
+				offeringsBadge := compton.Badge(p, strings.Join(offerings, ", "), color.Highlight, color.RepGray)
+				detailsSummary.AppendBadges(offeringsBadge)
+			}
 		case compton_data.NewsSection:
 
 			if lcut, ok, err := rdx.ParseLastValTime(vangogh_integration.SteamLastCommunityUpdateProperty, id); ok && err == nil {
