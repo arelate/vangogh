@@ -208,7 +208,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 			}
 
 			if len(mediaCounts) > 0 {
-				mediaBadge := compton.Badge(p, strings.Join(mediaCounts, ", "), color.RepGray, color.Highlight)
+				mediaBadge := compton.Badge(p, strings.Join(mediaCounts, ", "), color.Highlight, color.RepGray)
 				detailsSummary.AppendBadges(mediaBadge)
 			}
 
@@ -227,7 +227,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 					deckCompatColor = color.RepGray
 				}
 
-				steamDeckBadge := compton.Badge(p, sdccp, deckCompatColor, color.Highlight)
+				steamDeckBadge := compton.Badge(p, sdccp, color.Highlight, deckCompatColor)
 				detailsSummary.AppendBadges(steamDeckBadge)
 			}
 		case compton_data.ReceptionSection:
@@ -258,11 +258,13 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 					ratingsReviews = compton_fragments.FmtAggregatedRating(srap)
 				}
 
-				receptionBadges.Append(compton.Badge(p, ratingsReviews, receptionColor, color.Highlight))
+				receptionBadges.Append(compton.Badge(p, ratingsReviews, color.Highlight, receptionColor))
 
 			}
 
 			detailsSummary.AppendBadges(receptionBadges)
+		case compton_data.OfferingsSection:
+
 		case compton_data.NewsSection:
 
 			if lcut, ok, err := rdx.ParseLastValTime(vangogh_integration.SteamLastCommunityUpdateProperty, id); ok && err == nil {
@@ -273,7 +275,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 					updateColor = color.Green
 				}
 
-				lastUpdateBadge := compton.Badge(p, lcut.Format("Jan 2, '06"), updateColor, color.Highlight)
+				lastUpdateBadge := compton.Badge(p, lcut.Format("Jan 2, '06"), color.Highlight, updateColor)
 				detailsSummary.AppendBadges(lastUpdateBadge)
 
 			} else if err != nil {
@@ -286,8 +288,8 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 				validationBadge := compton.Badge(p,
 					pvr.HumanReadableString(),
-					compton_fragments.ValidationResultsColors[pvr],
-					color.Highlight)
+					color.Highlight,
+					compton_fragments.ValidationResultsColors[pvr])
 				detailsSummary.AppendBadges(validationBadge)
 			}
 		default:
