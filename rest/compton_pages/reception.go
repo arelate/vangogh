@@ -20,7 +20,10 @@ func Reception(id string, sar *steam_integration.AppReviews, rdx redux.Readable)
 
 	s.Append(pageStack)
 
-	ratingsRow := compton.FlexItems(s, direction.Row).RowGap(size.Normal).ColumnGap(size.Large)
+	ratingsRow := compton.FlexItems(s, direction.Row).
+		RowGap(size.Normal).
+		ColumnGap(size.Large).
+		ColumnWidthRule(size.XXXSmall)
 	pageStack.Append(ratingsRow)
 
 	for _, rrp := range compton_fragments.ProductProperties(s, id, rdx, compton_data.ReceptionProperties...) {
@@ -32,17 +35,6 @@ func Reception(id string, sar *steam_integration.AppReviews, rdx redux.Readable)
 		return s
 	}
 
-	//steamReviewsRow := compton.FlexItems(s, direction.Row).
-	//	AlignItems(align.Center).
-	//	JustifyContent(align.Center).
-	//	ColumnGap(size.Small).
-	//	BackgroundColor(color.Background)
-	//steamReviewsRow.AddClass("steam-reviews")
-	//steamReviewsRow.Append(
-	//	compton.Fspan(s, "Steam Reviews").
-	//		FontSize(size.Small).
-	//		PaddingBlock(size.Small).
-	//		BorderRadius(size.XSmall))
 	pageStack.Append(compton.SectionDivider(s, compton.Text("Steam Reviews")))
 
 	if len(sar.Reviews) == 0 {

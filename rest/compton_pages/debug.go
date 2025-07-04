@@ -8,6 +8,7 @@ import (
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
+	"github.com/boggydigital/compton/consts/loading"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
@@ -305,7 +306,7 @@ func productTypeSection(r compton.Registrar, id string, pt vangogh_integration.P
 
 	id = url.QueryEscape(id)
 
-	iframe := compton.IframeExpandHost(r, pt.String(), "/debug-data?id="+id+"&product-type="+pt.String())
+	iframe := compton.IframeExpandHost(r, pt.String(), "/debug-data?id="+id+"&product-type="+pt.String(), loading.Lazy)
 	ds.Append(iframe)
 
 	return ds

@@ -11,6 +11,7 @@ import (
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
+	"github.com/boggydigital/compton/consts/loading"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/issa"
 	"github.com/boggydigital/nod"
@@ -124,7 +125,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 	/* Product title */
 
-	productTitle := compton.Heading(2)
+	productTitle := compton.Heading(1)
 	productTitle.Append(compton.Fspan(p, title).TextAlign(align.Center))
 	productTitle.SetAttribute("style", "view-transition-name:product-title-"+id)
 
@@ -171,6 +172,8 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 			SummaryMarginBlockEnd(size.Normal)
 		detailsSummary.SetId(sectionTitle)
 		detailsSummary.SetTabIndex(ii + 1)
+
+		pageStack.Append(detailsSummary)
 
 		switch section {
 		case compton_data.InformationSection:
@@ -274,10 +277,14 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 			detailsSummary.SummaryMarginBlockEnd(size.Normal)
 		}
 
-		ifh := compton.IframeExpandHost(p, section, "/"+section+"?id="+id)
+		eagerness := loading.Lazy
+		if section == compton_data.InformationSection {
+			eagerness = loading.Eager
+		}
+
+		ifh := compton.IframeExpandHost(p, section, "/"+section+"?id="+id, eagerness)
 		detailsSummary.Append(ifh)
 
-		pageStack.Append(detailsSummary)
 	}
 
 	if owned, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && owned == vangogh_integration.TrueValue {
