@@ -43,7 +43,8 @@ func Information(id string, rdx redux.Readable) compton.PageElement {
 	items := compton.FlexItems(s, direction.Row).
 		JustifyContent(align.Start).
 		RowGap(size.Normal).
-		ColumnGap(size.Large)
+		ColumnGap(size.Large).
+		ColumnWidthRule(size.XXXSmall)
 
 	pageStack.Append(items)
 
