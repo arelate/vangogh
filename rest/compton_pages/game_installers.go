@@ -61,13 +61,13 @@ func GameInstallers(id string, dls vangogh_integration.DownloadsList, rdx redux.
 	s.Append(pageStack)
 
 	if downloadCompleted, ok, err := rdx.ParseLastValTime(vangogh_integration.DownloadCompletedProperty, id); ok && err == nil {
-		dcFrow := compton.Frow(s).FontSize(size.Small)
+		dcFrow := compton.Frow(s).FontSize(size.XSmall)
 		dcFrow.PropVal("Downloaded", downloadCompleted.Local().Format(time.RFC1123))
 		pageStack.Append(compton.FICenter(s, dcFrow))
 	}
 
 	if owned, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && owned == vangogh_integration.FalseValue {
-		ownershipRequiredNotice := compton.Fspan(s, "GameInstallers are available for owned products only").
+		ownershipRequiredNotice := compton.Fspan(s, "Installers are available for owned products only").
 			ForegroundColor(color.RepGray)
 		pageStack.Append(ownershipRequiredNotice)
 		return s
