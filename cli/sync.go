@@ -120,26 +120,40 @@ func Sync(
 		syncStart = time.Now().Unix()
 	}
 
-	syncEvents := make(map[string][]string, 2)
-	syncEvents[vangogh_integration.SyncStartKey] = []string{strconv.Itoa(int(syncStart))}
-
-	if err := GetData(nil, nil, since, syncOpts.purchases, true, force); err != nil {
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
 		return err
 	}
 
-	if err := Reduce([]vangogh_integration.ProductType{vangogh_integration.UnknownProductType}); err != nil {
+	syncEventsRdx, err := redux.NewWriter(reduxDir, vangogh_integration.SyncEventsProperty)
+	if err != nil {
+		return err
+	}
+
+	syncEvents := make(map[string][]string, 2)
+	syncEvents[vangogh_integration.SyncStartKey] = []string{strconv.Itoa(int(syncStart))}
+
+	if err = syncEventsRdx.BatchReplaceValues(vangogh_integration.SyncEventsProperty, syncEvents); err != nil {
+		return err
+	}
+
+	if err = GetData(nil, nil, since, syncOpts.purchases, true, force); err != nil {
+		return err
+	}
+
+	if err = Reduce([]vangogh_integration.ProductType{vangogh_integration.UnknownProductType}); err != nil {
 		return err
 	}
 
 	// summarize sync updates now, since other updates are digital artifacts
 	// and won't affect the summaries
-	if err := Summarize(syncStart); err != nil {
+	if err = Summarize(syncStart); err != nil {
 		return err
 	}
 
 	// get description images
 	if syncOpts.descriptionImages {
-		if err := GetDescriptionImages(nil, since, force); err != nil {
+		if err = GetDescriptionImages(nil, since, force); err != nil {
 			return err
 		}
 	}
@@ -153,18 +167,18 @@ func Sync(
 			}
 			imageTypes = append(imageTypes, it)
 		}
-		if err := GetImages(nil, imageTypes, true, force); err != nil {
+		if err = GetImages(nil, imageTypes, true, force); err != nil {
 			return err
 		}
 
 		dehydratedImageTypes := []vangogh_integration.ImageType{vangogh_integration.Image, vangogh_integration.VerticalImage}
-		if err := Dehydrate(nil, dehydratedImageTypes, false); err != nil {
+		if err = Dehydrate(nil, dehydratedImageTypes, false); err != nil {
 			return err
 		}
 	}
 
 	if syncOpts.videosMetadata {
-		if err := GetVideoMetadata(nil, true, false); err != nil {
+		if err = GetVideoMetadata(nil, true, false); err != nil {
 			return err
 		}
 	}
@@ -211,25 +225,13 @@ func Sync(
 
 	}
 
-	if err := CacheGitHubReleases(force); err != nil {
-		return err
-	}
-
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	syncEventsRdx, err := redux.NewWriter(reduxDir, vangogh_integration.SyncEventsProperty)
-	if err != nil {
+	if err = CacheGitHubReleases(force); err != nil {
 		return err
 	}
 
 	syncEvents[vangogh_integration.SyncCompleteKey] = []string{strconv.Itoa(int(time.Now().Unix()))}
 
-	if err = syncEventsRdx.BatchReplaceValues(
-		vangogh_integration.SyncEventsProperty,
-		syncEvents); err != nil {
+	if err = syncEventsRdx.BatchReplaceValues(vangogh_integration.SyncEventsProperty, syncEvents); err != nil {
 		return err
 	}
 
