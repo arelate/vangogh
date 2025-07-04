@@ -297,7 +297,7 @@ func propertyTitleValues(r compton.Registrar, property string, fmtProperty forma
 
 	if len(fmtProperty.values) > 0 {
 
-		if len(fmtProperty.values) < 2 {
+		if len(fmtProperty.values) < 3 {
 			tv.AppendLinkValues(fmtProperty.values)
 		} else {
 			summaryTitle := fmt.Sprintf("%d values", len(fmtProperty.values))

@@ -63,7 +63,7 @@ func Info(id string, rdx redux.Readable) compton.PageElement {
 	var descriptionFspan *compton.FspanElement
 	if rdx.HasKey(vangogh_integration.DescriptionOverviewProperty, id) {
 		descriptionFspan = compton.Fspan(s, "").
-			ForegroundColor(color.Foreground).
+			ForegroundColor(color.RepForeground).
 			FontWeight(font_weight.Bolder)
 
 		descriptionLinkTitle := "More..."
