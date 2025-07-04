@@ -25,6 +25,7 @@ import (
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
+	"github.com/boggydigital/compton/consts/font_weight"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/redux"
 	"net/url"
@@ -44,18 +45,46 @@ func Info(id string, rdx redux.Readable) compton.PageElement {
 	pageStack := compton.FlexItems(s, direction.Column).RowGap(size.Normal)
 	s.Append(pageStack)
 
-	if shortDesc, yes := rdx.GetLastVal(vangogh_integration.ShortDescriptionProperty, id); yes && strings.TrimSpace(shortDesc) != "" {
-		shortDescSpan := compton.Fspan(s, shortDesc).
+	var shortDesc string
+	if sd, yes := rdx.GetLastVal(vangogh_integration.ShortDescriptionProperty, id); yes && strings.TrimSpace(sd) != "" {
+		shortDesc = sd
+	}
+
+	var shortDescSpan *compton.FspanElement
+	if shortDesc != "" {
+		shortDescSpan = compton.Fspan(s, shortDesc).
 			MaxWidth(size.MaxWidth).
 			ForegroundColor(color.RepGray).
 			BorderRadius(size.XSmall).
 			FontSize(size.Small).
 			TextAlign(align.Start)
+	}
 
-		pageStack.Append(
-			compton.FICenter(s, shortDescSpan),
-			compton.SectionDivider(s, compton.Text("Product Details")))
+	var descriptionFspan *compton.FspanElement
+	if rdx.HasKey(vangogh_integration.DescriptionOverviewProperty, id) {
+		descriptionFspan = compton.Fspan(s, "").
+			ForegroundColor(color.Foreground).
+			FontWeight(font_weight.Bolder)
 
+		descriptionLinkTitle := "More..."
+		if shortDescSpan == nil {
+			descriptionLinkTitle = "View Description"
+		}
+
+		descriptionLink := compton.AText(descriptionLinkTitle, "/description?id="+id)
+		descriptionLink.SetAttribute("target", "_top")
+		descriptionFspan.Append(descriptionLink)
+	}
+
+	if shortDescSpan != nil && descriptionFspan != nil {
+		shortDescSpan.Append(compton.Text("&nbsp;"), descriptionFspan)
+		pageStack.Append(compton.FICenter(s, shortDescSpan))
+	} else if descriptionFspan != nil {
+		pageStack.Append(compton.FICenter(s, descriptionFspan))
+	}
+
+	if shortDescSpan != nil || descriptionFspan != nil {
+		pageStack.Append(compton.SectionDivider(s, compton.Text("Product Details")))
 	}
 
 	items := compton.FlexItems(s, direction.Row).

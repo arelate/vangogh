@@ -37,9 +37,8 @@ func Changelog(id string, rdx redux.Readable) compton.PageElement {
 	p.Append(compton.FICenter(p, pageStack))
 
 	heading := compton.Heading(1)
-
 	heading.Append(compton.Fspan(p, pageTitle).TextAlign(align.Center))
-
+	heading.SetAttribute("style", "view-transition-name:product-title-"+id)
 	pageStack.Append(compton.FICenter(p, heading))
 
 	if changelog, ok := rdx.GetAllValues(vangogh_integration.ChangelogProperty, id); !ok || len(changelog) == 0 {

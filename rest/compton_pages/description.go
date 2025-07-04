@@ -2,11 +2,13 @@ package compton_pages
 
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/arelate/vangogh/rest/compton_data"
-	"github.com/arelate/vangogh/rest/compton_fragments"
+	"github.com/arelate/vangogh/rest/compton_styles"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
+	"github.com/boggydigital/compton/consts/direction"
+	"github.com/boggydigital/compton/consts/size"
+	"github.com/boggydigital/issa"
 	"github.com/boggydigital/redux"
 	"net/url"
 	"path"
@@ -14,22 +16,52 @@ import (
 )
 
 func Description(id string, rdx redux.Readable) compton.PageElement {
-	desc := ""
+
+	//s := compton_fragments.ProductSection(compton_data.DescriptionSection, id, rdx)
+	var pageTitle string
+	if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
+		pageTitle = title
+	}
+
+	p := compton.Page(pageTitle)
+
+	p.RegisterStyles(compton_styles.Styles, "description.css")
+
+	// tinting document background color to the representative product color
+	if imageId, ok := rdx.GetLastVal(vangogh_integration.ImageProperty, id); ok && imageId != "" {
+		if repColor, sure := rdx.GetLastVal(vangogh_integration.RepColorProperty, imageId); sure && repColor != issa.NeutralRepColor {
+			p.SetAttribute("style", "--c-rep:"+repColor)
+		}
+	}
+
+	var desc string
 	if dop, ok := rdx.GetLastVal(vangogh_integration.DescriptionOverviewProperty, id); ok {
 		desc = dop
 	}
 
-	s := compton_fragments.ProductSection(compton_data.DescriptionSection, id, rdx)
+	pageStack := compton.FlexItems(p, direction.Column).
+		RowGap(size.Normal)
+	p.Append(compton.FICenter(p, pageStack))
+
+	heading := compton.Heading(1)
+	heading.Append(compton.Fspan(p, pageTitle).TextAlign(align.Center))
+	heading.SetAttribute("style", "view-transition-name:product-title-"+id)
+	pageStack.Append(compton.FICenter(p, heading))
+
+	descriptionStack := compton.FlexItems(p, direction.Column).
+		AlignItems(align.Start).
+		MaxWidth(size.MaxWidth)
+	pageStack.Append(descriptionStack)
 
 	descriptionDiv := compton.Div()
 	descriptionDiv.AddClass("description")
-	s.Append(descriptionDiv)
+	descriptionStack.Append(descriptionDiv)
 
 	if desc == "" {
-		fs := compton.Fspan(s, "Description is not available for this product").
+		fs := compton.Fspan(p, "Description is not available for this product").
 			ForegroundColor(color.RepGray).
 			TextAlign(align.Center)
-		descriptionDiv.Append(compton.FICenter(s, fs))
+		descriptionDiv.Append(compton.FICenter(p, fs))
 	} else {
 		desc = rewriteDescriptionImagesLinks(desc)
 		desc = rewriteGameLinks(desc)
@@ -71,7 +103,7 @@ func Description(id string, rdx redux.Readable) compton.PageElement {
 		copyrightsDiv.Append(ard)
 	}
 
-	return s
+	return p
 }
 
 func rewriteDescriptionImagesLinks(desc string) string {
