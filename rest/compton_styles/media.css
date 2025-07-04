@@ -1,7 +1,7 @@
 a {
-    line-height: 0;
 
     & img {
+        line-height: 0;
         width: 100%;
         border-radius: var(--s-xs);
     }

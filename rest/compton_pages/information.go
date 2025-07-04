@@ -31,9 +31,9 @@ import (
 	"strings"
 )
 
-func Information(id string, rdx redux.Readable) compton.PageElement {
+func Info(id string, rdx redux.Readable) compton.PageElement {
 
-	s := compton_fragments.ProductSection(compton_data.InformationSection, id, rdx)
+	s := compton_fragments.ProductSection(compton_data.InfoSection, id, rdx)
 
 	if imageId, ok := rdx.GetLastVal(vangogh_integration.ImageProperty, id); ok && imageId != "" {
 		if rc, sure := rdx.GetLastVal(vangogh_integration.RepColorProperty, imageId); sure && rc != "" {

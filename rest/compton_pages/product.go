@@ -22,7 +22,7 @@ import (
 )
 
 var openSections = []string{
-	compton_data.InformationSection,
+	compton_data.InfoSection,
 }
 
 func Product(id string, rdx redux.Readable) compton.PageElement {
@@ -61,7 +61,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 	hasSections := make([]string, 0)
 
-	hasSections = append(hasSections, compton_data.InformationSection)
+	hasSections = append(hasSections, compton_data.InfoSection)
 
 	if rdx.HasKey(vangogh_integration.DescriptionOverviewProperty, id) {
 		hasSections = append(hasSections, compton_data.DescriptionSection)
@@ -83,12 +83,9 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 		hasSections = append(hasSections, compton_data.OfferingsSection)
 	}
 
-	if rdx.HasKey(vangogh_integration.ScreenshotsProperty, id) {
-		hasSections = append(hasSections, compton_data.ScreenshotsSection)
-	}
-
-	if rdx.HasKey(vangogh_integration.VideoIdProperty, id) {
-		hasSections = append(hasSections, compton_data.VideosSection)
+	if rdx.HasKey(vangogh_integration.ScreenshotsProperty, id) ||
+		rdx.HasKey(vangogh_integration.VideoIdProperty, id) {
+		hasSections = append(hasSections, compton_data.MediaSection)
 	}
 
 	if rdx.HasValue(vangogh_integration.TypesProperty, id, vangogh_integration.SteamAppNews.String()) ||
@@ -174,7 +171,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 		pageStack.Append(detailsSummary)
 
 		switch section {
-		case compton_data.InformationSection:
+		case compton_data.InfoSection:
 			productBadges := compton.FlexItems(p, direction.Row).
 				ColumnGap(size.XSmall).
 				BackgroundColor(color.Transparent)
@@ -276,7 +273,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 		}
 
 		eagerness := loading.Lazy
-		if section == compton_data.InformationSection {
+		if section == compton_data.InfoSection {
 			eagerness = loading.Eager
 		}
 

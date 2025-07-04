@@ -6,9 +6,9 @@ import (
 	"net/http"
 )
 
-func GetScreenshots(w http.ResponseWriter, r *http.Request) {
+func GetInfo(w http.ResponseWriter, r *http.Request) {
 
-	// GET /screenshots?id
+	// GET /info?id
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
@@ -17,8 +17,9 @@ func GetScreenshots(w http.ResponseWriter, r *http.Request) {
 
 	id := r.URL.Query().Get("id")
 
-	p := compton_pages.Screenshots(id, rdx)
-	if err := p.WriteResponse(w); err != nil {
-		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+	if p := compton_pages.Info(id, rdx); p != nil {
+		if err := p.WriteResponse(w); err != nil {
+			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+		}
 	}
 }

@@ -46,9 +46,9 @@ func VideoOriginLink(r compton.Registrar, videoId, videoTitle, videoDuration str
 	linkColumn.Append(linkText)
 
 	if dur, err := strconv.ParseInt(videoDuration, 10, 64); err == nil {
-		frow := compton.Frow(r).
-			FontSize(size.Small).
-			PropVal("Duration", formatSeconds(dur))
+		frow := compton.Frow(r)
+		frow.FontSize(size.XSmall)
+		frow.PropVal("Duration", formatSeconds(dur))
 		linkColumn.Append(compton.FICenter(r, frow))
 	}
 

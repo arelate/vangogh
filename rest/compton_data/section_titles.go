@@ -1,12 +1,10 @@
 package compton_data
 
 const (
-	InformationSection = "information"
+	InfoSection        = "info"
 	OfferingsSection   = "offerings"
 	DescriptionSection = "description"
-	ChangelogSection   = "changelog"
-	ScreenshotsSection = "screenshots"
-	VideosSection      = "videos"
+	MediaSection       = "media"
 	NewsSection        = "news"
 	ReceptionSection   = "reception"
 	SteamDeckSection   = "steam-deck"
@@ -14,12 +12,10 @@ const (
 )
 
 var SectionTitles = map[string]string{
-	InformationSection: "Info",
+	InfoSection:        "Info",
 	OfferingsSection:   "Offerings",
 	DescriptionSection: "Description",
-	ChangelogSection:   "Changelog",
-	ScreenshotsSection: "Screenshots",
-	VideosSection:      "Videos",
+	MediaSection:       "Media",
 	NewsSection:        "News",
 	ReceptionSection:   "Reception",
 	SteamDeckSection:   "Steam Deck",

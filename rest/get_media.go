@@ -6,9 +6,9 @@ import (
 	"net/http"
 )
 
-func GetInformation(w http.ResponseWriter, r *http.Request) {
+func GetMedia(w http.ResponseWriter, r *http.Request) {
 
-	// GET /information?id
+	// GET /media?id
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
@@ -17,9 +17,9 @@ func GetInformation(w http.ResponseWriter, r *http.Request) {
 
 	id := r.URL.Query().Get("id")
 
-	if p := compton_pages.Information(id, rdx); p != nil {
-		if err := p.WriteResponse(w); err != nil {
-			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-		}
+	p := compton_pages.Media(id, rdx)
+	if err := p.WriteResponse(w); err != nil {
+		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}
+
 }
