@@ -58,6 +58,7 @@ func Info(id string, rdx redux.Readable) compton.PageElement {
 			BorderRadius(size.XSmall).
 			FontSize(size.Small).
 			TextAlign(align.Start)
+		shortDescSpan.AddClass("short-description")
 	}
 
 	var descriptionFspan *compton.FspanElement
@@ -77,7 +78,7 @@ func Info(id string, rdx redux.Readable) compton.PageElement {
 	}
 
 	if shortDescSpan != nil && descriptionFspan != nil {
-		shortDescSpan.Append(compton.Text("&nbsp;"), descriptionFspan)
+		shortDescSpan.Append(compton.Text("&nbsp;&nbsp;"), descriptionFspan)
 		pageStack.Append(compton.FICenter(s, shortDescSpan))
 	} else if descriptionFspan != nil {
 		pageStack.Append(compton.FICenter(s, descriptionFspan))
