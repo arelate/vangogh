@@ -1,6 +1,8 @@
 package compton_pages
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
@@ -11,6 +13,8 @@ import (
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/font_weight"
+	"github.com/boggydigital/compton/consts/size"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/redux"
 )
 
@@ -22,13 +26,13 @@ const (
 
 var messageByCategory = map[string]string{
 	"Verified": "Valve’s testing indicates that <span class='title'>%s</span> is " +
-		"<a class='category verified' target='_top' href='/search?steam-deck-app-compatibility-category=Verified'>Verified</a> on Steam Deck. " +
+		"<a class='Verified' target='_top' href='/search?steam-deck-app-compatibility-category=Verified'>Verified</a> on Steam Deck. " +
 		"This game is fully functional on Steam Deck, and works great with the built-in controls and display.",
 	"Playable": "Valve’s testing indicates that <span class='title'>%s</span> is " +
-		"<a class='category playable' target='_top' href='/search?steam-deck-app-compatibility-category=Playable'>Playable</a> on Steam Deck. " +
+		"<a class='Playable' target='_top' href='/search?steam-deck-app-compatibility-category=Playable'>Playable</a> on Steam Deck. " +
 		"This game is functional on Steam Deck, but might require extra effort to interact with or configure.",
 	"Unsupported": "Valve’s testing indicates that <span class='title'>%s</span> is " +
-		"<a class='category unsupported' target='_top' href='/search?steam-deck-app-compatibility-category=Unsupported'>Unsupported</a> on Steam Deck. " +
+		"<a class='Unsupported' target='_top' href='/search?steam-deck-app-compatibility-category=Unsupported'>Unsupported</a> on Steam Deck. " +
 		"Some or all of this game currently doesn't function on Steam Deck.",
 	"Unknown": "Valve is still learning about <span class='title'>%s</span>. " +
 		"We do not currently have further information regarding Steam Deck compatibility.",
@@ -41,13 +45,36 @@ var displayTypeColors = map[string]color.Color{
 	"Unknown":     color.RepGray,
 }
 
-func SteamDeck(id string, dacr *steam_integration.DeckAppCompatibilityReport, rdx redux.Readable) compton.PageElement {
+func Compatibility(id string, rdx redux.Readable) compton.PageElement {
 	title, _ := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
 
-	s := compton_fragments.ProductSection(compton_data.SteamDeckSection, id, rdx)
+	s := compton_fragments.ProductSection(compton_data.CompatibilitySection, id, rdx)
 
 	pageStack := compton.FlexItems(s, direction.Column)
 	s.Append(pageStack)
+
+	compatibilityRow := compton.FlexItems(s, direction.Row).
+		RowGap(size.Normal).
+		ColumnGap(size.Large).
+		ColumnWidthRule(size.XXXSmall)
+	pageStack.Append(compatibilityRow)
+
+	for _, rrp := range compton_fragments.ProductProperties(s, id, rdx, compton_data.CompatibilityProperties...) {
+		compatibilityRow.Append(rrp)
+	}
+
+	deckCompatibilityReport, err := getDeckAppCompatibilityReport(id, rdx)
+	if err != nil {
+		errorFspan := compton.Fspan(s, err.Error())
+		pageStack.Append(errorFspan)
+		return s
+	}
+
+	if deckCompatibilityReport == nil {
+		return s
+	}
+
+	pageStack.Append(compton.SectionDivider(s, compton.Text("Steam Deck")))
 
 	if category, ok := rdx.GetLastVal(vangogh_integration.SteamDeckAppCompatibilityCategoryProperty, id); ok {
 		message := fmt.Sprintf(messageByCategory[category], title)
@@ -56,7 +83,7 @@ func SteamDeck(id string, dacr *steam_integration.DeckAppCompatibilityReport, rd
 		pageStack.Append(divMessage)
 	}
 
-	if blogUrl := dacr.GetBlogUrl(); blogUrl != "" {
+	if blogUrl := deckCompatibilityReport.GetBlogUrl(); blogUrl != "" {
 		additionalInfo := compton.Span()
 		additionalInfo.Append(compton.Text(additionalInfoText))
 
@@ -70,13 +97,13 @@ func SteamDeck(id string, dacr *steam_integration.DeckAppCompatibilityReport, rd
 		pageStack.Append(additionalInfo)
 	}
 
-	results := dacr.GetResults()
+	results := deckCompatibilityReport.GetResults()
 
 	if len(results) > 0 {
 		pageStack.Append(compton.Hr())
 	}
 
-	displayTypes := dacr.GetDisplayTypes()
+	displayTypes := deckCompatibilityReport.GetDisplayTypes()
 
 	ul := compton.Ul()
 	if len(displayTypes) == len(results) {
@@ -113,4 +140,37 @@ func SteamDeck(id string, dacr *steam_integration.DeckAppCompatibilityReport, rd
 	pageStack.Append(ul)
 
 	return s
+}
+
+func getDeckAppCompatibilityReport(gogId string, rdx redux.Readable) (*steam_integration.DeckAppCompatibilityReport, error) {
+
+	var steamAppId string
+	if sai, ok := rdx.GetLastVal(vangogh_integration.SteamAppIdProperty, gogId); ok && sai != "" {
+		steamAppId = sai
+	} else {
+		return nil, errors.New("no steam app id for gog id " + gogId)
+	}
+
+	deckAppCompatibilityReportDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.SteamDeckCompatibilityReport)
+	if err != nil {
+		return nil, err
+	}
+
+	kvDeckAppCompatibilityReport, err := kevlar.New(deckAppCompatibilityReportDir, kevlar.JsonExt)
+	if err != nil {
+		return nil, err
+	}
+
+	rcDeckAppCompatibilityReport, err := kvDeckAppCompatibilityReport.Get(steamAppId)
+	if err != nil {
+		return nil, err
+	}
+	defer rcDeckAppCompatibilityReport.Close()
+
+	var deckCompatibilityReport steam_integration.DeckAppCompatibilityReport
+	if err = json.NewDecoder(rcDeckAppCompatibilityReport).Decode(&deckCompatibilityReport); err != nil {
+		return nil, err
+	}
+
+	return &deckCompatibilityReport, nil
 }

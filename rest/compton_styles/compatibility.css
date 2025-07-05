@@ -30,25 +30,22 @@ ul {
     }
 }
 
-.message {
+.Verified {
+    color: var(--c-green)
+}
 
-    & .category, .title {
-        font-weight: bold;
-    }
+.Playable {
+    color: var(--c-orange)
+}
 
-    & .verified {
-        color: var(--c-green)
-    }
+.Unsupported {
+    color: var(--c-red)
+}
 
-    & .playable {
-        color: var(--c-orange)
-    }
+.Unknown {
+    color: var(--c-gray)
+}
 
-    & .unsupported {
-        color: var(--c-red)
-    }
-
-    & .unknown {
-        color: var(--c-gray)
-    }
+.title {
+    font-weight: bold;
 }

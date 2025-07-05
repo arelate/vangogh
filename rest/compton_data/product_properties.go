@@ -36,9 +36,6 @@ var ProductProperties = []string{
 	vangogh_integration.EnginesProperty,
 	vangogh_integration.EnginesBuildsProperty,
 
-	vangogh_integration.ProtonDBTierProperty,
-	vangogh_integration.ProtonDBConfidenceProperty,
-
 	vangogh_integration.HltbPlatformsProperty,
 	vangogh_integration.HltbHoursToCompleteMainProperty,
 	vangogh_integration.HltbHoursToCompletePlusProperty,

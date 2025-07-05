@@ -88,7 +88,7 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx redux.Readab
 		if fmtBadge.Title != "" && fmtBadge.Icon == compton.NoSymbol {
 			badge = compton.SmallBadge(r, fmtBadge.Title, fmtBadge.Background, fmtBadge.Foreground)
 		} else if fmtBadge.Icon != compton.NoSymbol {
-			badge = compton.SmallBadgeIcon(r, fmtBadge.Icon, fmtBadge.Background, fmtBadge.Foreground)
+			badge = compton.SmallBadgeIcon(r, fmtBadge.Icon, "", fmtBadge.Background, fmtBadge.Foreground)
 		}
 		if badge != nil {
 			badge.AddClass(fmtBadge.Class)

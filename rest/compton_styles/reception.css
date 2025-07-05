@@ -1,7 +1,3 @@
-.rating {
-    width: calc(11 * var(--s-n))
-}
-
 @scope (title-values) {
 
     &.Positive .values {

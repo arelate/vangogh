@@ -89,8 +89,9 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 		hasSections = append(hasSections, compton_data.NewsSection)
 	}
 
-	if rdx.HasValue(vangogh_integration.TypesProperty, id, vangogh_integration.SteamDeckCompatibilityReport.String()) {
-		hasSections = append(hasSections, compton_data.SteamDeckSection)
+	if rdx.HasKey(vangogh_integration.SteamDeckAppCompatibilityCategoryProperty, id) ||
+		rdx.HasKey(vangogh_integration.ProtonDBTierProperty, id) {
+		hasSections = append(hasSections, compton_data.CompatibilitySection)
 	}
 
 	if val, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && val == vangogh_integration.TrueValue {
@@ -178,7 +179,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 				if fmtBadge.Title != "" && fmtBadge.Icon == compton.NoSymbol {
 					badge = compton.Badge(p, fmtBadge.Title, fmtBadge.Background, fmtBadge.Foreground)
 				} else if fmtBadge.Icon != compton.NoSymbol {
-					badge = compton.BadgeIcon(p, fmtBadge.Icon, fmtBadge.Background, fmtBadge.Foreground)
+					badge = compton.BadgeIcon(p, fmtBadge.Icon, "", fmtBadge.Background, fmtBadge.Foreground)
 				}
 				if badge != nil {
 					badge.AddClass(fmtBadge.Class)
@@ -212,23 +213,29 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 				detailsSummary.AppendBadges(mediaBadge)
 			}
 
-		case compton_data.SteamDeckSection:
-			if sdccp, ok := rdx.GetLastVal(vangogh_integration.SteamDeckAppCompatibilityCategoryProperty, id); ok {
+		case compton_data.CompatibilitySection:
+			var badge compton.Element
+			if dcp, ok := rdx.GetLastVal(vangogh_integration.SteamDeckAppCompatibilityCategoryProperty, id); ok {
 
-				var deckCompatColor color.Color
-				switch sdccp {
+				var dcColor color.Color
+				switch dcp {
 				case "Verified":
-					deckCompatColor = color.Green
+					dcColor = color.Green
 				case "Playable":
-					deckCompatColor = color.Orange
+					dcColor = color.Orange
 				case "Unsupported":
-					deckCompatColor = color.Red
+					dcColor = color.Red
 				default:
-					deckCompatColor = color.RepGray
+					dcColor = color.RepGray
 				}
 
-				steamDeckBadge := compton.Badge(p, sdccp, color.Highlight, deckCompatColor)
-				detailsSummary.AppendBadges(steamDeckBadge)
+				badge = compton.BadgeIcon(p, compton.Linux, dcp, color.Highlight, dcColor)
+			} else if pt, ok := rdx.GetLastVal(vangogh_integration.ProtonDBTierProperty, id); ok {
+				badge = compton.Badge(p, pt, color.Highlight, color.RepForeground)
+			}
+
+			if badge != nil {
+				detailsSummary.AppendBadges(badge)
 			}
 		case compton_data.ReceptionSection:
 			receptionBadges := compton.FlexItems(p, direction.Row).ColumnGap(size.XSmall)
