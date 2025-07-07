@@ -41,11 +41,16 @@ func TagsEditor(
 		}
 	}
 
+	var title string
+	if tp, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
+		title = tp
+	}
+
 	/* App navigation */
 
-	appNavLinks := compton_fragments.AppNavLinks(p, "")
+	appNavLinks := compton_fragments.MenuNav(p, title, "", rdx)
 
-	pageStack.Append(compton.FICenter(p, appNavLinks))
+	pageStack.Append(appNavLinks)
 
 	/* Product poster */
 
@@ -55,9 +60,8 @@ func TagsEditor(
 
 	/* Product title */
 
-	productTitle, _ := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
 	productHeading := compton.Heading(2)
-	productHeading.Append(compton.Fspan(p, productTitle).TextAlign(align.Center))
+	productHeading.Append(compton.Fspan(p, title).TextAlign(align.Center))
 	pageStack.Append(compton.FICenter(p, productHeading))
 
 	/* Ownership notice */

@@ -47,67 +47,8 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 	/* App navigation */
 
-	appNavLinks := compton_fragments.AppNavLinks(p, "")
-
-	showTocNavLinks := compton.NavLinks(p)
-	showTocNavLinks.SetAttribute("style", "view-transition-name:secondary-nav")
-
-	showTocLink := showTocNavLinks.AppendLink(p, &compton.NavTarget{
-		Symbol: compton.DownwardArrow,
-		Href:   "#",
-	})
-
-	/* Determine which sections should the product page have */
-
-	hasSections := make([]string, 0)
-
-	hasSections = append(hasSections, compton_data.InfoSection)
-
-	if sr, ok := rdx.GetLastVal(vangogh_integration.SummaryRatingProperty, id); ok && sr != "" {
-		hasSections = append(hasSections, compton_data.ReceptionSection)
-	}
-
-	offeringsCount := 0
-	for _, rpp := range compton_data.OfferingsProperties {
-		var rps []string
-		if rps, ok = rdx.GetAllValues(rpp, id); ok {
-			offeringsCount += len(rps)
-		}
-	}
-
-	if offeringsCount > 0 {
-		hasSections = append(hasSections, compton_data.OfferingsSection)
-	}
-
-	if rdx.HasKey(vangogh_integration.ScreenshotsProperty, id) ||
-		rdx.HasKey(vangogh_integration.VideoIdProperty, id) {
-		hasSections = append(hasSections, compton_data.MediaSection)
-	}
-
-	if rdx.HasValue(vangogh_integration.TypesProperty, id, vangogh_integration.SteamAppNews.String()) ||
-		rdx.HasKey(vangogh_integration.ChangelogProperty, id) {
-		hasSections = append(hasSections, compton_data.NewsSection)
-	}
-
-	if rdx.HasKey(vangogh_integration.SteamDeckAppCompatibilityCategoryProperty, id) ||
-		rdx.HasKey(vangogh_integration.ProtonDBTierProperty, id) {
-		hasSections = append(hasSections, compton_data.CompatibilitySection)
-	}
-
-	if val, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && val == vangogh_integration.TrueValue {
-		if productType, sure := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); sure && productType == vangogh_integration.GameProductType {
-			hasSections = append(hasSections, compton_data.InstallersSection)
-		}
-	}
-
-	/* Product details sections shortcuts */
-
-	productSectionsLinks := compton.SectionsLinks(p, hasSections, compton_data.SectionTitles)
-	pageStack.Append(compton.Attach(p, showTocLink, productSectionsLinks))
-
-	topLevelNav := []compton.Element{appNavLinks, showTocNavLinks, productSectionsLinks}
-
-	pageStack.Append(compton.FICenter(p, topLevelNav...))
+	menuNavLink := compton_fragments.MenuNav(p, title, id, rdx)
+	pageStack.Append(menuNavLink)
 
 	/* Product poster */
 
@@ -153,6 +94,8 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 	/* Product details sections */
 
+	hasSections := compton_fragments.ProductSections(id, rdx)
+
 	for ii, section := range hasSections {
 
 		sectionTitle := compton_data.SectionTitles[section]
@@ -162,7 +105,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 			MarkerColor(color.RepGray).
 			DetailsMarginBlockEnd(size.Unset).
 			SummaryMarginBlockEnd(size.Normal)
-		detailsSummary.SetId(sectionTitle)
+		detailsSummary.SetId(section)
 		detailsSummary.SetTabIndex(ii + 1)
 
 		pageStack.Append(detailsSummary)

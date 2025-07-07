@@ -1,6 +1,7 @@
 package compton_pages
 
 import (
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/boggydigital/compton"
@@ -12,10 +13,43 @@ import (
 	"slices"
 )
 
-func Updates(section string,
-	updates map[string][]string,
-	updateTotals map[string]int,
-	rdx redux.Readable) compton.PageElement {
+const (
+	updatedProductsLimit = 60 // divisible by 2,3,4,5,6
+)
+
+func Updates(section string, rdx redux.Readable, showAll bool) compton.PageElement {
+
+	updates := make(map[string][]string)
+	updateTotals := make(map[string]int)
+
+	paginate := false
+
+	for updateSection := range rdx.Keys(vangogh_integration.LastSyncUpdatesProperty) {
+
+		ids, _ := rdx.GetAllValues(vangogh_integration.LastSyncUpdatesProperty, updateSection)
+		updateTotals[updateSection] = len(ids)
+
+		paginate = len(ids) > updatedProductsLimit
+		for _, id := range ids {
+			if paginate && !showAll && len(updates[updateSection]) >= updatedProductsLimit {
+				continue
+			}
+			updates[updateSection] = append(updates[updateSection], id)
+		}
+	}
+
+	keys := make(map[string]bool)
+	for _, ids := range updates {
+		for _, id := range ids {
+			keys[id] = true
+		}
+	}
+
+	if section == "" {
+		if sortedSections := slices.Sorted(maps.Keys(updates)); len(sortedSections) > 0 {
+			section = sortedSections[0]
+		}
+	}
 
 	current := compton_data.AppNavUpdates
 	p, pageStack := compton_fragments.AppPage(current)
@@ -26,44 +60,12 @@ func Updates(section string,
 
 	/* Nav stack = App navigation + Show all + (popup) Updates sections shortcuts */
 
-	topLevelNav := []compton.Element{compton_fragments.AppNavLinks(p, current)}
-
-	updateSectionLinks := compton.NavLinks(p)
-	updateSectionLinks.SetAttribute("style", "view-transition-name:secondary-nav")
-
-	for _, updateSection := range slices.Sorted(maps.Keys(updates)) {
-
-		sectionLink := updateSectionLinks.AppendLink(p, &compton.NavTarget{
-			Href:     "/updates?section=" + updateSection,
-			Title:    updateSection,
-			Selected: updateSection == section,
-		})
-
-		if updateSection == section {
-			sectionLink.SetAttribute("style", "view-transition-name:current-update-section")
-		}
-
-	}
-
-	topLevelNav = append(topLevelNav, updateSectionLinks)
-
-	var showAllNavLinks *compton.NavLinksElement
-
-	if len(updates[section]) < updateTotals[section] {
-		showAllNavLinks = compton.NavLinks(p)
-		showAllNavLinks.SetAttribute("style", "view-transition-name:tertiary-nav")
-		showAllNavLinks.AppendLink(p, &compton.NavTarget{Href: "/updates?section=" + section + "&show-all=true", Title: "Show all"})
-
-		topLevelNav = append(topLevelNav, showAllNavLinks)
-	}
-
-	pageStack.Append(compton.FICenter(p, topLevelNav...))
+	menuNavLink := compton_fragments.MenuNav(p, section, "", rdx)
+	pageStack.Append(menuNavLink)
 
 	/* Updates sections */
 
 	ids := updates[section]
-
-	//sectionHeading := compton.DSTitle(p, section)
 
 	dsSection := compton.DSLarge(p, section, true).
 		BackgroundColor(color.Highlight).

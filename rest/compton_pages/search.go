@@ -16,8 +16,7 @@ const filterSearchTitle = "Filter & search"
 
 func Search(query map[string][]string, ids []string, from, to int, rdx redux.Readable) compton.PageElement {
 
-	current := compton_data.AppNavSearch
-	p, pageStack := compton_fragments.AppPage(current)
+	p, pageStack := compton_fragments.AppPage(compton_data.AppNavSearch)
 
 	p.AppendSpeculationRules("/*")
 
@@ -25,16 +24,15 @@ func Search(query map[string][]string, ids []string, from, to int, rdx redux.Rea
 
 	/* Nav stack = App navigation + Search shortcuts */
 
-	appNavLinks := compton_fragments.AppNavLinks(p, current)
+	scope := compton_data.SearchScopeFromQuery(query)
+	if scope == "" {
+		scope = "Search"
+	}
 
-	searchScope := compton_data.SearchScopeFromQuery(query)
-	searchLinks := compton_fragments.SearchLinks(p, searchScope)
-
-	pageStack.Append(compton.FICenter(p, appNavLinks, searchLinks))
+	menuNavLink := compton_fragments.MenuNav(p, scope, "", rdx)
+	pageStack.Append(menuNavLink)
 
 	/* Filter & Search details */
-
-	//filterSearchHeading := compton.DSTitle(p, filterSearchTitle)
 
 	filterSearchDetails := compton.DSLarge(p, filterSearchTitle, len(query) == 0).
 		BackgroundColor(color.Highlight).
