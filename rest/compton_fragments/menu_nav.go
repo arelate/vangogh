@@ -22,7 +22,7 @@ func MenuNav(r compton.Registrar, navTitle, id string, rdx redux.Readable) compt
 		navTitle = navTitle[:navTitleMaxChars] + "..."
 	}
 
-	dsMenu := compton.DSSmall(r, navTitle, false).SummaryJustifySelf(align.Center)
+	dsMenu := compton.DSSmall(r, navTitle, id == "").SummaryJustifySelf(align.Center)
 	dsMenu.SetId("menu-nav")
 	dsMenu.SetAttribute("style", "view-transitions-name:menu-nav")
 
