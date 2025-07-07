@@ -96,7 +96,7 @@ func sectionNavLink(r compton.Registrar, text string, href string) compton.Eleme
 
 	linkText := compton.Fspan(r, text).
 		FontSize(size.Small).
-		ForegroundColor(color.RepGray)
+		ForegroundColor(color.RepGray).TextAlign(align.Center)
 	link.Append(linkText)
 
 	return link
