@@ -90,6 +90,15 @@ func Updates(section string, rdx redux.Readable, showAll bool) compton.PageEleme
 	productsList := compton_fragments.ProductsList(p, ids, 0, len(ids), rdx, false)
 	sectionStack.Append(productsList)
 
+	/* Show all */
+
+	if len(updates[section]) < updateTotals[section] {
+		showAllNavLinks := compton.NavLinks(p)
+		showAllNavLinks.SetAttribute("style", "view-transition-name:tertiary-nav")
+		showAllNavLinks.AppendLink(p, &compton.NavTarget{Href: "/updates?section=" + section + "&show-all=true", Title: "Show all"})
+		pageStack.Append(compton.FICenter(p, showAllNavLinks))
+	}
+
 	/* Last Updated section */
 
 	pageStack.Append(compton.Br(), compton_fragments.Updated(p, rdx))
