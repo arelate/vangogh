@@ -18,11 +18,20 @@ const navTitleMaxChars = 30
 
 func MenuNav(r compton.Registrar, navTitle, id string, rdx redux.Readable) compton.Element {
 
-	if len(navTitle) > navTitleMaxChars {
-		navTitle = navTitle[:navTitleMaxChars] + "..."
+	var truncatedTitle string
+
+	for ii, rn := range navTitle {
+		if ii == navTitleMaxChars {
+			break
+		}
+		truncatedTitle += string(rn)
 	}
 
-	dsMenu := compton.DSSmall(r, navTitle, id == "").SummaryJustifySelf(align.Center)
+	if len(navTitle) > len(truncatedTitle) {
+		navTitle = truncatedTitle + "..."
+	}
+
+	dsMenu := compton.DSSmall(r, navTitle, false).SummaryJustifySelf(align.Center)
 	dsMenu.SetId("menu-nav")
 	dsMenu.SetAttribute("style", "view-transitions-name:menu-nav")
 
