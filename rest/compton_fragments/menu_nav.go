@@ -36,7 +36,7 @@ func MenuNav(r compton.Registrar, navTitle, id string, rdx redux.Readable) compt
 
 func menuNavItems(r compton.Registrar, id string, rdx redux.Readable) compton.Element {
 
-	pageStack := compton.FlexItems(r, direction.Column).JustifyContent(align.Center)
+	pageStack := compton.FlexItems(r, direction.Row).JustifyContent(align.Center)
 
 	// Updates
 
