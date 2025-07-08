@@ -45,11 +45,11 @@ func MenuNav(r compton.Registrar, navTitle, id string, rdx redux.Readable) compt
 
 func menuNavItems(r compton.Registrar, id string, rdx redux.Readable) compton.Element {
 
-	pageStack := compton.FlexItems(r, direction.Row).JustifyContent(align.Center)
+	pageStack := compton.FlexItems(r, direction.Row).JustifyContent(align.Center).ColumnGap(size.Large)
 
 	// Updates
 
-	updatesRow := compton.FlexItems(r, direction.Row).ColumnGap(size.Normal)
+	updatesRow := compton.FlexItems(r, direction.Row).ColumnGap(size.Normal).AlignItems(align.Center) //.AlignContent(align.Center).JustifyContent(align.Center).JustifyItems(align.Center)
 	pageStack.Append(updatesRow)
 
 	updatesRow.Append(sectionNavLink(r, "Updates", "/updates"))
@@ -66,7 +66,7 @@ func menuNavItems(r compton.Registrar, id string, rdx redux.Readable) compton.El
 
 	// Search
 
-	searchRow := compton.FlexItems(r, direction.Row).ColumnGap(size.Normal)
+	searchRow := compton.FlexItems(r, direction.Row).ColumnGap(size.Normal).AlignItems(align.Center)
 	pageStack.Append(searchRow)
 
 	searchRow.Append(sectionNavLink(r, "Search", "/search"))
@@ -102,10 +102,11 @@ func menuNavItems(r compton.Registrar, id string, rdx redux.Readable) compton.El
 func sectionNavLink(r compton.Registrar, text string, href string) compton.Element {
 
 	link := compton.A(href)
-
 	linkText := compton.Fspan(r, text).
 		FontSize(size.Small).
-		ForegroundColor(color.RepGray).TextAlign(align.Center)
+		TextAlign(align.Center).
+		FontWeight(font_weight.Bolder).
+		ForegroundColor(color.RepForeground)
 	link.Append(linkText)
 
 	return link
@@ -117,8 +118,7 @@ func navLink(r compton.Registrar, text string, href string) compton.Element {
 	link := compton.A(href)
 
 	linkText := compton.Fspan(r, text).
-		FontSize(size.Small).
-		FontWeight(font_weight.Bolder).
+		FontSize(size.XSmall).
 		ForegroundColor(color.RepForeground)
 	link.Append(linkText)
 
