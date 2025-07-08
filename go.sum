@@ -340,6 +340,8 @@ github.com/boggydigital/kevlar v0.6.6 h1:YgFkh2s5Q1MrYQxL5w91Ty7I1DgNXjSUY9ffa7o
 github.com/boggydigital/kevlar v0.6.6/go.mod h1:okRKde7LOZnO5iDk4aY1UHCQHzgvGfN+xLJcA5ofjb8=
 github.com/boggydigital/kevlar v0.6.7 h1:8XeX94FGbY8AHfOGCaW7TzDh+EspoIPaeBbqdBPpeyU=
 github.com/boggydigital/kevlar v0.6.7/go.mod h1:okRKde7LOZnO5iDk4aY1UHCQHzgvGfN+xLJcA5ofjb8=
+github.com/boggydigital/kevlar v0.6.9 h1:VX1M/F6ZrLxAslADkixcsYQ6HAnqRhwMuT12cikQDZM=
+github.com/boggydigital/kevlar v0.6.9/go.mod h1:wlHW4oa6bLm/xVlUoVYinsJKiitkaibBW9Diht46QPo=
 github.com/boggydigital/match_node v0.1.19 h1:n62RM9BOUwRJFNtagE4siMu34zgwz+BRCbdO/0j7aJM=
 github.com/boggydigital/match_node v0.1.19/go.mod h1:F8Eqagj2uDDRK6ElfuTIOWROjASUC72uUo9s7FWbthQ=
 github.com/boggydigital/middleware v0.1.17 h1:c/s9Of2Ow8dPyO/spGPfM6sd5P8qa/L2eFQrXtIlktg=
@@ -362,6 +364,8 @@ github.com/boggydigital/redux v0.1.7 h1:iSG61wAvUDN6pwdP6Udx2jlZUzWwQXgHAZajRB7F
 github.com/boggydigital/redux v0.1.7/go.mod h1:ZuIgU55x+sbcpeV/PfK1YEa+3eK3oKaqGjqNtdssgCE=
 github.com/boggydigital/redux v0.1.8 h1:L10iFffqBp5pFJzbeL6sl67WHeSVoIjIMPjTdQskSnI=
 github.com/boggydigital/redux v0.1.8/go.mod h1:ZuIgU55x+sbcpeV/PfK1YEa+3eK3oKaqGjqNtdssgCE=
+github.com/boggydigital/redux v0.1.9 h1:SSzyraDVaxNYSeWusNiOKx3e6wUGyO3WKvc07lupQvE=
+github.com/boggydigital/redux v0.1.9/go.mod h1:mI9586prkmJ00FPJn2fpqBVB3ViATnmgP6yfHq95C2I=
 github.com/boggydigital/testo v0.1.8 h1:NKuKLpWKn8gG3dYq8xNrFYHimxoCTdzLOs242q6jeQo=
 github.com/boggydigital/testo v0.1.8/go.mod h1:8JTO6UKeQPsHS82vbCH/3NLDfewmr/84vVQ6rNLdCas=
 github.com/boggydigital/wits v0.2.3 h1:Z0eB+QlIA18fJmblyV6ZJQ/swPYSFhOxfgMXOQz4/c8=
