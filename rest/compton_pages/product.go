@@ -47,8 +47,8 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 	/* App navigation */
 
-	menuNavLink := compton_fragments.MenuNav(p, title, id, rdx)
-	pageStack.Append(menuNavLink)
+	appNavLinks := compton_fragments.AppNavLinks(p, "")
+	pageStack.Append(compton.FICenter(p, appNavLinks))
 
 	/* Product poster */
 

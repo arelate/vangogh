@@ -24,13 +24,12 @@ func Search(query map[string][]string, ids []string, from, to int, rdx redux.Rea
 
 	/* Nav stack = App navigation + Search shortcuts */
 
-	scope := compton_data.SearchScopeFromQuery(query)
-	if scope == "" {
-		scope = "Search"
-	}
+	appNavLinks := compton_fragments.AppNavLinks(p, compton_data.AppNavSearch)
 
-	menuNavLink := compton_fragments.MenuNav(p, scope, "", rdx)
-	pageStack.Append(menuNavLink)
+	searchScope := compton_data.SearchScopeFromQuery(query)
+	searchLinks := compton_fragments.SearchLinks(p, searchScope)
+
+	pageStack.Append(compton.FICenter(p, appNavLinks, searchLinks))
 
 	/* Filter & Search details */
 

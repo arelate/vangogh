@@ -48,9 +48,8 @@ func TagsEditor(
 
 	/* App navigation */
 
-	appNavLinks := compton_fragments.MenuNav(p, title, "", rdx)
-
-	pageStack.Append(appNavLinks)
+	appNavLinks := compton_fragments.AppNavLinks(p, "")
+	pageStack.Append(compton.FICenter(p, appNavLinks))
 
 	/* Product poster */
 

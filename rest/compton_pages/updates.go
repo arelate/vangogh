@@ -60,8 +60,27 @@ func Updates(section string, rdx redux.Readable, showAll bool) compton.PageEleme
 
 	/* Nav stack = App navigation + Show all + (popup) Updates sections shortcuts */
 
-	menuNavLink := compton_fragments.MenuNav(p, section, "", rdx)
-	pageStack.Append(menuNavLink)
+	topLevelNav := []compton.Element{compton_fragments.AppNavLinks(p, current)}
+
+	updateSectionLinks := compton.NavLinks(p)
+	updateSectionLinks.SetAttribute("style", "view-transition-name:secondary-nav")
+
+	for _, updateSection := range slices.Sorted(maps.Keys(updates)) {
+
+		sectionLink := updateSectionLinks.AppendLink(p, &compton.NavTarget{
+			Href:     "/updates?section=" + updateSection,
+			Title:    updateSection,
+			Selected: updateSection == section,
+		})
+
+		if updateSection == section {
+			sectionLink.SetAttribute("style", "view-transition-name:current-update-section")
+		}
+
+	}
+
+	topLevelNav = append(topLevelNav, updateSectionLinks)
+	pageStack.Append(compton.FICenter(p, topLevelNav...))
 
 	/* Updates sections */
 
