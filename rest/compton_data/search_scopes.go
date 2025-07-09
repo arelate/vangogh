@@ -7,6 +7,7 @@ import (
 )
 
 const (
+	SearchNew                    = "New"
 	SearchOwned                  = "Own"
 	SearchWishlist               = "Wish"
 	SearchSale                   = "Sale"
@@ -17,6 +18,7 @@ const (
 const GogPreservationProgramTag = "Good Old Game"
 
 var SearchOrder = []string{
+	SearchNew,
 	SearchOwned,
 	SearchWishlist,
 	SearchSale,
@@ -27,6 +29,8 @@ var SearchOrder = []string{
 func SearchScopes() map[string]string {
 
 	queries := make(map[string]string)
+
+	queries[SearchNew] = ""
 
 	q := make(url.Values)
 	q.Set(vangogh_integration.OwnedProperty, vangogh_integration.TrueValue)
