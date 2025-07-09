@@ -69,7 +69,7 @@ func Updates(section string, rdx redux.Readable, showAll bool) compton.PageEleme
 
 		sectionLink := updateSectionLinks.AppendLink(p, &compton.NavTarget{
 			Href:     "/updates?section=" + updateSection,
-			Title:    updateSection,
+			Title:    vangogh_integration.UpdatesShorterTitles[updateSection],
 			Selected: updateSection == section,
 		})
 
@@ -86,7 +86,7 @@ func Updates(section string, rdx redux.Readable, showAll bool) compton.PageEleme
 
 	ids := updates[section]
 
-	dsSection := compton.DSLarge(p, section, true).
+	dsSection := compton.DSLarge(p, vangogh_integration.UpdatesLongerTitles[section], true).
 		BackgroundColor(color.Highlight).
 		SummaryMarginBlockEnd(size.Normal).
 		DetailsMarginBlockEnd(size.Unset).

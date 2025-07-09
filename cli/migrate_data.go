@@ -15,12 +15,20 @@ import (
 // Data scheme version log:
 // 1. local-manual-url -> manual-url-filename
 // 2. rm -rf metadata/_type_errors
+// 3. rename updates sections (remove old section titles)
 
 const (
-	latestDataSchema = 2
+	latestDataSchema = 3
 )
 
 const DeprecatedTypeErrors pathways.RelDir = "_type_errors"
+
+const (
+	installersUpdatesTitle = "Installers updates"
+	newProductTitle        = "New products"
+	releasedTodayTitle     = "Released today"
+	steamNewsTitle         = "Steam news"
+)
 
 func MigrateDataHandler(u *url.URL) error {
 	return MigrateData(u.Query().Has("force"))
@@ -63,6 +71,10 @@ func MigrateData(force bool) error {
 			}
 		case 1:
 			if err = removeTypeErrorsDir(); err != nil {
+				return err
+			}
+		case 2:
+			if err = removeLiteralUpdatesSections(); err != nil {
 				return err
 			}
 		}
@@ -152,4 +164,26 @@ func removeTypeErrorsDir() error {
 	typeErrorsDir := filepath.Join(metadataDir, string(DeprecatedTypeErrors))
 
 	return os.RemoveAll(typeErrorsDir)
+}
+
+func removeLiteralUpdatesSections() error {
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return err
+	}
+
+	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.LastSyncUpdatesProperty)
+	if err != nil {
+		return err
+	}
+
+	if err = rdx.CutKeys(vangogh_integration.LastSyncUpdatesProperty,
+		installersUpdatesTitle,
+		newProductTitle,
+		releasedTodayTitle,
+		steamNewsTitle); err != nil {
+		return err
+	}
+
+	return err
 }

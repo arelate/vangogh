@@ -25,13 +25,6 @@ const (
 	atomEntryTitle  = "Sync results"
 )
 
-const (
-	installersUpdatesTitle = "Installers updates"
-	newProductTitle        = "New products"
-	releasedTodayTitle     = "Released today"
-	steamNewsTitle         = "Steam news"
-)
-
 func SummarizeHandler(u *url.URL) error {
 
 	since, err := vangogh_integration.SinceFromUrl(u)
@@ -49,7 +42,11 @@ func Summarize(since int64) error {
 
 	summary := make(map[string][]string)
 
-	for _, section := range []string{newProductTitle, releasedTodayTitle, steamNewsTitle, installersUpdatesTitle} {
+	for _, section := range []string{
+		vangogh_integration.UpdatesInstallers,
+		vangogh_integration.UpdatesReleasedToday,
+		vangogh_integration.UpdatesNewProducts,
+		vangogh_integration.UpdatesInstallers} {
 		summary[section] = nil
 	}
 
@@ -68,7 +65,7 @@ func Summarize(since int64) error {
 	newApiProducts := kvApiProducts.Since(since, kevlar.Create)
 
 	for id := range newApiProducts {
-		summary[newProductTitle] = append(summary[newProductTitle], id)
+		summary[vangogh_integration.UpdatesNewProducts] = append(summary[vangogh_integration.UpdatesNewProducts], id)
 	}
 
 	// released today
@@ -94,7 +91,7 @@ func Summarize(since int64) error {
 	}
 
 	for id := range rt {
-		summary[releasedTodayTitle] = append(summary[releasedTodayTitle], id)
+		summary[vangogh_integration.UpdatesReleasedToday] = append(summary[vangogh_integration.UpdatesReleasedToday], id)
 	}
 
 	// updated installers
@@ -105,7 +102,7 @@ func Summarize(since int64) error {
 	}
 
 	for id := range updatedDetails {
-		summary[installersUpdatesTitle] = append(summary[installersUpdatesTitle], id)
+		summary[vangogh_integration.UpdatesInstallers] = append(summary[vangogh_integration.UpdatesInstallers], id)
 	}
 
 	// updated news
@@ -124,7 +121,7 @@ func Summarize(since int64) error {
 	for steamAppId := range updatedAppNews {
 		gogIds := rdx.Match(map[string][]string{vangogh_integration.SteamAppIdProperty: {steamAppId}}, redux.FullMatch)
 		for gogId := range gogIds {
-			summary[steamNewsTitle] = append(summary[steamNewsTitle], gogId)
+			summary[vangogh_integration.UpdatesSteamNews] = append(summary[vangogh_integration.UpdatesSteamNews], gogId)
 		}
 	}
 
