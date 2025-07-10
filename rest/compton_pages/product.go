@@ -152,7 +152,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 			}
 
 			if len(mediaCounts) > 0 {
-				mediaBadge := compton.Badge(p, strings.Join(mediaCounts, ", "), color.Highlight, color.RepGray)
+				mediaBadge := compton.BadgeText(p, strings.Join(mediaCounts, ", "), color.RepGray)
 				detailsSummary.AppendBadges(mediaBadge)
 			}
 
@@ -192,7 +192,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 				dcColor = color.RepGray
 			}
 
-			badge = compton.BadgeIcon(p, compton.Linux, compatText, color.Highlight, dcColor)
+			badge = compton.BadgeText(p, compatText, dcColor)
 			detailsSummary.AppendBadges(badge)
 
 		case compton_data.ReceptionSection:
@@ -223,7 +223,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 					ratingsReviews = compton_fragments.FmtAggregatedRating(srap)
 				}
 
-				receptionBadges.Append(compton.Badge(p, ratingsReviews, color.Highlight, receptionColor))
+				receptionBadges.Append(compton.BadgeText(p, ratingsReviews, receptionColor))
 
 			}
 
@@ -245,7 +245,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 			}
 
 			if len(offerings) > 0 {
-				offeringsBadge := compton.Badge(p, strings.Join(offerings, ", "), color.Highlight, color.RepGray)
+				offeringsBadge := compton.BadgeText(p, strings.Join(offerings, ", "), color.RepGray)
 				detailsSummary.AppendBadges(offeringsBadge)
 			}
 		case compton_data.NewsSection:
@@ -258,7 +258,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 					updateColor = color.Green
 				}
 
-				lastUpdateBadge := compton.Badge(p, lcut.Format("Jan 2, '06"), color.Highlight, updateColor)
+				lastUpdateBadge := compton.BadgeText(p, lcut.Format("Jan 2, '06"), updateColor)
 				detailsSummary.AppendBadges(lastUpdateBadge)
 
 			} else if err != nil {
@@ -269,10 +269,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 			if pvrs, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
 				pvr := vangogh_integration.ParseValidationResult(pvrs)
 
-				validationBadge := compton.Badge(p,
-					pvr.HumanReadableString(),
-					color.Highlight,
-					compton_fragments.ValidationResultsColors[pvr])
+				validationBadge := compton.BadgeText(p, pvr.HumanReadableString(), compton_fragments.ValidationResultsColors[pvr])
 				detailsSummary.AppendBadges(validationBadge)
 			}
 		default:
