@@ -1,6 +1,6 @@
 a {
     padding-inline-start: var(--s-s);
-    border-left: var(--s-xs) solid var(--c-gray);
+    border-left: var(--s-xs) solid var(--c-repgray);
 
     &.installer {
         border-color: var(--c-purple)
