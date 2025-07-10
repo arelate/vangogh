@@ -158,28 +158,43 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 		case compton_data.CompatibilitySection:
 			var badge compton.Element
+			var compatText string
+
 			if dcp, ok := rdx.GetLastVal(vangogh_integration.SteamDeckAppCompatibilityCategoryProperty, id); ok {
+				compatText = dcp
+			}
 
-				var dcColor color.Color
-				switch dcp {
-				case "Verified":
-					dcColor = color.Green
-				case "Playable":
-					dcColor = color.Orange
-				case "Unsupported":
-					dcColor = color.Red
-				default:
-					dcColor = color.RepGray
+			if compatText == "" || compatText == "Unknown" {
+				if pt, ok := rdx.GetLastVal(vangogh_integration.ProtonDBTierProperty, id); ok {
+					compatText = pt
 				}
-
-				badge = compton.BadgeIcon(p, compton.Linux, dcp, color.Highlight, dcColor)
-			} else if pt, ok := rdx.GetLastVal(vangogh_integration.ProtonDBTierProperty, id); ok {
-				badge = compton.Badge(p, pt, color.Highlight, color.RepForeground)
 			}
 
-			if badge != nil {
-				detailsSummary.AppendBadges(badge)
+			var dcColor color.Color
+			switch compatText {
+			case "Platinum":
+				fallthrough
+			case "Gold":
+				fallthrough
+			case "Verified":
+				dcColor = color.Green
+			case "Silver":
+				fallthrough
+			case "Bronze":
+				fallthrough
+			case "Playable":
+				dcColor = color.Orange
+			case "Borked":
+				fallthrough
+			case "Unsupported":
+				dcColor = color.Red
+			default:
+				dcColor = color.RepGray
 			}
+
+			badge = compton.BadgeIcon(p, compton.Linux, compatText, color.Highlight, dcColor)
+			detailsSummary.AppendBadges(badge)
+
 		case compton_data.ReceptionSection:
 			receptionBadges := compton.FlexItems(p, direction.Row).ColumnGap(size.XSmall)
 
