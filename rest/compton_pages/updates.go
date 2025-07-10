@@ -97,7 +97,7 @@ func Updates(section string, rdx redux.Readable, showAll bool) compton.PageEleme
 		compton_data.ManyItemsSinglePageTemplate,
 		compton_data.ManyItemsManyPagesTemplate)
 
-	itemsBadge := compton.Badge(p, cf.Title(0, len(ids), updateTotals[section]), color.Background, color.Foreground)
+	itemsBadge := compton.BadgeText(p, cf.Title(0, len(ids), updateTotals[section]), color.Foreground)
 	dsSection.AppendBadges(itemsBadge)
 
 	dsSection.SetId(section)
