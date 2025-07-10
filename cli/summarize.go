@@ -137,7 +137,12 @@ func Summarize(since int64) error {
 		return err
 	}
 
-	if err = publishAtom(rdx, summary); err != nil {
+	formattedSummary := make(map[string][]string)
+	for section, content := range summary {
+		formattedSummary[vangogh_integration.UpdatesLongerTitles[section]] = content
+	}
+
+	if err = publishAtom(rdx, formattedSummary); err != nil {
 		return err
 	}
 
