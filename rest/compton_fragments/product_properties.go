@@ -30,13 +30,6 @@ func ProductProperties(r compton.Registrar, id string, rdx redux.Readable, prope
 
 	for _, property := range properties {
 
-		if property == vangogh_integration.OperatingSystemsProperty {
-			if tv := operatingSystemsTitleValues(r, id, rdx); tv != nil {
-				productProperties = append(productProperties, tv)
-				continue
-			}
-		}
-
 		fmtProperty := formatProperty(id, property, rdx)
 		if tv := propertyTitleValues(r, property, fmtProperty); tv != nil {
 			productProperties = append(productProperties, tv)
@@ -259,28 +252,6 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 	}
 
 	return fmtProperty
-}
-
-func operatingSystemsTitleValues(r compton.Registrar, id string, rdx redux.Readable) compton.Element {
-	property := vangogh_integration.OperatingSystemsProperty
-	propertyTitle := compton_data.PropertyTitles[property]
-	tv := compton.TitleValues(r, propertyTitle).RowGap(size.XSmall).TitleForegroundColor(color.RepGray)
-	row := compton.FlexItems(r, direction.Row).JustifyContent(align.Start).ColumnGap(size.Normal).ColumnWidthRule(size.Unset)
-	tv.Append(row)
-	if values, ok := rdx.GetAllValues(property, id); ok {
-		oses := vangogh_integration.ParseManyOperatingSystems(values)
-		for _, os := range []vangogh_integration.OperatingSystem{
-			vangogh_integration.Windows, vangogh_integration.MacOS, vangogh_integration.Linux} {
-			if !slices.Contains(oses, os) {
-				continue
-			}
-			osLink := compton.A(searchHref(property, os.String()))
-			osLink.SetAttribute("target", "_top")
-			osLink.Append(compton.SvgUse(r, compton_data.OperatingSystemSymbols[os]))
-			row.Append(osLink)
-		}
-	}
-	return tv
 }
 
 func propertyTitleValues(r compton.Registrar, property string, fmtProperty formattedProperty) *compton.TitleValuesElement {

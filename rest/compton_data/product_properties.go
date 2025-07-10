@@ -9,10 +9,6 @@ var ProductProperties = []string{
 	vangogh_integration.LocalTagsProperty,
 	vangogh_integration.UserWishlistProperty,
 
-	vangogh_integration.OperatingSystemsProperty,
-	vangogh_integration.DevelopersProperty,
-	vangogh_integration.PublishersProperty,
-
 	vangogh_integration.CreatorsProperty,
 	vangogh_integration.DirectorsProperty,
 	vangogh_integration.ProducersProperty,
