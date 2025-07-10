@@ -5,6 +5,8 @@ import (
 )
 
 var ProductProperties = []string{
+	vangogh_integration.PriceProperty,
+
 	vangogh_integration.TagIdProperty,
 	vangogh_integration.LocalTagsProperty,
 	vangogh_integration.UserWishlistProperty,
@@ -18,7 +20,6 @@ var ProductProperties = []string{
 	vangogh_integration.WritersProperty,
 	vangogh_integration.ComposersProperty,
 
-	vangogh_integration.PriceProperty,
 	vangogh_integration.LanguageCodeProperty,
 
 	vangogh_integration.SeriesProperty,
