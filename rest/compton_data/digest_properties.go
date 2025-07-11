@@ -6,6 +6,7 @@ var DigestProperties = []string{
 	vangogh_integration.TagIdProperty,
 	vangogh_integration.LocalTagsProperty,
 	vangogh_integration.SteamDeckAppCompatibilityCategoryProperty,
+	vangogh_integration.SteamOsAppCompatibilityCategoryProperty,
 	vangogh_integration.OperatingSystemsProperty,
 	vangogh_integration.HltbPlatformsProperty,
 	vangogh_integration.GenresProperty,

@@ -45,6 +45,7 @@ var PropertyTitles = map[string]string{
 	vangogh_integration.TypesProperty:                             "Data Type",
 	vangogh_integration.SteamReviewScoreDescProperty:              "Steam Reviews",
 	vangogh_integration.SteamDeckAppCompatibilityCategoryProperty: "Steam Deck",
+	vangogh_integration.SteamOsAppCompatibilityCategoryProperty:   "SteamOS",
 	vangogh_integration.ProtonDBTierProperty:                      "ProtonDB Tier",
 	vangogh_integration.ProtonDBConfidenceProperty:                "ProtonDB Confidence",
 	vangogh_integration.SortProperty:                              "Sort",

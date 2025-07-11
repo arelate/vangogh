@@ -159,6 +159,8 @@ func searchInputs(r compton.Registrar, query map[string][]string, container comp
 				datalist = sortDatalist()
 			case vangogh_integration.ProductTypeProperty:
 				datalist = productTypesDatalist()
+			case vangogh_integration.SteamOsAppCompatibilityCategoryProperty:
+				fallthrough
 			case vangogh_integration.SteamDeckAppCompatibilityCategoryProperty:
 				datalist = steamDeckDatalist()
 			case vangogh_integration.LanguageCodeProperty:

@@ -247,6 +247,8 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 		fallthrough
 	case vangogh_integration.AggregatedRatingProperty:
 		fmtProperty.class = reviewClass(FmtAggregatedRating(firstValue))
+	case vangogh_integration.SteamOsAppCompatibilityCategoryProperty:
+		fallthrough
 	case vangogh_integration.SteamDeckAppCompatibilityCategoryProperty:
 		fmtProperty.class = firstValue
 	}
