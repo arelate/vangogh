@@ -10,7 +10,6 @@ import (
 	"iter"
 	"net/url"
 	"os"
-	"slices"
 	"strings"
 	"time"
 
@@ -197,10 +196,10 @@ func publishAtom(rdx redux.Readable, summary map[string][]string) error {
 func NewAtomFeedContent(rdx redux.Readable, summary map[string][]string) string {
 	sb := strings.Builder{}
 
-	sections := maps.Keys(summary)
-	sortedSections := slices.Sorted(sections)
-
-	for _, section := range sortedSections {
+	for _, section := range vangogh_integration.UpdatesOrder {
+		if _, ok := summary[section]; !ok {
+			continue
+		}
 		if len(summary[section]) == 0 {
 			continue
 		}

@@ -146,6 +146,8 @@ github.com/arelate/southern_light v0.2.99 h1:djTPzWS6kq+al7187AnBGn3SBhbnKPlkE9S
 github.com/arelate/southern_light v0.2.99/go.mod h1:g2lyyOf9XMctrXBYtjzEJF6OqzgZT1lGT/u9DWVS3T8=
 github.com/arelate/southern_light v0.3.0 h1:cwwQKaYyyNkMLv116ezHsF2+wNEWWlN/4YqTK+u6Q50=
 github.com/arelate/southern_light v0.3.0/go.mod h1:g2lyyOf9XMctrXBYtjzEJF6OqzgZT1lGT/u9DWVS3T8=
+github.com/arelate/southern_light v0.3.2 h1:vRErgKc8YubTZ0MQ3TzRnv0IXuRi6NcaLcmnkX6pqZE=
+github.com/arelate/southern_light v0.3.2/go.mod h1:g2lyyOf9XMctrXBYtjzEJF6OqzgZT1lGT/u9DWVS3T8=
 github.com/boggydigital/atomus v0.1.10 h1:ERmg6ncLOJ/y0B13SSRAIpjDgWQfEqfeQwFBSYgrjg0=
 github.com/boggydigital/atomus v0.1.10/go.mod h1:YK4iAWR9/+2rFhfaGLjkfoFiCPY5QNu8d23I/8wuWSY=
 github.com/boggydigital/atomus v0.1.11 h1:n9XRgPqF3OgnK8UK7yJ3aG5sQkwacBjtqzzOxCXz33A=
@@ -342,6 +344,8 @@ github.com/boggydigital/compton v0.3.57 h1:DPbozjV4cnyx6tSMlkL2Z/AJyXQhmTUiXsbgZ
 github.com/boggydigital/compton v0.3.57/go.mod h1:zJ5nRTBWqzOUYestOQXil5d29kjQENbGd3fbNGqDi14=
 github.com/boggydigital/compton v0.3.58 h1:cq2gzLswcgkrhZXTDV6JCZ4cLWJDkI0noZC4RzWH4Xk=
 github.com/boggydigital/compton v0.3.58/go.mod h1:zJ5nRTBWqzOUYestOQXil5d29kjQENbGd3fbNGqDi14=
+github.com/boggydigital/compton v0.3.59 h1:MMy7qNxTyRq1/g13/agIahYenqx4sPFpr3nirrsyyG8=
+github.com/boggydigital/compton v0.3.59/go.mod h1:zJ5nRTBWqzOUYestOQXil5d29kjQENbGd3fbNGqDi14=
 github.com/boggydigital/coost v0.3.10 h1:F2ouJCRaUIgDGHEgX4T1nN4XdfS/9qrn/kvWq0c05cg=
 github.com/boggydigital/coost v0.3.10/go.mod h1:hDXR+PHEu2R/V5Va/GKzFEOwAtbr32JM1Bw+tC91aN0=
 github.com/boggydigital/dolo v0.2.21 h1:6GKTXjBGtyOQIt4itxuvtUFxP88TypPX5eZAck5UYBg=
@@ -408,3 +412,5 @@ golang.org/x/net v0.40.0 h1:79Xs7wF06Gbdcg4kdCCIQArK11Z1hr5POQ6+fIYHNuY=
 golang.org/x/net v0.40.0/go.mod h1:y0hY0exeL2Pku80/zKK7tpntoX23cqL3Oa6njdgRtds=
 golang.org/x/net v0.41.0 h1:vBTly1HeNPEn3wtREYfy4GZ/NECgw2Cnl+nK6Nz3uvw=
 golang.org/x/net v0.41.0/go.mod h1:B/K4NNqkfmg07DQYrbwvSluqCJOOXwUjeb/5lOisjbA=
+golang.org/x/net v0.42.0 h1:jzkYrhi3YQWD6MLBJcsklgQsoAcw89EcZbJw8Z614hs=
+golang.org/x/net v0.42.0/go.mod h1:FF1RA5d3u7nAYA4z2TkclSCKh68eSXtiFwcWQpPXdt8=

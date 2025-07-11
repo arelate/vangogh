@@ -34,7 +34,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 	p, pageStack := compton_fragments.AppPage(title)
 
-	p.AppendSpeculationRules("/*")
+	p.AppendSpeculationRules(compton.SpeculationRulesConservativeEagerness, "/*")
 
 	p.RegisterStyles(compton_styles.Styles, "product.css", "gpp-badge.css")
 

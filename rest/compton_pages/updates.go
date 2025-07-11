@@ -54,7 +54,7 @@ func Updates(section string, rdx redux.Readable, showAll bool) compton.PageEleme
 	current := compton_data.AppNavUpdates
 	p, pageStack := compton_fragments.AppPage(current)
 
-	p.AppendSpeculationRules("/*")
+	p.AppendSpeculationRules(compton.SpeculationRulesConservativeEagerness, "/*")
 
 	p.SetAttribute("style", "--c-rep:var(--c-background)")
 
@@ -65,7 +65,11 @@ func Updates(section string, rdx redux.Readable, showAll bool) compton.PageEleme
 	updateSectionLinks := compton.NavLinks(p)
 	updateSectionLinks.SetAttribute("style", "view-transition-name:secondary-nav")
 
-	for _, updateSection := range slices.Sorted(maps.Keys(updates)) {
+	for _, updateSection := range vangogh_integration.UpdatesOrder {
+
+		if _, ok := updates[updateSection]; !ok {
+			continue
+		}
 
 		sectionLink := updateSectionLinks.AppendLink(p, &compton.NavTarget{
 			Href:     "/updates?section=" + updateSection,
