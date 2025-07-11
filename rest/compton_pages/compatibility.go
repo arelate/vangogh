@@ -97,26 +97,26 @@ func Compatibility(id string, rdx redux.Readable) compton.PageElement {
 		pageStack.Append(additionalInfo)
 	}
 
-	results := deckCompatibilityReport.GetResults()
+	steamDeckResults := deckCompatibilityReport.GetSteamDeckResults()
 
-	if len(results) > 0 {
+	if len(steamDeckResults) > 0 {
 		pageStack.Append(compton.Hr())
 	}
 
-	displayTypes := deckCompatibilityReport.GetDisplayTypes()
+	steamDeckDisplayTypes := deckCompatibilityReport.GetSteamDeckDisplayTypes()
 
 	ul := compton.Ul()
-	if len(displayTypes) == len(results) {
-		for ii, result := range results {
+	if len(steamDeckDisplayTypes) == len(steamDeckResults) {
+		for ii, result := range steamDeckResults {
 
-			dt := displayTypes[ii]
+			dt := steamDeckDisplayTypes[ii]
 			resultRow := compton.FlexItems(s, direction.Row).AlignItems(align.Center)
 			resultRow.AddClass("nowrap")
 
 			displayTypeIcon := compton.Fspan(s, "").ForegroundColor(displayTypeColors[dt])
 			displayTypeIcon.AddClass("svg")
 			displayTypeIcon.Append(compton.SvgUse(s, compton.Circle))
-			decodedResult := steam_integration.DecodeLocToken(result)
+			decodedResult := steam_integration.SteamDeckDecodeLocToken(result)
 			if decodedResult == "" {
 				decodedResult = result
 			}
@@ -131,7 +131,7 @@ func Compatibility(id string, rdx redux.Readable) compton.PageElement {
 
 			ul.Append(li)
 
-			if ii != len(results)-1 {
+			if ii != len(steamDeckResults)-1 {
 				ul.Append(compton.Hr())
 			}
 
