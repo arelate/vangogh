@@ -18,6 +18,7 @@ var PropertyTitles = map[string]string{
 	vangogh_integration.GenresProperty:              "Genres",
 	vangogh_integration.ThemesProperty:              "Themes",
 	vangogh_integration.StoreTagsProperty:           "Store Tags",
+	vangogh_integration.SteamCategoriesProperty:     "Steam Categories",
 	vangogh_integration.FeaturesProperty:            "Features",
 	vangogh_integration.GameModesProperty:           "Game Modes",
 	vangogh_integration.LanguageCodeProperty:        "Language",
