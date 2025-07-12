@@ -136,12 +136,7 @@ func Summarize(since int64) error {
 		return err
 	}
 
-	formattedSummary := make(map[string][]string)
-	for section, content := range summary {
-		formattedSummary[vangogh_integration.UpdatesLongerTitles[section]] = content
-	}
-
-	if err = publishAtom(rdx, formattedSummary); err != nil {
+	if err = publishAtom(rdx, summary); err != nil {
 		return err
 	}
 
@@ -203,7 +198,7 @@ func NewAtomFeedContent(rdx redux.Readable, summary map[string][]string) string 
 		if len(summary[section]) == 0 {
 			continue
 		}
-		sb.WriteString("<h1>" + section + "</h1>")
+		sb.WriteString("<h1>" + vangogh_integration.UpdatesLongerTitles[section] + "</h1>")
 		sb.WriteString("<ul>")
 		for _, id := range summary[section] {
 			if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
