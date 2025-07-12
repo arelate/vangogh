@@ -128,7 +128,7 @@ func Updates(section string, rdx redux.Readable, showAll bool) compton.PageEleme
 
 	/* Standard app footer */
 
-	pageStack.Append(compton.Footer(p, "Arles", "https://github.com/arelate", "🇫🇷"))
+	pageStack.Append(compton.Footer(p, "Bonjour d'Arles", "https://github.com/arelate"))
 
 	return p
 }

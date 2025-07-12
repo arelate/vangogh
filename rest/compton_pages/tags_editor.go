@@ -133,7 +133,7 @@ func TagsEditor(
 	/* Footer */
 
 	pageStack.Append(compton.Br(),
-		compton.Footer(p, "Arles", "https://github.com/arelate", "🇫🇷"))
+		compton.Footer(p, "Bonjour d'Arles", "https://github.com/arelate"))
 
 	return p
 }
