@@ -36,9 +36,7 @@
     }
 }
 
-fspan.symbol {
-    height: var(--s-n);
-
+fspan {
     & svg {
         width: var(--s-n);
         height: var(--s-n)
@@ -54,8 +52,3 @@ pre {
     word-break: break-word;
 }
 
-fspan.monochrome-emoji {
-    color: transparent;
-    text-shadow: 0 0 0 var(--fg);
-    font-size: var(--fs-n)
-}

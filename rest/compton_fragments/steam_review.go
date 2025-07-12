@@ -17,22 +17,23 @@ func SteamReview(r compton.Registrar, review steam_integration.Review) compton.E
 
 	container := compton.FlexItems(r, direction.Column).RowGap(size.Normal)
 
-	var votedTitle string
+	var votedSymbol compton.Symbol
 	var votedColor color.Color
 
 	switch review.VotedUp {
 	case true:
-		votedTitle = "&#x1F44D;" // "Recommended"
+		votedSymbol = compton.UpwardNestedChevrons // "Recommended"
 		votedColor = color.Green
 	case false:
-		votedTitle = "&#x1F44E;" // "Not Recommended"
+		votedSymbol = compton.DownwardNestedChevrons // "Not Recommended"
 		votedColor = color.Red
 	}
 
 	topFr := compton.Frow(r).FontSize(size.XSmall)
 
-	thumbsUpDown := compton.Fspan(r, votedTitle).ForegroundColor(votedColor)
-	thumbsUpDown.AddClass("monochrome-emoji")
+	thumbsUpDown := compton.Fspan(r, "").ForegroundColor(votedColor)
+	thumbsUpDown.Append(compton.SvgUse(r, votedSymbol))
+
 	topFr.Elements(thumbsUpDown)
 
 	topFr.Heading("Author")
