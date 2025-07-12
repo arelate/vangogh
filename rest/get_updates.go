@@ -8,7 +8,7 @@ import (
 
 func GetUpdates(w http.ResponseWriter, r *http.Request) {
 
-	// GET /updates?section
+	// GET /updates?section&all
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)

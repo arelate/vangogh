@@ -20,7 +20,7 @@ const (
 var updatesSymbols = map[string]compton.Symbol{
 	vangogh_integration.UpdatesInstallers:    compton.CompactDisk,
 	vangogh_integration.UpdatesReleasedToday: compton.RisingSun,
-	vangogh_integration.UpdatesSteamNews:     compton.Linux,
+	vangogh_integration.UpdatesSteamNews:     compton.News,
 }
 
 func Updates(section string, rdx redux.Readable, showAll bool) compton.PageElement {
