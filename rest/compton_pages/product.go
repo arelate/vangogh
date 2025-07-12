@@ -87,8 +87,8 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 		default:
 			value := strings.Join(values[property], ", ")
 			href := fmt.Sprintf("/search?%s=%s&sort=global-release-date&desc=true", property, value)
-			summaryRow.PropLinkColor(compton_data.PropertyTitles[property], color.RepForeground, value, href)
-			summaryRow.SetAttribute("style", "view-transition-name:"+property+id)
+			summaryRow.PropLinkColor(compton_data.PropertyTitles[property], color.RepForeground, value, href).
+				SetAttribute("style", "view-transition-name:"+property+id)
 		}
 
 	}
