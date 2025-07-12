@@ -17,6 +17,12 @@ const (
 	updatedProductsLimit = 60 // divisible by 2,3,4,5,6
 )
 
+var updatesSymbols = map[string]compton.Symbol{
+	vangogh_integration.UpdatesInstallers:    compton.CompactDisk,
+	vangogh_integration.UpdatesReleasedToday: compton.RisingSun,
+	vangogh_integration.UpdatesSteamNews:     compton.Linux,
+}
+
 func Updates(section string, rdx redux.Readable, showAll bool) compton.PageElement {
 
 	updates := make(map[string][]string)
@@ -71,9 +77,15 @@ func Updates(section string, rdx redux.Readable, showAll bool) compton.PageEleme
 			continue
 		}
 
+		var sectionSymbol compton.Symbol
+		if symbol, ok := updatesSymbols[updateSection]; ok {
+			sectionSymbol = symbol
+		}
+
 		sectionLink := updateSectionLinks.AppendLink(p, &compton.NavTarget{
 			Href:     "/updates?section=" + updateSection,
 			Title:    vangogh_integration.UpdatesShorterTitles[updateSection],
+			Symbol:   sectionSymbol,
 			Selected: updateSection == section,
 		})
 
