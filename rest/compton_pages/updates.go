@@ -130,7 +130,7 @@ func Updates(section string, rdx redux.Readable, showAll bool) compton.PageEleme
 	if len(updates[section]) < updateTotals[section] {
 		showAllNavLinks := compton.NavLinks(p)
 		showAllNavLinks.SetAttribute("style", "view-transition-name:tertiary-nav")
-		showAllNavLinks.AppendLink(p, &compton.NavTarget{Href: "/updates?section=" + section + "&show-all=true", Title: "Show all"})
+		showAllNavLinks.AppendLink(p, &compton.NavTarget{Href: "/updates?section=" + section + "&all", Title: "Show all"})
 		pageStack.Append(compton.FICenter(p, showAllNavLinks))
 	}
 

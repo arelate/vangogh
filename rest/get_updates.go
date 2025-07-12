@@ -17,7 +17,7 @@ func GetUpdates(w http.ResponseWriter, r *http.Request) {
 
 	q := r.URL.Query()
 
-	showAll := q.Get("show-all") == "true"
+	showAll := q.Has("all")
 	section := q.Get("section")
 
 	updatesPage := compton_pages.Updates(section, rdx, showAll)
