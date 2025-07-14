@@ -8,9 +8,6 @@
 
 backup
 
-cache-github-releases
-    force
-
 cascade-validation
 
 cleanup
@@ -28,6 +25,10 @@ dehydrate
     id&
     slug&
     image-type&*^={image-types}
+    force
+
+get-binaries
+    os&$={operating-systems^}
     force
 
 get-data

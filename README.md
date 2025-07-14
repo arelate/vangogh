@@ -40,6 +40,8 @@ services:
       # hot storage - frequently accessed data, that can benefit from being stored on SSD.
       # backups (cold storage)
       - /docker/vangogh/backups:/var/lib/vangogh/backups
+      # binaries (cold storage)
+      - /docker/vangogh/binaries:/var/lib/vangogh/binaries
       # downloads (cold storage)
       - /docker/vangogh/downloads:/var/lib/vangogh/downloads
       # checksums (hot storage)

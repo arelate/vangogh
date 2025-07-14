@@ -225,7 +225,7 @@ func Sync(
 
 	}
 
-	if err = CacheGitHubReleases(force); err != nil {
+	if err = GetBinaries(operatingSystems, force); err != nil {
 		return err
 	}
 

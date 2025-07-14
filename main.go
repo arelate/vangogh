@@ -53,10 +53,10 @@ func main() {
 
 	clo.HandleFuncs(map[string]clo.Handler{
 		"backup":                 cli.BackupHandler,
-		"cache-github-releases":  cli.CacheGitHubReleasesHandler,
 		"cascade-validation":     cli.CascadeValidationHandler,
 		"cleanup":                cli.CleanupHandler,
 		"dehydrate":              cli.DehydrateHandler,
+		"get-binaries":           cli.GetBinariesHandler,
 		"get-data":               cli.GetDataHandler,
 		"get-description-images": cli.GetDescriptionImagesHandler,
 		"get-downloads":          cli.GetDownloadsHandler,

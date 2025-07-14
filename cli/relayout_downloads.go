@@ -7,6 +7,7 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
+	"io/fs"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -142,5 +143,27 @@ func (drp *downloadsRelayoutProcessor) Process(_ string, slug string, downloadsL
 		}
 	}
 
+	return nil
+}
+
+func hasOnlyDSStore(entries []fs.DirEntry) bool {
+	if len(entries) == 1 {
+		return entries[0].Name() == ".DS_Store"
+	}
+	return false
+}
+
+func removeDirIfEmpty(dirPath string) error {
+	if entries, err := os.ReadDir(dirPath); err == nil && len(entries) == 0 {
+		if err = os.Remove(dirPath); err != nil {
+			return err
+		}
+	} else if err == nil && hasOnlyDSStore(entries) {
+		if err = os.RemoveAll(dirPath); err != nil {
+			return err
+		}
+	} else if err != nil {
+		return err
+	}
 	return nil
 }
