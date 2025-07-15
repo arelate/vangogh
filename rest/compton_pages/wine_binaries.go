@@ -42,7 +42,7 @@ func WineBinaries() compton.PageElement {
 
 		for _, binary := range vangogh_integration.OsWineBinaries[operatingSystem] {
 
-			binaryPropertyTitle := "Title"
+			binaryPropertyTitle := "Binaryt"
 			binaryTitle := binary.Title
 			if binaryTitle == "" {
 				binaryPropertyTitle = "GitHub Repo"
