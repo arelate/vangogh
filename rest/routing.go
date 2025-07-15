@@ -34,6 +34,7 @@ func HandleFuncs() {
 		"GET /changelog":     Log(http.HandlerFunc(GetChangelog)),
 		"GET /compatibility": Log(http.HandlerFunc(GetCompatibility)),
 		"GET /installers":    Log(http.HandlerFunc(GetInstallers)),
+		"GET /wine-binaries": Log(http.HandlerFunc(GetWineBinaries)),
 		// public media endpoints
 		"GET /image":               Log(http.HandlerFunc(GetImage)),
 		"GET /description-images/": Log(http.HandlerFunc(GetDescriptionImages)),
