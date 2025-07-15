@@ -225,7 +225,7 @@ func Sync(
 
 	}
 
-	if err = GetBinaries(operatingSystems, force); err != nil {
+	if err = GetWineBinaries(operatingSystems, force); err != nil {
 		return err
 	}
 

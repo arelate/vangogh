@@ -16,7 +16,7 @@ import (
 	"strings"
 )
 
-func GetBinariesHandler(u *url.URL) error {
+func GetWineBinariesHandler(u *url.URL) error {
 
 	q := u.Query()
 
@@ -28,16 +28,16 @@ func GetBinariesHandler(u *url.URL) error {
 			strings.Split(q.Get(vangogh_integration.OperatingSystemsProperty), ","))
 	}
 
-	return GetBinaries(operatingSystems, force)
+	return GetWineBinaries(operatingSystems, force)
 }
 
-func GetBinaries(operatingSystems []vangogh_integration.OperatingSystem, force bool) error {
+func GetWineBinaries(operatingSystems []vangogh_integration.OperatingSystem, force bool) error {
 
-	gba := nod.Begin("getting binaries...")
+	gba := nod.Begin("getting WINE binaries...")
 	defer gba.Done()
 
 	if len(operatingSystems) == 0 {
-		gba.EndWithResult("no operating system specified for binaries")
+		gba.EndWithResult("no operating system specified for WINE binaries")
 		return nil
 	}
 
@@ -58,7 +58,7 @@ func GetBinaries(operatingSystems []vangogh_integration.OperatingSystem, force b
 	binaries := make([]vangogh_integration.Binary, 0)
 
 	for _, operatingSystem := range operatingSystems {
-		binaries = append(binaries, vangogh_integration.OsBinaries[operatingSystem]...)
+		binaries = append(binaries, vangogh_integration.OsWineBinaries[operatingSystem]...)
 	}
 
 	binariesUrls := make([]*url.URL, 0, len(binaries))
@@ -105,7 +105,7 @@ func getGitHubBinaryUrl(ownerRepo string, assetGlob string, kvGitHubReleases kev
 		return nil, err
 	}
 
-	return getGitHubLatestReleaseAsset(ownerRepo, assetGlob, kvGitHubReleases, force)
+	return getGitHubLatestReleaseAssetUrl(ownerRepo, assetGlob, kvGitHubReleases)
 }
 
 func getGitHubRepoReleases(ownerRepo string, kvGitHubReleases kevlar.KeyValues) error {
@@ -141,7 +141,7 @@ func getGitHubRepoReleases(ownerRepo string, kvGitHubReleases kevlar.KeyValues) 
 	return nil
 }
 
-func getGitHubLatestReleaseAsset(ownerRepo, assetGlob string, kvGitHubReleases kevlar.KeyValues, force bool) (*url.URL, error) {
+func getGitHubLatestReleaseAssetUrl(ownerRepo, assetGlob string, kvGitHubReleases kevlar.KeyValues) (*url.URL, error) {
 
 	cra := nod.Begin(" getting %s latest asset url...", ownerRepo)
 	defer cra.Done()

@@ -12,9 +12,9 @@ import (
 	"strings"
 )
 
-func GetLatestBinary(w http.ResponseWriter, r *http.Request) {
+func GetLatestWineBinary(w http.ResponseWriter, r *http.Request) {
 
-	// GET /api/latest-binary?title&os
+	// GET /api/latest-wine-binary?title&os
 
 	q := r.URL.Query()
 
@@ -23,7 +23,7 @@ func GetLatestBinary(w http.ResponseWriter, r *http.Request) {
 
 	var binary *vangogh_integration.Binary
 
-	for _, bin := range vangogh_integration.OsBinaries[operatingSystem] {
+	for _, bin := range vangogh_integration.OsWineBinaries[operatingSystem] {
 		if strings.ToLower(bin.String()) == strings.ToLower(title) {
 			binary = &bin
 		}

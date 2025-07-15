@@ -27,10 +27,6 @@ dehydrate
     image-type&*^={image-types}
     force
 
-get-binaries
-    os&$={operating-systems^}
-    force
-
 get-data
     id&
     product-type={all-product-types}
@@ -69,6 +65,10 @@ get-video-metadata
     id^&
     slug&
     missing
+    force
+
+get-wine-binaries
+    os&$={operating-systems^}
     force
 
 migrate-data
