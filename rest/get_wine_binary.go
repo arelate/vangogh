@@ -12,9 +12,9 @@ import (
 	"strings"
 )
 
-func GetLatestWineBinary(w http.ResponseWriter, r *http.Request) {
+func GetWineBinary(w http.ResponseWriter, r *http.Request) {
 
-	// GET /api/latest-wine-binary?title&os
+	// GET /api/wine-binary?title&os
 
 	q := r.URL.Query()
 

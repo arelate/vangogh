@@ -53,7 +53,7 @@ func HandleFuncs() {
 		"GET /api/health":                 Log(http.HandlerFunc(GetHealth)),
 		"GET /api/health-auth":            Auth(Log(http.HandlerFunc(GetHealth)), AdminRole, SharedRole),
 		"GET /api/product-details":        Log(http.HandlerFunc(GetProductDetails)),
-		"GET /api/latest-wine-binary":     Log(http.HandlerFunc(GetLatestWineBinary)),
+		"GET /api/wine-binary":            Log(http.HandlerFunc(GetWineBinary)),
 		"GET /api/wine-binaries-versions": Log(http.HandlerFunc(GetWineBinariesVersions)),
 		// debug endpoints
 		"GET /debug":      Log(http.HandlerFunc(GetDebug)),

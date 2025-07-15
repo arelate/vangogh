@@ -40,14 +40,14 @@ func WineBinaries() compton.PageElement {
 
 	for _, operatingSystem := range operatingSystems {
 
-		pageStack.Append(compton.SectionDivider(p, compton.Text(operatingSystem.String())))
+		pageStack.Append(operatingSystemHeading(p, operatingSystem))
 
 		for _, binary := range vangogh_integration.OsWineBinaries[operatingSystem] {
 
-			binaryPropertyTitle := "Binary"
+			binaryPropertyTitle := "Title"
 			binaryTitle := binary.Title
 			if binaryTitle == "" {
-				binaryPropertyTitle = "GitHub Repo"
+				binaryPropertyTitle = "Repo"
 				binaryTitle = binary.GitHubOwnerRepo
 			}
 
@@ -61,14 +61,14 @@ func WineBinaries() compton.PageElement {
 				binaryVersion = latestRelease.TagName
 			}
 
-			link := compton.A("/api/latest-wine-binary?os=" + operatingSystem.String() + "&title=" + binaryTitle)
+			link := compton.A("/api/wine-binary?os=" + operatingSystem.String() + "&title=" + binaryTitle)
 			pageStack.Append(link)
 
 			linkFrow := compton.Frow(p).FontSize(size.Small)
 			link.Append(compton.FICenter(p, linkFrow))
 
 			linkFrow.PropVal(binaryPropertyTitle, binaryTitle)
-			linkFrow.PropVal("Latest Version", binaryVersion)
+			linkFrow.PropVal("Version", binaryVersion)
 
 		}
 
