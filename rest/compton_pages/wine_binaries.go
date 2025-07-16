@@ -3,6 +3,7 @@ package compton_pages
 import (
 	"github.com/arelate/southern_light/github_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/size"
@@ -20,6 +21,9 @@ func WineBinaries() compton.PageElement {
 
 	pageStack := compton.FlexItems(p, direction.Column)
 	p.Append(pageStack)
+
+	appNavLinks := compton_fragments.AppNavLinks(p, "")
+	pageStack.Append(compton.FICenter(p, appNavLinks))
 
 	titleHeading := compton.HeadingText(title, 1)
 	pageStack.Append(compton.FICenter(p, titleHeading))
