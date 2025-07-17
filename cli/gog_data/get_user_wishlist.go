@@ -13,13 +13,17 @@ import (
 	"github.com/boggydigital/redux"
 	"net/http"
 	"slices"
+	"time"
 )
 
 func GetUserWishlist(hc *http.Client, uat string) error {
-	guwa := nod.Begin("getting %s...", vangogh_integration.UserWishlist)
+
+	productType := vangogh_integration.UserWishlist
+
+	guwa := nod.Begin("getting %s...", productType)
 	defer guwa.Done()
 
-	userWishlistDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.UserWishlist)
+	userWishlistDir, err := vangogh_integration.AbsProductTypeDir(productType)
 	if err != nil {
 		return err
 	}
@@ -29,11 +33,37 @@ func GetUserWishlist(hc *http.Client, uat string) error {
 		return err
 	}
 
-	userWishlistId := vangogh_integration.UserWishlist.String()
+	userWishlistId := productType.String()
 	userWishlistUrl := gog_integration.UserWishlistUrl()
 
-	if err = fetch.RequestSetValue(userWishlistId, userWishlistUrl, reqs.UserWishlist(hc, uat), kvUserWishlist); err != nil {
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
 		return err
+	}
+
+	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.GetDataProperties()...)
+	if err != nil {
+		return err
+	}
+
+	ptId, err := vangogh_integration.ProductTypeId(productType, userWishlistId)
+	if err != nil {
+		return err
+	}
+
+	if err = fetch.RequestSetValue(userWishlistId, userWishlistUrl, reqs.UserWishlist(hc, uat), kvUserWishlist); err != nil {
+
+		if err = rdx.ReplaceValues(vangogh_integration.GetDataErrorMessageProperty, ptId, err.Error()); err != nil {
+			return err
+		}
+
+		formattedNow := time.Now().UTC().Format(time.RFC3339)
+		if err = rdx.ReplaceValues(vangogh_integration.GetDataErrorDateProperty, ptId, formattedNow); err != nil {
+			return err
+		}
+
+		return nil
+
 	}
 
 	return ReduceUserWishlist(kvUserWishlist)

@@ -12,14 +12,17 @@ import (
 	"github.com/boggydigital/redux"
 	"net/http"
 	"slices"
+	"time"
 )
 
 func GetLicences(hc *http.Client, userAccessToken string) error {
 
-	gla := nod.Begin("getting %s...", vangogh_integration.Licences)
+	productType := vangogh_integration.Licences
+
+	gla := nod.Begin("getting %s...", productType)
 	defer gla.Done()
 
-	licencesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.Licences)
+	licencesDir, err := vangogh_integration.AbsProductTypeDir(productType)
 	if err != nil {
 		return err
 	}
@@ -29,11 +32,36 @@ func GetLicences(hc *http.Client, userAccessToken string) error {
 		return err
 	}
 
-	licencesId := vangogh_integration.Licences.String()
+	licencesId := productType.String()
 	licencesUrl := gog_integration.LicencesUrl()
 
-	if err = fetch.RequestSetValue(licencesId, licencesUrl, reqs.Licenses(hc, userAccessToken), kvLicences); err != nil {
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
 		return err
+	}
+
+	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.GetDataProperties()...)
+	if err != nil {
+		return err
+	}
+
+	ptId, err := vangogh_integration.ProductTypeId(productType, licencesId)
+	if err != nil {
+		return err
+	}
+
+	if err = fetch.RequestSetValue(licencesId, licencesUrl, reqs.Licenses(hc, userAccessToken), kvLicences); err != nil {
+
+		if err = rdx.ReplaceValues(vangogh_integration.GetDataErrorMessageProperty, ptId, err.Error()); err != nil {
+			return err
+		}
+
+		formattedNow := time.Now().UTC().Format(time.RFC3339)
+		if err = rdx.ReplaceValues(vangogh_integration.GetDataErrorDateProperty, ptId, formattedNow); err != nil {
+			return err
+		}
+
+		return nil
 	}
 
 	return ReduceLicences(kvLicences)
