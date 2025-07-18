@@ -236,7 +236,7 @@ func downloadLink(r compton.Registrar,
 		linkTitle.Append(linkPrefix)
 	}
 	if nameSuffix != "" {
-		linkSuffix := compton.Fspan(r, nameSuffix).ForegroundColor(color.Foreground)
+		linkSuffix := compton.Fspan(r, nameSuffix).ForegroundColor(color.RepForeground)
 		linkTitle.Append(linkSuffix)
 	}
 
