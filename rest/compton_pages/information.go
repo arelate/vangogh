@@ -32,6 +32,8 @@ import (
 	"strings"
 )
 
+const linksValuesLimit = 3
+
 func Info(id string, rdx redux.Readable) compton.PageElement {
 
 	s := compton_fragments.ProductSection(compton_data.InfoSection, id, rdx)
@@ -269,6 +271,6 @@ func linksTitleValues(r compton.Registrar, property string, links []string) comp
 		ForegroundColor(color.Cyan).
 		TitleForegroundColor(color.Inherit).
 		SetLinksTarget(compton.LinkTargetTop).
-		AppendLinkValues(linksHrefs)
+		AppendLinkValues(linksValuesLimit, linksHrefs)
 	return tv
 }
