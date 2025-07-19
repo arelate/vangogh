@@ -38,6 +38,8 @@ func HandleFuncs() {
 		// public media endpoints
 		"GET /image":               Log(http.HandlerFunc(GetImage)),
 		"GET /description-images/": Log(http.HandlerFunc(GetDescriptionImages)),
+		// public files endpoints
+		"GET /wine-binary-file": Log(http.HandlerFunc(GetWineBinaryFile)),
 		// auth data endpoints
 		"GET /wishlist/add":     Auth(Log(http.HandlerFunc(GetWishlistAdd)), AdminRole),
 		"GET /wishlist/remove":  Auth(Log(http.HandlerFunc(GetWishlistRemove)), AdminRole),
@@ -53,7 +55,6 @@ func HandleFuncs() {
 		"GET /api/health":                 Log(http.HandlerFunc(GetHealth)),
 		"GET /api/health-auth":            Auth(Log(http.HandlerFunc(GetHealth)), AdminRole, SharedRole),
 		"GET /api/product-details":        Log(http.HandlerFunc(GetProductDetails)),
-		"GET /api/wine-binary":            Log(http.HandlerFunc(GetWineBinary)),
 		"GET /api/wine-binaries-versions": Log(http.HandlerFunc(GetWineBinariesVersions)),
 		// debug endpoints
 		"GET /debug":      Log(http.HandlerFunc(GetDebug)),
