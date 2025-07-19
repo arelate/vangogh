@@ -115,6 +115,11 @@ func reduceDetailsProduct(id string, kvDetails kevlar.KeyValues, piv shared_data
 			values = []string{det.GetForumUrl()}
 		case vangogh_integration.ChangelogProperty:
 			values = []string{det.GetChangelog()}
+		case vangogh_integration.OperatingSystemsProperty:
+			values, err = det.GetOperatingSystems()
+			if err != nil {
+				return err
+			}
 		}
 
 		if shared_data.IsNotEmpty(values...) {
