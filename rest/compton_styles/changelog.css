@@ -1,14 +1,10 @@
-body {
-    word-break: break-word;
+.changelog-content {
     line-height: calc(1.5 * var(--s-n));
-    margin-block: var(--s-l);
+    word-break: break-word;
 
-    & h1 {
-        line-height: calc(2 * var(--s-n));
+    & a {
+        font-weight: var(--fw-b);
+        color: var(--c-cyan);
     }
 }
 
-a {
-    font-weight: var(--fw-b);
-    color: var(--c-cyan);
-}

@@ -2,6 +2,7 @@ package compton_pages
 
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/arelate/vangogh/rest/compton_styles"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
@@ -17,7 +18,6 @@ import (
 
 func Description(id string, rdx redux.Readable) compton.PageElement {
 
-	//s := compton_fragments.ProductSection(compton_data.DescriptionSection, id, rdx)
 	var pageTitle string
 	if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
 		pageTitle = title
@@ -43,10 +43,23 @@ func Description(id string, rdx redux.Readable) compton.PageElement {
 		RowGap(size.Normal)
 	p.Append(compton.FICenter(p, pageStack))
 
+	appNavLinks := compton_fragments.AppNavLinks(p, "")
+	pageStack.Append(compton.FICenter(p, appNavLinks))
+
+	headingRow := compton.FlexItems(p, direction.Column).RowGap(size.XSmall)
+
 	heading := compton.Heading(1)
 	heading.Append(compton.Fspan(p, pageTitle).TextAlign(align.Center))
 	heading.SetAttribute("style", "view-transition-name:product-title-"+id)
-	pageStack.Append(compton.FICenter(p, heading))
+	headingRow.Append(heading)
+
+	subHeading := compton.Heading(2)
+	subHeading.Append(compton.Fspan(p, "Description").
+		TextAlign(align.Center).
+		ForegroundColor(color.RepGray))
+	headingRow.Append(subHeading)
+
+	pageStack.Append(compton.FICenter(p, headingRow))
 
 	descriptionStack := compton.FlexItems(p, direction.Column).
 		AlignItems(align.Start).
@@ -102,6 +115,9 @@ func Description(id string, rdx redux.Readable) compton.PageElement {
 		ard := compton.DivText(addtReqs)
 		copyrightsDiv.Append(ard)
 	}
+
+	pageStack.Append(compton.Br(),
+		compton.Footer(p, "Bonjour d'Arles", "https://github.com/arelate"))
 
 	return p
 }
