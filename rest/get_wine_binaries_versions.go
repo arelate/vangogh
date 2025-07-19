@@ -8,11 +8,12 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"net/http"
+	"path/filepath"
 )
 
 func GetWineBinariesVersions(w http.ResponseWriter, r *http.Request) {
 
-	binariesVersions := make(map[string]string)
+	binariesVersions := make([]vangogh_integration.WineBinaryDetails, 0, len(vangogh_integration.OsWineBinaries))
 
 	gitHubReleasesDir, err := pathways.GetAbsRelDir(vangogh_integration.GitHubReleases)
 	if err != nil {
@@ -26,8 +27,11 @@ func GetWineBinariesVersions(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for _, binaries := range vangogh_integration.OsWineBinaries {
+	for operatingSystem, binaries := range vangogh_integration.OsWineBinaries {
 		for _, binary := range binaries {
+
+			var wbd vangogh_integration.WineBinaryDetails
+
 			switch binary.Version {
 			case "":
 				latestRelease, err := github_integration.GetLatestRelease(binary.GitHubOwnerRepo, kvGitHubReleases)
@@ -35,10 +39,30 @@ func GetWineBinariesVersions(w http.ResponseWriter, r *http.Request) {
 					http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 					return
 				}
-				binariesVersions[binary.GitHubOwnerRepo] = latestRelease.TagName
+
+				latestAsset := github_integration.GetReleaseAsset(latestRelease, binary.GitHubAssetGlob)
+				_, filename := filepath.Split(latestAsset.BrowserDownloadUrl)
+
+				wbd = vangogh_integration.WineBinaryDetails{
+					Title:    binary.GitHubOwnerRepo,
+					OS:       operatingSystem,
+					Version:  latestRelease.TagName,
+					Filename: filename,
+				}
+
 			default:
-				binariesVersions[binary.Title] = binary.Version
+
+				_, filename := filepath.Split(binary.DownloadUrl)
+
+				wbd = vangogh_integration.WineBinaryDetails{
+					Title:    binary.Title,
+					OS:       operatingSystem,
+					Version:  binary.Version,
+					Filename: filename,
+				}
 			}
+
+			binariesVersions = append(binariesVersions, wbd)
 		}
 	}
 
