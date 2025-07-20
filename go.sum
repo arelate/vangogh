@@ -10,6 +10,8 @@ github.com/arelate/southern_light v0.3.10 h1:te+o/NJx1WqkUcqoO0kDcwsGymFERyUGUPx
 github.com/arelate/southern_light v0.3.10/go.mod h1:g2lyyOf9XMctrXBYtjzEJF6OqzgZT1lGT/u9DWVS3T8=
 github.com/arelate/southern_light v0.3.11 h1:cTZxynfzGQ57j3W/jyWvBw2xS3xw5UUyFS3M2Dnz4DE=
 github.com/arelate/southern_light v0.3.11/go.mod h1:g2lyyOf9XMctrXBYtjzEJF6OqzgZT1lGT/u9DWVS3T8=
+github.com/arelate/southern_light v0.3.12 h1:6+YFGYvSydA2Jdwjmp8dSWDvelpchyBZUR8u+mnOL5g=
+github.com/arelate/southern_light v0.3.12/go.mod h1:g2lyyOf9XMctrXBYtjzEJF6OqzgZT1lGT/u9DWVS3T8=
 github.com/boggydigital/atomus v0.1.11 h1:n9XRgPqF3OgnK8UK7yJ3aG5sQkwacBjtqzzOxCXz33A=
 github.com/boggydigital/atomus v0.1.11/go.mod h1:/ga4zus10Z3FiNDU4JmRw5fdm0IW78qoezV/Ni44V5s=
 github.com/boggydigital/backups v0.1.6 h1:E0YU7K/muSjmJcDtMBUP3mQN46/9kkq+HczuKxRWx14=
@@ -40,6 +42,8 @@ github.com/boggydigital/coost v0.3.10 h1:F2ouJCRaUIgDGHEgX4T1nN4XdfS/9qrn/kvWq0c
 github.com/boggydigital/coost v0.3.10/go.mod h1:hDXR+PHEu2R/V5Va/GKzFEOwAtbr32JM1Bw+tC91aN0=
 github.com/boggydigital/dolo v0.2.22 h1:t/653QlViAzELln/bwuZCAhjODc9tuypFazK2ltDbDQ=
 github.com/boggydigital/dolo v0.2.22/go.mod h1:/Z2gQ4V/IIc/9WEL2/HIUag4LnCyZZPOx1Kl9KxI7uI=
+github.com/boggydigital/dolo v0.2.23 h1:PD6j7/tKfjw31GUxVEN2MgK9IKOqDjSL542r75eoGZc=
+github.com/boggydigital/dolo v0.2.23/go.mod h1:/Z2gQ4V/IIc/9WEL2/HIUag4LnCyZZPOx1Kl9KxI7uI=
 github.com/boggydigital/issa v0.1.23 h1:rlofF32FwkXSKrplZ5J/AWn3mw4vq9VIP/KBZVE8sA0=
 github.com/boggydigital/issa v0.1.23/go.mod h1:1p/XNBpQW+dtnpUFhVxZHjNEZyP3qw4DsTC4rb0Qu68=
 github.com/boggydigital/kevlar v0.6.9 h1:VX1M/F6ZrLxAslADkixcsYQ6HAnqRhwMuT12cikQDZM=

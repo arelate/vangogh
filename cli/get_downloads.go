@@ -253,7 +253,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 
 			absDownloadPath := filepath.Join(absSlugDownloadDir, filename)
 
-			if _, err := os.Stat(absDownloadPath); err == nil {
+			if _, err = os.Stat(absDownloadPath); err == nil {
 				dmua.EndWithResult("already exists: %s", filename)
 				return nil
 			} else if !os.IsNotExist(err) {
@@ -271,7 +271,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	//check for error status codes and store them for the manualUrl to provide a hint that locally missing file
 	//is not a problem that can be solved locally (it's a remote source error)
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		if err := gdd.rdx.ReplaceValues(vangogh_integration.DownloadStatusErrorProperty, dl.ManualUrl, strconv.Itoa(resp.StatusCode)); err != nil {
+		if err = gdd.rdx.ReplaceValues(vangogh_integration.DownloadStatusErrorProperty, dl.ManualUrl, strconv.Itoa(resp.StatusCode)); err != nil {
 			return err
 		}
 		return errors.New(resp.Status)
@@ -279,7 +279,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 
 	resolvedUrl := resp.Request.URL
 
-	if err := resp.Body.Close(); err != nil {
+	if err = resp.Body.Close(); err != nil {
 		return err
 	}
 
@@ -300,15 +300,16 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	if dl.Type == vangogh_integration.Installer || dl.Type == vangogh_integration.DLC {
 		if remoteChecksumPath := resolvedUrl.Path + kevlar.XmlExt; remoteChecksumPath != "" {
 
-			absChecksumPath, err := vangogh_integration.AbsChecksumPath(absDownloadPath)
+			var absChecksumPath string
+			absChecksumPath, err = vangogh_integration.AbsChecksumPath(absDownloadPath)
 			if err != nil {
 				return err
 			}
 
 			// delete existing checksum in case the origin checksum produced 404 for a silently
 			// updated new version and we'd use a generated checksum to validate
-			if _, err := os.Stat(absChecksumPath); err == nil && gdd.forceUpdate {
-				if err := os.Remove(absChecksumPath); err != nil {
+			if _, err = os.Stat(absChecksumPath); err == nil && gdd.forceUpdate {
+				if err = os.Remove(absChecksumPath); err != nil {
 					return err
 				}
 			}
@@ -318,7 +319,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 			dca := nod.NewProgress(" - %s", checksumFilename)
 			originalPath := resolvedUrl.Path
 			resolvedUrl.Path = remoteChecksumPath
-			if err := dlClient.Download(resolvedUrl, gdd.forceUpdate, dca, absChecksumPath); err != nil {
+			if err = dlClient.Download(resolvedUrl, gdd.forceUpdate, dca, absChecksumPath); err != nil {
 				//don't interrupt normal download due to checksum download error,
 				//so don't return this error, just log it
 				dca.Error(err)
