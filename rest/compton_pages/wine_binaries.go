@@ -65,7 +65,7 @@ func WineBinaries() compton.PageElement {
 				binaryVersion = latestRelease.TagName
 			}
 
-			link := compton.A("/api/wine-binary?os=" + operatingSystem.String() + "&title=" + binaryTitle)
+			link := compton.A("/wine-binary-file?os=" + operatingSystem.String() + "&title=" + binaryTitle)
 			pageStack.Append(link)
 
 			linkFrow := compton.Frow(p).FontSize(size.Small)
