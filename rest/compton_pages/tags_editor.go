@@ -76,7 +76,6 @@ func TagsEditor(
 
 	dsTags := compton.DSLarge(p, tagsPropertyTitle, true).
 		BackgroundColor(color.Highlight).
-		ForegroundColor(color.Foreground).
 		SummaryMarginBlockEnd(size.Normal).
 		DetailsMarginBlockEnd(size.Unset)
 
