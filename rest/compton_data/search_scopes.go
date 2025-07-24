@@ -2,6 +2,7 @@ package compton_data
 
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/compton"
 	"net/url"
 	"strings"
 )
@@ -14,6 +15,15 @@ const (
 	SearchGogPreservationProgram = "GPP"
 	SearchMods                   = "Mods"
 )
+
+var SearchScopesSymbols = map[string]compton.Symbol{
+	SearchNew:                    compton.TwoLabelledInputs,
+	SearchOwned:                  compton.Bookmark,
+	SearchWishlist:               compton.Heart,
+	SearchSale:                   compton.Percent,
+	SearchGogPreservationProgram: compton.Shield,
+	SearchMods:                   compton.PuzzlePiece,
+}
 
 const GogPreservationProgramTag = "Good Old Game"
 

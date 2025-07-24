@@ -17,6 +17,7 @@ func SearchLinks(r compton.Registrar, current string) compton.Element {
 			Href:     "/search?" + searchScopes[scope],
 			Title:    scope,
 			Selected: current == scope,
+			Symbol:   compton_data.SearchScopesSymbols[scope],
 		})
 		if current == scope {
 			searchLink.SetAttribute("style", "view-transition-name:current-search-link")

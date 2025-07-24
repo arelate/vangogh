@@ -34,7 +34,8 @@ func GetWineBinariesVersions(w http.ResponseWriter, r *http.Request) {
 
 			switch binary.Version {
 			case "":
-				latestRelease, err := github_integration.GetLatestRelease(binary.GitHubOwnerRepo, kvGitHubReleases)
+				var latestRelease *github_integration.GitHubRelease
+				latestRelease, err = github_integration.GetLatestRelease(binary.GitHubOwnerRepo, kvGitHubReleases)
 				if err != nil {
 					http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 					return
@@ -50,6 +51,10 @@ func GetWineBinariesVersions(w http.ResponseWriter, r *http.Request) {
 					Filename: filename,
 				}
 
+				if latestAsset.Digest != nil {
+					wbd.Digest = *latestAsset.Digest
+				}
+
 			default:
 
 				_, filename := filepath.Split(binary.DownloadUrl)
@@ -58,6 +63,7 @@ func GetWineBinariesVersions(w http.ResponseWriter, r *http.Request) {
 					Title:    binary.Title,
 					OS:       operatingSystem,
 					Version:  binary.Version,
+					Digest:   binary.Digest,
 					Filename: filename,
 				}
 			}
