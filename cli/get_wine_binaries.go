@@ -236,7 +236,8 @@ func cleanupBinaries(urls ...*url.URL) error {
 	}
 
 	for _, fn := range unexpectedFilenames {
-		if err = os.Remove(fn); err != nil {
+		absFn := filepath.Join(wineBinariesDir, fn)
+		if err = os.Remove(absFn); err != nil {
 			return err
 		}
 	}
