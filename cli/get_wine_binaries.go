@@ -169,7 +169,7 @@ func downloadHttpBinaries(force bool, urls ...*url.URL) error {
 	dhba := nod.NewProgress("downloading binaries...")
 	defer dhba.Done()
 
-	binariesDir, err := pathways.GetAbsRelDir(vangogh_integration.Binaries)
+	wineBinariesDir, err := pathways.GetAbsRelDir(vangogh_integration.WineBinaries)
 	if err != nil {
 		return err
 	}
@@ -177,7 +177,7 @@ func downloadHttpBinaries(force bool, urls ...*url.URL) error {
 	dhba.TotalInt(len(urls))
 
 	for _, u := range urls {
-		if err = downloadHttpBinary(u, binariesDir, force); err != nil {
+		if err = downloadHttpBinary(u, wineBinariesDir, force); err != nil {
 			return err
 		}
 		dhba.Increment()
@@ -201,7 +201,7 @@ func cleanupBinaries(urls ...*url.URL) error {
 	cba := nod.Begin("cleaning up older binaries versions...")
 	defer cba.Done()
 
-	binariesDir, err := pathways.GetAbsRelDir(vangogh_integration.Binaries)
+	wineBinariesDir, err := pathways.GetAbsRelDir(vangogh_integration.WineBinaries)
 	if err != nil {
 		return err
 	}
@@ -212,7 +212,7 @@ func cleanupBinaries(urls ...*url.URL) error {
 		expectedFilenames = append(expectedFilenames, fn)
 	}
 
-	bd, err := os.Open(binariesDir)
+	bd, err := os.Open(wineBinariesDir)
 	if err != nil {
 		return err
 	}

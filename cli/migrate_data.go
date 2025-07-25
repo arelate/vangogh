@@ -16,18 +16,23 @@ import (
 // 1. local-manual-url -> manual-url-filename
 // 2. rm -rf metadata/_type_errors
 // 3. rename updates sections (remove old section titles)
+// 4. rename _binaries to _wine-binaries
 
 const (
-	latestDataSchema = 3
+	latestDataSchema = 4
 )
 
-const DeprecatedTypeErrors pathways.RelDir = "_type_errors"
+const deprecatedTypeErrors pathways.RelDir = "_type_errors"
 
 const (
 	installersUpdatesTitle = "Installers updates"
 	newProductTitle        = "New products"
 	releasedTodayTitle     = "Released today"
 	steamNewsTitle         = "Steam news"
+)
+
+const (
+	deprecatedBinaries pathways.RelDir = "_binaries"
 )
 
 func MigrateDataHandler(u *url.URL) error {
@@ -75,6 +80,10 @@ func MigrateData(force bool) error {
 			}
 		case 2:
 			if err = removeLiteralUpdatesSections(); err != nil {
+				return err
+			}
+		case 3:
+			if err = renameBinariesToWineBinaries(); err != nil {
 				return err
 			}
 		}
@@ -161,7 +170,7 @@ func removeTypeErrorsDir() error {
 		return err
 	}
 
-	typeErrorsDir := filepath.Join(metadataDir, string(DeprecatedTypeErrors))
+	typeErrorsDir := filepath.Join(metadataDir, string(deprecatedTypeErrors))
 
 	return os.RemoveAll(typeErrorsDir)
 }
@@ -186,4 +195,25 @@ func removeLiteralUpdatesSections() error {
 	}
 
 	return err
+}
+
+func renameBinariesToWineBinaries() error {
+
+	wineBinariesDir, err := pathways.GetAbsRelDir(vangogh_integration.WineBinaries)
+	if err != nil {
+		return err
+	}
+
+	if _, err = os.Stat(wineBinariesDir); err == nil {
+		return nil
+	}
+
+	downloadsDir, err := pathways.GetAbsDir(vangogh_integration.Downloads)
+	if err != nil {
+		return err
+	}
+
+	deprecatedBinariesDir := filepath.Join(downloadsDir, string(deprecatedBinaries))
+
+	return os.Rename(deprecatedBinariesDir, wineBinariesDir)
 }

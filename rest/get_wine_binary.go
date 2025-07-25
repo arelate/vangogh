@@ -34,7 +34,7 @@ func GetWineBinaryFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	binariesDir, err := pathways.GetAbsRelDir(vangogh_integration.Binaries)
+	wineBinariesDir, err := pathways.GetAbsRelDir(vangogh_integration.WineBinaries)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
@@ -68,7 +68,7 @@ func GetWineBinaryFile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	_, filename := filepath.Split(binaryUrl)
-	absFilepath := filepath.Join(binariesDir, filename)
+	absFilepath := filepath.Join(wineBinariesDir, filename)
 
 	if _, err = os.Stat(absFilepath); err == nil {
 	} else if os.IsNotExist(err) {

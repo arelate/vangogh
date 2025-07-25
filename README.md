@@ -33,15 +33,13 @@ services:
     # - VANGOGH_SYNC_DEBUG=true
     # DANGER ZONE: Please read downloads layouts documentation below!
     # Uncomment (remove leading # in the line below) to use a different downloads layout
-    # Note: `sharded` is the default behavior (downloads/s/slug) and `flat` is simpler layout (downloads/slug)
+    # Note: `flat` is default layout (downloads/slug) and `sharded` might work better for large collections (downloads/s/slug)
     # - VANGOGH_DOWNLOADS-LAYOUT=sharded
     volumes:
       # cold storage - less frequently accessed data, that can be stored on hibernating HDD.
       # hot storage - frequently accessed data, that can benefit from being stored on SSD.
       # backups (cold storage)
       - /docker/vangogh/backups:/var/lib/vangogh/backups
-      # binaries (cold storage)
-      - /docker/vangogh/binaries:/var/lib/vangogh/binaries
       # downloads (cold storage)
       - /docker/vangogh/downloads:/var/lib/vangogh/downloads
       # checksums (hot storage)
