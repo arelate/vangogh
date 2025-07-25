@@ -1,7 +1,6 @@
 package compton_pages
 
 import (
-	"github.com/arelate/southern_light/github_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/boggydigital/compton"
@@ -55,15 +54,11 @@ func WineBinaries() compton.PageElement {
 				binaryTitle = binary.GitHubOwnerRepo
 			}
 
-			binaryVersion := binary.Version
-			if binaryVersion == "" {
-				var latestRelease *github_integration.GitHubRelease
-				latestRelease, err = github_integration.GetLatestRelease(binary.GitHubOwnerRepo, kvGitHubReleases)
-				if err != nil {
-					p.Error(err)
-					return p
-				}
-				binaryVersion = latestRelease.TagName
+			var binaryVersion string
+			binaryVersion, err = binary.GetVersion(kvGitHubReleases)
+			if err != nil {
+				p.Error(err)
+				return p
 			}
 
 			link := compton.A("/wine-binary-file?os=" + operatingSystem.String() + "&title=" + binaryTitle)

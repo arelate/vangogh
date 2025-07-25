@@ -14,6 +14,7 @@ import (
 	"path/filepath"
 	"slices"
 	"strings"
+	"time"
 )
 
 func GetWineBinariesHandler(u *url.URL) error {
@@ -35,6 +36,8 @@ func GetWineBinaries(operatingSystems []vangogh_integration.OperatingSystem, for
 
 	gba := nod.Begin("getting WINE binaries...")
 	defer gba.Done()
+
+	start := time.Now()
 
 	if len(operatingSystems) == 0 {
 		gba.EndWithResult("no operating system specified for WINE binaries")
@@ -61,29 +64,33 @@ func GetWineBinaries(operatingSystems []vangogh_integration.OperatingSystem, for
 		binaries = append(binaries, vangogh_integration.OsWineBinaries[operatingSystem]...)
 	}
 
-	binariesUrls := make([]*url.URL, 0, len(binaries))
+	binariesUrls := make(map[string]*url.URL)
 
 	for _, binary := range binaries {
 		var u *url.URL
-		if u, err = getBinaryUrl(&binary, kvGitHubReleases, force); err == nil && u != nil {
-			binariesUrls = append(binariesUrls, u)
+		if u, err = getWineBinaryUrl(&binary, kvGitHubReleases, force); err == nil && u != nil {
+			binariesUrls[binary.String()] = u
 		} else if err != nil {
 			return err
 		}
 	}
 
-	if err = downloadHttpBinaries(force, binariesUrls...); err != nil {
+	if err = downloadHttpWineBinaries(binariesUrls, force); err != nil {
 		return err
 	}
 
-	if err = cleanupBinaries(binariesUrls...); err != nil {
+	if err = validateWineBinaries(start, binaries, binariesUrls, kvGitHubReleases, force); err != nil {
+		return err
+	}
+
+	if err = cleanupWineBinaries(binariesUrls); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func getBinaryUrl(bin *vangogh_integration.Binary, kvGitHubReleases kevlar.KeyValues, force bool) (*url.URL, error) {
+func getWineBinaryUrl(bin *vangogh_integration.Binary, kvGitHubReleases kevlar.KeyValues, force bool) (*url.URL, error) {
 
 	gba := nod.Begin(" getting %s url...", bin)
 	defer gba.Done()
@@ -164,7 +171,7 @@ func getGitHubLatestReleaseAssetUrl(ownerRepo, assetGlob string, kvGitHubRelease
 	return url.Parse(releaseAsset.BrowserDownloadUrl)
 }
 
-func downloadHttpBinaries(force bool, urls ...*url.URL) error {
+func downloadHttpWineBinaries(urls map[string]*url.URL, force bool) error {
 
 	dhba := nod.NewProgress("downloading binaries...")
 	defer dhba.Done()
@@ -177,7 +184,7 @@ func downloadHttpBinaries(force bool, urls ...*url.URL) error {
 	dhba.TotalInt(len(urls))
 
 	for _, u := range urls {
-		if err = downloadHttpBinary(u, wineBinariesDir, force); err != nil {
+		if err = downloadHttpWineBinary(u, wineBinariesDir, force); err != nil {
 			return err
 		}
 		dhba.Increment()
@@ -186,7 +193,7 @@ func downloadHttpBinaries(force bool, urls ...*url.URL) error {
 	return nil
 }
 
-func downloadHttpBinary(fromUrl *url.URL, toDir string, force bool) error {
+func downloadHttpWineBinary(fromUrl *url.URL, toDir string, force bool) error {
 
 	_, filename := filepath.Split(fromUrl.Path)
 
@@ -196,7 +203,28 @@ func downloadHttpBinary(fromUrl *url.URL, toDir string, force bool) error {
 	return dolo.DefaultClient.Download(fromUrl, force, ghba, toDir, filename)
 }
 
-func cleanupBinaries(urls ...*url.URL) error {
+func validateWineBinaries(since time.Time, binaries []vangogh_integration.Binary, urls map[string]*url.URL, kvGitHubReleases kevlar.KeyValues, force bool) error {
+
+	vwba := nod.NewProgress("validating binaries...")
+	defer vwba.Done()
+
+	//wineBinariesDir, err := pathways.GetAbsRelDir(vangogh_integration.WineBinaries)
+	//if err != nil {
+	//	return err
+	//}
+	//
+	//for _, binary := range binaries {
+	//
+	//	if u, ok := urls[binary.String()]; ok && u != nil {
+	//		absFilename := filepath.Join(wineBinariesDir, path.Base(u.Path))
+	//	}
+	//
+	//}
+
+	return nil
+}
+
+func cleanupWineBinaries(urls map[string]*url.URL) error {
 
 	cba := nod.Begin("cleaning up older binaries versions...")
 	defer cba.Done()

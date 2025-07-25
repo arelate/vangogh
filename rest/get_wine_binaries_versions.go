@@ -2,13 +2,12 @@ package rest
 
 import (
 	"encoding/json"
-	"github.com/arelate/southern_light/github_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"net/http"
-	"path/filepath"
+	"path"
 )
 
 func GetWineBinariesVersions(w http.ResponseWriter, r *http.Request) {
@@ -30,42 +29,33 @@ func GetWineBinariesVersions(w http.ResponseWriter, r *http.Request) {
 	for operatingSystem, binaries := range vangogh_integration.OsWineBinaries {
 		for _, binary := range binaries {
 
-			var wbd vangogh_integration.WineBinaryDetails
+			var binaryVersion string
+			binaryVersion, err = binary.GetVersion(kvGitHubReleases)
+			if err != nil {
+				http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+				return
+			}
 
-			switch binary.Version {
-			case "":
-				var latestRelease *github_integration.GitHubRelease
-				latestRelease, err = github_integration.GetLatestRelease(binary.GitHubOwnerRepo, kvGitHubReleases)
-				if err != nil {
-					http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-					return
-				}
+			var binaryDigest string
+			binaryDigest, err = binary.GetDigest(kvGitHubReleases)
+			if err != nil {
+				http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+				return
+			}
 
-				latestAsset := github_integration.GetReleaseAsset(latestRelease, binary.GitHubAssetGlob)
-				_, filename := filepath.Split(latestAsset.BrowserDownloadUrl)
+			var binaryDownloadUrl string
+			binaryDownloadUrl, err = binary.GetDownloadUrl(kvGitHubReleases)
+			if err != nil {
+				http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+				return
+			}
 
-				wbd = vangogh_integration.WineBinaryDetails{
-					Title:    binary.GitHubOwnerRepo,
-					OS:       operatingSystem,
-					Version:  latestRelease.TagName,
-					Filename: filename,
-				}
-
-				if latestAsset.Digest != nil {
-					wbd.Digest = *latestAsset.Digest
-				}
-
-			default:
-
-				_, filename := filepath.Split(binary.DownloadUrl)
-
-				wbd = vangogh_integration.WineBinaryDetails{
-					Title:    binary.Title,
-					OS:       operatingSystem,
-					Version:  binary.Version,
-					Digest:   binary.Digest,
-					Filename: filename,
-				}
+			wbd := vangogh_integration.WineBinaryDetails{
+				Title:    binary.GitHubOwnerRepo,
+				OS:       operatingSystem,
+				Version:  binaryVersion,
+				Digest:   binaryDigest,
+				Filename: path.Base(binaryDownloadUrl),
 			}
 
 			binariesVersions = append(binariesVersions, wbd)

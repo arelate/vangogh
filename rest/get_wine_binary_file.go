@@ -1,7 +1,6 @@
 package rest
 
 import (
-	"github.com/arelate/southern_light/github_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
@@ -40,31 +39,22 @@ func GetWineBinaryFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	binaryUrl := binary.DownloadUrl
+	gitHubReleasesDir, err := pathways.GetAbsRelDir(vangogh_integration.GitHubReleases)
+	if err != nil {
+		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+		return
+	}
 
-	if binaryUrl == "" {
+	kvGitHubReleases, err := kevlar.New(gitHubReleasesDir, kevlar.JsonExt)
+	if err != nil {
+		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+		return
+	}
 
-		gitHubReleasesDir, err := pathways.GetAbsRelDir(vangogh_integration.GitHubReleases)
-		if err != nil {
-			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-			return
-		}
-
-		kvGitHubReleases, err := kevlar.New(gitHubReleasesDir, kevlar.JsonExt)
-		if err != nil {
-			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-			return
-		}
-
-		latestRelease, err := github_integration.GetLatestRelease(binary.GitHubOwnerRepo, kvGitHubReleases)
-		if err != nil {
-			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-			return
-		}
-
-		latestAsset := github_integration.GetReleaseAsset(latestRelease, binary.GitHubAssetGlob)
-
-		binaryUrl = latestAsset.BrowserDownloadUrl
+	binaryUrl, err := binary.GetDownloadUrl(kvGitHubReleases)
+	if err != nil {
+		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+		return
 	}
 
 	_, filename := filepath.Split(binaryUrl)
