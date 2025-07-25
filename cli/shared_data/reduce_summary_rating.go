@@ -68,8 +68,10 @@ func reduceSummaryRatings(rdx redux.Writeable) error {
 
 		if ocrs, ok := rdx.GetLastVal(vangogh_integration.OpenCriticMedianScoreProperty, id); ok && ocrs != "" && ocrs != "0" {
 			if ocri, err := strconv.ParseFloat(ocrs, 32); err == nil {
-				summaryRating += int(ocri)
-				summaryRatingsCount++
+				if ocri > 0 {
+					summaryRating += int(ocri)
+					summaryRatingsCount++
+				}
 			} else {
 				nod.LogError(err)
 			}
