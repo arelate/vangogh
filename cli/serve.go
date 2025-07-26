@@ -56,9 +56,11 @@ func Serve(port int, layout vangogh_integration.DownloadsLayout, stderr bool) er
 		return err
 	}
 
+	ia := nod.Begin("initializing server...")
 	if err := rest.Init(layout); err != nil {
 		return err
 	}
+	ia.Done()
 
 	rest.HandleFuncs()
 
