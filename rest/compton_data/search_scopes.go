@@ -21,7 +21,7 @@ var SearchScopesSymbols = map[string]compton.Symbol{
 	SearchOwned:                  compton.Bookmark,
 	SearchWishlist:               compton.Heart,
 	SearchSale:                   compton.Percent,
-	SearchGogPreservationProgram: compton.Shield,
+	SearchGogPreservationProgram: compton.Gemstone,
 	SearchMods:                   compton.PuzzlePiece,
 }
 
