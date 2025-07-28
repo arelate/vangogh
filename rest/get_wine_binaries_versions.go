@@ -51,7 +51,7 @@ func GetWineBinariesVersions(w http.ResponseWriter, r *http.Request) {
 			}
 
 			wbd := vangogh_integration.WineBinaryDetails{
-				Title:    binary.GitHubOwnerRepo,
+				Title:    binary.String(),
 				OS:       operatingSystem,
 				Version:  binaryVersion,
 				Digest:   binaryDigest,
