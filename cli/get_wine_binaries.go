@@ -242,7 +242,7 @@ func validateWineBinary(absFilename string, binary *vangogh_integration.Binary, 
 	}
 
 	if stat.ModTime().Before(since) && !force {
-		vwba.EndWithResult("unchanged since last sync")
+		vwba.EndWithResult("unchanged")
 		return nil
 	}
 
