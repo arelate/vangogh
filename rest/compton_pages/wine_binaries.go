@@ -2,6 +2,7 @@ package compton_pages
 
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/southern_light/wine_integration"
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/direction"
@@ -45,7 +46,11 @@ func WineBinaries() compton.PageElement {
 
 		pageStack.Append(operatingSystemHeading(p, operatingSystem))
 
-		for _, binary := range vangogh_integration.OsWineBinaries[operatingSystem] {
+		for _, binary := range wine_integration.OsWineBinaries {
+
+			if binary.OS != operatingSystem {
+				continue
+			}
 
 			binaryTitleName := "Title"
 			binaryTitle := binary.Title

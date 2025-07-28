@@ -2,6 +2,7 @@ package rest
 
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/southern_light/wine_integration"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
@@ -20,9 +21,12 @@ func GetWineBinaryFile(w http.ResponseWriter, r *http.Request) {
 	operatingSystem := vangogh_integration.ParseOperatingSystem(q.Get(vangogh_integration.OperatingSystemsProperty))
 	title := q.Get(vangogh_integration.TitleProperty)
 
-	var binary *vangogh_integration.Binary
+	var binary *wine_integration.Binary
 
-	for _, bin := range vangogh_integration.OsWineBinaries[operatingSystem] {
+	for _, bin := range wine_integration.OsWineBinaries {
+		if bin.OS != operatingSystem {
+			continue
+		}
 		if strings.ToLower(bin.String()) == strings.ToLower(title) {
 			binary = &bin
 		}
