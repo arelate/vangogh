@@ -1,7 +1,9 @@
 package cli
 
 import (
+	"crypto/sha256"
 	"errors"
+	"fmt"
 	"github.com/arelate/southern_light/github_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/dolo"
@@ -11,6 +13,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"path"
 	"path/filepath"
 	"slices"
 	"strings"
@@ -79,7 +82,7 @@ func GetWineBinaries(operatingSystems []vangogh_integration.OperatingSystem, for
 		return err
 	}
 
-	if err = validateWineBinaries(start, binaries, binariesUrls, kvGitHubReleases, force); err != nil {
+	if err = validateWineBinaries(binaries, binariesUrls, kvGitHubReleases, start, force); err != nil {
 		return err
 	}
 
@@ -203,25 +206,91 @@ func downloadHttpWineBinary(fromUrl *url.URL, toDir string, force bool) error {
 	return dolo.DefaultClient.Download(fromUrl, force, ghba, toDir, filename)
 }
 
-func validateWineBinaries(since time.Time, binaries []vangogh_integration.Binary, urls map[string]*url.URL, kvGitHubReleases kevlar.KeyValues, force bool) error {
+func validateWineBinaries(binaries []vangogh_integration.Binary, urls map[string]*url.URL, kvGitHubReleases kevlar.KeyValues, since time.Time, force bool) error {
 
 	vwba := nod.NewProgress("validating binaries...")
 	defer vwba.Done()
 
-	//wineBinariesDir, err := pathways.GetAbsRelDir(vangogh_integration.WineBinaries)
-	//if err != nil {
-	//	return err
-	//}
-	//
-	//for _, binary := range binaries {
-	//
-	//	if u, ok := urls[binary.String()]; ok && u != nil {
-	//		absFilename := filepath.Join(wineBinariesDir, path.Base(u.Path))
-	//	}
-	//
-	//}
+	wineBinariesDir, err := pathways.GetAbsRelDir(vangogh_integration.WineBinaries)
+	if err != nil {
+		return err
+	}
+
+	for _, binary := range binaries {
+
+		if u, ok := urls[binary.String()]; ok && u != nil {
+			absFilename := filepath.Join(wineBinariesDir, path.Base(u.Path))
+			if err = validateWineBinary(absFilename, &binary, kvGitHubReleases, since, force); err != nil {
+				return err
+			}
+		}
+	}
 
 	return nil
+}
+
+func validateWineBinary(absFilename string, binary *vangogh_integration.Binary, kvGitHubReleases kevlar.KeyValues, since time.Time, force bool) error {
+
+	_, filename := filepath.Split(absFilename)
+
+	vwba := nod.NewProgress(" - %s...", filename)
+	defer vwba.Done()
+
+	stat, err := os.Stat(absFilename)
+	if err != nil {
+		return err
+	}
+
+	if stat.ModTime().Before(since) && !force {
+		vwba.EndWithResult("unchanged since last sync")
+		return nil
+	}
+
+	digest, err := binary.GetDigest(kvGitHubReleases)
+	if err != nil {
+		return err
+	}
+
+	if digest == "" {
+		vwba.EndWithResult("digest is not available")
+		return nil
+	}
+
+	wbFile, err := os.Open(absFilename)
+	if err != nil {
+		return err
+	}
+
+	defer wbFile.Close()
+
+	vwba.Total(uint64(stat.Size()))
+
+	if algorithm, dstHash, ok := strings.Cut(digest, ":"); ok {
+
+		switch algorithm {
+		case "sha256":
+
+			h := sha256.New()
+			if err = dolo.CopyWithProgress(h, wbFile, vwba); err != nil {
+				return err
+			}
+
+			srcHash := fmt.Sprintf("%x", h.Sum(nil))
+
+			if srcHash == dstHash {
+				vwba.EndWithResult("valid")
+				return nil
+			} else {
+				return errors.New("digest mismatch")
+			}
+
+		default:
+			return errors.New("unknown digest algorithm: " + algorithm)
+		}
+
+	} else {
+		return errors.New("unknown digest format: " + digest)
+	}
 }
 
 func cleanupWineBinaries(urls map[string]*url.URL) error {
