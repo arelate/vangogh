@@ -21,6 +21,7 @@ const (
 	SyncOptionScreenshots       = "screenshots"
 	SyncOptionVideosMetadata    = "videos-metadata"
 	SyncOptionDownloadsUpdates  = "downloads-updates"
+	SynOptionWineBinaries       = "wine-binaries"
 	negativePrefix              = "no-"
 )
 
@@ -31,6 +32,7 @@ type syncOptions struct {
 	screenshots       bool
 	videosMetadata    bool
 	downloadsUpdates  bool
+	wineBinaries      bool
 }
 
 func NegOpt(option string) string {
@@ -49,14 +51,17 @@ func initSyncOptions(u *url.URL) *syncOptions {
 		screenshots:       vangogh_integration.FlagFromUrl(u, SyncOptionScreenshots),
 		videosMetadata:    vangogh_integration.FlagFromUrl(u, SyncOptionVideosMetadata),
 		downloadsUpdates:  vangogh_integration.FlagFromUrl(u, SyncOptionDownloadsUpdates),
+		wineBinaries:      vangogh_integration.FlagFromUrl(u, SynOptionWineBinaries),
 	}
 
 	if vangogh_integration.FlagFromUrl(u, "all") {
+		// not handling purchases here - doesn't make sense to negate it
 		so.descriptionImages = !vangogh_integration.FlagFromUrl(u, NegOpt(SyncOptionDescriptionImages))
 		so.images = !vangogh_integration.FlagFromUrl(u, NegOpt(SyncOptionImages))
 		so.screenshots = !vangogh_integration.FlagFromUrl(u, NegOpt(SyncOptionScreenshots))
 		so.videosMetadata = !vangogh_integration.FlagFromUrl(u, NegOpt(SyncOptionVideosMetadata))
 		so.downloadsUpdates = !vangogh_integration.FlagFromUrl(u, NegOpt(SyncOptionDownloadsUpdates))
+		so.wineBinaries = !vangogh_integration.FlagFromUrl(u, NegOpt(SynOptionWineBinaries))
 	}
 
 	return so
@@ -225,8 +230,10 @@ func Sync(
 
 	}
 
-	if err = GetWineBinaries(operatingSystems, force); err != nil {
-		return err
+	if syncOpts.wineBinaries {
+		if err = GetWineBinaries(operatingSystems, force); err != nil {
+			return err
+		}
 	}
 
 	syncEvents[vangogh_integration.SyncCompleteKey] = []string{strconv.Itoa(int(time.Now().Unix()))}
