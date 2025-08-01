@@ -9,8 +9,6 @@ import (
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/redux"
-	"maps"
-	"slices"
 )
 
 const (
@@ -53,8 +51,11 @@ func Updates(section string, rdx redux.Readable, showAll bool) compton.PageEleme
 	}
 
 	if section == "" {
-		if sortedSections := slices.Sorted(maps.Keys(updates)); len(sortedSections) > 0 {
-			section = sortedSections[0]
+		for _, us := range vangogh_integration.UpdatesOrder {
+			if _, ok := updates[us]; ok {
+				section = us
+				break
+			}
 		}
 	}
 
