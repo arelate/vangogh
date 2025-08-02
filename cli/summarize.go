@@ -41,11 +41,7 @@ func Summarize(since int64) error {
 
 	summary := make(map[string][]string)
 
-	for _, section := range []string{
-		vangogh_integration.UpdatesInstallers,
-		vangogh_integration.UpdatesReleasedToday,
-		vangogh_integration.UpdatesNewProducts,
-		vangogh_integration.UpdatesInstallers} {
+	for _, section := range vangogh_integration.UpdatesOrder {
 		summary[section] = nil
 	}
 
