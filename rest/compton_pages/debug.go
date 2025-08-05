@@ -10,6 +10,7 @@ import (
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/loading"
 	"github.com/boggydigital/compton/consts/size"
+	"github.com/boggydigital/issa"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 	"maps"
@@ -24,15 +25,12 @@ func Debug(gogId string) (compton.PageElement, error) {
 		return nil, err
 	}
 
-	reduxProperties := make([]string, 0)
-
-	for _, property := range vangogh_integration.ReduxProperties() {
-		if slices.Contains(reduxProperties, property) {
-			continue
-		}
-		reduxProperties = append(reduxProperties, property)
+	rpm := make(map[string]any)
+	for _, p := range vangogh_integration.ReduxProperties() {
+		rpm[p] = nil
 	}
-	slices.Sort(reduxProperties)
+
+	reduxProperties := slices.Sorted(maps.Keys(rpm))
 
 	rdx, err := redux.NewReader(reduxDir, reduxProperties...)
 	if err != nil {
@@ -43,7 +41,7 @@ func Debug(gogId string) (compton.PageElement, error) {
 	if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, gogId); ok && title != "" {
 		productTitle = title
 	} else {
-		productTitle = "[GOG Id " + gogId + " title not found]"
+		productTitle = "Title Unknown, Id=" + gogId
 	}
 
 	var productTypes []vangogh_integration.ProductType
@@ -52,9 +50,17 @@ func Debug(gogId string) (compton.PageElement, error) {
 			productTypes = append(productTypes, vangogh_integration.ParseProductType(pt))
 		}
 	}
+	//productTypes := slices.Collect(vangogh_integration.AllProductTypes())
 
 	p := compton.Page(productTitle)
 	p.RegisterStyles(compton_styles.Styles, "debug.css")
+
+	// tinting document background color to the representative product color
+	if imageId, ok := rdx.GetLastVal(vangogh_integration.ImageProperty, gogId); ok && imageId != "" {
+		if repColor, sure := rdx.GetLastVal(vangogh_integration.RepColorProperty, imageId); sure && repColor != issa.NeutralRepColor {
+			p.SetAttribute("style", "--c-rep:"+repColor)
+		}
+	}
 
 	pageStack := compton.FlexItems(p, direction.Column)
 	p.Append(pageStack)
@@ -64,7 +70,7 @@ func Debug(gogId string) (compton.PageElement, error) {
 
 	pageStack.Append(compton.FICenter(p, ptHeading))
 
-	idsFrow := compton.Frow(p)
+	idsFrow := compton.Frow(p).FontSize(size.Small)
 	pageStack.Append(compton.FICenter(p, idsFrow))
 
 	idsFrow.Heading("Platform Ids")
@@ -241,7 +247,7 @@ func Debug(gogId string) (compton.PageElement, error) {
 		}
 	}
 
-	reduxDs := compton.DSLarge(p, "Redux", false).BackgroundColor(color.Highlight)
+	reduxDs := compton.DSLarge(p, "Redux", false).BackgroundColor(color.RepHighlight)
 	pageStack.Append(reduxDs)
 
 	reduxStack := compton.FlexItems(p, direction.Column)
@@ -302,7 +308,7 @@ func Debug(gogId string) (compton.PageElement, error) {
 }
 
 func productTypeSection(r compton.Registrar, id string, pt vangogh_integration.ProductType) compton.Element {
-	ds := compton.DSLarge(r, compton_data.TypesTitles[pt.String()], false).BackgroundColor(color.Highlight)
+	ds := compton.DSLarge(r, compton_data.TypesTitles[pt.String()], false)
 
 	id = url.QueryEscape(id)
 
