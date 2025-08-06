@@ -1,15 +1,17 @@
 package cli
 
 import (
-	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
-	"github.com/boggydigital/redux"
 	"net/url"
 	"os"
 	"path/filepath"
 	"slices"
 	"strconv"
+
+	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/nod"
+	"github.com/boggydigital/pathways"
+	"github.com/boggydigital/redux"
 )
 
 // Data scheme version log:
@@ -17,9 +19,10 @@ import (
 // 2. rm -rf metadata/_type_errors
 // 3. rename updates sections (remove old section titles)
 // 4. rename _binaries to _wine-binaries
+// 5. deprecate aggregated-rating property
 
 const (
-	latestDataSchema = 4
+	latestDataSchema = 5
 )
 
 const deprecatedTypeErrors pathways.RelDir = "_type_errors"
@@ -33,6 +36,10 @@ const (
 
 const (
 	deprecatedBinaries pathways.RelDir = "_binaries"
+)
+
+const (
+	aggregatedRatingProperty = "aggregated-rating"
 )
 
 func MigrateDataHandler(u *url.URL) error {
@@ -84,6 +91,10 @@ func MigrateData(force bool) error {
 			}
 		case 3:
 			if err = renameBinariesToWineBinaries(); err != nil {
+				return err
+			}
+		case 4:
+			if err = deprecateAggregatedRatingProperty(); err != nil {
 				return err
 			}
 		}
@@ -216,4 +227,14 @@ func renameBinariesToWineBinaries() error {
 	deprecatedBinariesDir := filepath.Join(downloadsDir, string(deprecatedBinaries))
 
 	return os.Rename(deprecatedBinariesDir, wineBinariesDir)
+}
+
+func deprecateAggregatedRatingProperty() error {
+
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return err
+	}
+
+	return os.Remove(filepath.Join(reduxDir, aggregatedRatingProperty+kevlar.GobExt))
 }

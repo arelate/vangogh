@@ -2,16 +2,17 @@ package compton_fragments
 
 import (
 	"fmt"
+	"net/url"
+	"strconv"
+	"strings"
+	"time"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/redux"
-	"net/url"
-	"strconv"
-	"strings"
-	"time"
 )
 
 const propertyValuesLimit = 2
@@ -166,10 +167,6 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 		fallthrough
 	case vangogh_integration.MetacriticScoreProperty:
 		fallthrough
-	case vangogh_integration.AggregatedRatingProperty:
-		if firstValue != "" {
-			fmtProperty.values[FmtAggregatedRating(firstValue)] = noHref()
-		}
 	case vangogh_integration.TopPercentProperty:
 		if firstValue != "" {
 			fmtProperty.values[firstValue] = searchHref(property, url.QueryEscape(firstValue))
@@ -243,8 +240,6 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 		fallthrough
 	case vangogh_integration.MetacriticScoreProperty:
 		fallthrough
-	case vangogh_integration.AggregatedRatingProperty:
-		fmtProperty.class = reviewClass(FmtAggregatedRating(firstValue))
 	case vangogh_integration.SteamOsAppCompatibilityCategoryProperty:
 		fallthrough
 	case vangogh_integration.SteamDeckAppCompatibilityCategoryProperty:

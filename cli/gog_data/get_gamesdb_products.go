@@ -3,6 +3,10 @@ package gog_data
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
+	"slices"
+	"strconv"
+
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
@@ -12,9 +16,6 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"net/http"
-	"slices"
-	"strconv"
 )
 
 func GetGamesDbGogProducts(ids []string, hc *http.Client, uat string, since int64, force bool) error {
@@ -113,8 +114,6 @@ func reduceGamesDbGogProduct(id string, kvGamesDbGogProducts kevlar.KeyValues, p
 			}
 		case vangogh_integration.VideoIdProperty:
 			values = gdgp.GetVideoIds()
-		case vangogh_integration.AggregatedRatingProperty:
-			values = []string{strconv.FormatFloat(gdgp.GetAggregatedRating(), 'f', -1, 64)}
 		case vangogh_integration.ThemesProperty:
 			values = gdgp.GetThemes()
 		case vangogh_integration.GameModesProperty:

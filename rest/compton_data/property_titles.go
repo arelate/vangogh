@@ -57,7 +57,6 @@ var PropertyTitles = map[string]string{
 	vangogh_integration.RatingProperty:                            "GOG.com Rating",
 	vangogh_integration.SteamReviewScoreProperty:                  "Steam Rating",
 	vangogh_integration.MetacriticScoreProperty:                   "Metacritic Rating",
-	vangogh_integration.AggregatedRatingProperty:                  "Aggregated Rating",
 	vangogh_integration.PriceProperty:                             "Price",
 	vangogh_integration.BasePriceProperty:                         "Base Price",
 	vangogh_integration.DiscountPercentageProperty:                "Discount",

@@ -2,10 +2,11 @@ package shared_data
 
 import (
 	"fmt"
+	"strconv"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/redux"
-	"strconv"
 )
 
 func reduceSummaryRatings(rdx redux.Writeable) error {
@@ -33,15 +34,6 @@ func reduceSummaryRatings(rdx redux.Writeable) error {
 		if srs, ok := rdx.GetLastVal(vangogh_integration.SteamReviewScoreProperty, id); ok && srs != "" && srs != "0" {
 			if sri, err := strconv.ParseInt(srs, 10, 32); err == nil {
 				summaryRating += int(sri) * 10
-				summaryRatingsCount++
-			} else {
-				nod.LogError(err)
-			}
-		}
-
-		if ars, ok := rdx.GetLastVal(vangogh_integration.AggregatedRatingProperty, id); ok && ars != "" && ars != "0" {
-			if ari, err := strconv.ParseFloat(ars, 32); err == nil {
-				summaryRating += int(ari)
 				summaryRatingsCount++
 			} else {
 				nod.LogError(err)
