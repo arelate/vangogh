@@ -1,6 +1,9 @@
 package reqs
 
 import (
+	"net/http"
+	"net/url"
+
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/hltb_integration"
 	"github.com/arelate/southern_light/opencritic_integration"
@@ -10,8 +13,6 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/southern_light/wikipedia_integration"
 	"github.com/boggydigital/dolo"
-	"net/http"
-	"net/url"
 )
 
 const (
@@ -144,6 +145,15 @@ func GamesDbGogProduct(authHttpClient *http.Client, authBearer string) *Params {
 		HttpMethod:  http.MethodGet,
 		AuthBearer:  authBearer,
 		UserAgent:   GetDefaultUserAgent(),
+	}
+}
+
+func SteamAppList() *Params {
+	return &Params{
+		ProductType: vangogh_integration.SteamAppList,
+		UrlFunc:     steam_integration.AppListParamUrl,
+		HttpClient:  http.DefaultClient,
+		HttpMethod:  http.MethodGet,
 	}
 }
 

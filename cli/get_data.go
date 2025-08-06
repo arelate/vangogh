@@ -2,6 +2,11 @@ package cli
 
 import (
 	"encoding/json"
+	"maps"
+	"net/http"
+	"net/url"
+	"slices"
+
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/gog_data"
@@ -14,10 +19,6 @@ import (
 	"github.com/arelate/vangogh/cli/wikipedia_data"
 	"github.com/boggydigital/coost"
 	"github.com/boggydigital/kevlar"
-	"maps"
-	"net/http"
-	"net/url"
-	"slices"
 )
 
 var purchasesTypes = []vangogh_integration.ProductType{
@@ -205,6 +206,12 @@ func GetData(ids []string, productTypes []vangogh_integration.ProductType, since
 	if requiresSteamAppIds(productTypes...) {
 		steamGogIds, err = shared_data.GetSteamGogIds(maps.Keys(catalogAccountGames))
 		if err != nil {
+			return err
+		}
+	}
+
+	if slices.Contains(productTypes, vangogh_integration.SteamAppList) {
+		if err = steam_data.GetAppList(); err != nil {
 			return err
 		}
 	}
