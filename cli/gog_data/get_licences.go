@@ -2,6 +2,10 @@ package gog_data
 
 import (
 	"encoding/json"
+	"net/http"
+	"slices"
+	"time"
+
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
@@ -10,9 +14,6 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"net/http"
-	"slices"
-	"time"
 )
 
 func GetLicences(hc *http.Client, userAccessToken string) error {
@@ -83,7 +84,7 @@ func ReduceLicences(kvLicences kevlar.KeyValues) error {
 	}
 
 	key := vangogh_integration.LicencesProperty
-	if err := rdx.MustHave(key); err != nil {
+	if err = rdx.MustHave(key); err != nil {
 		return err
 	}
 
