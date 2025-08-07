@@ -222,7 +222,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 				ratingsReviews := srep
 
 				if srap, sure := rdx.GetLastVal(vangogh_integration.SummaryRatingProperty, id); sure {
-					ratingsReviews = compton_fragments.FmtAggregatedRating(srap)
+					ratingsReviews = compton_fragments.FmtRating(srap)
 				}
 
 				receptionBadges.Append(compton.BadgeText(p, ratingsReviews, receptionColor))
