@@ -1,8 +1,13 @@
 package compton_pages
 
 import (
+	"maps"
+	"net/url"
+	"slices"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
+	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/arelate/vangogh/rest/compton_styles"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
@@ -13,9 +18,6 @@ import (
 	"github.com/boggydigital/issa"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"maps"
-	"net/url"
-	"slices"
 )
 
 func Debug(gogId string) (compton.PageElement, error) {
@@ -64,6 +66,9 @@ func Debug(gogId string) (compton.PageElement, error) {
 
 	pageStack := compton.FlexItems(p, direction.Column)
 	p.Append(pageStack)
+
+	appNavLinks := compton_fragments.AppNavLinks(p, "")
+	pageStack.Append(compton.FICenter(p, appNavLinks))
 
 	ptHeading := compton.H1()
 	ptHeading.Append(compton.Fspan(p, productTitle).TextAlign(align.Center))
@@ -303,6 +308,9 @@ func Debug(gogId string) (compton.PageElement, error) {
 			reduxStack.Append(ds)
 		}
 	}
+
+	pageStack.Append(compton.Br(),
+		compton.Footer(p, "Bonjour d'Arles", "https://github.com/arelate"))
 
 	return p, nil
 }
