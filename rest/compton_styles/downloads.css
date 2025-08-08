@@ -15,6 +15,13 @@ a {
     }
 }
 
+.long-text {
+    & fspan {
+        overflow-wrap: anywhere;
+        --ta: unset;
+    }
+}
+
 hr.subtle {
     border-color: var(--c-background)
 }

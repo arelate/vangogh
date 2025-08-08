@@ -31,7 +31,7 @@ func GetInstallers(w http.ResponseWriter, r *http.Request) {
 				http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 				return
 			}
-			gameInstallersPage := compton_pages.GameInstallers(id, dls, rdx)
+			gameInstallersPage := compton_pages.Installers(id, dls, rdx)
 			if err = gameInstallersPage.WriteResponse(w); err != nil {
 				http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 				return

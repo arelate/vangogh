@@ -2,6 +2,11 @@ package compton_pages
 
 import (
 	"fmt"
+	"net/url"
+	"slices"
+	"strings"
+	"time"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
@@ -12,10 +17,6 @@ import (
 	"github.com/boggydigital/compton/consts/font_weight"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/redux"
-	"net/url"
-	"slices"
-	"strings"
-	"time"
 )
 
 type DownloadVariant struct {
@@ -50,10 +51,10 @@ var validationResultsFontWeights = map[vangogh_integration.ValidationResult]font
 	vangogh_integration.ValidatedChecksumMismatch:    font_weight.Bolder,
 }
 
-// GameInstallers will present available installers, DLCs in the following hierarchy:
+// Installers will present available installers, DLCs in the following hierarchy:
 // - Operating system heading - Installers and DLCs (separately)
 // - title_values list of downloads by version
-func GameInstallers(id string, dls vangogh_integration.DownloadsList, rdx redux.Readable) compton.PageElement {
+func Installers(id string, dls vangogh_integration.DownloadsList, rdx redux.Readable) compton.PageElement {
 
 	s := compton_fragments.ProductSection(compton_data.InstallersSection, id, rdx)
 
@@ -266,7 +267,8 @@ func downloadLink(r compton.Registrar,
 	if dl.EstimatedBytes > 0 {
 		sizeFr.PropVal("Size", vangogh_integration.FormatBytes(dl.EstimatedBytes))
 	}
-	sizeFr.PropVal("Manual URL", dl.ManualUrl)
+	pvManualUrl := sizeFr.PropVal("Manual URL", dl.ManualUrl)
+	pvManualUrl.AddClass("long-text")
 
 	linkContainer.Append(sizeFr)
 

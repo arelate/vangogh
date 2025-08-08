@@ -2,12 +2,13 @@ package compton_fragments
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/redux"
-	"strings"
 )
 
 var ValidationResultsColors = map[vangogh_integration.ValidationResult]color.Color{
