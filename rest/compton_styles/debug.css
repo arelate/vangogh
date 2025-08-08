@@ -6,7 +6,7 @@ pre {
 }
 
 .redux-data {
-    max-width: var(--s-maxw);
+    --mw: var(--s-maxw);
     word-break: break-all;
 }
 
