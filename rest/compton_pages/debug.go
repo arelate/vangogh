@@ -16,16 +16,10 @@ import (
 	"github.com/boggydigital/compton/consts/loading"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/issa"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
-func Debug(gogId string) (compton.PageElement, error) {
-
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return nil, err
-	}
+func Debug(gogId string, rdx redux.Readable) (compton.PageElement, error) {
 
 	rpm := make(map[string]any)
 	for _, p := range vangogh_integration.ReduxProperties() {
@@ -33,11 +27,6 @@ func Debug(gogId string) (compton.PageElement, error) {
 	}
 
 	reduxProperties := slices.Sorted(maps.Keys(rpm))
-
-	rdx, err := redux.NewReader(reduxDir, reduxProperties...)
-	if err != nil {
-		return nil, err
-	}
 
 	var productTitle string
 	if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, gogId); ok && title != "" {
