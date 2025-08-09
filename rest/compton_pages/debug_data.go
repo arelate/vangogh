@@ -3,6 +3,10 @@ package compton_pages
 import (
 	"bytes"
 	"encoding/json"
+	"io"
+	"strings"
+	"time"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_styles"
@@ -11,9 +15,6 @@ import (
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"io"
-	"strings"
-	"time"
 )
 
 func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageElement, error) {
@@ -28,7 +29,27 @@ func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageEleme
 		return nil, err
 	}
 
-	ptId, err := vangogh_integration.ProductTypeId(pt, id)
+	var pageProperty string
+
+	switch pt {
+	case vangogh_integration.OrderPage:
+		pageProperty = vangogh_integration.OrderPageProductsProperty
+	case vangogh_integration.AccountPage:
+		pageProperty = vangogh_integration.AccountPageProductsProperty
+	case vangogh_integration.CatalogPage:
+		pageProperty = vangogh_integration.CatalogPageProductsProperty
+	default:
+		// do nothing
+	}
+
+	productOrPageId := id
+	if pageProperty != "" {
+		if pageId, ok := rdx.GetLastVal(pageProperty, id); ok {
+			productOrPageId = pageId
+		}
+	}
+
+	ptId, err := vangogh_integration.ProductTypeId(pt, productOrPageId)
 	if err != nil {
 		return nil, err
 	}
