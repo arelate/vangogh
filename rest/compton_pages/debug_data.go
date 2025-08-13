@@ -154,7 +154,7 @@ func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageEleme
 	}
 
 	if productOrPageUrl != "" {
-		frow.PropLinkColor("Origin Data", color.Teal, "Link", productOrPageUrl)
+		frow.PropLinkColor("Source", color.Teal, "URL", productOrPageUrl)
 	}
 
 	if hasGetDataProperty {
