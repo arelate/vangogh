@@ -4,13 +4,21 @@ import (
 	"bytes"
 	"encoding/json"
 	"io"
+	"net/url"
 	"strings"
 	"time"
 
+	"github.com/arelate/southern_light/gog_integration"
+	"github.com/arelate/southern_light/opencritic_integration"
+	"github.com/arelate/southern_light/pcgw_integration"
+	"github.com/arelate/southern_light/protondb_integration"
+	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/southern_light/wikipedia_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_styles"
 	"github.com/boggydigital/compton"
+	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/pathways"
@@ -78,6 +86,51 @@ func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageEleme
 	p := compton.IframeExpandContent(pt.String(), title)
 	p.RegisterStyles(compton_styles.Styles, "debug.css")
 
+	var urlFunc func(id string) *url.URL
+
+	switch pt {
+	case vangogh_integration.CatalogPage:
+		urlFunc = gog_integration.CatalogPageUrl
+	case vangogh_integration.AccountPage:
+		urlFunc = gog_integration.AccountPageUrl
+	case vangogh_integration.ApiProducts:
+		urlFunc = gog_integration.ApiProductUrl
+	case vangogh_integration.OrderPage:
+		urlFunc = gog_integration.OrdersPageUrl
+	case vangogh_integration.Details:
+		urlFunc = gog_integration.DetailsUrl
+	case vangogh_integration.GamesDbGogProducts:
+		urlFunc = gog_integration.GamesDbGogExternalReleaseUrl
+	case vangogh_integration.SteamAppDetails:
+		urlFunc = steam_integration.AppDetailsUrl
+	case vangogh_integration.SteamAppNews:
+		urlFunc = steam_integration.NewsForAppUrl
+	case vangogh_integration.SteamAppReviews:
+		urlFunc = steam_integration.AppReviewsUrl
+	case vangogh_integration.SteamDeckCompatibilityReport:
+		urlFunc = steam_integration.DeckAppCompatibilityReportUrl
+	case vangogh_integration.PcgwGogPageId:
+		urlFunc = pcgw_integration.WikiGogUrl
+	case vangogh_integration.PcgwSteamPageId:
+		urlFunc = pcgw_integration.WikiSteamUrl
+	case vangogh_integration.PcgwRaw:
+		urlFunc = pcgw_integration.WikiRawUrl
+	case vangogh_integration.WikipediaRaw:
+		urlFunc = wikipedia_integration.WikiRawUrl
+	//case vangogh_integration.HltbData:
+	//requires buildId
+	//urlFunc = hltb_integration.DataUrl
+	case vangogh_integration.ProtonDbSummary:
+		urlFunc = protondb_integration.ProtonDBUrl
+	case vangogh_integration.OpenCriticApiGame:
+		urlFunc = opencritic_integration.ApiGameUrl
+	}
+
+	var productOrPageUrl string
+	if urlFunc != nil {
+		productOrPageUrl = urlFunc(productOrPageId).String()
+	}
+
 	hasGetDataProperty := false
 	frow := compton.Frow(p).FontSize(size.Small)
 
@@ -98,6 +151,10 @@ func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageEleme
 			return nil, err
 		}
 		hasGetDataProperty = true
+	}
+
+	if productOrPageUrl != "" {
+		frow.PropLinkColor("Origin Data", color.Teal, "Link", productOrPageUrl)
 	}
 
 	if hasGetDataProperty {
