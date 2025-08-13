@@ -2,6 +2,10 @@ package gog_data
 
 import (
 	"encoding/json"
+	"slices"
+	"strconv"
+	"time"
+
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
@@ -10,9 +14,6 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"slices"
-	"strconv"
-	"time"
 )
 
 const firstPageId = "1"
@@ -36,13 +37,14 @@ func fetchGogPages(pageReq *reqs.Params, kv kevlar.KeyValues, tpw nod.TotalProgr
 		return err
 	}
 
+	formattedNow := time.Now().UTC().Format(time.RFC3339)
+
 	if err = fetch.RequestSetValue(firstPageId, firstPageUrl, pageReq, kv); err != nil {
 
 		if err = rdx.ReplaceValues(vangogh_integration.GetDataErrorMessageProperty, ptId, err.Error()); err != nil {
 			return err
 		}
 
-		formattedNow := time.Now().UTC().Format(time.RFC3339)
 		if err = rdx.ReplaceValues(vangogh_integration.GetDataErrorDateProperty, ptId, formattedNow); err != nil {
 			return err
 		}
@@ -51,6 +53,11 @@ func fetchGogPages(pageReq *reqs.Params, kv kevlar.KeyValues, tpw nod.TotalProgr
 		// returning to continue original operation uninterrupted
 		return nil
 	}
+
+	if err = rdx.ReplaceValues(vangogh_integration.GetDataLastUpdatedProperty, ptId, formattedNow); err != nil {
+		return err
+	}
+
 	if tpw != nil {
 		tpw.Increment()
 	}
