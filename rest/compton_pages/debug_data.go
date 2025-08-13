@@ -110,9 +110,9 @@ func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageEleme
 	case vangogh_integration.SteamDeckCompatibilityReport:
 		urlFunc = steam_integration.DeckAppCompatibilityReportUrl
 	case vangogh_integration.PcgwGogPageId:
-		urlFunc = pcgw_integration.WikiGogUrl
+		urlFunc = pcgw_integration.GogPageIdCargoQueryUrl
 	case vangogh_integration.PcgwSteamPageId:
-		urlFunc = pcgw_integration.WikiSteamUrl
+		urlFunc = pcgw_integration.SteamPageIdCargoQueryUrl
 	case vangogh_integration.PcgwRaw:
 		urlFunc = pcgw_integration.WikiRawUrl
 	case vangogh_integration.WikipediaRaw:
@@ -121,7 +121,7 @@ func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageEleme
 	//requires buildId
 	//urlFunc = hltb_integration.DataUrl
 	case vangogh_integration.ProtonDbSummary:
-		urlFunc = protondb_integration.ProtonDBUrl
+		urlFunc = protondb_integration.SummaryUrl
 	case vangogh_integration.OpenCriticApiGame:
 		urlFunc = opencritic_integration.ApiGameUrl
 	}
