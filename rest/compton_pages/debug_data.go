@@ -147,14 +147,15 @@ func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageEleme
 		frow.PropVal("Error Message", errorMsg)
 		if errorDate, ok, err := rdx.ParseLastValTime(vangogh_integration.GetDataErrorDateProperty, ptId); ok && err == nil {
 			frow.PropVal("Error Date", errorDate.Local().Format(time.RFC1123))
+			hasGetDataProperty = true
 		} else if err != nil {
 			return nil, err
 		}
-		hasGetDataProperty = true
 	}
 
 	if productOrPageUrl != "" {
 		frow.PropLinkColor("Source", color.Teal, "URL", productOrPageUrl)
+		hasGetDataProperty = true
 	}
 
 	if hasGetDataProperty {
