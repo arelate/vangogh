@@ -59,10 +59,20 @@ func Debug(gogId string, rdx redux.Readable) (compton.PageElement, error) {
 	appNavLinks := compton_fragments.AppNavLinks(p, "")
 	pageStack.Append(compton.FICenter(p, appNavLinks))
 
-	ptHeading := compton.H1()
-	ptHeading.Append(compton.Fspan(p, productTitle).TextAlign(align.Center))
+	headingRow := compton.FlexItems(p, direction.Column).RowGap(size.XSmall)
 
-	pageStack.Append(compton.FICenter(p, ptHeading))
+	heading := compton.Heading(1)
+	heading.Append(compton.Fspan(p, productTitle).TextAlign(align.Center))
+	heading.SetAttribute("style", "view-transition-name:product-title-"+gogId)
+	headingRow.Append(heading)
+
+	subHeading := compton.Heading(2)
+	subHeading.Append(compton.Fspan(p, "Debug").
+		TextAlign(align.Center).
+		ForegroundColor(color.RepGray))
+	headingRow.Append(subHeading)
+
+	pageStack.Append(compton.FICenter(p, headingRow))
 
 	idsFrow := compton.Frow(p).FontSize(size.Small)
 	pageStack.Append(compton.FICenter(p, idsFrow))
