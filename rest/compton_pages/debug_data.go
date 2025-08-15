@@ -134,23 +134,26 @@ func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageEleme
 	hasGetDataProperty := false
 	frow := compton.Frow(p).FontSize(size.Small)
 
+	var lastUpdated time.Time
 	if rdx.HasKey(vangogh_integration.GetDataLastUpdatedProperty, ptId) {
-		if lastUpdated, ok, err := rdx.ParseLastValTime(vangogh_integration.GetDataLastUpdatedProperty, ptId); ok && err == nil {
+		var ok bool
+		if lastUpdated, ok, err = rdx.ParseLastValTime(vangogh_integration.GetDataLastUpdatedProperty, ptId); ok && err == nil {
 			frow.PropVal("Last Updated", lastUpdated.Local().Format(time.RFC1123))
 			hasGetDataProperty = true
 		} else if err != nil {
 			return nil, err
 		}
 	}
-
-	if errorMsg, ok := rdx.GetLastVal(vangogh_integration.GetDataErrorMessageProperty, ptId); ok && errorMsg != "" {
-		frow.PropVal("Error Message", errorMsg)
-		if errorDate, ok, err := rdx.ParseLastValTime(vangogh_integration.GetDataErrorDateProperty, ptId); ok && err == nil {
+	if errorDate, ok, err := rdx.ParseLastValTime(vangogh_integration.GetDataErrorDateProperty, ptId); ok && err == nil {
+		if errorDate.After(lastUpdated) {
 			frow.PropVal("Error Date", errorDate.Local().Format(time.RFC1123))
 			hasGetDataProperty = true
-		} else if err != nil {
-			return nil, err
+			if errorMsg, ok := rdx.GetLastVal(vangogh_integration.GetDataErrorMessageProperty, ptId); ok && errorMsg != "" {
+				frow.PropVal("Error Message", errorMsg)
+			}
 		}
+	} else if err != nil {
+		return nil, err
 	}
 
 	if productOrPageUrl != "" {
