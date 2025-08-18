@@ -144,6 +144,7 @@ func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageEleme
 			return nil, err
 		}
 	}
+
 	if errorDate, ok, err := rdx.ParseLastValTime(vangogh_integration.GetDataErrorDateProperty, ptId); ok && err == nil {
 		if errorDate.After(lastUpdated) {
 			frow.PropVal("Error Date", errorDate.Local().Format(time.RFC1123))

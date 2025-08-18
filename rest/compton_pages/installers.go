@@ -27,13 +27,6 @@ type DownloadVariant struct {
 	validationResult vangogh_integration.ValidationResult
 }
 
-var downloadTypesStrings = map[vangogh_integration.DownloadType]string{
-	vangogh_integration.Installer: "Installer",
-	vangogh_integration.DLC:       "DLC",
-	vangogh_integration.Extra:     "Extra",
-	vangogh_integration.Movie:     "Movie",
-}
-
 var downloadTypesColors = map[vangogh_integration.DownloadType]color.Color{
 	vangogh_integration.Installer: color.Purple,
 	vangogh_integration.DLC:       color.Indigo,
@@ -141,7 +134,7 @@ func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 	fr := compton.Frow(r).FontSize(size.XSmall)
 
 	fr.IconColor(compton.Circle, downloadTypesColors[dv.downloadType])
-	fr.Heading(downloadTypesStrings[dv.downloadType])
+	fr.Heading(dv.downloadType.HumanReadableString())
 
 	if dv.langCode != "" {
 		fr.PropVal("Lang", compton_data.LanguageFlags[dv.langCode])
