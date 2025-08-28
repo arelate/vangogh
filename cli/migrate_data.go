@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"slices"
 	"strconv"
+	"strings"
 
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
@@ -20,9 +21,10 @@ import (
 // 3. rename updates sections (remove old section titles)
 // 4. rename _binaries to _wine-binaries
 // 5. deprecate aggregated-rating property
+// 6. rename logs from year-month-date-hour-minute-second.log to sync-year-month-date-hour-minute-second.log
 
 const (
-	latestDataSchema = 5
+	latestDataSchema = 6
 )
 
 const deprecatedTypeErrors pathways.RelDir = "_type_errors"
@@ -95,6 +97,10 @@ func MigrateData(force bool) error {
 			}
 		case 4:
 			if err = deprecateAggregatedRatingProperty(); err != nil {
+				return err
+			}
+		case 5:
+			if err = removeOldLogs(); err != nil {
 				return err
 			}
 		}
@@ -237,4 +243,35 @@ func deprecateAggregatedRatingProperty() error {
 	}
 
 	return os.Remove(filepath.Join(reduxDir, aggregatedRatingProperty+kevlar.GobExt))
+}
+
+func removeOldLogs() error {
+
+	logsDir, err := pathways.GetAbsDir(vangogh_integration.Logs)
+	if err != nil {
+		return err
+	}
+
+	ld, err := os.Open(logsDir)
+	if err != nil {
+		return err
+	}
+
+	logs, err := ld.Readdirnames(-1)
+	if err != nil {
+		return err
+	}
+
+	for _, logName := range logs {
+		if strings.HasPrefix(logName, "sync") || !strings.HasSuffix(logName, ".log") {
+			continue
+		}
+
+		absLogPath := filepath.Join(logsDir, logName)
+		if err = os.Remove(absLogPath); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

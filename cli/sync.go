@@ -1,14 +1,15 @@
 package cli
 
 import (
-	"github.com/arelate/vangogh/cli/shared_data"
-	"github.com/boggydigital/pathways"
-	"github.com/boggydigital/redux"
 	"maps"
 	"net/url"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/arelate/vangogh/cli/shared_data"
+	"github.com/boggydigital/pathways"
+	"github.com/boggydigital/redux"
 
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
@@ -110,7 +111,7 @@ func Sync(
 		if err != nil {
 			return err
 		}
-		logger, err := nod.EnableFileLogger(absLogsDir)
+		logger, err := nod.EnableFileLogger("sync", absLogsDir)
 		if err != nil {
 			return err
 		}
