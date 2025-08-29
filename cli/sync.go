@@ -122,35 +122,35 @@ func Sync(
 	}
 
 	if err = setSyncEvent(vangogh_integration.SyncStartKey, syncEventsRdx); err != nil {
-		return err
+		return setSyncInterrupted(err, syncEventsRdx)
 	}
 
 	if err = GetData(nil, nil, since, syncOpts.purchases, true, force); err != nil {
-		return err
+		return setSyncInterrupted(err, syncEventsRdx)
 	}
 
 	if err = setSyncEvent(vangogh_integration.SyncDataKey, syncEventsRdx); err != nil {
-		return err
+		return setSyncInterrupted(err, syncEventsRdx)
 	}
 
 	if err = Reduce([]vangogh_integration.ProductType{vangogh_integration.UnknownProductType}); err != nil {
-		return err
+		return setSyncInterrupted(err, syncEventsRdx)
 	}
 
 	// summarize sync updates now, since other updates are digital artifacts
 	// and won't affect the summaries
 	if err = Summarize(syncStart); err != nil {
-		return err
+		return setSyncInterrupted(err, syncEventsRdx)
 	}
 
 	// get description images
 	if syncOpts.descriptionImages {
 		if err = GetDescriptionImages(nil, since, force); err != nil {
-			return err
+			return setSyncInterrupted(err, syncEventsRdx)
 		}
 
 		if err = setSyncEvent(vangogh_integration.SyncDescriptionImagesKey, syncEventsRdx); err != nil {
-			return err
+			return setSyncInterrupted(err, syncEventsRdx)
 		}
 	}
 
@@ -164,30 +164,30 @@ func Sync(
 			imageTypes = append(imageTypes, it)
 		}
 		if err = GetImages(nil, imageTypes, true, force); err != nil {
-			return err
+			return setSyncInterrupted(err, syncEventsRdx)
 		}
 
 		if err = setSyncEvent(vangogh_integration.SyncImagesKey, syncEventsRdx); err != nil {
-			return err
+			return setSyncInterrupted(err, syncEventsRdx)
 		}
 
 		dehydratedImageTypes := []vangogh_integration.ImageType{vangogh_integration.Image, vangogh_integration.VerticalImage}
 		if err = Dehydrate(nil, dehydratedImageTypes, false); err != nil {
-			return err
+			return setSyncInterrupted(err, syncEventsRdx)
 		}
 
 		if err = setSyncEvent(vangogh_integration.SyncDehydrateKey, syncEventsRdx); err != nil {
-			return err
+			return setSyncInterrupted(err, syncEventsRdx)
 		}
 	}
 
 	if syncOpts.videosMetadata {
 		if err = GetVideoMetadata(nil, true, false); err != nil {
-			return err
+			return setSyncInterrupted(err, syncEventsRdx)
 		}
 
 		if err = setSyncEvent(vangogh_integration.SyncVideoMetadataKey, syncEventsRdx); err != nil {
-			return err
+			return setSyncInterrupted(err, syncEventsRdx)
 		}
 	}
 
@@ -196,11 +196,11 @@ func Sync(
 
 		updatedDetails, err := shared_data.GetDetailsUpdates(since)
 		if err != nil {
-			return err
+			return setSyncInterrupted(err, syncEventsRdx)
 		}
 
 		if err = queueDownloads(maps.Keys(updatedDetails)); err != nil {
-			return err
+			return setSyncInterrupted(err, syncEventsRdx)
 		}
 
 		// process remaining queued downloads, e.g. downloads that were queued before this sync
@@ -215,11 +215,11 @@ func Sync(
 			downloadTypes,
 			noPatches,
 			downloadsLayout); err != nil {
-			return err
+			return setSyncInterrupted(err, syncEventsRdx)
 		}
 
 		if err = setSyncEvent(vangogh_integration.SyncDownloadsKey, syncEventsRdx); err != nil {
-			return err
+			return setSyncInterrupted(err, syncEventsRdx)
 		}
 
 		if cleanup {
@@ -231,11 +231,11 @@ func Sync(
 				downloadsLayout,
 				true,
 				false); err != nil {
-				return err
+				return setSyncInterrupted(err, syncEventsRdx)
 			}
 
 			if err = setSyncEvent(vangogh_integration.SyncCleanupKey, syncEventsRdx); err != nil {
-				return err
+				return setSyncInterrupted(err, syncEventsRdx)
 			}
 		}
 
@@ -243,30 +243,30 @@ func Sync(
 
 	if syncOpts.wineBinaries {
 		if err = GetWineBinaries(operatingSystems, force); err != nil {
-			return err
+			return setSyncInterrupted(err, syncEventsRdx)
 		}
 
 		if err = setSyncEvent(vangogh_integration.SyncWineBinaries, syncEventsRdx); err != nil {
-			return err
+			return setSyncInterrupted(err, syncEventsRdx)
 		}
 	}
 
 	// backing up data
 	if err = Backup(); err != nil {
-		return err
+		return setSyncInterrupted(err, syncEventsRdx)
 	}
 
 	if err = setSyncEvent(vangogh_integration.SyncBackup, syncEventsRdx); err != nil {
-		return err
+		return setSyncInterrupted(err, syncEventsRdx)
 	}
 
 	// print new, updated
 	if err = GetSummary(); err != nil {
-		return err
+		return setSyncInterrupted(err, syncEventsRdx)
 	}
 
 	if err = setSyncEvent(vangogh_integration.SyncCompleteKey, syncEventsRdx); err != nil {
-		return err
+		return setSyncInterrupted(err, syncEventsRdx)
 	}
 
 	return nil
@@ -286,4 +286,12 @@ func setSyncEvent(eventKey string, rdx redux.Writeable) error {
 	syncEvents[eventKey] = []string{strconv.Itoa(int(time.Now().Unix()))}
 
 	return rdx.BatchReplaceValues(vangogh_integration.SyncEventsProperty, syncEvents)
+}
+
+func setSyncInterrupted(err error, rdx redux.Writeable) error {
+	if sse := setSyncEvent(vangogh_integration.SyncInterruptedKey, rdx); sse != nil {
+		return errors.Join(sse, err)
+	}
+
+	return err
 }
