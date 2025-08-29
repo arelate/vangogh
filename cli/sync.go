@@ -1,8 +1,10 @@
 package cli
 
 import (
+	"errors"
 	"maps"
 	"net/url"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -119,14 +121,15 @@ func Sync(
 		return err
 	}
 
-	syncEvents := make(map[string][]string, 2)
-	syncEvents[vangogh_integration.SyncStartKey] = []string{strconv.Itoa(int(syncStart))}
-
-	if err = syncEventsRdx.BatchReplaceValues(vangogh_integration.SyncEventsProperty, syncEvents); err != nil {
+	if err = setSyncEvent(vangogh_integration.SyncStartKey, syncEventsRdx); err != nil {
 		return err
 	}
 
 	if err = GetData(nil, nil, since, syncOpts.purchases, true, force); err != nil {
+		return err
+	}
+
+	if err = setSyncEvent(vangogh_integration.SyncDataKey, syncEventsRdx); err != nil {
 		return err
 	}
 
@@ -145,6 +148,10 @@ func Sync(
 		if err = GetDescriptionImages(nil, since, force); err != nil {
 			return err
 		}
+
+		if err = setSyncEvent(vangogh_integration.SyncDescriptionImagesKey, syncEventsRdx); err != nil {
+			return err
+		}
 	}
 
 	// get images
@@ -160,14 +167,26 @@ func Sync(
 			return err
 		}
 
+		if err = setSyncEvent(vangogh_integration.SyncImagesKey, syncEventsRdx); err != nil {
+			return err
+		}
+
 		dehydratedImageTypes := []vangogh_integration.ImageType{vangogh_integration.Image, vangogh_integration.VerticalImage}
 		if err = Dehydrate(nil, dehydratedImageTypes, false); err != nil {
+			return err
+		}
+
+		if err = setSyncEvent(vangogh_integration.SyncDehydrateKey, syncEventsRdx); err != nil {
 			return err
 		}
 	}
 
 	if syncOpts.videosMetadata {
 		if err = GetVideoMetadata(nil, true, false); err != nil {
+			return err
+		}
+
+		if err = setSyncEvent(vangogh_integration.SyncVideoMetadataKey, syncEventsRdx); err != nil {
 			return err
 		}
 	}
@@ -199,6 +218,10 @@ func Sync(
 			return err
 		}
 
+		if err = setSyncEvent(vangogh_integration.SyncDownloadsKey, syncEventsRdx); err != nil {
+			return err
+		}
+
 		if cleanup {
 			if err = Cleanup(nil,
 				operatingSystems,
@@ -210,6 +233,10 @@ func Sync(
 				false); err != nil {
 				return err
 			}
+
+			if err = setSyncEvent(vangogh_integration.SyncCleanupKey, syncEventsRdx); err != nil {
+				return err
+			}
 		}
 
 	}
@@ -218,16 +245,18 @@ func Sync(
 		if err = GetWineBinaries(operatingSystems, force); err != nil {
 			return err
 		}
-	}
 
-	syncEvents[vangogh_integration.SyncCompleteKey] = []string{strconv.Itoa(int(time.Now().Unix()))}
-
-	if err = syncEventsRdx.BatchReplaceValues(vangogh_integration.SyncEventsProperty, syncEvents); err != nil {
-		return err
+		if err = setSyncEvent(vangogh_integration.SyncWineBinaries, syncEventsRdx); err != nil {
+			return err
+		}
 	}
 
 	// backing up data
 	if err = Backup(); err != nil {
+		return err
+	}
+
+	if err = setSyncEvent(vangogh_integration.SyncBackup, syncEventsRdx); err != nil {
 		return err
 	}
 
@@ -236,5 +265,25 @@ func Sync(
 		return err
 	}
 
+	if err = setSyncEvent(vangogh_integration.SyncCompleteKey, syncEventsRdx); err != nil {
+		return err
+	}
+
 	return nil
+}
+
+func setSyncEvent(eventKey string, rdx redux.Writeable) error {
+
+	if err := rdx.MustHave(vangogh_integration.SyncEventsProperty); err != nil {
+		return err
+	}
+
+	if !slices.Contains(vangogh_integration.SyncEventsKeys, eventKey) {
+		return errors.New("unknown sync event key: " + eventKey)
+	}
+
+	syncEvents := make(map[string][]string)
+	syncEvents[eventKey] = []string{strconv.Itoa(int(time.Now().Unix()))}
+
+	return rdx.BatchReplaceValues(vangogh_integration.SyncEventsProperty, syncEvents)
 }
