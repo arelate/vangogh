@@ -128,39 +128,39 @@ func Sync(
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {
-		return err
+		return nod.Error(err)
 	}
 
 	syncEventsRdx, err := redux.NewWriter(reduxDir, vangogh_integration.SyncEventsProperty)
 	if err != nil {
-		return err
+		return nod.Error(err)
 	}
 
 	syncEvents := make(map[string][]string, 2)
 	syncEvents[vangogh_integration.SyncStartKey] = []string{strconv.Itoa(int(syncStart))}
 
 	if err = syncEventsRdx.BatchReplaceValues(vangogh_integration.SyncEventsProperty, syncEvents); err != nil {
-		return err
+		return nod.Error(err)
 	}
 
 	if err = GetData(nil, nil, since, syncOpts.purchases, true, force); err != nil {
-		return err
+		return nod.Error(err)
 	}
 
 	if err = Reduce([]vangogh_integration.ProductType{vangogh_integration.UnknownProductType}); err != nil {
-		return err
+		return nod.Error(err)
 	}
 
 	// summarize sync updates now, since other updates are digital artifacts
 	// and won't affect the summaries
 	if err = Summarize(syncStart); err != nil {
-		return err
+		return nod.Error(err)
 	}
 
 	// get description images
 	if syncOpts.descriptionImages {
 		if err = GetDescriptionImages(nil, since, force); err != nil {
-			return err
+			return nod.Error(err)
 		}
 	}
 
@@ -174,18 +174,18 @@ func Sync(
 			imageTypes = append(imageTypes, it)
 		}
 		if err = GetImages(nil, imageTypes, true, force); err != nil {
-			return err
+			return nod.Error(err)
 		}
 
 		dehydratedImageTypes := []vangogh_integration.ImageType{vangogh_integration.Image, vangogh_integration.VerticalImage}
 		if err = Dehydrate(nil, dehydratedImageTypes, false); err != nil {
-			return err
+			return nod.Error(err)
 		}
 	}
 
 	if syncOpts.videosMetadata {
 		if err = GetVideoMetadata(nil, true, false); err != nil {
-			return err
+			return nod.Error(err)
 		}
 	}
 
@@ -194,11 +194,11 @@ func Sync(
 
 		updatedDetails, err := shared_data.GetDetailsUpdates(since)
 		if err != nil {
-			return err
+			return nod.Error(err)
 		}
 
 		if err = queueDownloads(maps.Keys(updatedDetails)); err != nil {
-			return err
+			return nod.Error(err)
 		}
 
 		// process remaining queued downloads, e.g. downloads that were queued before this sync
@@ -213,7 +213,7 @@ func Sync(
 			downloadTypes,
 			noPatches,
 			downloadsLayout); err != nil {
-			return err
+			return nod.Error(err)
 		}
 
 		if cleanup {
@@ -225,7 +225,7 @@ func Sync(
 				downloadsLayout,
 				true,
 				false); err != nil {
-				return err
+				return nod.Error(err)
 			}
 		}
 
@@ -233,21 +233,25 @@ func Sync(
 
 	if syncOpts.wineBinaries {
 		if err = GetWineBinaries(operatingSystems, force); err != nil {
-			return err
+			return nod.Error(err)
 		}
 	}
 
 	syncEvents[vangogh_integration.SyncCompleteKey] = []string{strconv.Itoa(int(time.Now().Unix()))}
 
 	if err = syncEventsRdx.BatchReplaceValues(vangogh_integration.SyncEventsProperty, syncEvents); err != nil {
-		return err
+		return nod.Error(err)
 	}
 
 	// backing up data
 	if err = Backup(); err != nil {
-		return err
+		return nod.Error(err)
 	}
 
 	// print new, updated
-	return GetSummary()
+	if err = GetSummary(); err != nil {
+		return nod.Error(err)
+	}
+
+	return nil
 }

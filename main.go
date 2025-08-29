@@ -41,7 +41,7 @@ func main() {
 		vangogh_integration.DefaultRootDir,
 		vangogh_integration.RelToAbsDirs,
 		vangogh_integration.AllAbsDirs...); err != nil {
-		log.Fatalln(nod.Error(err))
+		log.Fatalln(err)
 	}
 
 	defs, err := clo.Load(
@@ -49,7 +49,7 @@ func main() {
 		bytes.NewBuffer(cliHelp),
 		clo_delegates.FuncMap)
 	if err != nil {
-		log.Fatalln(nod.Error(err))
+		log.Fatalln(err)
 	}
 
 	clo.HandleFuncs(map[string]clo.Handler{
@@ -78,10 +78,10 @@ func main() {
 	})
 
 	if err = defs.AssertCommandsHaveHandlers(); err != nil {
-		log.Fatalln(nod.Error(err))
+		log.Fatalln(err)
 	}
 
 	if err = defs.Serve(os.Args[1:]); err != nil {
-		log.Fatalln(nod.Error(err))
+		log.Fatalln(err)
 	}
 }
