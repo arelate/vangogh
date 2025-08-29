@@ -8,6 +8,7 @@ import (
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
+	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/pathways"
@@ -58,6 +59,12 @@ func Logs(rdx redux.Readable) compton.PageElement {
 		logLink := compton.A("/logs?id=" + fn)
 		logLink.Append(compton.Fspan(p, fn).TextAlign(align.Center))
 		logList.Append(logLink)
+	}
+
+	if len(files) == 0 {
+		logList.Append(compton.Fspan(p, "No logs found on this server.").
+			ForegroundColor(color.RepGray).
+			TextAlign(align.Center))
 	}
 
 	pageStack.Append(compton.Br(), logList)
