@@ -7,6 +7,7 @@ import (
 
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/compton"
+	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/redux"
 )
@@ -30,9 +31,21 @@ func Updated(r compton.Registrar, rdx redux.Readable) compton.Element {
 		}
 	}
 
-	syncEventFrow := compton.Frow(r).FontSize(size.XXSmall)
-	syncStatus := fmt.Sprintf("%s: %s", syncStatusTitle, vangogh_integration.SyncEventsTitles[syncEvent])
-	syncEventFrow.PropVal(syncStatus, syncEventTime.Format(time.RFC1123))
+	var syncStatusColor color.Color
+	switch syncEvent {
+	case vangogh_integration.SyncCompleteKey:
+		syncStatusColor = color.Green
+	case vangogh_integration.SyncInterruptedKey:
+		syncStatusColor = color.Red
+	default:
+		syncStatusColor = color.Yellow
+	}
 
-	return compton.FICenter(r, syncEventFrow).FontSize(size.XXSmall).ColumnGap(size.Small)
+	syncStatusFrow := compton.Frow(r).FontSize(size.XXSmall)
+
+	syncStatusTitle := fmt.Sprintf("%s: %s", syncStatusTitle, vangogh_integration.SyncEventsTitles[syncEvent])
+	syncStatusFrow.IconColor(compton.SmallerCircle, syncStatusColor)
+	syncStatusFrow.PropVal(syncStatusTitle, syncEventTime.Format(time.RFC1123))
+
+	return compton.FICenter(r, syncStatusFrow).FontSize(size.XXSmall).ColumnGap(size.Small)
 }
