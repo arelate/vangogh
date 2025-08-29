@@ -19,6 +19,7 @@ import (
 	"github.com/arelate/vangogh/cli/wikipedia_data"
 	"github.com/boggydigital/coost"
 	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/nod"
 )
 
 var purchasesTypes = []vangogh_integration.ProductType{
@@ -116,13 +117,14 @@ func GetData(ids []string, productTypes []vangogh_integration.ProductType, since
 	if requiresUserAccessToken(productTypes...) {
 
 		if err = gog_data.GetUserAccessToken(hc); err != nil {
-			return err
+			nod.LogError(err)
+		} else {
+			uat, err = readUserAccessToken()
+			if err != nil {
+				return err
+			}
 		}
 
-		uat, err = readUserAccessToken()
-		if err != nil {
-			return err
-		}
 	}
 
 	if slices.Contains(productTypes, vangogh_integration.Licences) {
