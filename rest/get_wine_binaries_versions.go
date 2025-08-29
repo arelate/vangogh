@@ -2,16 +2,19 @@ package rest
 
 import (
 	"encoding/json"
+	"net/http"
+	"path"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/southern_light/wine_integration"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
-	"net/http"
-	"path"
 )
 
 func GetWineBinariesVersions(w http.ResponseWriter, r *http.Request) {
+
+	// GET /api/wine-binaries-versions
 
 	binariesVersions := make([]vangogh_integration.WineBinaryDetails, 0, len(wine_integration.OsWineBinaries))
 

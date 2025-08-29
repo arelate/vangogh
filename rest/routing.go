@@ -2,10 +2,11 @@ package rest
 
 import (
 	_ "embed"
+	"net/http"
+
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/boggydigital/middleware"
 	"github.com/boggydigital/nod"
-	"net/http"
 )
 
 var (
@@ -35,6 +36,7 @@ func HandleFuncs() {
 		"GET /compatibility": Log(http.HandlerFunc(GetCompatibility)),
 		"GET /installers":    Log(http.HandlerFunc(GetInstallers)),
 		"GET /wine-binaries": Log(http.HandlerFunc(GetWineBinaries)),
+		"GET /logs":          Log(http.HandlerFunc(GetLogs)),
 		// public media endpoints
 		"GET /image":               Log(http.HandlerFunc(GetImage)),
 		"GET /description-images/": Log(http.HandlerFunc(GetDescriptionImages)),
