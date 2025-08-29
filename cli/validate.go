@@ -4,15 +4,16 @@ import (
 	"crypto/md5"
 	"encoding/xml"
 	"fmt"
+	"net/url"
+	"os"
+	"path/filepath"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"net/url"
-	"os"
-	"path/filepath"
 )
 
 func ValidateHandler(u *url.URL) error {

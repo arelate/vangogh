@@ -76,11 +76,7 @@ func SyncHandler(u *url.URL) error {
 		return err
 	}
 
-	debug := vangogh_integration.FlagFromUrl(u, "debug")
-
-	force := u.Query().Has("force")
-
-	cleanup := !vangogh_integration.FlagFromUrl(u, "no-cleanup")
+	q := u.Query()
 
 	return Sync(
 		since,
@@ -88,11 +84,10 @@ func SyncHandler(u *url.URL) error {
 		vangogh_integration.OperatingSystemsFromUrl(u),
 		vangogh_integration.LanguageCodesFromUrl(u),
 		vangogh_integration.DownloadTypesFromUrl(u),
-		vangogh_integration.FlagFromUrl(u, "no-patches"),
+		q.Has("no-patches"),
 		vangogh_integration.DownloadsLayoutFromUrl(u),
-		cleanup,
-		debug,
-		force)
+		!q.Has("no-cleanup"),
+		q.Has("force"))
 }
 
 func Sync(
@@ -104,21 +99,9 @@ func Sync(
 	noPatches bool,
 	downloadsLayout vangogh_integration.DownloadsLayout,
 	cleanup bool,
-	debug, force bool) error {
+	force bool) error {
 
-	if debug {
-		absLogsDir, err := pathways.GetAbsDir(vangogh_integration.Logs)
-		if err != nil {
-			return err
-		}
-		logger, err := nod.EnableFileLogger("sync", absLogsDir)
-		if err != nil {
-			return err
-		}
-		defer logger.Close()
-	}
-
-	sa := nod.Begin("syncing source data...")
+	sa := nod.Begin("syncing data...")
 	defer sa.Done()
 
 	syncStart := since
@@ -128,39 +111,39 @@ func Sync(
 
 	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
 	if err != nil {
-		return nod.Error(err)
+		return err
 	}
 
 	syncEventsRdx, err := redux.NewWriter(reduxDir, vangogh_integration.SyncEventsProperty)
 	if err != nil {
-		return nod.Error(err)
+		return err
 	}
 
 	syncEvents := make(map[string][]string, 2)
 	syncEvents[vangogh_integration.SyncStartKey] = []string{strconv.Itoa(int(syncStart))}
 
 	if err = syncEventsRdx.BatchReplaceValues(vangogh_integration.SyncEventsProperty, syncEvents); err != nil {
-		return nod.Error(err)
+		return err
 	}
 
 	if err = GetData(nil, nil, since, syncOpts.purchases, true, force); err != nil {
-		return nod.Error(err)
+		return err
 	}
 
 	if err = Reduce([]vangogh_integration.ProductType{vangogh_integration.UnknownProductType}); err != nil {
-		return nod.Error(err)
+		return err
 	}
 
 	// summarize sync updates now, since other updates are digital artifacts
 	// and won't affect the summaries
 	if err = Summarize(syncStart); err != nil {
-		return nod.Error(err)
+		return err
 	}
 
 	// get description images
 	if syncOpts.descriptionImages {
 		if err = GetDescriptionImages(nil, since, force); err != nil {
-			return nod.Error(err)
+			return err
 		}
 	}
 
@@ -174,18 +157,18 @@ func Sync(
 			imageTypes = append(imageTypes, it)
 		}
 		if err = GetImages(nil, imageTypes, true, force); err != nil {
-			return nod.Error(err)
+			return err
 		}
 
 		dehydratedImageTypes := []vangogh_integration.ImageType{vangogh_integration.Image, vangogh_integration.VerticalImage}
 		if err = Dehydrate(nil, dehydratedImageTypes, false); err != nil {
-			return nod.Error(err)
+			return err
 		}
 	}
 
 	if syncOpts.videosMetadata {
 		if err = GetVideoMetadata(nil, true, false); err != nil {
-			return nod.Error(err)
+			return err
 		}
 	}
 
@@ -194,11 +177,11 @@ func Sync(
 
 		updatedDetails, err := shared_data.GetDetailsUpdates(since)
 		if err != nil {
-			return nod.Error(err)
+			return err
 		}
 
 		if err = queueDownloads(maps.Keys(updatedDetails)); err != nil {
-			return nod.Error(err)
+			return err
 		}
 
 		// process remaining queued downloads, e.g. downloads that were queued before this sync
@@ -213,7 +196,7 @@ func Sync(
 			downloadTypes,
 			noPatches,
 			downloadsLayout); err != nil {
-			return nod.Error(err)
+			return err
 		}
 
 		if cleanup {
@@ -225,7 +208,7 @@ func Sync(
 				downloadsLayout,
 				true,
 				false); err != nil {
-				return nod.Error(err)
+				return err
 			}
 		}
 
@@ -233,24 +216,24 @@ func Sync(
 
 	if syncOpts.wineBinaries {
 		if err = GetWineBinaries(operatingSystems, force); err != nil {
-			return nod.Error(err)
+			return err
 		}
 	}
 
 	syncEvents[vangogh_integration.SyncCompleteKey] = []string{strconv.Itoa(int(time.Now().Unix()))}
 
 	if err = syncEventsRdx.BatchReplaceValues(vangogh_integration.SyncEventsProperty, syncEvents); err != nil {
-		return nod.Error(err)
+		return err
 	}
 
 	// backing up data
 	if err = Backup(); err != nil {
-		return nod.Error(err)
+		return err
 	}
 
 	// print new, updated
 	if err = GetSummary(); err != nil {
-		return nod.Error(err)
+		return err
 	}
 
 	return nil

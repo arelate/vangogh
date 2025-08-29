@@ -7,8 +7,8 @@ package main
 import (
 	"bytes"
 	_ "embed"
-	_ "image/jpeg"
 	"log"
+	"net/url"
 	"os"
 
 	"github.com/arelate/southern_light/vangogh_integration"
@@ -26,16 +26,15 @@ var (
 	cliHelp []byte
 )
 
-const (
-	dirsOverrideFilename = "directories.txt"
-)
+const dirsOverrideFilename = "directories.txt"
+const debugParam = "debug"
 
 func main() {
 
 	nod.EnableStdOutPresenter()
 
-	ns := nod.Begin("vangogh is serving your DRM-free needs")
-	defer ns.Done()
+	vsa := nod.Begin("vangogh is serving your DRM-free needs")
+	defer vsa.Done()
 
 	if err := pathways.Setup(dirsOverrideFilename,
 		vangogh_integration.DefaultRootDir,
@@ -81,7 +80,26 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	if err = defs.Serve(os.Args[1:]); err != nil {
+	var u *url.URL
+	u, err = defs.Parse(os.Args[1:])
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	if q := u.Query(); q.Has(debugParam) {
+		absLogsDir, err := pathways.GetAbsDir(vangogh_integration.Logs)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		logger, err := nod.EnableFileLogger(u.Path, absLogsDir)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		defer logger.Close()
+	}
+
+	if err = defs.Serve(u); err != nil {
+		vsa.Error(err)
 		log.Fatalln(err)
 	}
 }
