@@ -15,6 +15,11 @@ func GetLogs(w http.ResponseWriter, r *http.Request) {
 
 	// GET /logs?log
 
+	if err := RefreshRedux(); err != nil {
+		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+		return
+	}
+
 	id := r.URL.Query().Get("id")
 	if id != "" {
 		absLogsDir, err := pathways.GetAbsDir(vangogh_integration.Logs)
@@ -40,7 +45,7 @@ func GetLogs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	logsPage := compton_pages.Logs()
+	logsPage := compton_pages.Logs(rdx)
 	if err := logsPage.WriteResponse(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}

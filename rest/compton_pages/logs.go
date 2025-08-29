@@ -11,9 +11,10 @@ import (
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/pathways"
+	"github.com/boggydigital/redux"
 )
 
-func Logs() compton.PageElement {
+func Logs(rdx redux.Readable) compton.PageElement {
 
 	title := "Logs"
 
@@ -61,8 +62,9 @@ func Logs() compton.PageElement {
 
 	pageStack.Append(compton.Br(), logList)
 
-	pageStack.Append(compton.Br(),
-		compton.Footer(p, "Bonjour d'Arles", "https://github.com/arelate"))
+	pageStack.Append(compton.Br(), compton_fragments.Updated(p, rdx))
+
+	pageStack.Append(compton.Footer(p, "Bonjour d'Arles", "https://github.com/arelate"))
 
 	return p
 }
