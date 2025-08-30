@@ -42,7 +42,7 @@ services:
       - /docker/vangogh/backups:/var/lib/vangogh/backups
       # downloads (cold storage)
       - /docker/vangogh/downloads:/var/lib/vangogh/downloads
-      # checksums (hot storage)
+      # checksums (cold storage)
       - /docker/vangogh/checksums:/var/lib/vangogh/checksums
       # images (hot storage)
       - /docker/vangogh/images:/var/lib/vangogh/images
