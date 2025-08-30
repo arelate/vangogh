@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_pages"
@@ -21,7 +22,16 @@ func GetLogs(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := r.URL.Query().Get("id")
+
+	if strings.Contains(id, "/") ||
+		strings.Contains(id, "\\") ||
+		strings.Contains(id, "..") {
+		http.Error(w, "Invalid log name", http.StatusBadRequest)
+		return
+	}
+
 	if id != "" {
+
 		absLogsDir, err := pathways.GetAbsDir(vangogh_integration.Logs)
 		if err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
@@ -31,7 +41,7 @@ func GetLogs(w http.ResponseWriter, r *http.Request) {
 		relFilename := filepath.Base(id)
 
 		absFilepath := filepath.Join(absLogsDir, relFilename)
-		if _, err := os.Stat(absFilepath); os.IsNotExist(err) {
+		if _, err = os.Stat(absFilepath); os.IsNotExist(err) {
 			http.NotFound(w, r)
 			return
 		} else if err != nil {
