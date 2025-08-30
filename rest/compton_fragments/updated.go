@@ -1,7 +1,6 @@
 package compton_fragments
 
 import (
-	"fmt"
 	"strconv"
 	"time"
 
@@ -17,18 +16,23 @@ const syncStatusTitle = "Sync status"
 func Updated(r compton.Registrar, rdx redux.Readable) compton.Element {
 
 	var syncEvent string
-	var syncEventTime time.Time
+	var syncEventTimestamp int64
 
 	for _, se := range vangogh_integration.SyncEventsKeys {
 		if sss, ok := rdx.GetLastVal(vangogh_integration.SyncEventsProperty, se); ok {
 			if sci, err := strconv.ParseInt(sss, 10, 64); err == nil {
-				set := time.Unix(sci, 0)
-				if set.After(syncEventTime) {
-					syncEvent = se
-					syncEventTime = set
+				if sci >= syncEventTimestamp {
+
 				}
+				syncEvent = se
+				syncEventTimestamp = sci
 			}
 		}
+	}
+
+	syncEventDateText := "Never"
+	if syncEventTimestamp > 0 {
+		syncEventDateText = time.Unix(syncEventTimestamp, 0).Format(time.RFC1123)
 	}
 
 	var syncStatusColor color.Color
@@ -43,9 +47,9 @@ func Updated(r compton.Registrar, rdx redux.Readable) compton.Element {
 
 	syncStatusFrow := compton.Frow(r).FontSize(size.XXSmall)
 
-	syncStatusTitle := fmt.Sprintf("%s: %s", syncStatusTitle, vangogh_integration.SyncEventsTitles[syncEvent])
+	syncStatusFrow.Heading(syncStatusTitle)
 	syncStatusFrow.IconColor(compton.SmallerCircle, syncStatusColor)
-	syncStatusFrow.PropVal(syncStatusTitle, syncEventTime.Format(time.RFC1123))
+	syncStatusFrow.PropVal(vangogh_integration.SyncEventsTitles[syncEvent], syncEventDateText)
 
 	return compton.FICenter(r, syncStatusFrow).FontSize(size.XXSmall).ColumnGap(size.Small)
 }
