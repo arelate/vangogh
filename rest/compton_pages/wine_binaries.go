@@ -52,10 +52,10 @@ func WineBinaries() compton.PageElement {
 				continue
 			}
 
-			binaryTitleName := "Title"
+			//binaryTitleName := "Title"
 			binaryTitle := binary.Title
 			if binaryTitle == "" {
-				binaryTitleName = "Repo"
+				//binaryTitleName = "Repo"
 				binaryTitle = binary.GitHubOwnerRepo
 			}
 
@@ -72,7 +72,7 @@ func WineBinaries() compton.PageElement {
 			linkFrow := compton.Frow(p).FontSize(size.Small)
 			link.Append(compton.FICenter(p, linkFrow))
 
-			linkFrow.PropVal(binaryTitleName, binaryTitle)
+			linkFrow.Heading(binaryTitle)
 			if binaryVersion != "" {
 				linkFrow.PropVal("Version", binaryVersion)
 			}

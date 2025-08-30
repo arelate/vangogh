@@ -22,10 +22,9 @@ func Updated(r compton.Registrar, rdx redux.Readable) compton.Element {
 		if sss, ok := rdx.GetLastVal(vangogh_integration.SyncEventsProperty, se); ok {
 			if sci, err := strconv.ParseInt(sss, 10, 64); err == nil {
 				if sci >= syncEventTimestamp {
-
+					syncEvent = se
+					syncEventTimestamp = sci
 				}
-				syncEvent = se
-				syncEventTimestamp = sci
 			}
 		}
 	}
