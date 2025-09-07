@@ -1,9 +1,12 @@
 package cli
 
 import (
+	"net/url"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
-	"net/url"
+	"github.com/boggydigital/pathways"
+	"github.com/boggydigital/redux"
 )
 
 func ProcessQueueHandler(u *url.URL) error {
@@ -26,6 +29,21 @@ func ProcessQueue(
 	defer pqa.Done()
 
 	queuedIds, err := getQueuedDownloads()
+	if err != nil {
+		return err
+	}
+
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return err
+	}
+
+	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.GOGOrderDateProperty)
+	if err != nil {
+		return err
+	}
+
+	queuedIds, err = rdx.Sort(queuedIds, true, vangogh_integration.GOGOrderDateProperty)
 	if err != nil {
 		return err
 	}
