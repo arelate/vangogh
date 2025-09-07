@@ -1,6 +1,8 @@
 package shared_data
 
 import (
+	"slices"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
@@ -20,6 +22,11 @@ func reduceTypes(rdx redux.Writeable) error {
 
 	idsTypes := make(map[string][]string)
 
+	// clear all existing values
+	if err := rdx.CutKeys(vangogh_integration.TypesProperty, slices.Collect(rdx.Keys(vangogh_integration.TypesProperty))...); err != nil {
+		return err
+	}
+
 	for pt := range vangogh_integration.AllProductTypes() {
 
 		if pt == vangogh_integration.UnknownProductType {
@@ -31,9 +38,14 @@ func reduceTypes(rdx redux.Writeable) error {
 			return err
 		}
 
-		ext := kevlar.JsonExt
-		if pt == vangogh_integration.PcgwRaw {
-			ext = ".txt"
+		var ext string
+		switch pt {
+		case vangogh_integration.WikipediaRaw:
+			fallthrough
+		case vangogh_integration.PcgwRaw:
+			ext = kevlar.TxtExt
+		default:
+			ext = kevlar.JsonExt
 		}
 
 		kvPt, err := kevlar.New(ptDir, ext)
