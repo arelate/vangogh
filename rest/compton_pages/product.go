@@ -3,6 +3,10 @@ package compton_pages
 import (
 	_ "embed"
 	"fmt"
+	"slices"
+	"strings"
+	"time"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
@@ -16,9 +20,6 @@ import (
 	"github.com/boggydigital/issa"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/redux"
-	"slices"
-	"strings"
-	"time"
 )
 
 var openSections = []string{
@@ -58,7 +59,7 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 	/* Product title */
 
-	productTitle := compton.Heading(1)
+	productTitle := compton.Heading(2)
 	productTitle.Append(compton.Fspan(p, title).TextAlign(align.Center))
 	productTitle.SetAttribute("style", "view-transition-name:product-title-"+id)
 
