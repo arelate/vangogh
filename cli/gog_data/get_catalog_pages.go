@@ -3,6 +3,9 @@ package gog_data
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
+	"strconv"
+
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/reqs"
@@ -11,8 +14,6 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"net/http"
-	"strconv"
 )
 
 const demoStoreTag = "Demo"
@@ -32,7 +33,7 @@ func GetCatalogPages(hc *http.Client, uat string, since int64, force bool) error
 		return err
 	}
 
-	if err = fetchGogPages(reqs.CatalogPage(hc, uat), kvCatalogPages, gcpa, true); err != nil {
+	if err = fetchCatalogPages(reqs.CatalogPage(hc, uat), kvCatalogPages, gcpa); err != nil {
 		return err
 	}
 
