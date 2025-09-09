@@ -3,6 +3,9 @@ package gog_data
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
+	"time"
+
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/reqs"
@@ -11,8 +14,6 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"net/http"
-	"time"
 )
 
 func GetOrderPages(hc *http.Client, uat string, since int64, force bool) error {
@@ -109,6 +110,11 @@ func reduceOrderPage(page string, kvOrderPages kevlar.KeyValues, piv shared_data
 					}
 				case vangogh_integration.OrderPageProductsProperty:
 					piv[property][id] = []string{page}
+				case vangogh_integration.ImageProperty:
+					// order image should be used only when not sourced from primary type (e.g. catalog)
+					if !rdx.HasKey(vangogh_integration.ImageProperty, id) {
+						piv[property][id] = []string{gog_integration.ImageId(orderProduct.GetImage())}
+					}
 				}
 			}
 		}
