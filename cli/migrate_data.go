@@ -24,7 +24,7 @@ import (
 // 6. rename logs from year-month-date-hour-minute-second.log to sync-year-month-date-hour-minute-second.log
 
 const (
-	latestDataSchema = 6
+	latestDataSchema = 7
 )
 
 const deprecatedTypeErrors pathways.RelDir = "_type_errors"
@@ -42,6 +42,10 @@ const (
 
 const (
 	aggregatedRatingProperty = "aggregated-rating"
+)
+
+const (
+	totalCatalogPages = 113
 )
 
 func MigrateDataHandler(u *url.URL) error {
@@ -101,6 +105,10 @@ func MigrateData(force bool) error {
 			}
 		case 5:
 			if err = removeOldLogs(); err != nil {
+				return err
+			}
+		case 6:
+			if err = removeOldLimitCatalogPages(); err != nil {
 				return err
 			}
 		}
@@ -269,6 +277,36 @@ func removeOldLogs() error {
 
 		absLogPath := filepath.Join(logsDir, logName)
 		if err = os.Remove(absLogPath); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func removeOldLimitCatalogPages() error {
+
+	catalogPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.CatalogPage)
+	if err != nil {
+		return err
+	}
+
+	kvCatalogPages, err := kevlar.New(catalogPagesDir, kevlar.JsonExt)
+	if err != nil {
+		return err
+	}
+
+	for page := range kvCatalogPages.Keys() {
+
+		if pi, err := strconv.ParseInt(page, 10, 32); err == nil {
+			if pi <= totalCatalogPages {
+				continue
+			}
+
+			if err = kvCatalogPages.Cut(page); err != nil {
+				return err
+			}
+		} else {
 			return err
 		}
 	}

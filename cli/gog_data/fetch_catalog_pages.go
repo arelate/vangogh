@@ -29,38 +29,36 @@ func fetchCatalogPages(catalogPageReq *reqs.Params, kvCatalogPages kevlar.KeyVal
 
 	currentCatalogPage := 1
 	lastExternalProductId := ""
-	productCount := 0
+	productCount, totalPages := 0, 0
 
 	for {
 		if err = fetchCatalogPage(currentCatalogPage, lastExternalProductId, catalogPageReq, kvCatalogPages, rdx); err != nil {
 			return err
 		}
 
-		if productCount == 0 {
-			productCount, err = getProductCount(currentCatalogPage, kvCatalogPages)
-			if err != nil {
-				return err
-			}
-
-			if productCount > 0 && tpw != nil {
-				// 12345 / 100 = 123
-				// + one page for the remaining 45 products (12345 - 12300)
-				// + the last resulting page with empty products list
-				tpw.TotalInt((productCount / gog_integration.CatalogPagesProductsLimit) + 1 + 1)
-			}
-		}
-
-		if tpw != nil {
-			tpw.Increment()
-		}
-
-		lastExternalProductId, err = getLastExternalProductId(currentCatalogPage, kvCatalogPages)
+		productCount, lastExternalProductId, err = getProductCountLastId(currentCatalogPage, kvCatalogPages)
 		if err != nil {
 			return err
 		}
 
+		if totalPages == 0 && productCount > 0 && tpw != nil {
+			// 12345 / 100 = 123
+			// + one page for the remaining 45 products (12345 - 12300)
+			// + the last resulting page with empty products list
+			totalPages = productCount / gog_integration.CatalogPagesProductsLimit
+			if totalPages*gog_integration.CatalogPagesProductsLimit < productCount {
+				totalPages++
+			}
+			totalPages++
+			tpw.TotalInt(totalPages)
+		}
+
 		if lastExternalProductId == "" {
 			break
+		}
+
+		if tpw != nil {
+			tpw.Increment()
 		}
 
 		currentCatalogPage++
@@ -97,39 +95,23 @@ func fetchCatalogPage(currentPage int, searchAfter string, pageReq *reqs.Params,
 	return rdx.ReplaceValues(vangogh_integration.GetDataLastUpdatedProperty, ptId, formattedNow)
 }
 
-func getLastExternalProductId(currentPage int, kvCatalogPage kevlar.KeyValues) (string, error) {
+func getProductCountLastId(currentPage int, kvCatalogPage kevlar.KeyValues) (int, string, error) {
 
 	rcCatalogPage, err := kvCatalogPage.Get(strconv.Itoa(currentPage))
 	if err != nil {
-		return "", err
+		return -1, "", err
 	}
 	defer rcCatalogPage.Close()
 
 	var catalogPage gog_integration.CatalogPage
 	if err = json.NewDecoder(rcCatalogPage).Decode(&catalogPage); err != nil {
-		return "", err
+		return -1, "", err
 	}
 
 	switch len(catalogPage.Products) {
 	case 0:
-		return "", nil
+		return -1, "", nil
 	default:
-		return catalogPage.Products[len(catalogPage.Products)-1].Id, nil
+		return catalogPage.ProductCount, catalogPage.Products[len(catalogPage.Products)-1].Id, nil
 	}
-}
-
-func getProductCount(currentPage int, kvCatalogPage kevlar.KeyValues) (int, error) {
-
-	rcCatalogPage, err := kvCatalogPage.Get(strconv.Itoa(currentPage))
-	if err != nil {
-		return -1, err
-	}
-	defer rcCatalogPage.Close()
-
-	var catalogPage gog_integration.CatalogPage
-	if err = json.NewDecoder(rcCatalogPage).Decode(&catalogPage); err != nil {
-		return -1, err
-	}
-
-	return catalogPage.ProductCount, nil
 }
