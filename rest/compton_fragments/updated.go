@@ -26,7 +26,7 @@ func SyncStatus(r compton.Registrar, rdx redux.Readable) compton.Element {
 					if ii < len(vangogh_integration.SyncEventsKeys)-1 {
 						currentSyncEvent = vangogh_integration.SyncEventsKeys[ii+1]
 					} else {
-						currentSyncEvent = lastCompletedSyncEvent
+						currentSyncEvent = se
 					}
 					syncEventTimestamp = sci
 				}
