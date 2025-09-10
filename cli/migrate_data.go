@@ -22,10 +22,9 @@ import (
 // 4. rename _binaries to _wine-binaries
 // 5. deprecate aggregated-rating property
 // 6. rename logs from year-month-date-hour-minute-second.log to sync-year-month-date-hour-minute-second.log
-// 7. catalog-page now uses 100 products limit (vs 48) so there's fewer pages (extra ones need to be removed)
 
 const (
-	latestDataSchema = 7
+	latestDataSchema = 6
 )
 
 const deprecatedTypeErrors pathways.RelDir = "_type_errors"
@@ -43,10 +42,6 @@ const (
 
 const (
 	aggregatedRatingProperty = "aggregated-rating"
-)
-
-const (
-	currentCatalogPages = 113
 )
 
 func MigrateDataHandler(u *url.URL) error {
@@ -106,10 +101,6 @@ func MigrateData(force bool) error {
 			}
 		case 5:
 			if err = removeOldLogs(); err != nil {
-				return err
-			}
-		case 6:
-			if err = removeExtraCatalogPages(); err != nil {
 				return err
 			}
 		}
@@ -279,33 +270,6 @@ func removeOldLogs() error {
 		absLogPath := filepath.Join(logsDir, logName)
 		if err = os.Remove(absLogPath); err != nil {
 			return err
-		}
-	}
-
-	return nil
-}
-
-func removeExtraCatalogPages() error {
-
-	catalogPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.CatalogPage)
-	if err != nil {
-		return err
-	}
-
-	kvCatalogPages, err := kevlar.New(catalogPagesDir, kevlar.JsonExt)
-	if err != nil {
-		return err
-	}
-
-	for ii := 1; ii <= kvCatalogPages.Len(); ii++ {
-		if ii <= currentCatalogPages {
-			continue
-		}
-		page := strconv.Itoa(ii)
-		if kvCatalogPages.Has(page) {
-			if err = kvCatalogPages.Cut(page); err != nil {
-				return err
-			}
 		}
 	}
 
