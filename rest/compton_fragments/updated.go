@@ -13,16 +13,21 @@ import (
 
 const syncStatusTitle = "Sync status"
 
-func Updated(r compton.Registrar, rdx redux.Readable) compton.Element {
+func SyncStatus(r compton.Registrar, rdx redux.Readable) compton.Element {
 
-	var syncEvent string
+	var lastCompletedSyncEvent, currentSyncEvent string
 	var syncEventTimestamp int64
 
-	for _, se := range vangogh_integration.SyncEventsKeys {
+	for ii, se := range vangogh_integration.SyncEventsKeys {
 		if sss, ok := rdx.GetLastVal(vangogh_integration.SyncEventsProperty, se); ok {
 			if sci, err := strconv.ParseInt(sss, 10, 64); err == nil {
 				if sci >= syncEventTimestamp {
-					syncEvent = se
+					lastCompletedSyncEvent = se
+					if ii < len(vangogh_integration.SyncEventsKeys)-1 {
+						currentSyncEvent = vangogh_integration.SyncEventsKeys[ii+1]
+					} else {
+						currentSyncEvent = lastCompletedSyncEvent
+					}
 					syncEventTimestamp = sci
 				}
 			}
@@ -35,7 +40,7 @@ func Updated(r compton.Registrar, rdx redux.Readable) compton.Element {
 	}
 
 	var syncStatusColor color.Color
-	switch syncEvent {
+	switch lastCompletedSyncEvent {
 	case vangogh_integration.SyncCompleteKey:
 		syncStatusColor = color.Green
 	case vangogh_integration.SyncInterruptedKey:
@@ -48,7 +53,7 @@ func Updated(r compton.Registrar, rdx redux.Readable) compton.Element {
 
 	syncStatusFrow.Heading(syncStatusTitle)
 	syncStatusFrow.IconColor(compton.SmallerCircle, syncStatusColor)
-	syncStatusFrow.PropVal(vangogh_integration.SyncEventsTitles[syncEvent], syncEventDateText)
+	syncStatusFrow.PropVal(vangogh_integration.CurrentSyncEventsTitles[currentSyncEvent], syncEventDateText)
 
 	return compton.FICenter(r, syncStatusFrow).FontSize(size.XXSmall).ColumnGap(size.Small)
 }

@@ -69,7 +69,7 @@ func Logs(rdx redux.Readable) compton.PageElement {
 
 	pageStack.Append(compton.Br(), logList)
 
-	pageStack.Append(compton.Br(), compton_fragments.Updated(p, rdx))
+	pageStack.Append(compton.Br(), compton_fragments.SyncStatus(p, rdx))
 
 	pageStack.Append(compton.Footer(p, "Bonjour d'Arles", "https://github.com/arelate"))
 

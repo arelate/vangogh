@@ -138,7 +138,7 @@ func Updates(section string, rdx redux.Readable, showAll bool) compton.PageEleme
 
 	/* Last Updated section */
 
-	pageStack.Append(compton.Br(), compton_fragments.Updated(p, rdx))
+	pageStack.Append(compton.Br(), compton_fragments.SyncStatus(p, rdx))
 
 	/* Standard app footer */
 
