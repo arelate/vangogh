@@ -18,10 +18,10 @@ import (
 // Data scheme version log:
 // 1. local-manual-url -> manual-url-filename
 // 2. rm -rf metadata/_type_errors
-// 3. rename updates sections (remove old section titles)
+// 3. rename updates sections (remove old section titles) // v1.1.8
 // 4. rename _binaries to _wine-binaries
 // 5. deprecate aggregated-rating property
-// 6. rename logs from year-month-date-hour-minute-second.log to sync-year-month-date-hour-minute-second.log
+// 6. rename logs from year-month-date-hour-minute-second.log to sync-year-month-date-hour-minute-second.log // v1.1.9
 
 const (
 	latestDataSchema = 7
