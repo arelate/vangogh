@@ -1,15 +1,16 @@
 package compton_pages
 
 import (
+	"maps"
+	"slices"
+	"strconv"
+
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/redux"
-	"maps"
-	"slices"
-	"strconv"
 )
 
 const filterSearchTitle = "Filter & search"
@@ -29,7 +30,7 @@ func Search(query map[string][]string, ids []string, from, to int, rdx redux.Rea
 	searchScope := compton_data.SearchScopeFromQuery(query)
 	searchLinks := compton_fragments.SearchLinks(p, searchScope)
 
-	pageStack.Append(compton.FICenter(p, appNavLinks, searchLinks))
+	pageStack.Append(compton.FICenter(p, appNavLinks, searchLinks).ColumnGap(size.Small))
 
 	/* Filter & Search details */
 
