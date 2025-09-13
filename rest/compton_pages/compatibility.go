@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
@@ -82,70 +83,6 @@ func Compatibility(id string, rdx redux.Readable) compton.PageElement {
 	for _, device := range []string{steamDeck, steamOs} {
 		addSteamCompatibilitySection(s, pageStack, id, title, deckCompatibilityReport, device, rdx)
 	}
-	//pageStack.Append(compton.SectionDivider(s, compton.Text(steamDeck)))
-	//
-	//if category, ok := rdx.GetLastVal(vangogh_integration.SteamDeckAppCompatibilityCategoryProperty, id); ok {
-	//	message := fmt.Sprintf(messageByCategory[category], title, steamDeck, steamDeck)
-	//	divMessage := compton.DivText(message)
-	//	divMessage.AddClass("message")
-	//	pageStack.Append(divMessage)
-	//}
-	//
-	//if blogUrl := deckCompatibilityReport.GetBlogUrl(); blogUrl != "" {
-	//	additionalInfo := compton.Span()
-	//	additionalInfo.Append(compton.Text(fmt.Sprintf(additionalInfoText, steamDeck)))
-	//
-	//	link := compton.A(blogUrl)
-	//	link.Append(compton.Fspan(s, additionalInfoLink).
-	//		FontWeight(font_weight.Bolder).
-	//		ForegroundColor(color.Cyan))
-	//	link.SetAttribute("target", "_top")
-	//	additionalInfo.Append(link)
-	//
-	//	pageStack.Append(additionalInfo)
-	//}
-	//
-	//steamDeckResults := deckCompatibilityReport.GetSteamDeckResults()
-	//
-	//if len(steamDeckResults) > 0 {
-	//	pageStack.Append(compton.Hr())
-	//}
-	//
-	//steamDeckDisplayTypes := deckCompatibilityReport.GetSteamDeckDisplayTypes()
-	//
-	//ul := compton.Ul()
-	//if len(steamDeckDisplayTypes) == len(steamDeckResults) {
-	//	for ii, result := range steamDeckResults {
-	//
-	//		dt := steamDeckDisplayTypes[ii]
-	//		resultRow := compton.FlexItems(s, direction.Row).AlignItems(align.Center)
-	//		resultRow.AddClass("nowrap")
-	//
-	//		displayTypeIcon := compton.Fspan(s, "").ForegroundColor(displayTypeColors[dt])
-	//		displayTypeIcon.AddClass("svg")
-	//		displayTypeIcon.Append(compton.SvgUse(s, compton.Circle))
-	//		decodedResult := steam_integration.SteamDeckDecodeLocToken(result)
-	//		if decodedResult == "" {
-	//			decodedResult = result
-	//		}
-	//		displayTypeMessage := compton.Fspan(s, decodedResult)
-	//		if dt == "Unknown" {
-	//			displayTypeMessage.ForegroundColor(color.RepGray)
-	//		}
-	//		resultRow.Append(displayTypeIcon, displayTypeMessage)
-	//
-	//		li := compton.ListItem()
-	//		li.Append(resultRow)
-	//
-	//		ul.Append(li)
-	//
-	//		if ii != len(steamDeckResults)-1 {
-	//			ul.Append(compton.Hr())
-	//		}
-	//
-	//	}
-	//}
-	//pageStack.Append(ul)
 
 	return s
 }
@@ -271,7 +208,7 @@ func addSteamCompatibilitySection(r compton.Registrar, pageStack compton.Element
 			if decodedResult == "" {
 				decodedResult = result
 			}
-			displayTypeMessage := compton.Fspan(r, decodedResult)
+			displayTypeMessage := compton.Fspan(r, decodedResult).FontSize(size.Small)
 			if dt == "Unknown" {
 				displayTypeMessage.ForegroundColor(color.RepGray)
 			}
