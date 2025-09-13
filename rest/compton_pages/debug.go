@@ -288,7 +288,7 @@ func Debug(gogId string, rdx redux.Readable) (compton.PageElement, error) {
 
 			ds := compton.DSSmall(p, property, open)
 
-			dsStack := compton.FlexItems(p, direction.Column).AlignItems(align.Start)
+			dsStack := compton.FlexItems(p, direction.Column).AlignItems(align.Start).JustifyContent(align.Start)
 			ds.Append(dsStack)
 
 			if len(propertySources[property]) > 0 {
