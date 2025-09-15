@@ -86,10 +86,11 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 			summaryRow.PropIcons(compton_data.PropertyTitles[property], osSymbols...).
 				SetAttribute("style", "view-transition-name:"+property+id)
 		default:
-			value := strings.Join(values[property], ", ")
-			href := fmt.Sprintf("/search?%s=%s&sort=global-release-date&desc=true", property, value)
-			summaryRow.PropLinkColor(compton_data.PropertyTitles[property], color.RepForeground, value, href).
-				SetAttribute("style", "view-transition-name:"+property+id)
+			for _, value := range values[property] {
+				href := fmt.Sprintf("/search?%s=%s&sort=global-release-date&desc=true", property, value)
+				summaryRow.PropLinkColor(compton_data.PropertyTitles[property], color.RepForeground, value, href).
+					SetAttribute("style", "view-transition-name:"+property+id)
+			}
 		}
 
 	}
