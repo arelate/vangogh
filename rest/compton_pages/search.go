@@ -26,6 +26,7 @@ func Search(query map[string][]string, ids []string, from, to int, rdx redux.Rea
 	/* Nav stack = App navigation + Search shortcuts */
 
 	appNavLinks := compton_fragments.AppNavLinks(p, compton_data.AppNavSearch)
+	appNavLinks.SetId("top")
 
 	searchScope := compton_data.SearchScopeFromQuery(query)
 	searchLinks := compton_fragments.SearchLinks(p, searchScope)
@@ -84,10 +85,13 @@ func Search(query map[string][]string, ids []string, from, to int, rdx redux.Rea
 		query["from"] = []string{strconv.Itoa(to)}
 		enq := compton_data.EncodeQuery(query)
 
+		backToTopNavLinks := compton.NavLinks(p)
+		backToTopNavLinks.AppendLink(p, &compton.NavTarget{Href: "#top", Title: "Back to top"})
+
 		nextPageNavLink := compton.NavLinks(p)
 		nextPageNavLink.AppendLink(p, &compton.NavTarget{Href: "/search?" + enq, Title: "Next page"})
 
-		pageStack.Append(nextPageNavLink)
+		pageStack.Append(compton.FICenter(p, backToTopNavLinks, nextPageNavLink).ColumnGap(size.Small))
 	}
 
 	/* Standard app footer */

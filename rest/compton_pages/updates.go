@@ -71,6 +71,7 @@ func Updates(section string, rdx redux.Readable, showAll bool) compton.PageEleme
 	topLevelNav := []compton.Element{compton_fragments.AppNavLinks(p, current)}
 
 	updateSectionLinks := compton.NavLinks(p)
+	updateSectionLinks.SetId("top")
 	updateSectionLinks.SetAttribute("style", "view-transition-name:secondary-nav")
 
 	for _, updateSection := range vangogh_integration.UpdatesOrder {
@@ -133,7 +134,11 @@ func Updates(section string, rdx redux.Readable, showAll bool) compton.PageEleme
 		showAllNavLinks := compton.NavLinks(p)
 		showAllNavLinks.SetAttribute("style", "view-transition-name:tertiary-nav")
 		showAllNavLinks.AppendLink(p, &compton.NavTarget{Href: "/updates?section=" + section + "&all", Title: "Show all"})
-		pageStack.Append(compton.FICenter(p, showAllNavLinks))
+
+		backToTopNavLinks := compton.NavLinks(p)
+		backToTopNavLinks.AppendLink(p, &compton.NavTarget{Href: "#top", Title: "Back to top"})
+
+		pageStack.Append(compton.FICenter(p, backToTopNavLinks, showAllNavLinks).ColumnGap(size.Small))
 	}
 
 	/* Last Updated section */
