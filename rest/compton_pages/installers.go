@@ -255,15 +255,23 @@ func downloadLink(r compton.Registrar,
 
 	link.Append(linkColumn)
 
+	bottomRow := compton.FlexItems(r, direction.Row).ColumnGap(size.Small).AlignItems(align.Center)
+
 	sizeFr := compton.Frow(r).FontSize(size.XSmall)
 
 	if dl.EstimatedBytes > 0 {
 		sizeFr.PropVal("Size", vangogh_integration.FormatBytes(dl.EstimatedBytes))
 	}
-	pvManualUrl := sizeFr.PropVal("Manual URL", dl.ManualUrl)
-	pvManualUrl.AddClass("long-text")
 
-	linkContainer.Append(sizeFr)
+	copyManualUrlToClipboard := compton.CopyToClipboard(r,
+		compton.Fspan(r, "Copy Manual URL").FontSize(size.XSmall).ForegroundColor(color.Blue).FontWeight(font_weight.Bolder),
+		compton.Fspan(r, "Copied!").FontSize(size.XSmall).ForegroundColor(color.Green),
+		compton.Fspan(r, "Error").FontSize(size.XSmall).ForegroundColor(color.Red),
+		dl.ManualUrl)
+
+	bottomRow.Append(sizeFr, copyManualUrlToClipboard)
+
+	linkContainer.Append(bottomRow)
 
 	return linkContainer
 }
