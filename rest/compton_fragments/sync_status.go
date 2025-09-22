@@ -15,23 +15,25 @@ const syncStatusTitle = "Sync status"
 
 func SyncStatus(r compton.Registrar, rdx redux.Readable) compton.Element {
 
-	var lastCompletedSyncEvent, currentSyncEvent string
+	var lastCompletedSyncEvent string
 	var syncEventTimestamp int64
 
-	for ii, se := range vangogh_integration.SyncEventsKeys {
+	for _, se := range vangogh_integration.SyncEventsKeys {
 		if sss, ok := rdx.GetLastVal(vangogh_integration.SyncEventsProperty, se); ok {
 			if sci, err := strconv.ParseInt(sss, 10, 64); err == nil {
 				if sci >= syncEventTimestamp {
 					lastCompletedSyncEvent = se
-					if ii < len(vangogh_integration.SyncEventsKeys)-1 {
-						currentSyncEvent = vangogh_integration.SyncEventsKeys[ii+1]
-					} else {
-						currentSyncEvent = se
-					}
 					syncEventTimestamp = sci
 				}
 			}
 		}
+	}
+
+	var currentSyncEvent string
+	if cse, ok := vangogh_integration.CurrentSyncEventForCompleted[lastCompletedSyncEvent]; ok {
+		currentSyncEvent = cse
+	} else {
+		currentSyncEvent = lastCompletedSyncEvent
 	}
 
 	syncEventDateText := "Never"
