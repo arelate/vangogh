@@ -2,11 +2,13 @@ package rest
 
 import (
 	"fmt"
+	"net/http"
+	"os"
+	"time"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/middleware"
 	"github.com/boggydigital/nod"
-	"net/http"
-	"os"
 )
 
 func GetAtom(w http.ResponseWriter, r *http.Request) {
@@ -22,16 +24,20 @@ func GetAtom(w http.ResponseWriter, r *http.Request) {
 	if stat, err := os.Stat(absAtomFeedPath); err == nil {
 
 		w.Header().Set(middleware.LastModifiedHeader, stat.ModTime().UTC().Format(http.TimeFormat))
-		ims := r.Header.Get(middleware.IfModifiedSinceHeader)
-		lm := stat.ModTime().UTC().Format(http.TimeFormat)
-		if middleware.IsNotModified(ims, lm) {
-			w.WriteHeader(http.StatusNotModified)
-			return
-		}
+		ifModifiedSince := r.Header.Get(middleware.IfModifiedSinceHeader)
+		lastModified := stat.ModTime().UTC().Format(http.TimeFormat)
 
+		if ims, err := time.Parse(http.TimeFormat, ifModifiedSince); err == nil {
+			if lm, err := time.Parse(http.TimeFormat, lastModified); err == nil {
+				if lm.Unix() <= ims.Unix() {
+					w.WriteHeader(http.StatusNotModified)
+					return
+				}
+			}
+		}
 		http.ServeFile(w, r, absAtomFeedPath)
 	} else {
-		_ = nod.Error(fmt.Errorf("atom feed not found"))
+		nod.LogError(fmt.Errorf("atom feed not found"))
 		http.NotFound(w, r)
 	}
 }
