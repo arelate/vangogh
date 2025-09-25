@@ -2,7 +2,9 @@ package rest
 
 import (
 	"crypto/sha256"
+
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/author"
 	"github.com/boggydigital/middleware"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
@@ -19,6 +21,8 @@ var (
 	operatingSystems []vangogh_integration.OperatingSystem
 	langCodes        []string
 	noPatches        bool
+
+	bouncer *author.Bouncer
 
 	downloadsLayout vangogh_integration.DownloadsLayout
 
@@ -52,5 +56,16 @@ func Init(layout vangogh_integration.DownloadsLayout) error {
 	downloadsLayout = layout
 
 	rdx, err = redux.NewReader(reduxDir, vangogh_integration.ReduxProperties()...)
-	return err
+
+	authorDir, err := pathways.GetAbsRelDir(vangogh_integration.Author)
+	if err != nil {
+		return err
+	}
+
+	bouncer, err = author.NewBouncer(authorDir, GetRoles(), "/login")
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

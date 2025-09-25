@@ -35,6 +35,7 @@ func GetAtom(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 		}
+
 		http.ServeFile(w, r, absAtomFeedPath)
 	} else {
 		nod.LogError(fmt.Errorf("atom feed not found"))
