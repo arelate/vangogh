@@ -1,15 +1,16 @@
 package cli
 
 import (
+	"maps"
+	"net/url"
+	"os"
+	"slices"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"maps"
-	"net/url"
-	"os"
-	"slices"
 )
 
 func UpdateDownloadsHandler(u *url.URL) error {
@@ -98,6 +99,7 @@ func UpdateDownloads(
 		downloadTypes,
 		noPatches,
 		downloadsLayout,
+		false,
 		false,
 		true)
 }
