@@ -2,16 +2,6 @@ package cli
 
 import (
 	"errors"
-	"github.com/arelate/southern_light/gog_integration"
-	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/arelate/vangogh/cli/itemizations"
-	"github.com/arelate/vangogh/cli/reqs"
-	"github.com/boggydigital/coost"
-	"github.com/boggydigital/dolo"
-	"github.com/boggydigital/kevlar"
-	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
-	"github.com/boggydigital/redux"
 	"iter"
 	"net/http"
 	"net/url"
@@ -22,6 +12,17 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/arelate/southern_light/gog_integration"
+	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/cli/itemizations"
+	"github.com/arelate/vangogh/cli/reqs"
+	"github.com/boggydigital/coost"
+	"github.com/boggydigital/dolo"
+	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/nod"
+	"github.com/boggydigital/pathways"
+	"github.com/boggydigital/redux"
 )
 
 func GetDownloadsHandler(u *url.URL) error {
@@ -44,8 +45,9 @@ func GetDownloadsHandler(u *url.URL) error {
 		vangogh_integration.DownloadTypesFromUrl(u),
 		vangogh_integration.FlagFromUrl(u, "no-patches"),
 		vangogh_integration.DownloadsLayoutFromUrl(u),
-		vangogh_integration.FlagFromUrl(u, "missing"),
-		vangogh_integration.FlagFromUrl(u, "force"),
+		q.Has("checksums-only"),
+		q.Has("missing"),
+		q.Has("force"),
 		manualUrlFilter...)
 }
 
@@ -56,6 +58,7 @@ func GetDownloads(
 	downloadTypes []vangogh_integration.DownloadType,
 	noPatches bool,
 	downloadsLayout vangogh_integration.DownloadsLayout,
+	checksumsOnly,
 	missing,
 	force bool,
 	manualUrlFilter ...string) error {
@@ -117,6 +120,7 @@ func GetDownloads(
 		rdx:             rdx,
 		forceUpdate:     force,
 		downloadsLayout: downloadsLayout,
+		checksumsOnly:   checksumsOnly,
 		manualUrlFilter: manualUrlFilter,
 	}
 
@@ -139,6 +143,7 @@ type getDownloadsDelegate struct {
 	rdx             redux.Writeable
 	forceUpdate     bool
 	downloadsLayout vangogh_integration.DownloadsLayout
+	checksumsOnly   bool
 	manualUrlFilter []string
 }
 
@@ -239,7 +244,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	//1 - check if local file exists (based on manual-url -> filename) before attempting to resolve manual-url
 	//2 - resolve the source URL to an actual session URL
 	//3 - construct local relative dir and resolvedFilename based on manualUrl type (installer, movie, dlc, extra)
-	//4 - for a given set of extensions - download validation file for installers
+	//4 - for a given set of extensions - download checksums for installers
 	//5 - download authorized session URL to a file
 	//6 - set association from manualUrl to a resolved resolvedFilename
 
@@ -328,6 +333,11 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 			}
 			resolvedUrl.Path = originalPath
 		}
+	}
+
+	if gdd.checksumsOnly {
+		dmua.EndWithResult("downloaded checksum only")
+		return nil
 	}
 
 	//5
