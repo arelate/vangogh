@@ -2,6 +2,9 @@ package compton_pages
 
 import (
 	"fmt"
+	"net/url"
+	"strings"
+
 	"github.com/arelate/southern_light"
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/gogdb_integration"
@@ -28,8 +31,6 @@ import (
 	"github.com/boggydigital/compton/consts/font_weight"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/redux"
-	"net/url"
-	"strings"
 )
 
 const linksValuesLimit = 3
@@ -271,6 +272,7 @@ func linksTitleValues(r compton.Registrar, property string, links []string) comp
 		ForegroundColor(color.Cyan).
 		TitleForegroundColor(color.Inherit).
 		SetLinksTarget(compton.LinkTargetTop).
-		AppendLinkValues(linksValuesLimit, linksHrefs)
+		AppendLinkValues(linksValuesLimit, linksHrefs).
+		Width(size.XXXLarge)
 	return tv
 }
