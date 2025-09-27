@@ -141,6 +141,12 @@ update-downloads
     since-hours-ago
     updates-only
 
+users
+    action=create,delete,list
+    username
+    password
+    role
+
 validate
     id^&
     slug&

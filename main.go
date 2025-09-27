@@ -72,6 +72,7 @@ func main() {
 		"summarize":              cli.SummarizeHandler,
 		"sync":                   cli.SyncHandler,
 		"update-downloads":       cli.UpdateDownloadsHandler,
+		"users":                  cli.UsersHandler,
 		"validate":               cli.ValidateHandler,
 		"version":                cli.VersionHandler,
 	})

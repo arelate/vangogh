@@ -23,11 +23,11 @@ func HandleFuncs() {
 		"GET /icon.png":      Log(http.HandlerFunc(GetIcon)),
 		"GET /atom":          Log(http.HandlerFunc(GetAtom)),
 		// public data endpoints
-		"GET /login":  Log(http.HandlerFunc(GetLogin)),
-		"POST /login": Log(http.HandlerFunc(bouncer.PostLogin)),
+		"GET /login":        Log(http.HandlerFunc(GetLogin)),
+		"GET /authenticate": Log(http.HandlerFunc(bouncer.Authenticate)),
 		// soon to be authenticated endpoints
 		"GET /updates": Log(http.HandlerFunc(GetUpdates)),
-		//"GET /search":        author.Auth(bouncer, Log(http.HandlerFunc(GetSearch))),
+		//"GET /search":        author.ValidateSession(bouncer, Log(http.HandlerFunc(GetSearch))),
 		"GET /search":        Log(http.HandlerFunc(GetSearch)),
 		"GET /product":       Log(http.HandlerFunc(GetProduct)),
 		"GET /info":          Log(http.HandlerFunc(GetInfo)),

@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/perm"
 	"github.com/boggydigital/author"
 	"github.com/boggydigital/middleware"
 	"github.com/boggydigital/pathways"
@@ -62,7 +63,7 @@ func Init(layout vangogh_integration.DownloadsLayout) error {
 		return err
 	}
 
-	bouncer, err = author.NewBouncer(authorDir, GetRoles(), "/login")
+	bouncer, err = author.NewBouncer(authorDir, perm.GetRolesPermissions(), "/login")
 	if err != nil {
 		return err
 	}
