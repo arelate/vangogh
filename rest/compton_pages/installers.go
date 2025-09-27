@@ -241,10 +241,12 @@ func downloadLink(r compton.Registrar,
 		manualUrlValidationResult := vangogh_integration.ValidationResultUnknown
 		manualUrlStatus := vangogh_integration.ManualUrlStatusUnknown
 
-		if muss, ok := rdx.GetLastVal(vangogh_integration.ManualUrlStatusProperty, dl.ManualUrl); ok && vangogh_integration.ParseManualUrlStatus(muss) == vangogh_integration.ManualUrlValidated {
+		if muss, ok := rdx.GetLastVal(vangogh_integration.ManualUrlStatusProperty, dl.ManualUrl); ok {
 			manualUrlStatus = vangogh_integration.ParseManualUrlStatus(muss)
-			if vrs, sure := rdx.GetLastVal(vangogh_integration.ManualUrlValidationResultProperty, dl.ManualUrl); sure {
-				manualUrlValidationResult = vangogh_integration.ParseValidationResult(vrs)
+			if manualUrlStatus == vangogh_integration.ManualUrlValidated {
+				if vrs, sure := rdx.GetLastVal(vangogh_integration.ManualUrlValidationResultProperty, dl.ManualUrl); sure {
+					manualUrlValidationResult = vangogh_integration.ParseValidationResult(vrs)
+				}
 			}
 		}
 
