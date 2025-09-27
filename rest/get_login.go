@@ -13,7 +13,7 @@ func GetLogin(w http.ResponseWriter, r *http.Request) {
 
 	p := compton.Page("vangogh login")
 
-	form := compton.Form("/authenticate", http.MethodGet)
+	form := compton.Form("/auth", http.MethodPost)
 	p.Append(form)
 
 	formStack := compton.FlexItems(p, direction.Column)
