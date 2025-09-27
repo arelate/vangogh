@@ -63,7 +63,7 @@ func Init(layout vangogh_integration.DownloadsLayout) error {
 		return err
 	}
 
-	bouncer, err = author.NewBouncer(authorDir, perm.GetRolesPermissions(), "/login")
+	bouncer, err = author.NewBouncer(authorDir, perm.GetRolesPermissions(), "/login", "/success")
 	if err != nil {
 		return err
 	}

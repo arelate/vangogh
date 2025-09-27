@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/arelate/vangogh/rest/compton_data"
+	"github.com/boggydigital/author"
 	"github.com/boggydigital/middleware"
 	"github.com/boggydigital/nod"
 )
@@ -23,8 +24,9 @@ func HandleFuncs() {
 		"GET /icon.png":      Log(http.HandlerFunc(GetIcon)),
 		"GET /atom":          Log(http.HandlerFunc(GetAtom)),
 		// public data endpoints
-		"GET /login":        Log(http.HandlerFunc(GetLogin)),
-		"GET /authenticate": Log(http.HandlerFunc(bouncer.Authenticate)),
+		"GET /login":    Log(http.HandlerFunc(GetLogin)),
+		"POST /auth":    Log(http.HandlerFunc(bouncer.Authenticate)),
+		"POST /success": Log(http.HandlerFunc(PostSuccess)),
 		// soon to be authenticated endpoints
 		"GET /updates": Log(http.HandlerFunc(GetUpdates)),
 		//"GET /search":        author.ValidateSession(bouncer, Log(http.HandlerFunc(GetSearch))),
@@ -63,7 +65,7 @@ func HandleFuncs() {
 		"GET /api/product-details":        Log(http.HandlerFunc(GetProductDetails)),
 		"GET /api/wine-binaries-versions": Log(http.HandlerFunc(GetWineBinariesVersions)),
 		// debug endpoints
-		"GET /debug":      Log(http.HandlerFunc(GetDebug)),
+		"GET /debug":      author.ValidateSession(bouncer, Log(http.HandlerFunc(GetDebug))),
 		"GET /debug-data": Auth(Log(http.HandlerFunc(GetDebugData)), AdminRole, SharedRole),
 		// start at the updates
 		"GET /": Redirect("/updates", http.StatusPermanentRedirect),
