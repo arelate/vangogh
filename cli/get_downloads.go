@@ -241,19 +241,26 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	defer dmua.Done()
 
 	//downloading a manual URL is the following set of steps:
+	//0 - set the manual-url status to downloading
 	//1 - check if local file exists (based on manual-url -> filename) before attempting to resolve manual-url
 	//2 - resolve the source URL to an actual session URL
-	//3 - construct local relative dir and resolvedFilename based on manualUrl type (installer, movie, dlc, extra)
-	//4 - for a given set of extensions - download checksums for installers
-	//5 - download authorized session URL to a file
-	//6 - set association from manualUrl to a resolved resolvedFilename
+	//3 - set association from manualUrl to a resolved resolvedFilename
+	//4 - construct local relative dir and resolvedFilename based on manualUrl type (installer, movie, dlc, extra)
+	//5 - for a given set of extensions - download checksums for installers
+	//6 - download authorized session URL to a file
+	//7 - set the manual-url status to downloaded
+
+	if err := gdd.rdx.ReplaceValues(vangogh_integration.ManualUrlStatusProperty,
+		dl.ManualUrl, vangogh_integration.ManualUrlDownloading.String()); err != nil {
+		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
+	}
 
 	//1
 	if !gdd.forceUpdate {
 		if filename, ok := gdd.rdx.GetLastVal(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl); ok && filename != "" {
 			absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.Type, gdd.downloadsLayout)
 			if err != nil {
-				return err
+				return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 			}
 
 			absDownloadPath := filepath.Join(absSlugDownloadDir, filename)
@@ -262,7 +269,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 				dmua.EndWithResult("already exists: %s", filename)
 				return nil
 			} else if !os.IsNotExist(err) {
-				return err
+				return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 			}
 		}
 	}
@@ -270,52 +277,53 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	//2
 	resp, err := httpClient.Head(gog_integration.ManualDownloadUrl(dl.ManualUrl).String())
 	if err != nil {
-		return err
+		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 	}
 
 	//check for error status codes and store them for the manualUrl to provide a hint that locally missing file
 	//is not a problem that can be solved locally (it's a remote source error)
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		if err = gdd.rdx.ReplaceValues(vangogh_integration.DownloadStatusErrorProperty, dl.ManualUrl, strconv.Itoa(resp.StatusCode)); err != nil {
-			return err
+			return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 		}
-		return errors.New(resp.Status)
+		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, errors.New(resp.Status))
 	}
 
 	resolvedUrl := resp.Request.URL
 
 	if err = resp.Body.Close(); err != nil {
-		return err
+		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 	}
 
 	//3
 	_, resolvedFilename := path.Split(resolvedUrl.Path)
 	if err := gdd.rdx.ReplaceValues(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl, resolvedFilename); err != nil {
-		return err
+		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 	}
 
+	//4
 	absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.Type, gdd.downloadsLayout)
 	if err != nil {
-		return err
+		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 	}
 
 	absDownloadPath := filepath.Join(absSlugDownloadDir, resolvedFilename)
 
-	//4
+	//5
 	if dl.Type == vangogh_integration.Installer || dl.Type == vangogh_integration.DLC {
 		if remoteChecksumPath := resolvedUrl.Path + kevlar.XmlExt; remoteChecksumPath != "" {
 
 			var absChecksumPath string
 			absChecksumPath, err = vangogh_integration.AbsChecksumPath(absDownloadPath)
 			if err != nil {
-				return err
+				return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 			}
 
 			// delete existing checksum in case the origin checksum produced 404 for a silently
 			// updated new version and we'd use a generated checksum to validate
 			if _, err = os.Stat(absChecksumPath); err == nil && gdd.forceUpdate {
 				if err = os.Remove(absChecksumPath); err != nil {
-					return err
+					return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 				}
 			}
 
@@ -340,17 +348,18 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 		return nil
 	}
 
-	//5
+	//6
 	lfa := nod.NewProgress(" - %s", resolvedFilename)
 	defer lfa.Done()
 
 	if err = dlClient.Download(resolvedUrl, gdd.forceUpdate, lfa, absDownloadPath); err != nil {
-		return err
+		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 	}
 
+	//7
 	if err = gdd.rdx.ReplaceValues(vangogh_integration.ManualUrlStatusProperty,
 		dl.ManualUrl, vangogh_integration.ManualUrlDownloaded.String()); err != nil {
-		return err
+		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 	}
 
 	lfa.EndWithResult("downloaded")
@@ -385,6 +394,16 @@ func getQueuedDownloads() ([]string, error) {
 	}
 
 	return queuedDownloads, nil
+}
+
+func errManualUrlDownloadInterrupted(manualUrl string, rdx redux.Writeable, sourceErr error) error {
+
+	if err := rdx.ReplaceValues(vangogh_integration.ManualUrlStatusProperty,
+		manualUrl, vangogh_integration.ManualUrlDownloadInterrupted.String()); err != nil {
+		return errors.Join(err, sourceErr)
+	}
+
+	return sourceErr
 }
 
 func queueDownloads(ids iter.Seq[string]) error {

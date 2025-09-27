@@ -238,19 +238,29 @@ func downloadLink(r compton.Registrar,
 
 	if dl.Type == vangogh_integration.Installer || dl.Type == vangogh_integration.DLC {
 
-		vr := vangogh_integration.ValidationResultUnknown
+		manualUrlValidationResult := vangogh_integration.ValidationResultUnknown
+		manualUrlStatus := vangogh_integration.ManualUrlStatusUnknown
 
 		if muss, ok := rdx.GetLastVal(vangogh_integration.ManualUrlStatusProperty, dl.ManualUrl); ok && vangogh_integration.ParseManualUrlStatus(muss) == vangogh_integration.ManualUrlValidated {
+			manualUrlStatus = vangogh_integration.ParseManualUrlStatus(muss)
 			if vrs, sure := rdx.GetLastVal(vangogh_integration.ManualUrlValidationResultProperty, dl.ManualUrl); sure {
-				vr = vangogh_integration.ParseValidationResult(vrs)
+				manualUrlValidationResult = vangogh_integration.ParseValidationResult(vrs)
 			}
 		}
 
-		validationResult := compton.Fspan(r, vr.HumanReadableString()).
+		var statusValidationResult string
+		switch manualUrlValidationResult {
+		case vangogh_integration.ValidationResultUnknown:
+			statusValidationResult = manualUrlStatus.HumanReadableString()
+		default:
+			statusValidationResult = manualUrlValidationResult.HumanReadableString()
+		}
+
+		manualUrlStatusValidationResult := compton.Fspan(r, statusValidationResult).
 			FontSize(size.XSmall).
-			ForegroundColor(compton_fragments.ValidationResultsColors[vr]).
-			FontWeight(validationResultsFontWeights[vr])
-		linkColumn.Append(validationResult)
+			ForegroundColor(compton_fragments.ValidationResultsColors[manualUrlValidationResult]).
+			FontWeight(validationResultsFontWeights[manualUrlValidationResult])
+		linkColumn.Append(manualUrlStatusValidationResult)
 	}
 
 	link.Append(linkColumn)
