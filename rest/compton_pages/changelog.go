@@ -40,12 +40,12 @@ func Changelog(id string, rdx redux.Readable) compton.PageElement {
 
 	headingRow := compton.FlexItems(p, direction.Column).RowGap(size.XSmall)
 
-	heading := compton.Heading(1)
+	heading := compton.Heading(2)
 	heading.Append(compton.Fspan(p, pageTitle).TextAlign(align.Center))
 	heading.SetAttribute("style", "view-transition-name:product-title-"+id)
 	headingRow.Append(heading)
 
-	subHeading := compton.Heading(2)
+	subHeading := compton.Heading(3)
 	subHeading.Append(compton.Fspan(p, "Changelog").
 		TextAlign(align.Center).
 		ForegroundColor(color.RepGray))

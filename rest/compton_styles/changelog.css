@@ -1,3 +1,7 @@
+body {
+    margin: var(--s-n);
+}
+
 .changelog-content {
     line-height: calc(1.5 * var(--s-n));
     word-break: break-word;

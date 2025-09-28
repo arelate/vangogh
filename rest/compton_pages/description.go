@@ -1,6 +1,10 @@
 package compton_pages
 
 import (
+	"net/url"
+	"path"
+	"strings"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/arelate/vangogh/rest/compton_styles"
@@ -11,9 +15,6 @@ import (
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/issa"
 	"github.com/boggydigital/redux"
-	"net/url"
-	"path"
-	"strings"
 )
 
 func Description(id string, rdx redux.Readable) compton.PageElement {
@@ -48,12 +49,12 @@ func Description(id string, rdx redux.Readable) compton.PageElement {
 
 	headingRow := compton.FlexItems(p, direction.Column).RowGap(size.XSmall)
 
-	heading := compton.Heading(1)
+	heading := compton.Heading(2)
 	heading.Append(compton.Fspan(p, pageTitle).TextAlign(align.Center))
 	heading.SetAttribute("style", "view-transition-name:product-title-"+id)
 	headingRow.Append(heading)
 
-	subHeading := compton.Heading(2)
+	subHeading := compton.Heading(3)
 	subHeading.Append(compton.Fspan(p, "Description").
 		TextAlign(align.Center).
 		ForegroundColor(color.RepGray))

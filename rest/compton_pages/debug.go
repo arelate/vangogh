@@ -61,12 +61,12 @@ func Debug(gogId string, rdx redux.Readable) (compton.PageElement, error) {
 
 	headingRow := compton.FlexItems(p, direction.Column).RowGap(size.XSmall)
 
-	heading := compton.Heading(1)
+	heading := compton.Heading(2)
 	heading.Append(compton.Fspan(p, productTitle).TextAlign(align.Center))
 	heading.SetAttribute("style", "view-transition-name:product-title-"+gogId)
 	headingRow.Append(heading)
 
-	subHeading := compton.Heading(2)
+	subHeading := compton.Heading(3)
 	subHeading.Append(compton.Fspan(p, "Debug").
 		TextAlign(align.Center).
 		ForegroundColor(color.RepGray))
