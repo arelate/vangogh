@@ -56,9 +56,9 @@ func Logs(rdx redux.Readable) compton.PageElement {
 	logList := compton.FlexItems(p, direction.Column).RowGap(size.Normal)
 
 	for _, fn := range files {
-		logLink := compton.A("/logs?id=" + fn)
-		logLink.Append(compton.Fspan(p, fn).TextAlign(align.Center))
-		logList.Append(logLink)
+		logLinkContainer := compton.Fspan(p, "").TextAlign(align.Center)
+		logLinkContainer.Append(compton.AText(fn, "/logs?id="+fn))
+		logList.Append(logLinkContainer)
 	}
 
 	if len(files) == 0 {
