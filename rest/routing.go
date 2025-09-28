@@ -42,7 +42,6 @@ func HandleFuncs() {
 		"GET /compatibility": Log(http.HandlerFunc(GetCompatibility)),
 		"GET /installers":    Log(http.HandlerFunc(GetInstallers)),
 		"GET /wine-binaries": Log(http.HandlerFunc(GetWineBinaries)),
-		"GET /logs":          Log(http.HandlerFunc(GetLogs)),
 		// public media endpoints
 		"GET /image":               Log(http.HandlerFunc(GetImage)),
 		"GET /description-images/": Log(http.HandlerFunc(GetDescriptionImages)),
@@ -65,8 +64,9 @@ func HandleFuncs() {
 		"GET /api/product-details":        Log(http.HandlerFunc(GetProductDetails)),
 		"GET /api/wine-binaries-versions": Log(http.HandlerFunc(GetWineBinariesVersions)),
 		// debug endpoints
-		"GET /debug":      author.ValidateSession(bouncer, Log(http.HandlerFunc(GetDebug))),
-		"GET /debug-data": Auth(Log(http.HandlerFunc(GetDebugData)), AdminRole, SharedRole),
+		"GET /debug":      author.AuthenticateSession(bouncer, Log(http.HandlerFunc(GetDebug))),
+		"GET /debug-data": author.AuthenticateSession(bouncer, Log(http.HandlerFunc(GetDebugData))),
+		"GET /logs":       author.AuthenticateSession(bouncer, Log(http.HandlerFunc(GetLogs))),
 		// start at the updates
 		"GET /": Redirect("/updates", http.StatusPermanentRedirect),
 	}
