@@ -24,6 +24,8 @@ github.com/boggydigital/author v0.1.7 h1:TSUZDGRpBl8/y5bY/iDdlDZ9mFJEmu+1svbtHHP
 github.com/boggydigital/author v0.1.7/go.mod h1:TByLkZmjPXYcK+l3920TEybnXYK7+qjc6oGLKnnEtVI=
 github.com/boggydigital/author v0.1.8 h1:SVz18a5Cvun9hF55Vc2ik/sDB739aF3Xto22jB0LoYE=
 github.com/boggydigital/author v0.1.8/go.mod h1:TByLkZmjPXYcK+l3920TEybnXYK7+qjc6oGLKnnEtVI=
+github.com/boggydigital/author v0.1.9 h1:8IhvoUUQB7v++iLeQUq4RKkojAUE1PjMX6OFWHwvXYc=
+github.com/boggydigital/author v0.1.9/go.mod h1:TByLkZmjPXYcK+l3920TEybnXYK7+qjc6oGLKnnEtVI=
 github.com/boggydigital/backups v0.1.6 h1:E0YU7K/muSjmJcDtMBUP3mQN46/9kkq+HczuKxRWx14=
 github.com/boggydigital/backups v0.1.6/go.mod h1:k2oRf30c7FL5ZCUCVBEzDB2Cem1LevVTkVHR/WqaU7I=
 github.com/boggydigital/busan v0.1.1 h1:sP0vbrgazePvThZZh0pQdn9BfWkvdQGTaQLF2YQliAo=

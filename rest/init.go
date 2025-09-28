@@ -23,7 +23,7 @@ var (
 	langCodes        []string
 	noPatches        bool
 
-	bouncer *author.Bouncer
+	sb *author.SessionBouncer
 
 	downloadsLayout vangogh_integration.DownloadsLayout
 
@@ -63,7 +63,7 @@ func Init(layout vangogh_integration.DownloadsLayout) error {
 		return err
 	}
 
-	bouncer, err = author.NewBouncer(authorDir, perm.GetRolesPermissions(), "/login", "/success")
+	sb, err = author.NewSessionBouncer(authorDir, perm.GetRolesPermissions(), "/login", "/success")
 	if err != nil {
 		return err
 	}

@@ -82,7 +82,7 @@ func Users(action userAction, username, password, role string) error {
 			return err
 		}
 
-		if err = auth.SetRole(username, password, role); err != nil {
+		if err = auth.GrantRole(username, password, role); err != nil {
 			return err
 		}
 	case userActionDelete:
