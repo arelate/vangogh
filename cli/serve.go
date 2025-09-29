@@ -2,12 +2,13 @@ package cli
 
 import (
 	"fmt"
-	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/arelate/vangogh/rest"
-	"github.com/boggydigital/nod"
 	"net/http"
 	"net/url"
 	"strconv"
+
+	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/rest"
+	"github.com/boggydigital/nod"
 )
 
 func ServeHandler(u *url.URL) error {
@@ -29,16 +30,6 @@ func ServeHandler(u *url.URL) error {
 	layout := vangogh_integration.DownloadsLayoutFromUrl(u)
 
 	rest.SetDefaultDownloadsFilters(oses, langCodes, noPatches)
-
-	sharedUsername := vangogh_integration.ValueFromUrl(u, "shared-username")
-	sharedPassword := vangogh_integration.ValueFromUrl(u, "shared-password")
-	adminUsername := vangogh_integration.ValueFromUrl(u, "admin-username")
-	adminPassword := vangogh_integration.ValueFromUrl(u, "admin-password")
-
-	rest.SetUsername(rest.SharedRole, sharedUsername)
-	rest.SetPassword(rest.SharedRole, sharedPassword)
-	rest.SetUsername(rest.AdminRole, adminUsername)
-	rest.SetPassword(rest.AdminRole, adminPassword)
 
 	return Serve(port, layout, vangogh_integration.FlagFromUrl(u, "stderr"))
 }

@@ -7,13 +7,11 @@ import (
 	"github.com/arelate/vangogh/perm"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/boggydigital/author"
-	"github.com/boggydigital/middleware"
 	"github.com/boggydigital/nod"
 )
 
 var (
 	AuthSsn  = author.AuthenticateSession
-	Auth     = middleware.BasicHttpAuth
 	Log      = nod.RequestLog
 	Redirect = http.RedirectHandler
 )
@@ -60,17 +58,10 @@ func HandleFuncs() {
 		// products redirects
 		"GET /products": Redirect("/search", http.StatusPermanentRedirect),
 		// API
-
-		// TODO: uncomment when theo implements new authentication
-		//"GET /api/health":                 Log(http.HandlerFunc(GetHealth)),
-		//"GET /api/health-auth":            AuthSsn(sb, Log(http.HandlerFunc(GetHealth)), perm.ReadApi),
-		//"GET /api/product-details":        AuthSsn(sb, Log(http.HandlerFunc(GetProductDetails)), perm.ReadApi),
-		//"GET /api/wine-binaries-versions": AuthSsn(sb, Log(http.HandlerFunc(GetWineBinariesVersions)), perm.ReadApi),
-
 		"GET /api/health":                 Log(http.HandlerFunc(GetHealth)),
-		"GET /api/health-auth":            Auth(Log(http.HandlerFunc(GetHealth)), AdminRole, SharedRole),
-		"GET /api/product-details":        Log(http.HandlerFunc(GetProductDetails)),
-		"GET /api/wine-binaries-versions": Log(http.HandlerFunc(GetWineBinariesVersions)),
+		"GET /api/health-auth":            AuthSsn(sb, Log(http.HandlerFunc(GetHealth)), perm.ReadApi),
+		"GET /api/product-details":        AuthSsn(sb, Log(http.HandlerFunc(GetProductDetails)), perm.ReadApi),
+		"GET /api/wine-binaries-versions": AuthSsn(sb, Log(http.HandlerFunc(GetWineBinariesVersions)), perm.ReadApi),
 		// debug endpoints
 		"GET /debug":      AuthSsn(sb, Log(http.HandlerFunc(GetDebug)), perm.ReadDebug),
 		"GET /debug-data": AuthSsn(sb, Log(http.HandlerFunc(GetDebugData)), perm.ReadDebug),

@@ -7,8 +7,12 @@ import (
 	"time"
 
 	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/boggydigital/middleware"
 	"github.com/boggydigital/nod"
+)
+
+const (
+	LastModifiedHeader    = "Last-Modified"
+	IfModifiedSinceHeader = "If-Modified-Since"
 )
 
 func GetAtom(w http.ResponseWriter, r *http.Request) {
@@ -23,8 +27,8 @@ func GetAtom(w http.ResponseWriter, r *http.Request) {
 
 	if stat, err := os.Stat(absAtomFeedPath); err == nil {
 
-		w.Header().Set(middleware.LastModifiedHeader, stat.ModTime().UTC().Format(http.TimeFormat))
-		ifModifiedSince := r.Header.Get(middleware.IfModifiedSinceHeader)
+		w.Header().Set(LastModifiedHeader, stat.ModTime().UTC().Format(http.TimeFormat))
+		ifModifiedSince := r.Header.Get(IfModifiedSinceHeader)
 		lastModified := stat.ModTime().UTC().Format(http.TimeFormat)
 
 		if ims, err := time.Parse(http.TimeFormat, ifModifiedSince); err == nil {

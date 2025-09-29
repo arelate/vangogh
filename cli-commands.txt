@@ -101,10 +101,6 @@ serve
     lang-code$
     no-patches$
     downloads-layout$={downloads-layouts^}
-    admin-username$
-    admin-password$
-    shared-username$
-    shared-password$
 
 size
     id^&
