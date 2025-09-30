@@ -49,7 +49,12 @@ func Init(layout vangogh_integration.DownloadsLayout) error {
 		return err
 	}
 
-	sb, err = author.NewSessionBouncer(authorDir, perm.GetRolesPermissions(), "/login", "/success")
+	paths := map[string]string{
+		author.LoginPath:   "/login",
+		author.SuccessPath: "/success",
+	}
+
+	sb, err = author.NewSessionBouncer(authorDir, perm.GetRolesPermissions(), paths)
 	if err != nil {
 		return err
 	}
