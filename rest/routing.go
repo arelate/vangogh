@@ -26,7 +26,7 @@ func HandleFuncs() {
 		// public data endpoints
 		"GET /login":    Log(http.HandlerFunc(GetLogin)),
 		"POST /auth":    Log(http.HandlerFunc(sb.AuthenticateUser)),
-		"POST /success": Log(http.HandlerFunc(PostSuccess)),
+		"POST /success": AuthSsn(sb, Log(http.HandlerFunc(PostSuccess))),
 		// soon to be authenticated endpoints
 		"GET /updates":       AuthSsn(sb, Log(http.HandlerFunc(GetUpdates)), perm.ReadUpdates),
 		"GET /search":        AuthSsn(sb, Log(http.HandlerFunc(GetSearch)), perm.ReadSearch),
