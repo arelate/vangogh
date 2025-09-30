@@ -58,8 +58,7 @@ func HandleFuncs() {
 		// products redirects
 		"GET /products": Redirect("/search", http.StatusPermanentRedirect),
 		// API
-		"GET /api/health":                 Log(http.HandlerFunc(GetHealth)),
-		"GET /api/health-auth":            AuthSsn(sb, Log(http.HandlerFunc(GetHealth)), perm.ReadApi),
+		"GET /api/health":                 AuthSsn(sb, Log(http.HandlerFunc(GetHealth)), perm.ReadApi),
 		"GET /api/product-details":        AuthSsn(sb, Log(http.HandlerFunc(GetProductDetails)), perm.ReadApi),
 		"GET /api/wine-binaries-versions": AuthSsn(sb, Log(http.HandlerFunc(GetWineBinariesVersions)), perm.ReadApi),
 		// debug endpoints

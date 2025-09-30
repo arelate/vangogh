@@ -28,8 +28,12 @@ const (
 func GetRolesPermissions() map[string][]author.Permission {
 
 	return map[string][]author.Permission{
-		RoleAdmin: {ReadUpdates, ReadSearch, ReadProductData, ReadImages, ReadFiles, ReadWishlist, WriteWishlist, ReadAccountTags, WriteAccountTags, ReadLocalTags, WriteLocalTags, ReadApi, ReadDebug, ReadLogs},
-		RoleUser:  {ReadUpdates, ReadSearch, ReadProductData, ReadImages, ReadFiles, ReadLocalTags, WriteLocalTags, ReadApi},
-		RoleDemo:  {ReadUpdates, ReadSearch, ReadProductData, ReadImages},
+		RoleAdmin: {ReadUpdates, ReadSearch, ReadProductData, ReadImages,
+			ReadFiles, ReadLocalTags, WriteLocalTags, ReadApi,
+			ReadWishlist, WriteWishlist, ReadAccountTags, WriteAccountTags, ReadDebug, ReadLogs},
+		RoleUser: {ReadUpdates, ReadSearch, ReadProductData, ReadImages,
+			ReadFiles, ReadLocalTags, WriteLocalTags, ReadApi},
+		RoleDemo: {ReadUpdates, ReadSearch, ReadProductData, ReadImages},
 	}
+
 }
