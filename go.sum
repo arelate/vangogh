@@ -8,6 +8,8 @@ github.com/boggydigital/author v0.1.10 h1:AHQ0f8hqjCvI78QtBXdP+tIpmajdle7p+ffaRX
 github.com/boggydigital/author v0.1.10/go.mod h1:TByLkZmjPXYcK+l3920TEybnXYK7+qjc6oGLKnnEtVI=
 github.com/boggydigital/author v0.1.11 h1:mU+i9ZHkFoi20xpuqSU20nJ7Mty7NjTJo3u2Uspx8+U=
 github.com/boggydigital/author v0.1.11/go.mod h1:TByLkZmjPXYcK+l3920TEybnXYK7+qjc6oGLKnnEtVI=
+github.com/boggydigital/author v0.1.13 h1:i2/h+9ss1NUvEGxWpSKrmYzSALE1mrDYiDEePllJnt8=
+github.com/boggydigital/author v0.1.13/go.mod h1:TByLkZmjPXYcK+l3920TEybnXYK7+qjc6oGLKnnEtVI=
 github.com/boggydigital/backups v0.1.6 h1:E0YU7K/muSjmJcDtMBUP3mQN46/9kkq+HczuKxRWx14=
 github.com/boggydigital/backups v0.1.6/go.mod h1:k2oRf30c7FL5ZCUCVBEzDB2Cem1LevVTkVHR/WqaU7I=
 github.com/boggydigital/busan v0.1.1 h1:sP0vbrgazePvThZZh0pQdn9BfWkvdQGTaQLF2YQliAo=
