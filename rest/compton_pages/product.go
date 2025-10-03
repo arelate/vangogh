@@ -291,9 +291,19 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 	}
 
 	if owned, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && owned == vangogh_integration.TrueValue {
+
+		var hintSentences []string
+
+		if preorder, sure := rdx.GetLastVal(vangogh_integration.PreOrderProperty, id); sure && preorder == vangogh_integration.TrueValue {
+			hintSentences = append(hintSentences, "Installers are not available for pre-orders.")
+		}
+
 		if productType, sure := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); sure && productType != vangogh_integration.GameProductType {
 
-			hintSentences := []string{"No installers here."}
+			if len(hintSentences) == 0 {
+				hintSentences = append(hintSentences, "No installers here.")
+			}
+
 			switch productType {
 			case vangogh_integration.DlcProductType:
 				hintSentences = append(hintSentences, "Visit the <b>Offerings</b> section for the required product download links - including this DLC.")
@@ -301,16 +311,19 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 				hintSentences = append(hintSentences, "See the <b>Offerings</b> section for included products with downloads.")
 			}
 
-			nonGameInstallersHint := compton.Fspan(p, strings.Join(hintSentences, " ")).
+		}
+
+		if len(hintSentences) > 0 {
+			noInstallersHint := compton.Fspan(p, strings.Join(hintSentences, " ")).
 				FontSize(size.Small).
 				ForegroundColor(color.RepGray).
 				TextAlign(align.Center)
 
 			pageStack.Append(
 				compton.Break(),
-				compton.FICenter(p, nonGameInstallersHint))
-
+				compton.FICenter(p, noInstallersHint))
 		}
+
 	}
 
 	/* Standard app footer */

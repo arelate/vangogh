@@ -44,7 +44,11 @@ func ProductSections(id string, rdx redux.Readable) []string {
 
 	if val, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && val == vangogh_integration.TrueValue {
 		if productType, sure := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); sure && productType == vangogh_integration.GameProductType {
-			hasSections = append(hasSections, compton_data.InstallersSection)
+			if preorder, yeah := rdx.GetLastVal(vangogh_integration.PreOrderProperty, id); yeah && preorder == vangogh_integration.TrueValue {
+				// do nothing
+			} else {
+				hasSections = append(hasSections, compton_data.InstallersSection)
+			}
 		}
 	}
 
