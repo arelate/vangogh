@@ -1,7 +1,3 @@
-body {
-    margin: var(--s-n);
-}
-
 pre {
     max-width: var(--s-maxw);
     font-weight: var(--fw-n);
