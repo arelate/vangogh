@@ -25,6 +25,7 @@ func HandleFuncs() {
 		"GET /atom":          Log(http.HandlerFunc(GetAtom)),
 		// public data endpoints
 		"GET /login":    Log(http.HandlerFunc(GetLogin)),
+		"GET /logout":   Log(http.HandlerFunc(sb.DeauthSession)),
 		"POST /auth":    Log(http.HandlerFunc(sb.AuthBrowserUsernamePassword)),
 		"POST /success": AuthSt(sb, Log(http.HandlerFunc(PostSuccess))),
 		// soon to be authenticated endpoints
