@@ -90,7 +90,12 @@ func Users(action userAction, username, password, role string) error {
 			return err
 		}
 	case userActionList:
-		userRoles := auth.GetUserRoles()
+
+		var userRoles map[string][]string
+		userRoles, err = auth.GetUserRoles()
+		if err != nil {
+			return err
+		}
 
 		if len(userRoles) > 0 {
 			ua.EndWithSummary("users and roles:", userRoles)
