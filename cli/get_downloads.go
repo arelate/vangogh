@@ -266,6 +266,13 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 			absDownloadPath := filepath.Join(absSlugDownloadDir, filename)
 
 			if _, err = os.Stat(absDownloadPath); err == nil {
+
+				// set the file as Downloaded, to avoid keeping it as Downloading
+				if err = gdd.rdx.ReplaceValues(vangogh_integration.ManualUrlStatusProperty,
+					dl.ManualUrl, vangogh_integration.ManualUrlDownloaded.String()); err != nil {
+					return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
+				}
+
 				dmua.EndWithResult("already exists: %s", filename)
 				return nil
 			} else if !os.IsNotExist(err) {
@@ -297,7 +304,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 
 	//3
 	_, resolvedFilename := path.Split(resolvedUrl.Path)
-	if err := gdd.rdx.ReplaceValues(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl, resolvedFilename); err != nil {
+	if err = gdd.rdx.ReplaceValues(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl, resolvedFilename); err != nil {
 		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 	}
 

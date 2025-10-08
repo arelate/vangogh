@@ -391,6 +391,9 @@ func getDownloadVariants(os vangogh_integration.OperatingSystem, title string, d
 			if edv.validationResult < vr {
 				edv.validationResult = vr
 			}
+			if edv.manualUrlStatus < mus {
+				edv.manualUrlStatus = mus
+			}
 		}
 
 	}
