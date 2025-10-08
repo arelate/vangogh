@@ -60,7 +60,7 @@ func HandleFuncs() {
 		"GET /products": Redirect("/search", http.StatusPermanentRedirect),
 		// API
 		"POST /api/auth-user":             Log(http.HandlerFunc(sb.AuthApiUsernamePassword)),
-		"POST /api/auth-session":          AuthSt(sb, Log(http.HandlerFunc(sb.AuthApiSession)), perm.ReadApi),
+		"POST /api/auth-session":          Log(http.HandlerFunc(sb.AuthApiSession)),
 		"GET /api/product-details":        AuthSt(sb, Log(http.HandlerFunc(GetProductDetails)), perm.ReadApi),
 		"GET /api/wine-binaries-versions": AuthSt(sb, Log(http.HandlerFunc(GetWineBinariesVersions)), perm.ReadApi),
 		// debug endpoints
