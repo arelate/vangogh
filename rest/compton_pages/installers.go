@@ -388,10 +388,12 @@ func getDownloadVariants(os vangogh_integration.OperatingSystem, title string, d
 			variants = append(variants, dv)
 		} else {
 			edv.estimatedBytes += dl.EstimatedBytes
+			// use the "worst" validation result, worse = larger value
 			if edv.validationResult < vr {
 				edv.validationResult = vr
 			}
-			if edv.manualUrlStatus < mus {
+			// use the "most in progress" manual url status, most in progress = smaller value
+			if edv.manualUrlStatus > mus {
 				edv.manualUrlStatus = mus
 			}
 		}
