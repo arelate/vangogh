@@ -24,6 +24,7 @@ type DownloadVariant struct {
 	version          string
 	langCode         string
 	estimatedBytes   int64
+	manualUrlStatus  vangogh_integration.ManualUrlStatus
 	validationResult vangogh_integration.ValidationResult
 }
 
@@ -146,11 +147,24 @@ func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 		fr.PropVal("Size", vangogh_integration.FormatBytes(dv.estimatedBytes))
 	}
 
+	var manualUrlStatus string
+	manualUrlColor := color.RepGray
+	manualUrlFontWeight := font_weight.Normal
+
+	switch dv.validationResult {
+	case vangogh_integration.ValidationResultUnknown:
+		manualUrlStatus = dv.manualUrlStatus.HumanReadableString()
+	default:
+		manualUrlStatus = dv.validationResult.HumanReadableString()
+		manualUrlColor = compton_fragments.ValidationResultsColors[dv.validationResult]
+		manualUrlFontWeight = validationResultsFontWeights[dv.validationResult]
+	}
+
 	if dv.downloadType == vangogh_integration.Installer || dv.downloadType == vangogh_integration.DLC {
-		validationResult := compton.Fspan(r, dv.validationResult.HumanReadableString()).
+		validationResult := compton.Fspan(r, manualUrlStatus).
 			FontSize(size.XSmall).
-			ForegroundColor(compton_fragments.ValidationResultsColors[dv.validationResult]).
-			FontWeight(validationResultsFontWeights[dv.validationResult])
+			ForegroundColor(manualUrlColor).
+			FontWeight(manualUrlFontWeight)
 
 		fr.Elements(validationResult)
 	}
@@ -344,13 +358,19 @@ func getDownloadVariants(os vangogh_integration.OperatingSystem, title string, d
 			continue
 		}
 
-		var vr vangogh_integration.ValidationResult
-		if muss, ok := rdx.GetLastVal(vangogh_integration.ManualUrlStatusProperty, dl.ManualUrl); ok && vangogh_integration.ParseManualUrlStatus(muss) == vangogh_integration.ManualUrlValidated {
-			if vrs, sure := rdx.GetLastVal(vangogh_integration.ManualUrlValidationResultProperty, dl.ManualUrl); sure {
-				vr = vangogh_integration.ParseValidationResult(vrs)
-			} else {
-				vr = vangogh_integration.ValidationResultUnknown
+		var mus vangogh_integration.ManualUrlStatus
+		vr := vangogh_integration.ValidationResultUnknown
+
+		if muss, ok := rdx.GetLastVal(vangogh_integration.ManualUrlStatusProperty, dl.ManualUrl); ok {
+
+			mus = vangogh_integration.ParseManualUrlStatus(muss)
+
+			if mus == vangogh_integration.ManualUrlValidated {
+				if vrs, sure := rdx.GetLastVal(vangogh_integration.ManualUrlValidationResultProperty, dl.ManualUrl); sure {
+					vr = vangogh_integration.ParseValidationResult(vrs)
+				}
 			}
+
 		} else {
 			vr = vangogh_integration.ValidationResultUnknown
 		}
@@ -361,6 +381,7 @@ func getDownloadVariants(os vangogh_integration.OperatingSystem, title string, d
 			langCode:         dl.LanguageCode,
 			estimatedBytes:   dl.EstimatedBytes,
 			validationResult: vr,
+			manualUrlStatus:  mus,
 		}
 
 		if edv := getDownloadVariant(variants, dv); edv == nil {
