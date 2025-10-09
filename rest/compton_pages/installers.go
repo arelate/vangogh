@@ -252,30 +252,12 @@ func downloadLink(r compton.Registrar,
 
 	if dl.Type == vangogh_integration.Installer || dl.Type == vangogh_integration.DLC {
 
-		manualUrlValidationResult := vangogh_integration.ValidationResultUnknown
-		manualUrlStatus := vangogh_integration.ManualUrlStatusUnknown
+		dvs := vangogh_integration.NewDvs(dl.ManualUrl, rdx)
 
-		if muss, ok := rdx.GetLastVal(vangogh_integration.ManualUrlStatusProperty, dl.ManualUrl); ok {
-			manualUrlStatus = vangogh_integration.ParseManualUrlStatus(muss)
-			if manualUrlStatus == vangogh_integration.ManualUrlValidated {
-				if vrs, sure := rdx.GetLastVal(vangogh_integration.ManualUrlValidationResultProperty, dl.ManualUrl); sure {
-					manualUrlValidationResult = vangogh_integration.ParseValidationResult(vrs)
-				}
-			}
-		}
-
-		var statusValidationResult string
-		switch manualUrlValidationResult {
-		case vangogh_integration.ValidationResultUnknown:
-			statusValidationResult = manualUrlStatus.HumanReadableString()
-		default:
-			statusValidationResult = manualUrlValidationResult.HumanReadableString()
-		}
-
-		manualUrlStatusValidationResult := compton.Fspan(r, statusValidationResult).
+		manualUrlStatusValidationResult := compton.Fspan(r, dvs.HumanReadableString()).
 			FontSize(size.XSmall).
-			ForegroundColor(compton_fragments.ValidationResultsColors[manualUrlValidationResult]).
-			FontWeight(validationResultsFontWeights[manualUrlValidationResult])
+			ForegroundColor(compton_fragments.ValidationResultsColors[dvs.ValidationResult()]).
+			FontWeight(validationResultsFontWeights[dvs.ValidationResult()])
 		linkColumn.Append(manualUrlStatusValidationResult)
 	}
 
@@ -358,30 +340,15 @@ func getDownloadVariants(os vangogh_integration.OperatingSystem, title string, d
 			continue
 		}
 
-		var mus vangogh_integration.ManualUrlStatus
-		vr := vangogh_integration.ValidationResultUnknown
-
-		if muss, ok := rdx.GetLastVal(vangogh_integration.ManualUrlStatusProperty, dl.ManualUrl); ok {
-
-			mus = vangogh_integration.ParseManualUrlStatus(muss)
-
-			if mus == vangogh_integration.ManualUrlValidated {
-				if vrs, sure := rdx.GetLastVal(vangogh_integration.ManualUrlValidationResultProperty, dl.ManualUrl); sure {
-					vr = vangogh_integration.ParseValidationResult(vrs)
-				}
-			}
-
-		} else {
-			vr = vangogh_integration.ValidationResultUnknown
-		}
+		dvs := vangogh_integration.NewDvs(dl.ManualUrl, rdx)
 
 		dv := &DownloadVariant{
 			downloadType:     dl.Type,
 			version:          dl.Version,
 			langCode:         dl.LanguageCode,
 			estimatedBytes:   dl.EstimatedBytes,
-			validationResult: vr,
-			manualUrlStatus:  mus,
+			validationResult: dvs.ValidationResult(),
+			manualUrlStatus:  dvs.ManualUrlStatus(),
 		}
 
 		if edv := getDownloadVariant(variants, dv); edv == nil {
@@ -389,12 +356,12 @@ func getDownloadVariants(os vangogh_integration.OperatingSystem, title string, d
 		} else {
 			edv.estimatedBytes += dl.EstimatedBytes
 			// use the "worst" validation result, worse = larger value
-			if edv.validationResult < vr {
-				edv.validationResult = vr
+			if edv.validationResult < dvs.ValidationResult() {
+				edv.validationResult = dvs.ValidationResult()
 			}
 			// use the "most in progress" manual url status, most in progress = smaller value
-			if edv.manualUrlStatus > mus {
-				edv.manualUrlStatus = mus
+			if edv.manualUrlStatus > dvs.ManualUrlStatus() {
+				edv.manualUrlStatus = dvs.ManualUrlStatus()
 			}
 		}
 

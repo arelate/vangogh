@@ -8,6 +8,10 @@ github.com/arelate/southern_light v0.3.49 h1:N9nbSxv8Pw6u9D+Q4NWRoFt8PbfkDdhnKvT
 github.com/arelate/southern_light v0.3.49/go.mod h1:F69W9BwWJOuw3a/gnN1gR+oEMLAclfbtdHmZcQUb9uU=
 github.com/arelate/southern_light v0.3.50 h1:eogRsFm8JboT7hpTJDQ3hXeRNp8FIsIiMojTmFpzCRA=
 github.com/arelate/southern_light v0.3.50/go.mod h1:F69W9BwWJOuw3a/gnN1gR+oEMLAclfbtdHmZcQUb9uU=
+github.com/arelate/southern_light v0.3.51 h1:UUR+GuJuj2mRH2CujOZkIZzCwmGUw0X218vWlRApdZk=
+github.com/arelate/southern_light v0.3.51/go.mod h1:hs+emkSayVAhRWsnSkLWSsDqkAM8LE+wxOl1qxq+8OM=
+github.com/arelate/southern_light v0.3.52 h1:5r6n0cxjd0ZjDf55+Zr7QImwSfqh6+UdeomDS3TriUc=
+github.com/arelate/southern_light v0.3.52/go.mod h1:hs+emkSayVAhRWsnSkLWSsDqkAM8LE+wxOl1qxq+8OM=
 github.com/boggydigital/atomus v0.1.11 h1:n9XRgPqF3OgnK8UK7yJ3aG5sQkwacBjtqzzOxCXz33A=
 github.com/boggydigital/atomus v0.1.11/go.mod h1:/ga4zus10Z3FiNDU4JmRw5fdm0IW78qoezV/Ni44V5s=
 github.com/boggydigital/author v0.1.9 h1:8IhvoUUQB7v++iLeQUq4RKkojAUE1PjMX6OFWHwvXYc=
@@ -26,6 +30,8 @@ github.com/boggydigital/author v0.1.16 h1:HQUq47/GkpwFouqYSff3z82pA4929ObCWorixr
 github.com/boggydigital/author v0.1.16/go.mod h1:TByLkZmjPXYcK+l3920TEybnXYK7+qjc6oGLKnnEtVI=
 github.com/boggydigital/author v0.1.17 h1:bTMtLVB7gdLAgYLEHwoZN+FQgYxrbcsSc/gWFnoGHgs=
 github.com/boggydigital/author v0.1.17/go.mod h1:TByLkZmjPXYcK+l3920TEybnXYK7+qjc6oGLKnnEtVI=
+github.com/boggydigital/author v0.1.18 h1:KEGqFr56dMjOYVQSFb43U05W0wHNnYb14V+HHr3jt8Y=
+github.com/boggydigital/author v0.1.18/go.mod h1:11oYKJzlZAGHPZrfZncJrYOvFpc6ctKNuPcWj4lq8ik=
 github.com/boggydigital/backups v0.1.6 h1:E0YU7K/muSjmJcDtMBUP3mQN46/9kkq+HczuKxRWx14=
 github.com/boggydigital/backups v0.1.6/go.mod h1:k2oRf30c7FL5ZCUCVBEzDB2Cem1LevVTkVHR/WqaU7I=
 github.com/boggydigital/busan v0.1.1 h1:sP0vbrgazePvThZZh0pQdn9BfWkvdQGTaQLF2YQliAo=
@@ -62,7 +68,13 @@ github.com/boggydigital/yet_urls v0.1.57 h1:wMnDpjc2xDlP2ScGRcskfQj+X6s95S+HGtWi
 github.com/boggydigital/yet_urls v0.1.57/go.mod h1:Cn2NQWWljMw9iJSdQh7UZh2jXNeanG0JQE8nbBG9oFY=
 golang.org/x/crypto v0.42.0 h1:chiH31gIWm57EkTXpwnqf8qeuMUi0yekh6mT2AvFlqI=
 golang.org/x/crypto v0.42.0/go.mod h1:4+rDnOTJhQCx2q7/j6rAN5XDw8kPjeaXEUR2eL94ix8=
+golang.org/x/crypto v0.43.0 h1:dduJYIi3A3KOfdGOHX8AVZ/jGiyPa3IbBozJ5kNuE04=
+golang.org/x/crypto v0.43.0/go.mod h1:BFbav4mRNlXJL4wNeejLpWxB7wMbc79PdRGhWKncxR0=
 golang.org/x/image v0.31.0 h1:mLChjE2MV6g1S7oqbXC0/UcKijjm5fnJLUYKIYrLESA=
 golang.org/x/image v0.31.0/go.mod h1:R9ec5Lcp96v9FTF+ajwaH3uGxPH4fKfHHAVbUILxghA=
+golang.org/x/image v0.32.0 h1:6lZQWq75h7L5IWNk0r+SCpUJ6tUVd3v4ZHnbRKLkUDQ=
+golang.org/x/image v0.32.0/go.mod h1:/R37rrQmKXtO6tYXAjtDLwQgFLHmhW+V6ayXlxzP2Pc=
 golang.org/x/net v0.44.0 h1:evd8IRDyfNBMBTTY5XRF1vaZlD+EmWx6x8PkhR04H/I=
 golang.org/x/net v0.44.0/go.mod h1:ECOoLqd5U3Lhyeyo/QDCEVQ4sNgYsqvCZ722XogGieY=
+golang.org/x/net v0.46.0 h1:giFlY12I07fugqwPuWJi68oOnpfqFnJIJzaIIm2JVV4=
+golang.org/x/net v0.46.0/go.mod h1:Q9BGdFy1y4nkUwiLvT5qtyhAnEHgnQ/zd8PfU6nc210=

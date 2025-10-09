@@ -3,12 +3,13 @@ package rest
 import (
 	"encoding/json"
 	"encoding/xml"
-	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/boggydigital/nod"
-	"github.com/boggydigital/redux"
 	"net/http"
 	"os"
 	"path/filepath"
+
+	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/nod"
+	"github.com/boggydigital/redux"
 )
 
 const applicationJsonContentType = "application/json"
@@ -103,14 +104,19 @@ func getProductDetails(id string, dls vangogh_integration.DownloadsList, rdx red
 	}
 
 	for _, dl := range dls {
+
+		dvs := vangogh_integration.NewDvs(dl.ManualUrl, rdx)
+
 		link := vangogh_integration.ProductDownloadLink{
-			ManualUrl:       dl.ManualUrl,
-			Name:            dl.Name,
-			OperatingSystem: dl.OS,
-			Type:            dl.Type,
-			LanguageCode:    dl.LanguageCode,
-			Version:         dl.Version,
-			EstimatedBytes:  dl.EstimatedBytes,
+			ManualUrl:        dl.ManualUrl,
+			Name:             dl.Name,
+			OperatingSystem:  dl.OS,
+			Type:             dl.Type,
+			LanguageCode:     dl.LanguageCode,
+			Version:          dl.Version,
+			EstimatedBytes:   dl.EstimatedBytes,
+			ManualUrlStatus:  dvs.ManualUrlStatus(),
+			ValidationResult: dvs.ValidationResult(),
 		}
 
 		if dl.Type == vangogh_integration.DLC {
@@ -130,18 +136,6 @@ func getProductDetails(id string, dls vangogh_integration.DownloadsList, rdx red
 			if md5, err := getMd5Checksum(absDownloadPath); err == nil {
 				link.Md5 = md5
 			}
-		}
-
-		if muss, ok := rdx.GetLastVal(vangogh_integration.ManualUrlStatusProperty, dl.ManualUrl); ok && muss != "" {
-			link.Status = muss
-		} else {
-			link.Status = vangogh_integration.ManualUrlStatusUnknown.String()
-		}
-
-		if vrs, ok := rdx.GetLastVal(vangogh_integration.ManualUrlValidationResultProperty, dl.ManualUrl); ok && vrs != "" {
-			link.ValidationResult = vangogh_integration.ParseValidationResult(vrs)
-		} else {
-			link.ValidationResult = vangogh_integration.ValidationResultUnknown
 		}
 
 		productDetails.DownloadLinks = append(productDetails.DownloadLinks, link)
