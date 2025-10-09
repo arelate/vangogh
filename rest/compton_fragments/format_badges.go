@@ -12,8 +12,10 @@ import (
 )
 
 var ValidationResultsColors = map[vangogh_integration.ValidationResult]color.Color{
-	vangogh_integration.ValidationResultUnknown:      color.RepGray,
+	vangogh_integration.ValidationQueued:             color.RepGray,
+	vangogh_integration.ValidationValidating:         color.RepGray,
 	vangogh_integration.ValidatedSuccessfully:        color.Green,
+	vangogh_integration.ValidationResultUnknown:      color.RepGray,
 	vangogh_integration.ValidatedUnresolvedManualUrl: color.Teal,
 	vangogh_integration.ValidatedMissingLocalFile:    color.Teal,
 	vangogh_integration.ValidatedMissingChecksum:     color.Teal,
