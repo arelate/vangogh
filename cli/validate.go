@@ -250,6 +250,10 @@ func (vd *validateDelegate) Process(id, slug string, list vangogh_integration.Do
 	sva := nod.Begin(slug)
 	defer sva.Done()
 
+	if err := vd.rdx.ReplaceValues(vangogh_integration.ProductValidationResultProperty, id, vangogh_integration.ValidationValidating.String()); err != nil {
+		return err
+	}
+
 	manualUrlsValidationResults := make(map[string][]string)
 
 	productVrs := make([]vangogh_integration.ValidationResult, 0, len(list))
