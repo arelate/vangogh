@@ -174,12 +174,20 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 		}
 	}
 
-	// reset manual-urls status to queued prior to downloading
-	manualUrlsQueued := make(map[string][]string)
+	// reset manual-urls download status to queued prior to downloading
+	// reset manual-urls validation result to unknown prior to downloading
+	manualUrlDownloadQueued := make(map[string][]string)
+	manualUrlValidationResultUnknown := make(map[string][]string)
 	for _, manualUrl := range manualUrls {
-		manualUrlsQueued[manualUrl] = []string{vangogh_integration.ManualUrlQueued.String()}
+		manualUrlDownloadQueued[manualUrl] = []string{vangogh_integration.ManualUrlQueued.String()}
+		manualUrlValidationResultUnknown[manualUrl] = []string{vangogh_integration.ValidationResultUnknown.String()}
 	}
-	if err := gdd.rdx.BatchAddValues(vangogh_integration.ManualUrlStatusProperty, manualUrlsQueued); err != nil {
+
+	if err := gdd.rdx.BatchReplaceValues(vangogh_integration.ManualUrlStatusProperty, manualUrlDownloadQueued); err != nil {
+		return err
+	}
+
+	if err := gdd.rdx.BatchReplaceValues(vangogh_integration.ManualUrlValidationResultProperty, manualUrlValidationResultUnknown); err != nil {
 		return err
 	}
 
