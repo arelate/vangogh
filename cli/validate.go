@@ -254,10 +254,26 @@ func (vd *validateDelegate) Process(id, slug string, list vangogh_integration.Do
 
 	productVrs := make([]vangogh_integration.ValidationResult, 0, len(list))
 
+	validationQueued := make(map[string][]string)
+	for _, dl := range list {
+		validationQueued[dl.ManualUrl] = []string{vangogh_integration.ValidationQueued.String()}
+	}
+
+	if err := vd.rdx.BatchReplaceValues(vangogh_integration.ManualUrlValidationResultProperty, validationQueued); err != nil {
+		return err
+	}
+
 	for _, dl := range list {
 
 		if dl.Type != vangogh_integration.Installer && dl.Type != vangogh_integration.DLC {
 			continue
+		}
+
+		if err := vd.rdx.ReplaceValues(
+			vangogh_integration.ManualUrlValidationResultProperty,
+			dl.ManualUrl,
+			vangogh_integration.ValidationValidating.String()); err != nil {
+			return err
 		}
 
 		vr, err := validateManualUrl(slug, &dl, vd.rdx, vd.downloadsLayout)
