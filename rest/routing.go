@@ -24,10 +24,9 @@ func HandleFuncs() {
 		"GET /icon.png":      Log(http.HandlerFunc(GetIcon)),
 		"GET /atom":          Log(http.HandlerFunc(GetAtom)),
 		// public data endpoints
-		"GET /login":    Log(http.HandlerFunc(GetLogin)),
-		"GET /logout":   Log(http.HandlerFunc(sb.DeauthSession)),
-		"POST /auth":    Log(http.HandlerFunc(sb.AuthBrowserUsernamePassword)),
-		"POST /success": AuthSt(sb, Log(http.HandlerFunc(PostSuccess))),
+		"GET /login":  Log(http.HandlerFunc(GetLogin)),
+		"GET /logout": Log(http.HandlerFunc(sb.DeauthSession)),
+		"POST /auth":  Log(http.HandlerFunc(sb.AuthBrowserUsernamePassword)),
 		// soon to be authenticated endpoints
 		"GET /updates":       AuthSt(sb, Log(http.HandlerFunc(GetUpdates)), perm.ReadUpdates),
 		"GET /search":        AuthSt(sb, Log(http.HandlerFunc(GetSearch)), perm.ReadSearch),
