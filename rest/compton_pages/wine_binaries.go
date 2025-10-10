@@ -81,7 +81,7 @@ func WineBinaries() compton.PageElement {
 
 	}
 
-	pageStack.Append(compton.Br(), compton_fragments.PageFooter(p))
+	pageStack.Append(compton.Br(), compton.FICenter(p, compton_fragments.GitHubLink(p), compton_fragments.LogoutLink(p)))
 
 	return p
 }

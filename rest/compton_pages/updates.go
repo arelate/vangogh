@@ -146,7 +146,7 @@ func Updates(section string, rdx redux.Readable, showAll bool) compton.PageEleme
 
 	/* Standard app footer */
 
-	pageStack.Append(compton_fragments.PageFooter(p))
+	pageStack.Append(compton.FICenter(p, compton_fragments.GitHubLink(p), compton_fragments.LogoutLink(p)))
 
 	return p
 }

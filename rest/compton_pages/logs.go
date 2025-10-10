@@ -71,7 +71,7 @@ func Logs(rdx redux.Readable) compton.PageElement {
 
 	pageStack.Append(compton.Br(), compton_fragments.SyncStatus(p, rdx))
 
-	pageStack.Append(compton_fragments.PageFooter(p))
+	pageStack.Append(compton.FICenter(p, compton_fragments.GitHubLink(p), compton_fragments.LogoutLink(p)))
 
 	return p
 }
