@@ -8,9 +8,11 @@ import (
 	"time"
 
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/perm"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/arelate/vangogh/rest/compton_styles"
+	"github.com/boggydigital/author"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
@@ -26,7 +28,7 @@ var openSections = []string{
 	compton_data.InfoSection,
 }
 
-func Product(id string, rdx redux.Readable) compton.PageElement {
+func Product(id string, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
 
 	title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
 	if !ok {
@@ -328,7 +330,14 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 	/* Standard app footer */
 
-	pageStack.Append(compton.Br(), compton.FICenter(p, compton_fragments.DebugLink(p, id), compton_fragments.GitHubLink(p), compton_fragments.LogoutLink(p)))
+	var footerLinks []compton.Element
+
+	if slices.Contains(permissions, perm.ReadDebug) {
+		footerLinks = append(footerLinks, compton_fragments.DebugLink(p, id))
+	}
+	footerLinks = append(footerLinks, compton_fragments.GitHubLink(p), compton_fragments.LogoutLink(p))
+
+	pageStack.Append(compton.Br(), compton.FICenter(p, footerLinks...))
 
 	return p
 }

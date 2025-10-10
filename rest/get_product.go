@@ -1,11 +1,12 @@
 package rest
 
 import (
+	"net/http"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_pages"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/redux"
-	"net/http"
 )
 
 func GetProduct(w http.ResponseWriter, r *http.Request) {
@@ -37,7 +38,13 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 
 	id := r.URL.Query().Get(vangogh_integration.IdProperty)
 
-	if productPage := compton_pages.Product(id, rdx); productPage != nil {
+	sessionPermissions, err := sb.GetPermissions(r)
+	if err != nil {
+		http.Error(w, nod.Error(err).Error(), http.StatusBadRequest)
+		return
+	}
+
+	if productPage := compton_pages.Product(id, rdx, sessionPermissions...); productPage != nil {
 		if err := productPage.WriteResponse(w); err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		}
