@@ -1,12 +1,16 @@
 package compton_fragments
 
 import (
+	"slices"
+
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/perm"
 	"github.com/arelate/vangogh/rest/compton_data"
+	"github.com/boggydigital/author"
 	"github.com/boggydigital/redux"
 )
 
-func ProductSections(id string, rdx redux.Readable) []string {
+func ProductSections(id string, rdx redux.Readable, permissions ...author.Permission) []string {
 
 	hasSections := make([]string, 0)
 
@@ -42,12 +46,14 @@ func ProductSections(id string, rdx redux.Readable) []string {
 		hasSections = append(hasSections, compton_data.CompatibilitySection)
 	}
 
-	if val, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && val == vangogh_integration.TrueValue {
-		if productType, sure := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); sure && productType == vangogh_integration.GameProductType {
-			if preorder, yeah := rdx.GetLastVal(vangogh_integration.PreOrderProperty, id); yeah && preorder == vangogh_integration.TrueValue {
-				// do nothing
-			} else {
-				hasSections = append(hasSections, compton_data.InstallersSection)
+	if slices.Contains(permissions, perm.ReadFiles) {
+		if val, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && val == vangogh_integration.TrueValue {
+			if productType, sure := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); sure && productType == vangogh_integration.GameProductType {
+				if preorder, yeah := rdx.GetLastVal(vangogh_integration.PreOrderProperty, id); yeah && preorder == vangogh_integration.TrueValue {
+					// do nothing
+				} else {
+					hasSections = append(hasSections, compton_data.InstallersSection)
+				}
 			}
 		}
 	}

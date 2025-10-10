@@ -100,7 +100,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 
 	/* Product details sections */
 
-	hasSections := compton_fragments.ProductSections(id, rdx)
+	hasSections := compton_fragments.ProductSections(id, rdx, permissions...)
 
 	for ii, section := range hasSections {
 
