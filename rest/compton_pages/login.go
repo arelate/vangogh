@@ -9,6 +9,7 @@ import (
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/size"
+	"golang.org/x/net/html/atom"
 )
 
 const (
@@ -42,6 +43,10 @@ func Login(authPath string) compton.PageElement {
 
 	tiUsername := compton.TIText(p, usernameLabelTitle, author.UsernameParam).Width(size.XXXLarge)
 	tiPassword := compton.TIPassword(p, passwordLabelTitle, author.PasswordParam).Width(size.XXXLarge)
+
+	if input := tiUsername.GetFirstElementByTagName(atom.Input); input != nil {
+		input.SetAttribute("autofocus", "")
+	}
 
 	submitNavLink := compton.NavLinks(p)
 	submitNavLink.AppendSubmitLink(p, &compton.NavTarget{
