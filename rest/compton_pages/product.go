@@ -15,6 +15,7 @@ import (
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
+	"github.com/boggydigital/compton/consts/font_weight"
 	"github.com/boggydigital/compton/consts/loading"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/issa"
@@ -328,7 +329,10 @@ func Product(id string, rdx redux.Readable) compton.PageElement {
 
 	/* Standard app footer */
 
-	pageStack.Append(compton.Br(), compton_fragments.PageFooter(p))
+	debugLink := compton.A("/debug?id=" + id)
+	debugLink.Append(compton.Fspan(p, "Debug product data").FontSize(size.XSmall).ForegroundColor(color.Blue).FontWeight(font_weight.Bolder))
+
+	pageStack.Append(compton.Br(), compton.FICenter(p, debugLink), compton_fragments.PageFooter(p))
 
 	return p
 }

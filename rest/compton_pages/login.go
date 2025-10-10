@@ -3,6 +3,7 @@ package compton_pages
 import (
 	"net/http"
 
+	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/boggydigital/author"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
@@ -57,7 +58,7 @@ func Login(authPath string) compton.PageElement {
 
 	formStack.Append(tiUsername, tiPassword, submitNavLink)
 
-	pageStack.Append(compton.Footer(p, "Bonjour d'Arles", "https://github.com/arelate"))
+	pageStack.Append(compton.FICenter(p, compton_fragments.GitHubLink(p)))
 
 	return p
 }
