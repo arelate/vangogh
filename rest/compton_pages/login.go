@@ -46,6 +46,7 @@ func Login(authPath string) compton.PageElement {
 
 	if input := tiUsername.GetFirstElementByTagName(atom.Input); input != nil {
 		input.SetAttribute("autofocus", "")
+		input.SetAttribute("autocapitalize", "none")
 	}
 
 	submitNavLink := compton.NavLinks(p)
