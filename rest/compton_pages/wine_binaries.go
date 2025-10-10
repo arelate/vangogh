@@ -81,8 +81,7 @@ func WineBinaries() compton.PageElement {
 
 	}
 
-	pageStack.Append(compton.Br(),
-		compton.Footer(p, "Bonjour d'Arles", "https://github.com/arelate"))
+	pageStack.Append(compton.Br(), compton_fragments.PageFooter(p))
 
 	return p
 }

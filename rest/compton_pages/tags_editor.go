@@ -1,6 +1,11 @@
 package compton_pages
 
 import (
+	"maps"
+	"net/http"
+	"slices"
+	"strconv"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
@@ -14,10 +19,6 @@ import (
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/issa"
 	"github.com/boggydigital/redux"
-	"maps"
-	"net/http"
-	"slices"
-	"strconv"
 )
 
 func TagsEditor(
@@ -131,8 +132,7 @@ func TagsEditor(
 
 	/* Footer */
 
-	pageStack.Append(compton.Br(),
-		compton.Footer(p, "Bonjour d'Arles", "https://github.com/arelate"))
+	pageStack.Append(compton.Br(), compton_fragments.PageFooter(p))
 
 	return p
 }
