@@ -1,10 +1,11 @@
 package compton_data
 
 import (
-	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/boggydigital/compton"
 	"net/url"
 	"strings"
+
+	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/compton"
 )
 
 const (
@@ -18,7 +19,7 @@ const (
 
 var SearchScopesSymbols = map[string]compton.Symbol{
 	SearchNew:                    compton.TwoLabelledInputs,
-	SearchOwned:                  compton.Bookmark,
+	SearchOwned:                  compton.CompactDisk,
 	SearchWishlist:               compton.Heart,
 	SearchSale:                   compton.Percent,
 	SearchGogPreservationProgram: compton.Gemstone,
