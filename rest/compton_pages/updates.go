@@ -4,6 +4,7 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
+	"github.com/boggydigital/author"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
@@ -22,7 +23,7 @@ var updatesSymbols = map[string]compton.Symbol{
 	vangogh_integration.UpdatesSteamNews:     compton.NewsBroadcast,
 }
 
-func Updates(section string, rdx redux.Readable, showAll bool) compton.PageElement {
+func Updates(section string, rdx redux.Readable, showAll bool, permissions ...author.Permission) compton.PageElement {
 
 	updates := make(map[string][]string)
 	updateTotals := make(map[string]int)
@@ -142,7 +143,7 @@ func Updates(section string, rdx redux.Readable, showAll bool) compton.PageEleme
 
 	/* Last Updated section */
 
-	pageStack.Append(compton.Br(), compton_fragments.SyncStatus(p, rdx))
+	pageStack.Append(compton.Br(), compton_fragments.SyncStatus(p, rdx, permissions...))
 
 	/* Standard app footer */
 

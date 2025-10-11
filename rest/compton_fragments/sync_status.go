@@ -1,10 +1,13 @@
 package compton_fragments
 
 import (
+	"slices"
 	"strconv"
 	"time"
 
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/perm"
+	"github.com/boggydigital/author"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/size"
@@ -13,7 +16,7 @@ import (
 
 const syncStatusTitle = "Sync status"
 
-func SyncStatus(r compton.Registrar, rdx redux.Readable) compton.Element {
+func SyncStatus(r compton.Registrar, rdx redux.Readable, permissions ...author.Permission) compton.Element {
 
 	var lastCompletedSyncEvent string
 	var syncEventTimestamp int64
@@ -56,6 +59,10 @@ func SyncStatus(r compton.Registrar, rdx redux.Readable) compton.Element {
 	syncStatusFrow.Heading(syncStatusTitle)
 	syncStatusFrow.IconColor(compton.SmallerCircle, syncStatusColor)
 	syncStatusFrow.PropVal(vangogh_integration.CurrentSyncEventsTitles[currentSyncEvent], syncEventDateText)
+
+	if slices.Contains(permissions, perm.ReadLogs) {
+		syncStatusFrow.LinkColor("Logs", "/logs", color.Blue)
+	}
 
 	return compton.FICenter(r, syncStatusFrow).FontSize(size.XXSmall).ColumnGap(size.Small)
 }

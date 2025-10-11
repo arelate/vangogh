@@ -21,7 +21,13 @@ func GetUpdates(w http.ResponseWriter, r *http.Request) {
 	showAll := q.Has("all")
 	section := q.Get("section")
 
-	updatesPage := compton_pages.Updates(section, rdx, showAll)
+	permissions, err := sb.GetPermissions(r)
+	if err != nil {
+		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+		return
+	}
+
+	updatesPage := compton_pages.Updates(section, rdx, showAll, permissions...)
 	if err := updatesPage.WriteResponse(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}
