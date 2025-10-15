@@ -66,8 +66,7 @@ func Compatibility(id string, rdx redux.Readable, permissions ...author.Permissi
 		ColumnWidthRule(size.XXXSmall)
 	pageStack.Append(compatibilityRow)
 
-	for _, rrp := range compton_fragments.ProductProperties(s, id, rdx,
-		compton_data.PermittedProperties(compton_data.CompatibilityProperties, permissions...)) {
+	for _, rrp := range compton_fragments.ProductProperties(s, id, rdx, compton_data.CompatibilityProperties, permissions...) {
 		compatibilityRow.Append(rrp)
 	}
 

@@ -27,8 +27,7 @@ func Reception(id string, sar *steam_integration.AppReviews, rdx redux.Readable,
 		ColumnWidthRule(size.XXXSmall)
 	pageStack.Append(ratingsRow)
 
-	for _, rrp := range compton_fragments.ProductProperties(s, id, rdx,
-		compton_data.PermittedProperties(compton_data.ReceptionProperties, permissions...)) {
+	for _, rrp := range compton_fragments.ProductProperties(s, id, rdx, compton_data.ReceptionProperties, permissions...) {
 		ratingsRow.Append(rrp)
 	}
 

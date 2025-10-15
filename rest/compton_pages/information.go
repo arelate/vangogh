@@ -100,8 +100,7 @@ func Info(id string, rdx redux.Readable, permissions ...author.Permission) compt
 
 	pageStack.Append(items)
 
-	for _, pp := range compton_fragments.ProductProperties(s, id, rdx,
-		compton_data.PermittedProperties(compton_data.ProductProperties, permissions...)) {
+	for _, pp := range compton_fragments.ProductProperties(s, id, rdx, compton_data.ProductProperties, permissions...) {
 		items.Append(pp)
 	}
 

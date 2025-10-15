@@ -2,14 +2,15 @@ package compton_fragments
 
 import (
 	"fmt"
-	"iter"
 	"net/url"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
+	"github.com/boggydigital/author"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/size"
@@ -24,14 +25,16 @@ type formattedProperty struct {
 	actions map[string]string
 }
 
-func ProductProperties(r compton.Registrar, id string, rdx redux.Readable, properties iter.Seq[string]) []compton.Element {
+func ProductProperties(r compton.Registrar, id string, rdx redux.Readable, properties []string, permissions ...author.Permission) []compton.Element {
 
 	productProperties := make([]compton.Element, 0)
 
-	for property := range properties {
+	ppo := compton_data.PermittedProperties(properties, permissions...)
+
+	for property := range ppo {
 
 		fmtProperty := formatProperty(id, property, rdx)
-		if tv := propertyTitleValues(r, property, fmtProperty); tv != nil {
+		if tv := propertyTitleValues(r, property, fmtProperty, permissions...); tv != nil {
 			productProperties = append(productProperties, tv)
 		}
 	}
@@ -252,7 +255,7 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 	return fmtProperty
 }
 
-func propertyTitleValues(r compton.Registrar, property string, fmtProperty formattedProperty) *compton.TitleValuesElement {
+func propertyTitleValues(r compton.Registrar, property string, fmtProperty formattedProperty, permissions ...author.Permission) *compton.TitleValuesElement {
 
 	if len(fmtProperty.values) == 0 && len(fmtProperty.actions) == 0 {
 		return nil
@@ -271,6 +274,10 @@ func propertyTitleValues(r compton.Registrar, property string, fmtProperty forma
 		if fmtProperty.class != "" {
 			tv.AddClass(fmtProperty.class)
 		}
+	}
+
+	if prm, ok := compton_data.PropertyActionPermissions[property]; ok && !slices.Contains(permissions, prm) {
+		return tv
 	}
 
 	if len(fmtProperty.actions) > 0 {
