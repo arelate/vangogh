@@ -4,6 +4,7 @@ import (
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
+	"github.com/boggydigital/author"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
@@ -12,7 +13,7 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-func Reception(id string, sar *steam_integration.AppReviews, rdx redux.Readable) compton.PageElement {
+func Reception(id string, sar *steam_integration.AppReviews, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
 
 	s := compton_fragments.ProductSection(compton_data.ReceptionSection, id, rdx)
 
@@ -26,7 +27,8 @@ func Reception(id string, sar *steam_integration.AppReviews, rdx redux.Readable)
 		ColumnWidthRule(size.XXXSmall)
 	pageStack.Append(ratingsRow)
 
-	for _, rrp := range compton_fragments.ProductProperties(s, id, rdx, compton_data.ReceptionProperties...) {
+	for _, rrp := range compton_fragments.ProductProperties(s, id, rdx,
+		permittedPropertiesOnly(compton_data.ReceptionProperties, permissions...)) {
 		ratingsRow.Append(rrp)
 	}
 

@@ -3,12 +3,13 @@ package rest
 import (
 	"encoding/json"
 	"errors"
+	"net/http"
+
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_pages"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"net/http"
 )
 
 func GetReception(w http.ResponseWriter, r *http.Request) {
@@ -27,7 +28,13 @@ func GetReception(w http.ResponseWriter, r *http.Request) {
 		nod.LogError(err)
 	}
 
-	p := compton_pages.Reception(gogId, appReviews, rdx)
+	permissions, err := sb.GetPermissions(r)
+	if err != nil {
+		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+		return
+	}
+
+	p := compton_pages.Reception(gogId, appReviews, rdx, permissions...)
 
 	if err = p.Write(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)

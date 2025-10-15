@@ -16,8 +16,8 @@ const (
 	ReadFiles
 	ReadWishlist
 	WriteWishlist
-	ReadAccountTags
-	WriteAccountTags
+	ReadTagId
+	WriteTagId
 	ReadLocalTags
 	WriteLocalTags
 	ReadApi
@@ -30,7 +30,7 @@ func GetRolesPermissions() map[string][]author.Permission {
 	return map[string][]author.Permission{
 		RoleAdmin: {ReadUpdates, ReadSearch, ReadProductData, ReadImages,
 			ReadFiles, ReadLocalTags, WriteLocalTags, ReadApi,
-			ReadWishlist, WriteWishlist, ReadAccountTags, WriteAccountTags, ReadDebug, ReadLogs},
+			ReadWishlist, WriteWishlist, ReadTagId, WriteTagId, ReadDebug, ReadLogs},
 		RoleUser: {ReadUpdates, ReadSearch, ReadProductData, ReadImages,
 			ReadFiles, ReadLocalTags, WriteLocalTags, ReadApi},
 		RoleDemo: {ReadUpdates, ReadSearch, ReadProductData, ReadImages},

@@ -9,6 +9,7 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
+	"github.com/boggydigital/author"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
@@ -51,7 +52,7 @@ var displayTypeColors = map[string]color.Color{
 	"Unknown":     color.RepGray,
 }
 
-func Compatibility(id string, rdx redux.Readable) compton.PageElement {
+func Compatibility(id string, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
 	title, _ := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
 
 	s := compton_fragments.ProductSection(compton_data.CompatibilitySection, id, rdx)
@@ -65,7 +66,8 @@ func Compatibility(id string, rdx redux.Readable) compton.PageElement {
 		ColumnWidthRule(size.XXXSmall)
 	pageStack.Append(compatibilityRow)
 
-	for _, rrp := range compton_fragments.ProductProperties(s, id, rdx, compton_data.CompatibilityProperties...) {
+	for _, rrp := range compton_fragments.ProductProperties(s, id, rdx,
+		permittedPropertiesOnly(compton_data.CompatibilityProperties, permissions...)) {
 		compatibilityRow.Append(rrp)
 	}
 

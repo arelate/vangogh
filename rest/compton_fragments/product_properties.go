@@ -2,6 +2,7 @@ package compton_fragments
 
 import (
 	"fmt"
+	"iter"
 	"net/url"
 	"strconv"
 	"strings"
@@ -23,11 +24,11 @@ type formattedProperty struct {
 	actions map[string]string
 }
 
-func ProductProperties(r compton.Registrar, id string, rdx redux.Readable, properties ...string) []compton.Element {
+func ProductProperties(r compton.Registrar, id string, rdx redux.Readable, properties iter.Seq[string]) []compton.Element {
 
 	productProperties := make([]compton.Element, 0)
 
-	for _, property := range properties {
+	for property := range properties {
 
 		fmtProperty := formatProperty(id, property, rdx)
 		if tv := propertyTitleValues(r, property, fmtProperty); tv != nil {

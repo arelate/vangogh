@@ -49,8 +49,8 @@ func HandleFuncs() {
 		// auth data endpoints
 		"GET /wishlist/add":     AuthSt(sb, Log(http.HandlerFunc(GetWishlistAdd)), perm.WriteWishlist),
 		"GET /wishlist/remove":  AuthSt(sb, Log(http.HandlerFunc(GetWishlistRemove)), perm.WriteWishlist),
-		"GET /tags/edit":        AuthSt(sb, Log(http.HandlerFunc(GetTagsEdit)), perm.WriteAccountTags),
-		"GET /tags/apply":       AuthSt(sb, Log(http.HandlerFunc(GetTagsApply)), perm.WriteAccountTags),
+		"GET /tags/edit":        AuthSt(sb, Log(http.HandlerFunc(GetTagsEdit)), perm.WriteTagId),
+		"GET /tags/apply":       AuthSt(sb, Log(http.HandlerFunc(GetTagsApply)), perm.WriteTagId),
 		"GET /local-tags/edit":  AuthSt(sb, Log(http.HandlerFunc(GetLocalTagsEdit)), perm.WriteLocalTags),
 		"GET /local-tags/apply": AuthSt(sb, Log(http.HandlerFunc(GetLocalTagsApply)), perm.WriteLocalTags),
 		// auth files endpoints
