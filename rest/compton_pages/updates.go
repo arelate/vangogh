@@ -1,6 +1,9 @@
 package compton_pages
 
 import (
+	"errors"
+	"slices"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
@@ -15,13 +18,6 @@ import (
 const (
 	updatedProductsLimit = 60 // divisible by 2,3,4,5,6
 )
-
-var updatesSymbols = map[string]compton.Symbol{
-	vangogh_integration.UpdatesInstallers:    compton.CompactDisk,
-	vangogh_integration.UpdatesReleasedToday: compton.RisingSun,
-	vangogh_integration.UpdatesNewProducts:   compton.ShoppingLabel,
-	vangogh_integration.UpdatesSteamNews:     compton.NewsBroadcast,
-}
 
 func Updates(section string, rdx redux.Readable, showAll bool, permissions ...author.Permission) compton.PageElement {
 
@@ -54,6 +50,9 @@ func Updates(section string, rdx redux.Readable, showAll bool, permissions ...au
 	if section == "" {
 		for _, us := range vangogh_integration.UpdatesOrder {
 			if _, ok := updates[us]; ok {
+				if prm, ok := compton_data.UpdateSectionPermissions[us]; ok && !slices.Contains(permissions, prm) {
+					continue
+				}
 				section = us
 				break
 			}
@@ -62,6 +61,14 @@ func Updates(section string, rdx redux.Readable, showAll bool, permissions ...au
 
 	current := compton_data.AppNavUpdates
 	p, pageStack := compton_fragments.AppPage(current)
+
+	if section == "" {
+		p.Error(errors.New("section not found"))
+		return p
+	} else if prm, ok := compton_data.UpdateSectionPermissions[section]; ok && !slices.Contains(permissions, prm) {
+		p.Error(errors.New("section access restricted"))
+		return p
+	}
 
 	p.AppendSpeculationRules(compton.SpeculationRulesConservativeEagerness, "/*")
 
@@ -80,8 +87,12 @@ func Updates(section string, rdx redux.Readable, showAll bool, permissions ...au
 			continue
 		}
 
+		if prm, ok := compton_data.UpdateSectionPermissions[updateSection]; ok && !slices.Contains(permissions, prm) {
+			continue
+		}
+
 		var sectionSymbol compton.Symbol
-		if symbol, ok := updatesSymbols[updateSection]; ok {
+		if symbol, ok := compton_data.UpdateSectionSymbols[updateSection]; ok {
 			sectionSymbol = symbol
 		}
 

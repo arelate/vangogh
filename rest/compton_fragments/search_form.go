@@ -8,6 +8,7 @@ import (
 
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
+	"github.com/boggydigital/author"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/direction"
@@ -16,7 +17,7 @@ import (
 	"golang.org/x/net/html/atom"
 )
 
-func SearchForm(r compton.Registrar, query map[string][]string, searchQuery *compton.FrowElement, rdx redux.Readable) compton.Element {
+func SearchForm(r compton.Registrar, query map[string][]string, searchQuery *compton.FrowElement, rdx redux.Readable, permissions ...author.Permission) compton.Element {
 
 	form := compton.Form("/search", "GET")
 	formStack := compton.FlexItems(r, direction.Column)
@@ -40,7 +41,7 @@ func SearchForm(r compton.Registrar, query map[string][]string, searchQuery *com
 	inputs := compton.FlexItems(r, direction.Row).JustifyContent(align.Center).RowGap(size.Normal).Width(size.FullWidth)
 	formStack.Append(inputs)
 
-	searchInputs(r, query, inputs, rdx)
+	searchInputs(r, query, inputs, rdx, permissions...)
 
 	// duplicating Submit button after inputs at the end
 	formStack.Append(submitRow)
@@ -133,8 +134,13 @@ func propertyValuesDatalist(property string, rdx redux.Readable) map[string]stri
 	return dl
 }
 
-func searchInputs(r compton.Registrar, query map[string][]string, container compton.Element, rdx redux.Readable) {
+func searchInputs(r compton.Registrar, query map[string][]string, container compton.Element, rdx redux.Readable, permissions ...author.Permission) {
 	for ii, property := range compton_data.SearchProperties {
+
+		if prm, ok := compton_data.PropertyPermissions[property]; ok && !slices.Contains(permissions, prm) {
+			continue
+		}
+
 		title := compton_data.PropertyTitles[property]
 		value := strings.Join(query[property], ", ")
 		titleInput := compton.TISearchValue(r, title, property, value)

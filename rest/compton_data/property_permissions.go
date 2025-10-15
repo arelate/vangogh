@@ -12,6 +12,7 @@ import (
 var PropertyPermissions = map[string]author.Permission{
 	vangogh_integration.TagIdProperty:     perm.ReadTagId,
 	vangogh_integration.LocalTagsProperty: perm.ReadLocalTags,
+	vangogh_integration.OwnedProperty:     perm.ReadOwned,
 }
 
 var PropertyActionPermissions = map[string]author.Permission{

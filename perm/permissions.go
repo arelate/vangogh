@@ -11,6 +11,7 @@ const (
 const (
 	ReadUpdates author.Permission = iota
 	ReadSearch
+	ReadOwned
 	ReadProductData
 	ReadImages
 	ReadFiles
@@ -28,10 +29,10 @@ const (
 func GetRolesPermissions() map[string][]author.Permission {
 
 	return map[string][]author.Permission{
-		RoleAdmin: {ReadUpdates, ReadSearch, ReadProductData, ReadImages,
+		RoleAdmin: {ReadUpdates, ReadSearch, ReadOwned, ReadProductData, ReadImages,
 			ReadFiles, ReadLocalTags, WriteLocalTags, ReadApi,
 			ReadWishlist, WriteWishlist, ReadTagId, WriteTagId, ReadDebug, ReadLogs},
-		RoleUser: {ReadUpdates, ReadSearch, ReadProductData, ReadImages,
+		RoleUser: {ReadUpdates, ReadSearch, ReadOwned, ReadProductData, ReadImages,
 			ReadFiles, ReadLocalTags, WriteLocalTags, ReadApi},
 		RoleDemo: {ReadUpdates, ReadSearch, ReadProductData, ReadImages},
 	}

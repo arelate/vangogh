@@ -65,7 +65,7 @@ func Search(query map[string][]string, ids []string, from, to int, rdx redux.Rea
 		queryFrow.LinkColor("Clear", "/search", color.Blue)
 	}
 
-	filterSearchDetails.Append(compton_fragments.SearchForm(p, query, queryFrow, rdx))
+	filterSearchDetails.Append(compton_fragments.SearchForm(p, query, queryFrow, rdx, permissions...))
 	pageStack.Append(filterSearchDetails)
 
 	if queryFrow != nil {

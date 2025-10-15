@@ -2,10 +2,11 @@ package compton_fragments
 
 import (
 	"github.com/arelate/vangogh/rest/compton_data"
+	"github.com/boggydigital/author"
 	"github.com/boggydigital/compton"
 )
 
-func SearchLinks(r compton.Registrar, current string) compton.Element {
+func SearchLinks(r compton.Registrar, current string, permissions ...author.Permission) compton.Element {
 
 	searchNavLinks := compton.NavLinks(r)
 	searchNavLinks.SetAttribute("style", "view-transition-name:secondary-nav")

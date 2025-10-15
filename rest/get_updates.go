@@ -28,7 +28,8 @@ func GetUpdates(w http.ResponseWriter, r *http.Request) {
 	}
 
 	updatesPage := compton_pages.Updates(section, rdx, showAll, permissions...)
-	if err := updatesPage.WriteResponse(w); err != nil {
+	if err = updatesPage.WriteResponse(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+		return
 	}
 }
