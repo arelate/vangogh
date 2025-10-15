@@ -3,13 +3,14 @@ package compton_pages
 import (
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
+	"github.com/boggydigital/author"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/redux"
 )
 
-func Offerings(id string, rdx redux.Readable) compton.PageElement {
+func Offerings(id string, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
 
 	s := compton_fragments.ProductSection(compton_data.OfferingsSection, id, rdx)
 
@@ -24,7 +25,7 @@ func Offerings(id string, rdx redux.Readable) compton.PageElement {
 			propertyTitleRow := compton.SectionDivider(s, compton.Text(compton_data.PropertyTitles[op]))
 
 			stack.Append(compton.FICenter(s, propertyTitleRow))
-			stack.Append(compton_fragments.ProductsList(s, rps, 0, len(rps), rdx, true))
+			stack.Append(compton_fragments.ProductsList(s, rps, 0, len(rps), rdx, true, permissions...))
 		}
 	}
 

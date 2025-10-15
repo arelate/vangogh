@@ -1,14 +1,15 @@
 package rest
 
 import (
-	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/arelate/vangogh/rest/compton_data"
-	"github.com/arelate/vangogh/rest/compton_pages"
-	"github.com/boggydigital/nod"
 	"net/http"
 	"slices"
 	"strconv"
 	"strings"
+
+	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/rest/compton_data"
+	"github.com/arelate/vangogh/rest/compton_pages"
+	"github.com/boggydigital/nod"
 )
 
 func GetSearch(w http.ResponseWriter, r *http.Request) {
@@ -90,7 +91,13 @@ func GetSearch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	searchPage := compton_pages.Search(query, ids, from, to, rdx)
+	permissions, err := sb.GetPermissions(r)
+	if err != nil {
+		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+		return
+	}
+
+	searchPage := compton_pages.Search(query, ids, from, to, rdx, permissions...)
 	if err := searchPage.WriteResponse(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}

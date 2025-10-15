@@ -6,6 +6,7 @@ import (
 
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
+	"github.com/boggydigital/author"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/redux"
@@ -23,7 +24,7 @@ var ValidationResultsColors = map[vangogh_integration.ValidationResult]color.Col
 	vangogh_integration.ValidatedChecksumMismatch:    color.Red,
 }
 
-func FormatBadges(id string, rdx redux.Readable) []compton.FormattedBadge {
+func FormatBadges(id string, rdx redux.Readable, permissions ...author.Permission) []compton.FormattedBadge {
 	owned := false
 	if lp, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok {
 		owned = lp == vangogh_integration.TrueValue
@@ -31,7 +32,9 @@ func FormatBadges(id string, rdx redux.Readable) []compton.FormattedBadge {
 
 	fmtBadges := make([]compton.FormattedBadge, 0, len(compton_data.BadgeProperties))
 
-	for _, p := range compton_data.BadgeProperties {
+	ppo := compton_data.PermittedProperties(compton_data.BadgeProperties, permissions...)
+
+	for p := range ppo {
 		if fmtBadge := formatBadge(id, p, owned, rdx); fmtBadge.Title != "" || fmtBadge.Icon != compton.NoSymbol {
 			fmtBadges = append(fmtBadges, fmtBadge)
 		}

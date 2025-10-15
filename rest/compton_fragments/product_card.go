@@ -1,17 +1,19 @@
 package compton_fragments
 
 import (
+	"slices"
+	"strings"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_styles"
+	"github.com/boggydigital/author"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/issa"
 	"github.com/boggydigital/redux"
-	"slices"
-	"strings"
 )
 
 func SummarizeProductProperties(id string, rdx redux.Readable) ([]string, map[string][]string) {
@@ -43,7 +45,7 @@ func SummarizeProductProperties(id string, rdx redux.Readable) ([]string, map[st
 	return properties, values
 }
 
-func ProductCard(r compton.Registrar, id string, hydrated bool, rdx redux.Readable) compton.Element {
+func ProductCard(r compton.Registrar, id string, hydrated bool, rdx redux.Readable, permissions ...author.Permission) compton.Element {
 
 	r.RegisterStyles(compton_styles.Styles, "gpp-badge.css")
 
@@ -83,7 +85,7 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx redux.Readab
 		JustifyContent(align.Start).
 		Width(size.FullWidth)
 
-	for _, fmtBadge := range FormatBadges(id, rdx) {
+	for _, fmtBadge := range FormatBadges(id, rdx, permissions...) {
 		var badge *compton.FspanElement
 		if fmtBadge.Title != "" && fmtBadge.Icon == compton.NoSymbol {
 			badge = compton.SmallBadge(r, fmtBadge.Title, fmtBadge.Background, fmtBadge.Foreground)

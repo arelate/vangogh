@@ -122,7 +122,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 				ColumnGap(size.XSmall).
 				BackgroundColor(color.Transparent)
 			productBadges.SetAttribute("style", "view-transition-name:product-badges-"+id)
-			for _, fmtBadge := range compton_fragments.FormatBadges(id, rdx) {
+			for _, fmtBadge := range compton_fragments.FormatBadges(id, rdx, permissions...) {
 
 				var badge *compton.FspanElement
 				if fmtBadge.Title != "" && fmtBadge.Icon == compton.NoSymbol {

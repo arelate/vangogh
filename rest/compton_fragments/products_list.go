@@ -2,6 +2,7 @@ package compton_fragments
 
 import (
 	"github.com/arelate/vangogh/rest/compton_styles"
+	"github.com/boggydigital/author"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/direction"
@@ -11,7 +12,7 @@ import (
 
 const dehydratedCount = 3
 
-func ProductsList(r compton.Registrar, ids []string, from, to int, rdx redux.Readable, topTarget bool) compton.Element {
+func ProductsList(r compton.Registrar, ids []string, from, to int, rdx redux.Readable, topTarget bool, permissions ...author.Permission) compton.Element {
 
 	r.RegisterStyles(compton_styles.Styles, "products-list.css")
 
@@ -25,7 +26,7 @@ func ProductsList(r compton.Registrar, ids []string, from, to int, rdx redux.Rea
 			productLink.SetAttribute("target", "_top")
 		}
 
-		if productCard := ProductCard(r, id, ii-from < dehydratedCount, rdx); productCard != nil {
+		if productCard := ProductCard(r, id, ii-from < dehydratedCount, rdx, permissions...); productCard != nil {
 			productLink.Append(productCard)
 			productCards.Append(productLink)
 		}

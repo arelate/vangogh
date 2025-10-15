@@ -7,6 +7,7 @@ import (
 
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
+	"github.com/boggydigital/author"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/size"
@@ -15,7 +16,7 @@ import (
 
 const filterSearchTitle = "Filter & search"
 
-func Search(query map[string][]string, ids []string, from, to int, rdx redux.Readable) compton.PageElement {
+func Search(query map[string][]string, ids []string, from, to int, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
 
 	p, pageStack := compton_fragments.AppPage(compton_data.AppNavSearch)
 
@@ -74,7 +75,7 @@ func Search(query map[string][]string, ids []string, from, to int, rdx redux.Rea
 	/* Search results product cards */
 
 	if len(ids) > 0 {
-		productsList := compton_fragments.ProductsList(p, ids, from, to, rdx, false)
+		productsList := compton_fragments.ProductsList(p, ids, from, to, rdx, false, permissions...)
 		pageStack.Append(productsList)
 	}
 

@@ -2,9 +2,7 @@ package compton_pages
 
 import (
 	"fmt"
-	"iter"
 	"net/url"
-	"slices"
 	"strings"
 
 	"github.com/arelate/southern_light"
@@ -103,7 +101,7 @@ func Info(id string, rdx redux.Readable, permissions ...author.Permission) compt
 	pageStack.Append(items)
 
 	for _, pp := range compton_fragments.ProductProperties(s, id, rdx,
-		permittedPropertiesOnly(compton_data.ProductProperties, permissions...)) {
+		compton_data.PermittedProperties(compton_data.ProductProperties, permissions...)) {
 		items.Append(pp)
 	}
 
@@ -279,20 +277,4 @@ func linksTitleValues(r compton.Registrar, property string, links []string) comp
 		AppendLinkValues(linksValuesLimit, linksHrefs).
 		Width(size.XXXLarge)
 	return tv
-}
-
-func permittedPropertiesOnly(properties []string, permissions ...author.Permission) iter.Seq[string] {
-	return func(yield func(string) bool) {
-
-		for _, p := range properties {
-
-			if prm, ok := compton_data.RestrictedProperties[p]; ok && !slices.Contains(permissions, prm) {
-				continue
-			}
-
-			if !yield(p) {
-				return
-			}
-		}
-	}
 }
