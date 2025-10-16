@@ -18,6 +18,8 @@ const filterSearchTitle = "Filter & search"
 
 func Search(query map[string][]string, ids []string, from, to int, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
 
+	query = permittedQuery(query, permissions...)
+
 	p, pageStack := compton_fragments.AppPage(compton_data.AppNavSearch)
 
 	p.AppendSpeculationRules(compton.SpeculationRulesConservativeEagerness, "/*")
@@ -29,7 +31,7 @@ func Search(query map[string][]string, ids []string, from, to int, rdx redux.Rea
 	appNavLinks := compton_fragments.AppNavLinks(p, compton_data.AppNavSearch)
 
 	searchScope := compton_data.SearchScopeFromQuery(query)
-	searchLinks := compton_fragments.SearchLinks(p, searchScope)
+	searchLinks := compton_fragments.SearchLinks(p, searchScope, permissions...)
 
 	pageStack.Append(compton.FICenter(p, appNavLinks, searchLinks).ColumnGap(size.Small))
 
@@ -99,4 +101,20 @@ func Search(query map[string][]string, ids []string, from, to int, rdx redux.Rea
 	pageStack.Append(compton.Br(), compton.FICenter(p, compton_fragments.GitHubLink(p), compton_fragments.LogoutLink(p)))
 
 	return p
+}
+
+func permittedQuery(query map[string][]string, permissions ...author.Permission) map[string][]string {
+	permQuery := make(map[string][]string, len(query))
+
+	for p, v := range query {
+
+		if prm, ok := compton_data.PropertyPermissions[p]; ok && !slices.Contains(permissions, prm) {
+			continue
+		}
+
+		permQuery[p] = v
+
+	}
+
+	return permQuery
 }

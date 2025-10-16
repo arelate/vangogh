@@ -10,14 +10,16 @@ import (
 )
 
 var PropertyPermissions = map[string]author.Permission{
-	vangogh_integration.TagIdProperty:     perm.ReadTagId,
-	vangogh_integration.LocalTagsProperty: perm.ReadLocalTags,
-	vangogh_integration.OwnedProperty:     perm.ReadOwned,
+	vangogh_integration.TagIdProperty:        perm.ReadTagId,
+	vangogh_integration.LocalTagsProperty:    perm.ReadLocalTags,
+	vangogh_integration.OwnedProperty:        perm.ReadOwned,
+	vangogh_integration.UserWishlistProperty: perm.ReadWishlist,
 }
 
 var PropertyActionPermissions = map[string]author.Permission{
-	vangogh_integration.TagIdProperty:     perm.WriteTagId,
-	vangogh_integration.LocalTagsProperty: perm.WriteLocalTags,
+	vangogh_integration.TagIdProperty:        perm.WriteTagId,
+	vangogh_integration.LocalTagsProperty:    perm.WriteLocalTags,
+	vangogh_integration.UserWishlistProperty: perm.WriteWishlist,
 }
 
 func PermittedProperties(properties []string, permissions ...author.Permission) iter.Seq[string] {
