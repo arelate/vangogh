@@ -16,6 +16,7 @@ type userAction int
 const (
 	userActionUnknown userAction = iota
 	userActionCreate
+	userActionChangePassword
 	userActionDelete
 	userActionList
 )
@@ -27,6 +28,7 @@ func UsersHandler(u *url.URL) error {
 	var action userAction
 	username := q.Get("username")
 	password := q.Get("password")
+	newPassword := q.Get("new-password")
 	role := q.Get("role")
 
 	switch q.Get("action") {
@@ -40,16 +42,21 @@ func UsersHandler(u *url.URL) error {
 		if username == "" || password == "" {
 			return errors.New("username, password must be provided")
 		}
+	case "change-password":
+		action = userActionChangePassword
+		if username == "" || password == "" || newPassword == "" {
+			return errors.New("username, password and new-password must be provided")
+		}
 	case "list":
 		action = userActionList
 	default:
 		return errors.New("unknown user action: " + q.Get("action"))
 	}
 
-	return Users(action, username, password, role)
+	return Users(action, username, password, newPassword, role)
 }
 
-func Users(action userAction, username, password, role string) error {
+func Users(action userAction, username, password, newPassword, role string) error {
 
 	var actionVerb string
 	switch action {
@@ -57,6 +64,8 @@ func Users(action userAction, username, password, role string) error {
 		actionVerb = "creating"
 	case userActionDelete:
 		actionVerb = "deleting"
+	case userActionChangePassword:
+		actionVerb = "changing password for"
 	case userActionList:
 		actionVerb = "listing"
 	default:
@@ -82,11 +91,15 @@ func Users(action userAction, username, password, role string) error {
 			return err
 		}
 
-		if err = auth.GrantRole(username, password, role); err != nil {
+		if err = auth.SetRole(username, password, role); err != nil {
 			return err
 		}
 	case userActionDelete:
 		if err = auth.CutUser(username, password); err != nil {
+			return err
+		}
+	case userActionChangePassword:
+		if err = auth.UpdatePassword(username, password, newPassword); err != nil {
 			return err
 		}
 	case userActionList:

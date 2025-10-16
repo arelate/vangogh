@@ -138,9 +138,10 @@ update-downloads
     updates-only
 
 users
-    action=create,delete,list
+    action=create,delete,change-password,list
     username
     password
+    new-password
     role
 
 validate
