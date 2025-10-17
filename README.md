@@ -10,8 +10,8 @@
 ## Getting started
 
 1. [Installation with docker](https://github.com/arelate/vangogh/wiki/Installation-with-docker) is the recommended way to get started with `vangogh`.
-2. After you've installed `vangogh` service, [Authorization and user management](https://github.com/arelate/vangogh/wiki/Authorization-and-user-management) can help you add and manage users.
-3. Then, [Server administration](https://github.com/arelate/vangogh/wiki/Server-administration) will help you authenticate with GOG.com and keep your data updated.
+2. Then, [Authorization and user management](https://github.com/arelate/vangogh/wiki/Authorization-and-user-management) can help you add and manage users.
+3. Then, [Server administration](https://github.com/arelate/vangogh/wiki/Server-administration) can help you authenticate with GOG.com and keep your data updated.
 
 ## Browser compatibility
 
