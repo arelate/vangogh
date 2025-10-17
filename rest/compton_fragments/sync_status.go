@@ -14,7 +14,7 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-const syncStatusTitle = "Sync status"
+const syncStatusTitle = "Data"
 
 func SyncStatus(r compton.Registrar, rdx redux.Readable, permissions ...author.Permission) compton.Element {
 
@@ -41,7 +41,7 @@ func SyncStatus(r compton.Registrar, rdx redux.Readable, permissions ...author.P
 
 	syncEventDateText := "Never"
 	if syncEventTimestamp > 0 {
-		syncEventDateText = time.Unix(syncEventTimestamp, 0).Format(time.RFC1123)
+		syncEventDateText = time.Unix(syncEventTimestamp, 0).Format("02-Jan-06 15:04")
 	}
 
 	var syncStatusColor color.Color
@@ -64,5 +64,5 @@ func SyncStatus(r compton.Registrar, rdx redux.Readable, permissions ...author.P
 		syncStatusFrow.LinkColor("Logs", "/logs", color.Blue)
 	}
 
-	return compton.FICenter(r, syncStatusFrow).FontSize(size.XXSmall).ColumnGap(size.Small)
+	return compton.FICenter(r, syncStatusFrow).ColumnGap(size.Small)
 }
