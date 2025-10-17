@@ -7,99 +7,17 @@
 | ![List Dark](github_images/list-dark.jpeg)       | ![List Light](github_images/list-light.jpeg)       |
 | ![Product Dark](github_images/product-dark.jpeg) | ![Product Light](github_images/product-light.jpeg) |
 
-
-## Future vangogh ideas and aspirations
-
-`vangogh` roadmap is available [here](ROADMAP.md).
-
 ## Installation
 
-The recommended way to install `vangogh` is with [docker compose](https://docs.docker.com/compose/):
+Check out [Installation with docker](https://github.com/arelate/vangogh/wiki/Installation-with-docker).
 
-- create a `compose.yml` file (this minimal example omits common settings like network, restart, etc):
+## User management
 
-```yaml
-version: '3'
-services:
-  vangogh:
-    container_name: vangogh
-    image: ghcr.io/arelate/vangogh:latest
-    environment:
-    # Set operating systems, languages, etc - customize to your needs
-      - VANGOGH_OS=Windows # possible values: Windows, macOS, Linux
-      - VANGOGH_LANG-CODE=en # see all possible values in https://github.com/arelate/southern_light/blob/main/gog_integration/languages.go  
-      - VANGOGH_NO-PATCHES=true # this disables individual patches downloads
-    # Uncomment (remove leading # in the line below) to create a log file on every sync 
-    # - VANGOGH_SYNC_DEBUG=true
-    # DANGER ZONE: Please read downloads layouts documentation below!
-    # Uncomment (remove leading # in the line below) to use a different downloads layout
-    # Note: `flat` is default layout (downloads/slug) and `sharded` might work better for large collections (downloads/s/slug)
-    # - VANGOGH_DOWNLOADS-LAYOUT=sharded
-    volumes:
-      # cold storage - less frequently accessed data, that can be stored on hibernating HDD.
-      # hot storage - frequently accessed data, that can benefit from being stored on SSD.
-      # backups (cold storage)
-      - /docker/vangogh/backups:/var/lib/vangogh/backups
-      # downloads (cold storage)
-      - /docker/vangogh/downloads:/var/lib/vangogh/downloads
-      # checksums (cold storage)
-      - /docker/vangogh/checksums:/var/lib/vangogh/checksums
-      # images (hot storage)
-      - /docker/vangogh/images:/var/lib/vangogh/images
-      # input (hot storage)
-      - /docker/vangogh:/var/lib/vangogh/input
-      # description_images (hot storage)
-      - /docker/vangogh/description_images:/var/lib/vangogh/description_images
-      # logs (cold storage)
-      - /docker/vangogh/logs:/var/lib/vangogh/logs
-      # metadata (hot storage)
-      - /docker/vangogh/metadata:/var/lib/vangogh/metadata
-      # output (hot storage)
-      - /docker/vangogh:/var/lib/vangogh/output
-      # sharing timezone from the host
-      - /etc/localtime:/etc/localtime:ro
-      # certificates
-      - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:ro
-    ports:
-      # https://en.wikipedia.org/wiki/Vincent_van_Gogh
-      - "1853:1853"
-```
-- (move it to location of your choice, e.g. `/docker/vangogh` or remote server or anywhere else)
-- while in the directory with that config - pull the image with `docker compose pull`
-- start the service with `docker compose up -d`
-- assuming everything was setup correctly - `vangogh` will now be available at this location address, port 1853 (e.g. http://localhost:1853 for a local server installation)
+Check out [Authorization and user management](https://github.com/arelate/vangogh/wiki/Authorization-and-user-management).
 
 ## Browser compatibility
 
-`vangogh` has been tested in the most popular browsers (Chrome and other Chromium-based browsers, Safari, Firefox) and should work reasonably well in all of them with minor visual differences.
-
-### @scope
-
-`vangogh` uses [@scope](https://developer.mozilla.org/en-US/docs/Web/CSS/@scope) to encapsulate styles. Browser support for this feature is emerging, here's what you should expect:
-
-- Chromium-based browsers support @scope
-- Safari supports @scope
-- Firefox support for @scope is in development and requires you to manually enable it:
-
-```text
-From version 128: this feature is behind the layout.css.at-scope.enabled preference (needs to be set to true). To change preferences in Firefox, visit about:config.
-```
-
-### View Transitions API
-
-`vangogh` uses [View Transitions API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API) to smooth page to page navigation. Browser support for this feature is emerging, here's what you should expect:
-
-- Chromium-based browsers currently provide the best experience
-- Safari support View Transitions for forward navigation, but not backward. You can track [this bug](https://bugs.webkit.org/show_bug.cgi?id=289078) for progress.
-- Firefox doesn't support View Transitions at the moment. You can track [this bug](https://bugzilla.mozilla.org/show_bug.cgi?id=1823896) for progress.
-
-### CSS gap decorations
-
-`vangogh` implements [CSS gap decorations](https://blogs.windows.com/msedgedev/2025/03/19/minding-the-gaps-a-new-way-to-draw-separators-in-css/) in the Information and Reception sections on the product pages. Browser support for this feature is emerging, here's what you should expect:
-
-- Chromium-based browser currently implement this in Canary version, when chrome://flags/#enable-experimental-web-platform-features is enabled
-- Safari doesn't support CSS gap decorations. You can track [this issue](https://github.com/WebKit/standards-positions/issues/444) for progress on their position.
-- Firefox doesn't support CSS gap decoration, but have positive intent to implement. See [this issue](https://github.com/mozilla/standards-positions/issues/1158) for more details. 
+Something not looking right? Check out [Browser compatibility](https://github.com/arelate/vangogh/wiki/Browser-compatibility)
 
 ## Setting up GOG.com authorization with cookies.txt
 
@@ -155,24 +73,6 @@ In order to change download layouts please use the following steps:
 - specify `VANGOGH_DOWNLOADS-LAYOUT={new-layout}` in the `compose.yml` (see the example [above](#Installation))
 - recreate the container and restart `vangogh`
 
-## Setting up authentication
-
-`vangogh` requires configured usernames/password to access more sensitive data (e.g. installers downloads). Unless you set those - you won't be able to access them through the CLI. You also need to set those for `theo` to be able to download games.
-
-Here's how to do that - you need to add that to `compose.yml` in the `environment:` section:
-
-```yaml
-  # add this under environment: in compose.yml
-  - VANGOGH_SERVE_ADMIN-USERNAME=admin-user
-  - VANGOGH_SERVE_ADMIN-PASSWORD=admin-password
-  - VANGOGH_SERVE_SHARED-USERNAME=shared-user
-  - VANGOGH_SERVE_SHARED-PASSWORD=shared-password
-```
-
-After setting those values - you'll need to restart `vangogh` service with `docker compose restart` (you'll need to be in the same directory `compose.yml` for `vangogh` is).
-
-You can see up to date specification of what endpoints require authentication, as well as role requirements [here](https://github.com/arelate/vangogh/blob/main/rest/routing.go).
-
 ## Taking care of your data
 
 Syncing data keeps it in sync with GOG.com. As part of this process some data is left on the system and `vangogh` provides few ways to clean up and vet the data:
@@ -181,6 +81,6 @@ Syncing data keeps it in sync with GOG.com. As part of this process some data is
 - `vet` will take care of various data problems, such as local-only images, old logs, etc. `vet -all` will run series of tests of data and print out recommendations. `vet -all -fix` will also attempt to repair the problem.
 - `validate` will test installers you've downloaded using validation files provided by GOG.com. `validate -all-not-valid` will do that for all installers that are not in valid state. Please note that GOG.com is missing validation files for some installers and this will not be considered a critical error - you can use `vet` to generate missing checksums (by computing them locally - won't validate data validity, but will help maintain data consistency over time). 
 
-## Sharing games
+## vangogh and GOG.com games sharing guidelines
 
 `vangogh` assumes you follow GOG.com [games sharing guidelines](https://support.gog.com/hc/en-us/articles/212184489-Can-I-share-games-with-others-?product=gog). Just like GOG.com, we trust you that this will not be abused.
