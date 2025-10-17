@@ -1,11 +1,12 @@
 package rest
 
 import (
+	"net/http"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_pages"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"net/http"
 )
 
 func GetInstallers(w http.ResponseWriter, r *http.Request) {

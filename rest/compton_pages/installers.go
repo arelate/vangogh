@@ -147,27 +147,31 @@ func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 		fr.PropVal("Size", vangogh_integration.FormatBytes(dv.estimatedBytes))
 	}
 
-	var manualUrlStatus string
-	manualUrlColor := color.RepGray
-	manualUrlFontWeight := font_weight.Normal
-
-	switch dv.validationResult {
-	case vangogh_integration.ValidationResultUnknown:
-		manualUrlStatus = dv.manualUrlStatus.HumanReadableString()
-	default:
-		manualUrlStatus = dv.validationResult.HumanReadableString()
-		manualUrlColor = compton_fragments.ValidationResultsColors[dv.validationResult]
-		manualUrlFontWeight = validationResultsFontWeights[dv.validationResult]
-	}
+	var downloadValidationStatus string
+	downloadValidationColor := color.RepGray
+	downloadValidationlFontWeight := font_weight.Normal
 
 	if dv.downloadType == vangogh_integration.Installer || dv.downloadType == vangogh_integration.DLC {
-		validationResult := compton.Fspan(r, manualUrlStatus).
-			FontSize(size.XSmall).
-			ForegroundColor(manualUrlColor).
-			FontWeight(manualUrlFontWeight)
 
-		fr.Elements(validationResult)
+		switch dv.validationResult {
+		case vangogh_integration.ValidationResultUnknown:
+			downloadValidationStatus = dv.manualUrlStatus.HumanReadableString()
+		default:
+			downloadValidationStatus = dv.validationResult.HumanReadableString()
+			downloadValidationColor = compton_fragments.ValidationResultsColors[dv.validationResult]
+			downloadValidationlFontWeight = validationResultsFontWeights[dv.validationResult]
+		}
+
+	} else {
+		downloadValidationStatus = dv.manualUrlStatus.HumanReadableString()
 	}
+
+	manualUrlStatus := compton.Fspan(r, downloadValidationStatus).
+		FontSize(size.XSmall).
+		ForegroundColor(downloadValidationColor).
+		FontWeight(downloadValidationlFontWeight)
+
+	fr.Elements(manualUrlStatus)
 
 	return fr
 }
@@ -250,16 +254,13 @@ func downloadLink(r compton.Registrar,
 
 	linkColumn.Append(linkTitle)
 
-	if dl.Type == vangogh_integration.Installer || dl.Type == vangogh_integration.DLC {
+	dvs := vangogh_integration.NewDvs(dl.ManualUrl, rdx)
 
-		dvs := vangogh_integration.NewDvs(dl.ManualUrl, rdx)
-
-		manualUrlStatusValidationResult := compton.Fspan(r, dvs.HumanReadableString()).
-			FontSize(size.XSmall).
-			ForegroundColor(compton_fragments.ValidationResultsColors[dvs.ValidationResult()]).
-			FontWeight(validationResultsFontWeights[dvs.ValidationResult()])
-		linkColumn.Append(manualUrlStatusValidationResult)
-	}
+	manualUrlStatusValidationResult := compton.Fspan(r, dvs.HumanReadableString()).
+		FontSize(size.XSmall).
+		ForegroundColor(compton_fragments.ValidationResultsColors[dvs.ValidationResult()]).
+		FontWeight(validationResultsFontWeights[dvs.ValidationResult()])
+	linkColumn.Append(manualUrlStatusValidationResult)
 
 	link.Append(linkColumn)
 
