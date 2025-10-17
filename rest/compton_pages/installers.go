@@ -256,7 +256,22 @@ func downloadLink(r compton.Registrar,
 
 	dvs := vangogh_integration.NewDvs(dl.ManualUrl, rdx)
 
-	manualUrlStatusValidationResult := compton.Fspan(r, dvs.HumanReadableString()).
+	var downloadValidationStatus string
+
+	if dl.Type == vangogh_integration.Installer || dl.Type == vangogh_integration.DLC {
+
+		switch dvs.ValidationResult() {
+		case vangogh_integration.ValidationResultUnknown:
+			downloadValidationStatus = dvs.ManualUrlStatus().HumanReadableString()
+		default:
+			downloadValidationStatus = dvs.ValidationResult().HumanReadableString()
+		}
+
+	} else {
+		downloadValidationStatus = dvs.ManualUrlStatus().HumanReadableString()
+	}
+
+	manualUrlStatusValidationResult := compton.Fspan(r, downloadValidationStatus).
 		FontSize(size.XSmall).
 		ForegroundColor(compton_fragments.ValidationResultsColors[dvs.ValidationResult()]).
 		FontWeight(validationResultsFontWeights[dvs.ValidationResult()])
