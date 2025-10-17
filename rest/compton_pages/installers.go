@@ -359,8 +359,8 @@ func getDownloadVariants(os vangogh_integration.OperatingSystem, title string, d
 			if edv.validationResult < dvs.ValidationResult() {
 				edv.validationResult = dvs.ValidationResult()
 			}
-			// use the "most in progress" manual url status, most in progress = smaller value
-			if edv.manualUrlStatus > dvs.ManualUrlStatus() {
+			// use the "worst" manual url status, worse = larger value
+			if edv.manualUrlStatus < dvs.ManualUrlStatus() {
 				edv.manualUrlStatus = dvs.ManualUrlStatus()
 			}
 		}
