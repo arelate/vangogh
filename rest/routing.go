@@ -63,9 +63,10 @@ func HandleFuncs() {
 		"GET /api/product-details":        AuthSt(sb, Log(http.HandlerFunc(GetProductDetails)), perm.ReadApi),
 		"GET /api/wine-binaries-versions": AuthSt(sb, Log(http.HandlerFunc(GetWineBinariesVersions)), perm.ReadApi),
 		// debug endpoints
-		"GET /debug":      AuthSt(sb, Log(http.HandlerFunc(GetDebug)), perm.ReadDebug),
-		"GET /debug-data": AuthSt(sb, Log(http.HandlerFunc(GetDebugData)), perm.ReadDebug),
-		"GET /logs":       AuthSt(sb, Log(http.HandlerFunc(GetLogs)), perm.ReadLogs),
+		"GET /debug":           AuthSt(sb, Log(http.HandlerFunc(GetDebug)), perm.ReadDebug),
+		"GET /debug-data":      AuthSt(sb, Log(http.HandlerFunc(GetDebugData)), perm.ReadDebug),
+		"GET /logs":            AuthSt(sb, Log(http.HandlerFunc(GetLogs)), perm.ReadLogs),
+		"GET /downloads-queue": AuthSt(sb, Log(http.HandlerFunc(GetDownloadsQueue)), perm.ReadDebug),
 		// start at the updates
 		"GET /": Redirect("/updates", http.StatusPermanentRedirect),
 	}
