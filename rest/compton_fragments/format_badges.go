@@ -24,15 +24,15 @@ var ValidationResultsColors = map[vangogh_integration.ValidationResult]color.Col
 	vangogh_integration.ValidatedChecksumMismatch:    color.Red,
 }
 
-func FormatBadges(id string, rdx redux.Readable, permissions ...author.Permission) []compton.FormattedBadge {
+func FormatBadges(id string, rdx redux.Readable, badgeProperties []string, permissions ...author.Permission) []compton.FormattedBadge {
 	owned := false
 	if lp, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok {
 		owned = lp == vangogh_integration.TrueValue
 	}
 
-	fmtBadges := make([]compton.FormattedBadge, 0, len(compton_data.BadgeProperties))
+	fmtBadges := make([]compton.FormattedBadge, 0, len(badgeProperties))
 
-	ppo := compton_data.PermittedProperties(compton_data.BadgeProperties, permissions...)
+	ppo := compton_data.PermittedProperties(badgeProperties, permissions...)
 
 	for p := range ppo {
 		if fmtBadge := formatBadge(id, p, owned, rdx); fmtBadge.Title != "" || fmtBadge.Icon != compton.NoSymbol {

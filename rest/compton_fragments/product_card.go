@@ -89,16 +89,15 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx redux.Readab
 		AlignItems(align.Center).
 		AlignContent(align.Center)
 
-	for _, fmtBadge := range FormatBadges(id, rdx, permissions...) {
+	for _, fmtBadge := range FormatBadges(id, rdx, compton_data.InformationBadgeProperties, permissions...) {
 		var badge compton.Element
-		if fmtBadge.Title != "" && fmtBadge.Icon == compton.NoSymbol {
-			badge = compton.BadgeText(r, fmtBadge.Title, color.RepForeground)
-		} else if fmtBadge.Icon != compton.NoSymbol {
+		switch fmtBadge.Title {
+		case "":
 			badge = compton.BadgeIcon(r, fmtBadge.Icon, color.RepForeground)
+		default:
+			badge = compton.BadgeText(r, fmtBadge.Title, color.RepForeground)
 		}
-		if badge != nil {
-			productBadges.Append(badge)
-		}
+		productBadges.Append(badge)
 	}
 
 	pc.AppendBadges(productBadges)

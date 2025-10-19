@@ -4,7 +4,7 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 )
 
-var BadgeProperties = []string{
+var InformationBadgeProperties = []string{
 	vangogh_integration.OwnedProperty,
 	vangogh_integration.UserWishlistProperty,
 	vangogh_integration.IsModProperty,

@@ -126,17 +126,16 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 				AlignItems(align.Center)
 
 			productBadges.SetAttribute("style", "view-transition-name:product-badges-"+id)
-			for _, fmtBadge := range compton_fragments.FormatBadges(id, rdx, permissions...) {
+			for _, fmtBadge := range compton_fragments.FormatBadges(id, rdx, compton_data.InformationBadgeProperties, permissions...) {
 
 				var badge compton.Element
-				if fmtBadge.Title != "" && fmtBadge.Icon == compton.NoSymbol {
-					badge = compton.BadgeText(p, fmtBadge.Title, color.RepGray)
-				} else if fmtBadge.Icon != compton.NoSymbol {
+				switch fmtBadge.Title {
+				case "":
 					badge = compton.BadgeIcon(p, fmtBadge.Icon, color.RepGray)
+				default:
+					badge = compton.BadgeText(p, fmtBadge.Title, color.RepGray)
 				}
-				if badge != nil {
-					productBadges.Append(badge)
-				}
+				productBadges.Append(badge)
 			}
 			detailsSummary.AppendBadges(productBadges)
 		case compton_data.MediaSection:

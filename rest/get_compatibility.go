@@ -25,7 +25,7 @@ func GetCompatibility(w http.ResponseWriter, r *http.Request) {
 	}
 
 	p := compton_pages.Compatibility(id, rdx, permissions...)
-	if err := p.WriteResponse(w); err != nil {
+	if err = p.WriteResponse(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}
 }
