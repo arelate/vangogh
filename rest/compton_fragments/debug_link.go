@@ -9,7 +9,7 @@ import (
 
 func DebugLink(r compton.Registrar, id string) compton.Element {
 	debugLink := compton.A("/debug?id=" + id)
-	debugLink.Append(compton.Fspan(r, "Debug").FontSize(size.XSmall).ForegroundColor(color.Blue).FontWeight(font_weight.Bolder))
+	debugLink.Append(compton.Fspan(r, "Debug").FontSize(size.XSmall).ForegroundColor(color.RepForeground).FontWeight(font_weight.Bolder))
 
 	return debugLink
 }

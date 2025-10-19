@@ -58,7 +58,7 @@ func SyncStatus(r compton.Registrar, rdx redux.Readable, permissions ...author.P
 	syncStatusFrow.PropVal(vangogh_integration.CurrentSyncEventsTitles[currentSyncEvent], syncEventDateText)
 
 	if slices.Contains(permissions, perm.ReadLogs) {
-		syncStatusFrow.LinkColor("Logs", "/logs", color.Blue)
+		syncStatusFrow.LinkColor("Logs", "/logs", color.RepForeground)
 	}
 
 	return compton.FICenter(r, syncStatusFrow).ColumnGap(size.Small)
