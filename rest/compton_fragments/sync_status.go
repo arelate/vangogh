@@ -14,8 +14,6 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-const syncStatusTitle = "Data"
-
 func SyncStatus(r compton.Registrar, rdx redux.Readable, permissions ...author.Permission) compton.Element {
 
 	var lastCompletedSyncEvent string
@@ -56,7 +54,6 @@ func SyncStatus(r compton.Registrar, rdx redux.Readable, permissions ...author.P
 
 	syncStatusFrow := compton.Frow(r).FontSize(size.XXSmall)
 
-	syncStatusFrow.Heading(syncStatusTitle)
 	syncStatusFrow.IconColor(compton.SmallerCircle, syncStatusColor)
 	syncStatusFrow.PropVal(vangogh_integration.CurrentSyncEventsTitles[currentSyncEvent], syncEventDateText)
 
