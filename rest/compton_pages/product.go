@@ -119,19 +119,22 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 		switch section {
 		case compton_data.InfoSection:
 			productBadges := compton.FlexItems(p, direction.Row).
-				ColumnGap(size.XSmall).
-				BackgroundColor(color.Transparent)
+				ColumnGap(size.Small).
+				BackgroundColor(color.Transparent).
+				JustifyItems(align.Center).
+				AlignItems(align.Center)
+
 			productBadges.SetAttribute("style", "view-transition-name:product-badges-"+id)
 			for _, fmtBadge := range compton_fragments.FormatBadges(id, rdx, permissions...) {
 
 				var badge *compton.FspanElement
 				if fmtBadge.Title != "" && fmtBadge.Icon == compton.NoSymbol {
-					badge = compton.Badge(p, fmtBadge.Title, fmtBadge.Background, fmtBadge.Foreground)
+					badge = compton.BadgeText(p, fmtBadge.Title, color.RepGray)
 				} else if fmtBadge.Icon != compton.NoSymbol {
-					badge = compton.BadgeIcon(p, fmtBadge.Icon, "", fmtBadge.Background, fmtBadge.Foreground)
+					badge = compton.BadgeIcon(p, fmtBadge.Icon, color.RepGray)
 				}
 				if badge != nil {
-					badge.AddClass(fmtBadge.Class)
+					//badge.AddClass(fmtBadge.Class)
 					productBadges.Append(badge)
 				}
 			}
@@ -205,7 +208,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 			receptionBadges := compton.FlexItems(p, direction.Row).ColumnGap(size.Small)
 
 			if tp, sure := rdx.GetLastVal(vangogh_integration.TopPercentProperty, id); sure && tp != "" {
-				topPercentBadge := compton.Badge(p, fmt.Sprintf("Top %s", tp), color.Green, color.Highlight)
+				topPercentBadge := compton.BadgeText(p, fmt.Sprintf("Top %s", tp), color.Green)
 				receptionBadges.Append(topPercentBadge)
 			}
 

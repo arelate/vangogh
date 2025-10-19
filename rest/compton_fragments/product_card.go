@@ -10,6 +10,7 @@ import (
 	"github.com/boggydigital/author"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
+	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/issa"
@@ -80,20 +81,21 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx redux.Readab
 	}
 
 	productBadges := compton.FlexItems(r, direction.Row).
-		RowGap(size.XXSmall).
-		ColumnGap(size.XXSmall).
+		RowGap(size.Small).
+		ColumnGap(size.Small).
 		JustifyContent(align.Start).
-		Width(size.FullWidth)
+		Width(size.FullWidth).
+		AlignItems(align.Center).
+		AlignContent(align.Center)
 
 	for _, fmtBadge := range FormatBadges(id, rdx, permissions...) {
 		var badge *compton.FspanElement
 		if fmtBadge.Title != "" && fmtBadge.Icon == compton.NoSymbol {
-			badge = compton.SmallBadge(r, fmtBadge.Title, fmtBadge.Background, fmtBadge.Foreground)
+			badge = compton.BadgeText(r, fmtBadge.Title, color.RepForeground)
 		} else if fmtBadge.Icon != compton.NoSymbol {
-			badge = compton.SmallBadgeIcon(r, fmtBadge.Icon, "", fmtBadge.Background, fmtBadge.Foreground)
+			badge = compton.BadgeIcon(r, fmtBadge.Icon, color.RepForeground)
 		}
 		if badge != nil {
-			badge.AddClass(fmtBadge.Class)
 			productBadges.Append(badge)
 		}
 	}
