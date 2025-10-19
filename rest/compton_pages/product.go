@@ -120,6 +120,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 		case compton_data.InfoSection:
 			productBadges := compton.FlexItems(p, direction.Row).
 				ColumnGap(size.Small).
+				FontSize(size.XXSmall).
 				BackgroundColor(color.Transparent).
 				JustifyItems(align.Center).
 				AlignItems(align.Center)
@@ -127,14 +128,13 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 			productBadges.SetAttribute("style", "view-transition-name:product-badges-"+id)
 			for _, fmtBadge := range compton_fragments.FormatBadges(id, rdx, permissions...) {
 
-				var badge *compton.FspanElement
+				var badge compton.Element
 				if fmtBadge.Title != "" && fmtBadge.Icon == compton.NoSymbol {
 					badge = compton.BadgeText(p, fmtBadge.Title, color.RepGray)
 				} else if fmtBadge.Icon != compton.NoSymbol {
 					badge = compton.BadgeIcon(p, fmtBadge.Icon, color.RepGray)
 				}
 				if badge != nil {
-					//badge.AddClass(fmtBadge.Class)
 					productBadges.Append(badge)
 				}
 			}
@@ -161,7 +161,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 			}
 
 			if len(mediaCounts) > 0 {
-				mediaBadge := compton.BadgeText(p, strings.Join(mediaCounts, ", "), color.RepGray)
+				mediaBadge := compton.BadgeText(p, strings.Join(mediaCounts, ", "), color.RepGray).FontSize(size.XXSmall)
 				detailsSummary.AppendBadges(mediaBadge)
 			}
 
@@ -201,11 +201,11 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 				dcColor = color.RepGray
 			}
 
-			badge = compton.BadgeText(p, compatText, dcColor)
+			badge = compton.BadgeText(p, compatText, dcColor).FontSize(size.XXSmall)
 			detailsSummary.AppendBadges(badge)
 
 		case compton_data.ReceptionSection:
-			receptionBadges := compton.FlexItems(p, direction.Row).ColumnGap(size.Small)
+			receptionBadges := compton.FlexItems(p, direction.Row).ColumnGap(size.Small).FontSize(size.XXSmall)
 
 			if tp, sure := rdx.GetLastVal(vangogh_integration.TopPercentProperty, id); sure && tp != "" {
 				topPercentBadge := compton.BadgeText(p, fmt.Sprintf("Top %s", tp), color.Green)
@@ -254,7 +254,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 			}
 
 			if len(offerings) > 0 {
-				offeringsBadge := compton.BadgeText(p, strings.Join(offerings, ", "), color.RepGray)
+				offeringsBadge := compton.BadgeText(p, strings.Join(offerings, ", "), color.RepGray).FontSize(size.XXSmall)
 				detailsSummary.AppendBadges(offeringsBadge)
 			}
 		case compton_data.NewsSection:
@@ -267,7 +267,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 					updateColor = color.Green
 				}
 
-				lastUpdateBadge := compton.BadgeText(p, lcut.Format("Jan 2, '06"), updateColor)
+				lastUpdateBadge := compton.BadgeText(p, lcut.Format("Jan 2, '06"), updateColor).FontSize(size.XXSmall)
 				detailsSummary.AppendBadges(lastUpdateBadge)
 
 			} else if err != nil {
@@ -278,7 +278,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 			if pvrs, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
 				pvr := vangogh_integration.ParseValidationResult(pvrs)
 
-				validationBadge := compton.BadgeText(p, pvr.HumanReadableString(), compton_fragments.ValidationResultsColors[pvr])
+				validationBadge := compton.BadgeText(p, pvr.HumanReadableString(), compton_fragments.ValidationResultsColors[pvr]).FontSize(size.XXSmall)
 				detailsSummary.AppendBadges(validationBadge)
 			}
 		default:

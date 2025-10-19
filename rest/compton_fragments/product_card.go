@@ -83,13 +83,14 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx redux.Readab
 	productBadges := compton.FlexItems(r, direction.Row).
 		RowGap(size.Small).
 		ColumnGap(size.Small).
+		FontSize(size.XXXSmall).
 		JustifyContent(align.Start).
 		Width(size.FullWidth).
 		AlignItems(align.Center).
 		AlignContent(align.Center)
 
 	for _, fmtBadge := range FormatBadges(id, rdx, permissions...) {
-		var badge *compton.FspanElement
+		var badge compton.Element
 		if fmtBadge.Title != "" && fmtBadge.Icon == compton.NoSymbol {
 			badge = compton.BadgeText(r, fmtBadge.Title, color.RepForeground)
 		} else if fmtBadge.Icon != compton.NoSymbol {
