@@ -18,7 +18,7 @@ const (
 )
 
 var SearchScopesSymbols = map[string]compton.Symbol{
-	SearchNew:                    compton.TwoLabelledInputs,
+	SearchNew:                    compton.TwoTitleValues,
 	SearchOwned:                  compton.CompactDisk,
 	SearchWishlist:               compton.Heart,
 	SearchSale:                   compton.Percent,

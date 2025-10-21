@@ -2,13 +2,14 @@ package compton_fragments
 
 import (
 	"fmt"
+	"strconv"
+	"time"
+
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/size"
-	"strconv"
-	"time"
 )
 
 const longReviewThreshold = 750
@@ -22,10 +23,10 @@ func SteamReview(r compton.Registrar, review steam_integration.Review) compton.E
 
 	switch review.VotedUp {
 	case true:
-		votedSymbol = compton.UpwardNestedChevrons // "Recommended"
+		votedSymbol = compton.ThreeUpwardChevrons // "Recommended"
 		votedColor = color.Green
 	case false:
-		votedSymbol = compton.DownwardNestedChevrons // "Not Recommended"
+		votedSymbol = compton.ThreeDownwardChevrons // "Not Recommended"
 		votedColor = color.Red
 	}
 
