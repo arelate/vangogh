@@ -65,6 +65,10 @@ func formatBadge(id, property string, owned bool, rdx redux.Readable) compton.Fo
 	}
 
 	switch property {
+	case vangogh_integration.TopPercentProperty:
+		if rdx.HasKey(vangogh_integration.TopPercentProperty, id) {
+			fmtBadge.Icon = compton.Trophy
+		}
 	case vangogh_integration.DownloadQueuedProperty:
 		if downloadQueued > downloadStarted &&
 			downloadQueued > downloadCompleted {

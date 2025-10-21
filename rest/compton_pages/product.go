@@ -207,19 +207,25 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 			receptionBadges := compton.FlexItems(p, direction.Row).ColumnGap(size.Small).FontSize(size.XXSmall)
 
 			if tp, sure := rdx.GetLastVal(vangogh_integration.TopPercentProperty, id); sure && tp != "" {
-				topPercentBadge := compton.BadgeText(p, fmt.Sprintf("Top %s", tp), color.Green)
-				receptionBadges.Append(topPercentBadge)
+				topPercentSymbol := compton.SvgUse(p, compton.Trophy).ForegroundColor(color.Green)
+				topPercentBadge := compton.BadgeText(p, tp, color.Green)
+				receptionBadges.Append(topPercentSymbol, topPercentBadge)
 			}
+
+			var receptionSymbol compton.Symbol
 
 			if srep, ok := rdx.GetLastVal(vangogh_integration.SummaryReviewsProperty, id); ok {
 
 				var receptionColor color.Color
 				switch srep {
 				case vangogh_integration.RatingPositive:
+					receptionSymbol = compton.ThreeUpwardChevrons
 					receptionColor = color.Green
 				case vangogh_integration.RatingNegative:
+					receptionSymbol = compton.ThreeDownwardChevrons
 					receptionColor = color.Red
 				case vangogh_integration.RatingMixed:
+					receptionSymbol = compton.ThreeHorizontalLines
 					receptionColor = color.Yellow
 				default:
 					receptionColor = color.RepGray
@@ -228,10 +234,12 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 				ratingsReviews := srep
 
 				if srap, sure := rdx.GetLastVal(vangogh_integration.SummaryRatingProperty, id); sure {
-					ratingsReviews = compton_fragments.FmtRating(srap)
+					ratingsReviews = compton_fragments.FmtRatingValue(srap)
 				}
 
-				receptionBadges.Append(compton.BadgeText(p, ratingsReviews, receptionColor))
+				receptionSvgUse := compton.SvgUse(p, receptionSymbol).ForegroundColor(receptionColor)
+
+				receptionBadges.Append(receptionSvgUse, compton.BadgeText(p, ratingsReviews, receptionColor))
 
 			}
 

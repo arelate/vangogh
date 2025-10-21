@@ -338,11 +338,22 @@ func fmtSteamRating(rs string) string {
 
 }
 
+func FmtRatingValue(rs string) string {
+	var rv string
+	if rf, err := strconv.ParseFloat(rs, 64); err == nil {
+		ri := int64(rf)
+		if ri > 0 {
+			rv = fmt.Sprintf(" %d%%", ri)
+		}
+	}
+	return rv
+}
+
 func FmtRating(rs string) string {
 	rd := ""
 	if rf, err := strconv.ParseFloat(rs, 64); err == nil {
 		ri := int64(rf)
-		rd = vangogh_integration.RatingDesc(ri)
+		//rd = vangogh_integration.RatingDesc(ri)
 		if ri > 0 {
 			rd += fmt.Sprintf(" %d%%", ri)
 		}

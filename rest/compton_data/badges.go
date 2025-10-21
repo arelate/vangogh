@@ -5,11 +5,14 @@ import (
 )
 
 var InformationBadgeProperties = []string{
+	// symbols
 	vangogh_integration.OwnedProperty,
 	vangogh_integration.UserWishlistProperty,
 	vangogh_integration.IsModProperty,
 	vangogh_integration.StoreTagsProperty, // Good Old Game label
 	vangogh_integration.ProductTypeProperty,
+	vangogh_integration.TopPercentProperty,
+	// text
 	vangogh_integration.ComingSoonProperty,
 	vangogh_integration.PreOrderProperty,
 	vangogh_integration.InDevelopmentProperty,
