@@ -67,10 +67,6 @@ func GetSearch(w http.ResponseWriter, r *http.Request) {
 
 		found := slices.Collect(rdx.Match(q))
 
-		if len(found) == 0 {
-			return
-		}
-
 		var err error
 		ids, err = rdx.Sort(found, desc, sort, vangogh_integration.TitleProperty, vangogh_integration.ProductTypeProperty)
 		if err != nil {
