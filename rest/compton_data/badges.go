@@ -7,6 +7,9 @@ import (
 var InformationBadgeProperties = []string{
 	// symbols
 	vangogh_integration.OwnedProperty,
+	vangogh_integration.DownloadQueuedProperty,
+	vangogh_integration.DownloadStartedProperty,
+	//vangogh_integration.DownloadCompletedProperty,
 	vangogh_integration.UserWishlistProperty,
 	vangogh_integration.IsModProperty,
 	vangogh_integration.StoreTagsProperty, // Good Old Game label
@@ -21,7 +24,4 @@ var InformationBadgeProperties = []string{
 	vangogh_integration.TagIdProperty,
 	vangogh_integration.LocalTagsProperty,
 	vangogh_integration.IsDemoProperty,
-	vangogh_integration.DownloadQueuedProperty,
-	vangogh_integration.DownloadStartedProperty,
-	vangogh_integration.DownloadCompletedProperty,
 }
