@@ -94,9 +94,6 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx redux.Readab
 		default:
 			badge = compton.BadgeText(r, fmtBadge.Title, color.RepForeground)
 		}
-		if fmtBadge.Class != "" {
-			badge.AddClass(fmtBadge.Class)
-		}
 		productBadges.Append(badge)
 	}
 

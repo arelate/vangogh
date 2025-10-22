@@ -135,9 +135,6 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 				default:
 					badge = compton.BadgeText(p, fmtBadge.Title, color.RepGray)
 				}
-				if fmtBadge.Class != "" {
-					badge.AddClass(fmtBadge.Class)
-				}
 				productBadges.Append(badge)
 			}
 			detailsSummary.AppendBadges(productBadges)

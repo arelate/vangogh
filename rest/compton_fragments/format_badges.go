@@ -77,7 +77,6 @@ func formatBadge(id, property string, owned bool, rdx redux.Readable) compton.Fo
 	case vangogh_integration.DownloadStartedProperty:
 		if downloadStarted > downloadCompleted {
 			fmtBadge.Icon = compton.CyclingCircle
-			fmtBadge.Class = vangogh_integration.DownloadStartedProperty
 		}
 	case vangogh_integration.OwnedProperty:
 		if owned {
@@ -151,7 +150,6 @@ func formatBadge(id, property string, owned bool, rdx redux.Readable) compton.Fo
 	case vangogh_integration.StoreTagsProperty:
 		if rdx.HasValue(vangogh_integration.StoreTagsProperty, id, compton_data.GogPreservationProgramTag) {
 			fmtBadge.Icon = compton.Gemstone
-			fmtBadge.Class = "gog-preservation-program"
 		} else {
 			fmtBadge.Title = ""
 		}
