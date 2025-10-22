@@ -45,7 +45,7 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if productPage := compton_pages.Product(id, rdx, sessionPermissions...); productPage != nil {
-		if err := productPage.WriteResponse(w); err != nil {
+		if err = productPage.WriteResponse(w); err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		}
 	} else {

@@ -28,6 +28,13 @@ var openSections = []string{
 	compton_data.InfoSection,
 }
 
+var offeringsBadgesOrder = []compton.Symbol{
+	compton.CompactDisk,
+	compton.TwoStackedItems,
+	compton.ItemPlus,
+	compton.PuzzlePiece,
+}
+
 func Product(id string, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
 
 	title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
@@ -245,7 +252,6 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 
 			detailsSummary.AppendBadges(receptionBadges)
 		case compton_data.OfferingsSection:
-			offerings := make([]string, 0)
 			ops := []string{
 				vangogh_integration.IsIncludedByGamesProperty,
 				vangogh_integration.IsRequiredByGamesProperty,
@@ -254,15 +260,27 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 				vangogh_integration.RequiresGamesProperty,
 				vangogh_integration.ModifiesGamesProperty}
 
+			offeringsSymbols := make(map[compton.Symbol]any)
+
 			for _, op := range ops {
 				if games, sure := rdx.GetAllValues(op, id); sure && len(games) > 0 {
-					offerings = append(offerings, compton_data.PropertyTitles[op])
+					offeringsSymbols[compton_data.PropertySymbols[op]] = nil
 				}
 			}
 
-			if len(offerings) > 0 {
-				offeringsBadge := compton.BadgeText(p, strings.Join(offerings, ", "), color.RepGray).FontSize(size.XXSmall)
-				detailsSummary.AppendBadges(offeringsBadge)
+			if len(offeringsSymbols) > 0 {
+				offeringsBadges := make([]compton.Element, 0, len(offeringsSymbols))
+
+				for _, os := range offeringsBadgesOrder {
+					if _, sure := offeringsSymbols[os]; sure {
+						offeringsBadges = append(offeringsBadges, compton.BadgeIcon(p, os, color.RepGray))
+					}
+				}
+
+				offeringsBadgesRow := compton.FlexItems(p, direction.Row).ColumnGap(size.Small)
+				offeringsBadgesRow.Append(offeringsBadges...)
+
+				detailsSummary.AppendBadges(offeringsBadgesRow)
 			}
 		case compton_data.NewsSection:
 

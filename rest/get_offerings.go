@@ -25,7 +25,7 @@ func GetOfferings(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if p := compton_pages.Offerings(id, rdx, permissions...); p != nil {
-		if err := p.WriteResponse(w); err != nil {
+		if err = p.WriteResponse(w); err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		}
 	}

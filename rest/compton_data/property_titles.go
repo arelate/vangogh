@@ -2,6 +2,7 @@ package compton_data
 
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/compton"
 )
 
 var PropertyTitles = map[string]string{
@@ -115,4 +116,13 @@ var PropertyTitles = map[string]string{
 var ShortPropertyTitles = map[string]string{
 	vangogh_integration.DevelopersProperty: "Dev.",
 	vangogh_integration.PublishersProperty: "Pub.",
+}
+
+var PropertySymbols = map[string]compton.Symbol{
+	vangogh_integration.IsIncludedByGamesProperty: compton.TwoStackedItems,
+	vangogh_integration.IsRequiredByGamesProperty: compton.ItemPlus,
+	vangogh_integration.IsModifiedByGamesProperty: compton.PuzzlePiece,
+	vangogh_integration.IncludesGamesProperty:     compton.TwoStackedItems,
+	vangogh_integration.RequiresGamesProperty:     compton.CompactDisk,
+	vangogh_integration.ModifiesGamesProperty:     compton.PuzzlePiece,
 }
