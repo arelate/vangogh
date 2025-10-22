@@ -48,7 +48,7 @@ func formatBadge(id, property string, owned bool, rdx redux.Readable) compton.Fo
 	fmtBadge := compton.FormattedBadge{}
 
 	var downloadQueued, downloadStarted, downloadCompleted string
-	//validationResult := vangogh_integration.ValidationResultUnknown
+	validationResult := vangogh_integration.ValidationResultUnknown
 
 	if dq, ok := rdx.GetLastVal(vangogh_integration.DownloadQueuedProperty, id); ok {
 		downloadQueued = dq
@@ -60,9 +60,9 @@ func formatBadge(id, property string, owned bool, rdx redux.Readable) compton.Fo
 		downloadCompleted = dc
 	}
 
-	//if pvr, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
-	//	validationResult = vangogh_integration.ParseValidationResult(pvr)
-	//}
+	if pvr, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
+		validationResult = vangogh_integration.ParseValidationResult(pvr)
+	}
 
 	switch property {
 	case vangogh_integration.TopPercentProperty:
@@ -80,7 +80,7 @@ func formatBadge(id, property string, owned bool, rdx redux.Readable) compton.Fo
 		}
 	case vangogh_integration.OwnedProperty:
 		if owned {
-			if downloadCompleted == "" {
+			if downloadCompleted == "" && validationResult == vangogh_integration.ValidationResultUnknown {
 				fmtBadge.Icon = compton.DashedCircle
 			} else if downloadCompleted >= downloadQueued && downloadCompleted >= downloadStarted {
 				fmtBadge.Icon = compton.CompactDisk
