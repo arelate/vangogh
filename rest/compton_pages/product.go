@@ -39,7 +39,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 
 	p.AppendSpeculationRules(compton.SpeculationRulesConservativeEagerness, "/*")
 
-	p.RegisterStyles(compton_styles.Styles, "product.css", "gpp-badge.css")
+	p.RegisterStyles(compton_styles.Styles, "product.css")
 
 	// tinting document background color to the representative product color
 	if imageId, ok := rdx.GetLastVal(vangogh_integration.ImageProperty, id); ok && imageId != "" {
@@ -134,6 +134,9 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 					badge = compton.BadgeIcon(p, fmtBadge.Icon, color.RepGray)
 				default:
 					badge = compton.BadgeText(p, fmtBadge.Title, color.RepGray)
+				}
+				if fmtBadge.Class != "" {
+					badge.AddClass(fmtBadge.Class)
 				}
 				productBadges.Append(badge)
 			}

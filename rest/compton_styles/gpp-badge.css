@@ -1,9 +1,0 @@
-fspan.good-old-game {
-    background-image: linear-gradient(0.25turn, var(--c-pink), var(--c-yellow), var(--c-mint), var(--c-blue));
-    background-size: contain;
-    background-origin: border-box;
-    background-clip: text;
-    outline: var(--s-xxxs) solid var(--c-brown);
-    outline-offset: calc(-1 * var(--s-xxxs));
-    --fg: transparent;
-}
