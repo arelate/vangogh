@@ -72,7 +72,11 @@ func formatBadge(id, property string, owned bool, rdx redux.Readable) compton.Fo
 	case vangogh_integration.DownloadQueuedProperty:
 		if downloadQueued > downloadStarted &&
 			downloadQueued > downloadCompleted {
-			fmtBadge.Icon = compton.ClockFace
+			if downloadCompleted != "" {
+				fmtBadge.Icon = compton.ClockFace
+			} else {
+				fmtBadge.Icon = compton.DashedClockFace
+			}
 		}
 	case vangogh_integration.DownloadStartedProperty:
 		if downloadStarted > downloadCompleted {
@@ -80,7 +84,7 @@ func formatBadge(id, property string, owned bool, rdx redux.Readable) compton.Fo
 		}
 	case vangogh_integration.OwnedProperty:
 		if owned {
-			if downloadCompleted == "" && validationResult == vangogh_integration.ValidationResultUnknown {
+			if downloadCompleted == "" && validationResult == vangogh_integration.ValidationResultUnknown && downloadQueued == "" {
 				fmtBadge.Icon = compton.DashedCircle
 			} else if downloadCompleted >= downloadQueued && downloadCompleted >= downloadStarted {
 				fmtBadge.Icon = compton.CompactDisk
