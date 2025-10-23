@@ -79,9 +79,8 @@ func Search(query map[string][]string, ids []string, from, to int, rdx redux.Rea
 	if len(ids) > 0 {
 		productsList := compton_fragments.ProductsList(p, ids, from, to, rdx, false, permissions...)
 		pageStack.Append(productsList)
-	} else {
-
-		pageStack.Append(compton.Br(), compton.FICenter(p, compton.Fspan(p, "No products match search query").ForegroundColor(color.RepGray)))
+	} else if len(query) > 0 {
+		pageStack.Append(compton.Br(), compton.FICenter(p, compton.Fspan(p, "Nothing found.").ForegroundColor(color.RepGray)))
 	}
 
 	/* Show more... button */
