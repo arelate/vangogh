@@ -284,7 +284,7 @@ func propertyTitleValues(r compton.Registrar, property string, fmtProperty forma
 		for ac, acHref := range fmtProperty.actions {
 			actionLink := compton.A(acHref)
 			actionLink.SetAttribute("target", "_top")
-			actionLink.Append(compton.Fspan(r, ac).ForegroundColor(color.Blue))
+			actionLink.Append(compton.Fspan(r, ac).ForegroundColor(color.Blue).Width(size.Initial))
 			tv.Append(actionLink)
 		}
 	}
