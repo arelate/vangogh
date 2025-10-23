@@ -54,7 +54,7 @@ func SyncStatus(r compton.Registrar, rdx redux.Readable, permissions ...author.P
 
 	syncStatusFrow := compton.Frow(r).FontSize(size.XXSmall)
 
-	syncStatusFrow.IconColor(compton.SmallerCircle, syncStatusColor)
+	syncStatusFrow.IconColor(compton.Circle, syncStatusColor)
 	syncStatusFrow.PropVal(vangogh_integration.CurrentSyncEventsTitles[currentSyncEvent], syncEventDateText)
 
 	if slices.Contains(permissions, perm.ReadLogs) {
