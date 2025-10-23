@@ -146,7 +146,7 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 			fmtProperty.values[ct] = noHref()
 		}
 	case vangogh_integration.HltbReviewScoreProperty:
-		if firstValue != "0" {
+		if !isZeroValue(firstValue) {
 			fmtProperty.values[fmtHltbRating(firstValue)] = noHref()
 		}
 	case vangogh_integration.DiscountPercentageProperty:
@@ -164,17 +164,17 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 			fmtProperty.values[value] = noHref()
 		}
 	case vangogh_integration.SteamReviewScoreProperty:
-		if firstValue != "" {
+		if !isZeroValue(firstValue) {
 			fmtProperty.values[fmtSteamRating(firstValue)] = noHref()
 		}
 	case vangogh_integration.OpenCriticMedianScoreProperty:
 		fallthrough
 	case vangogh_integration.MetacriticScoreProperty:
-		if firstValue != "" {
+		if !isZeroValue(firstValue) {
 			fmtProperty.values[FmtRating(firstValue)] = noHref()
 		}
 	case vangogh_integration.TopPercentProperty:
-		if firstValue != "" {
+		if !isZeroValue(firstValue) {
 			fmtProperty.values[firstValue] = searchHref(property, url.QueryEscape(firstValue))
 		}
 	case vangogh_integration.CreatorsProperty:
@@ -365,4 +365,8 @@ func formatDate(s string) string {
 		return t.Format("2006.01.02")
 	}
 	return s
+}
+
+func isZeroValue(v string) bool {
+	return v == "0" || v == ""
 }
