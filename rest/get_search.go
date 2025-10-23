@@ -65,7 +65,13 @@ func GetSearch(w http.ResponseWriter, r *http.Request) {
 		}
 		desc := q.Get(vangogh_integration.DescendingProperty) == "true"
 
-		found := slices.Collect(rdx.Match(q))
+		var found []string
+
+		if isSortDescOnly(query) {
+			found = slices.Collect(rdx.Keys(vangogh_integration.TitleProperty))
+		} else {
+			found = slices.Collect(rdx.Match(q))
+		}
 
 		var err error
 		ids, err = rdx.Sort(found, desc, sort, vangogh_integration.TitleProperty, vangogh_integration.ProductTypeProperty)
@@ -98,7 +104,25 @@ func GetSearch(w http.ResponseWriter, r *http.Request) {
 	}
 
 	searchPage := compton_pages.Search(query, ids, from, to, rdx, permissions...)
-	if err := searchPage.WriteResponse(w); err != nil {
+	if err = searchPage.WriteResponse(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}
+}
+
+func isSortDescOnly(q map[string][]string) bool {
+	switch len(q) {
+	case 0:
+		return false
+	case 1:
+		_, okSort := q[vangogh_integration.SortProperty]
+		_, okDesc := q[vangogh_integration.DescendingProperty]
+		return okSort || okDesc
+	case 2:
+		_, okSort := q[vangogh_integration.SortProperty]
+		_, okDesc := q[vangogh_integration.DescendingProperty]
+		return okSort && okDesc
+	default:
+		return false
+	}
+
 }
