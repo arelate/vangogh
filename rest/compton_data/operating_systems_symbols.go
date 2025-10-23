@@ -7,6 +7,6 @@ import (
 
 var OperatingSystemSymbols = map[vangogh_integration.OperatingSystem]compton.Symbol{
 	vangogh_integration.Windows: compton.Windows,
-	vangogh_integration.MacOS:   compton.MacOS,
-	vangogh_integration.Linux:   compton.Linux,
+	vangogh_integration.MacOS:   compton.PlaceOfInterest,
+	vangogh_integration.Linux:   compton.SteamDeck,
 }
