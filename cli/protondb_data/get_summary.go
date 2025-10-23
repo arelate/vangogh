@@ -2,7 +2,9 @@ package protondb_data
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
+	"maps"
+
 	"github.com/arelate/southern_light/protondb_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
@@ -12,7 +14,6 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"maps"
 )
 
 func GetSummary(steamGogIds map[string][]string, since int64, force bool) error {
@@ -62,7 +63,7 @@ func ReduceSummary(steamGogIds map[string][]string, kvSummary kevlar.KeyValues) 
 
 	for steamAppId, gogIds := range steamGogIds {
 		if !kvSummary.Has(steamAppId) {
-			nod.LogError(fmt.Errorf("%s is missing %s", dataType, steamAppId))
+			nod.LogError(errors.New("missing: " + dataType.String() + ", " + steamAppId))
 			rsa.Increment()
 			continue
 		}

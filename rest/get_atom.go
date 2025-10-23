@@ -1,7 +1,7 @@
 package rest
 
 import (
-	"fmt"
+	"errors"
 	"net/http"
 	"os"
 	"time"
@@ -42,7 +42,7 @@ func GetAtom(w http.ResponseWriter, r *http.Request) {
 
 		http.ServeFile(w, r, absAtomFeedPath)
 	} else {
-		nod.LogError(fmt.Errorf("atom feed not found"))
+		nod.LogError(errors.New("atom feed not found"))
 		http.NotFound(w, r)
 	}
 }

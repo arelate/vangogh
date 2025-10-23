@@ -1,21 +1,22 @@
 package cli
 
 import (
-	"fmt"
-	"github.com/arelate/vangogh/cli/shared_data"
-	"github.com/boggydigital/atomus"
-	"github.com/boggydigital/kevlar"
-	"github.com/boggydigital/pathways"
-	"github.com/boggydigital/redux"
 	"iter"
 	"net/url"
 	"os"
 	"strings"
 	"time"
 
+	"github.com/arelate/vangogh/cli/shared_data"
+	"github.com/boggydigital/atomus"
+	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/pathways"
+	"github.com/boggydigital/redux"
+
+	"maps"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
-	"maps"
 )
 
 const (
@@ -198,7 +199,7 @@ func NewAtomFeedContent(rdx redux.Readable, summary map[string][]string) string 
 		sb.WriteString("<ul>")
 		for _, id := range summary[section] {
 			if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
-				sb.WriteString(fmt.Sprintf("<li>%s (%s)</li>", title, id))
+				sb.WriteString("<li>" + title + " (" + id + ")</li>")
 			} else {
 				sb.WriteString("<li>" + id + "</li>")
 			}

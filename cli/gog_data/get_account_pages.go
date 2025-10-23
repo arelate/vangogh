@@ -2,7 +2,10 @@ package gog_data
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
+	"net/http"
+	"strconv"
+
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/reqs"
@@ -11,8 +14,6 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"net/http"
-	"strconv"
 )
 
 func GetAccountPages(hc *http.Client, uat string, since int64, force bool) error {
@@ -60,7 +61,7 @@ func ReduceAccountPages(kvAccountPages kevlar.KeyValues, since int64) error {
 	for page := range updatedAccountPages {
 
 		if !kvAccountPages.Has(page) {
-			nod.LogError(fmt.Errorf("%s is missing %s", pageType, page))
+			nod.LogError(errors.New("missing: " + pageType.String() + ", " + page))
 			continue
 		}
 

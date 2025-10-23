@@ -2,7 +2,9 @@ package pcgw_data
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
+	"maps"
+
 	"github.com/arelate/southern_light/pcgw_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
@@ -12,7 +14,6 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"maps"
 )
 
 func GetGogPageId(gogIds map[string]any, force bool) error {
@@ -65,7 +66,7 @@ func ReduceGogPageIds(gogIds map[string]any, kvPageId kevlar.KeyValues) error {
 
 	for gogId := range gogIds {
 		if !kvPageId.Has(gogId) {
-			nod.LogError(fmt.Errorf("%s is missing %s", dataType, gogId))
+			nod.LogError(errors.New("missing: " + dataType.String() + ", " + gogId))
 			continue
 		}
 

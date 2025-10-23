@@ -1,7 +1,6 @@
 package compton_fragments
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/arelate/southern_light/vangogh_integration"
@@ -137,7 +136,7 @@ func formatBadge(id, property string, owned bool, rdx redux.Readable) compton.Fo
 		if owned {
 			fmtBadge.Title = ""
 		} else if dp, ok := rdx.GetLastVal(vangogh_integration.DiscountPercentageProperty, id); ok && dp != "0" {
-			fmtBadge.Title = fmt.Sprintf("-%s%%", dp)
+			fmtBadge.Title = "-" + dp + "%"
 		} else {
 			fmtBadge.Title = ""
 		}

@@ -2,7 +2,9 @@ package pcgw_data
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
+	"maps"
+
 	"github.com/arelate/southern_light/pcgw_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
@@ -12,7 +14,6 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"maps"
 )
 
 func GetSteamPageId(steamGogIds map[string][]string, force bool) error {
@@ -90,7 +91,7 @@ func ReduceSteamPageIds(steamGogIds map[string][]string, kvPageId kevlar.KeyValu
 
 	for steamAppId, gogIds := range steamGogIds {
 		if !kvPageId.Has(steamAppId) {
-			nod.LogError(fmt.Errorf("%s is missing %s", dataType, steamAppId))
+			nod.LogError(errors.New("missing: " + dataType.String() + ", " + steamAppId))
 			continue
 		}
 

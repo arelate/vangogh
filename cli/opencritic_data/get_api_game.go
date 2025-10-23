@@ -2,7 +2,10 @@ package opencritic_data
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
+	"maps"
+	"strconv"
+
 	"github.com/arelate/southern_light/opencritic_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
@@ -12,8 +15,6 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"maps"
-	"strconv"
 )
 
 func GetApiGame(openCriticGogIds map[string][]string, force bool) error {
@@ -61,7 +62,7 @@ func ReduceApiGame(openCriticGogIds map[string][]string, kvApiGame kevlar.KeyVal
 
 	for openCriticId, gogIds := range openCriticGogIds {
 		if !kvApiGame.Has(openCriticId) {
-			nod.LogError(fmt.Errorf("%s is missing %s", dataType, openCriticId))
+			nod.LogError(errors.New("missing: " + dataType.String() + ", " + openCriticId))
 			continue
 		}
 

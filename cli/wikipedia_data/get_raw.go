@@ -1,7 +1,11 @@
 package wikipedia_data
 
 import (
-	"fmt"
+	"errors"
+	"maps"
+	"slices"
+	"strings"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/southern_light/wikipedia_integration"
 	"github.com/arelate/vangogh/cli/fetch"
@@ -11,9 +15,6 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"maps"
-	"slices"
-	"strings"
 )
 
 func GetRaw(wikipediaGogIds map[string][]string, force bool) error {
@@ -63,7 +64,7 @@ func ReduceRaw(wikipediaGogIds map[string][]string, kvRaw kevlar.KeyValues) erro
 
 	for wikipediaId, gogIds := range wikipediaGogIds {
 		if !kvRaw.Has(wikipediaId) {
-			nod.LogError(fmt.Errorf("%s is missing %s", dataType, wikipediaId))
+			nod.LogError(errors.New("missing: " + dataType.String() + ", " + wikipediaId))
 			continue
 		}
 

@@ -1,16 +1,17 @@
 package cli
 
 import (
-	"fmt"
+	"errors"
+	"net/url"
+	"os"
+	"strings"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/itemizations"
 	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"net/url"
-	"os"
-	"strings"
 )
 
 func GetImagesHandler(u *url.URL) error {
@@ -119,7 +120,7 @@ func GetImages(ids []string, its []vangogh_integration.ImageType, missing, force
 			for it := range missingImageTypes {
 				itss = append(itss, it.String())
 			}
-			completionStatus = fmt.Sprintf("no %s", strings.Join(itss, ", "))
+			completionStatus = "no " + strings.Join(itss, ", ")
 		}
 
 		mita.EndWithResult(completionStatus)
@@ -132,7 +133,7 @@ func GetImages(ids []string, its []vangogh_integration.ImageType, missing, force
 func imageTypesReduxAssets(otherProperties []string, its []vangogh_integration.ImageType) (redux.Writeable, error) {
 	for _, it := range its {
 		if !vangogh_integration.IsValidImageType(it) {
-			return nil, fmt.Errorf("invalid image type %s", it)
+			return nil, errors.New("invalid image type: " + it.String())
 		}
 	}
 

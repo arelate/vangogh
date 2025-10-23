@@ -43,15 +43,15 @@ func ProductProperties(r compton.Registrar, id string, rdx redux.Readable, prope
 }
 
 func searchHref(property, value string) string {
-	return fmt.Sprintf("/search?%s=%s", property, value)
+	return "/search?" + property + "=" + value
 }
 
 func searchCreditsHref(value string) string {
-	return fmt.Sprintf("/search?credits=%s", value)
+	return "/search?credits=" + value
 }
 
 func grdSortedSearchHref(property, value string) string {
-	return fmt.Sprintf("/search?%s=%s&sort=global-release-date&desc=true", property, value)
+	return "/search?sort=global-release-date&desc=true&" + property + "=" + value
 }
 
 func noHref() string {

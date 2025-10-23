@@ -1,11 +1,12 @@
 package rest
 
 import (
-	"fmt"
-	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/boggydigital/nod"
+	"errors"
 	"net/http"
 	"path/filepath"
+
+	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/nod"
 )
 
 func GetDescriptionImages(w http.ResponseWriter, r *http.Request) {
@@ -22,7 +23,7 @@ func GetDescriptionImages(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, absLocalFilePath)
 	} else {
 		if err == nil {
-			err = fmt.Errorf("file %s not found", absLocalFilePath)
+			err = errors.New("file not found: " + absLocalFilePath)
 		}
 		http.Error(w, nod.Error(err).Error(), http.StatusNotFound)
 	}

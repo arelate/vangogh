@@ -2,7 +2,10 @@ package steam_data
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
+	"maps"
+	"strconv"
+
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
@@ -12,8 +15,6 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"maps"
-	"strconv"
 )
 
 func GetAppDetails(steamGogIds map[string][]string, force bool) error {
@@ -63,7 +64,7 @@ func ReduceAppDetails(steamGogIds map[string][]string, kvAppDetails kevlar.KeyVa
 
 	for steamAppId, gogIds := range steamGogIds {
 		if !kvAppDetails.Has(steamAppId) {
-			nod.LogError(fmt.Errorf("%s is missing %s", dataType, steamAppId))
+			nod.LogError(errors.New("missing: " + dataType.String() + ", " + steamAppId))
 			rada.Increment()
 			continue
 		}

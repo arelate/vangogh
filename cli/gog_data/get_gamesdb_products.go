@@ -2,7 +2,7 @@ package gog_data
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
 	"net/http"
 	"slices"
 	"strconv"
@@ -76,7 +76,7 @@ func ReduceGamesDbGogProducts(kvGamesDbGogProducts kevlar.KeyValues, since int64
 
 	for id := range updatedGamesDbGogProducts {
 		if !kvGamesDbGogProducts.Has(id) {
-			nod.LogError(fmt.Errorf("%s is missing %s", dataType, id))
+			nod.LogError(errors.New("missing: " + dataType.String() + ", " + id))
 			continue
 		}
 

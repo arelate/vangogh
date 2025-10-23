@@ -1,7 +1,13 @@
 package pcgw_data
 
 import (
-	"fmt"
+	"errors"
+	"maps"
+	"net/url"
+	"slices"
+	"strconv"
+	"strings"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/southern_light/wikipedia_integration"
 	"github.com/arelate/vangogh/cli/fetch"
@@ -11,11 +17,6 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"maps"
-	"net/url"
-	"slices"
-	"strconv"
-	"strings"
 )
 
 func GetRaw(pcgwGogIds map[string][]string, force bool) error {
@@ -65,7 +66,7 @@ func ReduceRaw(pcgwGogIds map[string][]string, kvRaw kevlar.KeyValues) error {
 
 	for pcgwPageId, gogIds := range pcgwGogIds {
 		if !kvRaw.Has(pcgwPageId) {
-			nod.LogError(fmt.Errorf("%s is missing %s", dataType, pcgwPageId))
+			nod.LogError(errors.New("missing: " + dataType.String() + ", " + pcgwPageId))
 			continue
 		}
 

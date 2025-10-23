@@ -2,7 +2,10 @@ package steam_data
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
+	"maps"
+	"time"
+
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
@@ -13,8 +16,6 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"maps"
-	"time"
 )
 
 func GetAppNews(steamGogIds map[string][]string, force bool) error {
@@ -64,7 +65,7 @@ func ReduceAppNews(steamGogIds map[string][]string, kvAppNews kevlar.KeyValues) 
 
 	for steamAppId, gogIds := range steamGogIds {
 		if !kvAppNews.Has(steamAppId) {
-			nod.LogError(fmt.Errorf("%s is missing %s", dataType, steamAppId))
+			nod.LogError(errors.New("missing: " + dataType.String() + ", " + steamAppId))
 			rana.Increment()
 			continue
 		}

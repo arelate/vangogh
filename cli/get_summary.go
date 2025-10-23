@@ -1,12 +1,12 @@
 package cli
 
 import (
-	"fmt"
+	"net/url"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"net/url"
 )
 
 func GetSummaryHandler(u *url.URL) error {
@@ -36,7 +36,7 @@ func GetSummary() error {
 		ids, _ := rdx.GetAllValues(vangogh_integration.LastSyncUpdatesProperty, section)
 		for _, id := range ids {
 			if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
-				summary[section] = append(summary[section], fmt.Sprintf("%s %s", id, title))
+				summary[section] = append(summary[section], id+" "+title)
 			}
 		}
 	}

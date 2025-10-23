@@ -1,7 +1,6 @@
 package compton_pages
 
 import (
-	"fmt"
 	"net/url"
 	"strings"
 
@@ -147,28 +146,28 @@ func externalLinks(id string, rdx redux.Readable) map[string][]string {
 		vangogh_integration.SupportUrlProperty} {
 		if val, ok := rdx.GetLastVal(p, id); ok {
 			links[compton_data.GOGLinksProperty] = append(links[compton_data.GOGLinksProperty],
-				fmt.Sprintf("%s=%s", p, gogLink(val)))
+				p+"="+gogLink(val))
 		}
 	}
 
 	if appId, ok := rdx.GetLastVal(vangogh_integration.SteamAppIdProperty, id); ok {
 		links[compton_data.SteamLinksProperty] =
 			append(links[compton_data.SteamLinksProperty],
-				fmt.Sprintf("%s=%s", compton_data.SteamCommunityUrlProperty, steam_integration.SteamCommunityUrl(appId)))
+				compton_data.SteamCommunityUrlProperty+"="+steam_integration.SteamCommunityUrl(appId).String())
 		links[compton_data.SteamLinksProperty] =
 			append(links[compton_data.SteamLinksProperty],
-				fmt.Sprintf("%s=%s", compton_data.SteamGuidesUrlProperty, steam_integration.SteamGuidesUrl(appId)))
+				compton_data.SteamGuidesUrlProperty+"="+steam_integration.SteamGuidesUrl(appId).String())
 		links[compton_data.OtherLinksProperty] =
 			append(links[compton_data.OtherLinksProperty],
-				fmt.Sprintf("%s=%s", compton_data.ProtonDBUrlProperty, protondb_integration.ProtonDBUrl(appId)))
+				compton_data.ProtonDBUrlProperty+"="+protondb_integration.ProtonDBUrl(appId).String())
 	}
 
 	links[compton_data.OtherLinksProperty] = append(links[compton_data.OtherLinksProperty],
-		fmt.Sprintf("%s=%s", compton_data.GOGDBUrlProperty, gogdb_integration.GOGDBUrl(id)))
+		compton_data.GOGDBUrlProperty+"="+gogdb_integration.GOGDBUrl(id).String())
 
 	if website, ok := rdx.GetLastVal(vangogh_integration.WebsiteProperty, id); ok && website != "" {
 		links[compton_data.OtherLinksProperty] = append(links[compton_data.OtherLinksProperty],
-			fmt.Sprintf("%s=%s", compton_data.WebsiteUrlProperty, website))
+			compton_data.WebsiteUrlProperty+"="+website)
 	}
 
 	if pcgwWikiUrl := otherLink(id,
@@ -237,14 +236,14 @@ func externalLinks(id string, rdx redux.Readable) map[string][]string {
 
 	if openCriticId, ok := rdx.GetLastVal(vangogh_integration.OpenCriticIdProperty, id); ok {
 		if openCriticSlug, sure := rdx.GetLastVal(vangogh_integration.OpenCriticSlugProperty, id); sure {
-			openCriticUrl := fmt.Sprintf("%s=%s", compton_data.OpenCriticUrlProperty, opencritic_integration.GameUrl(openCriticId, openCriticSlug))
+			openCriticUrl := compton_data.OpenCriticUrlProperty + "=" + opencritic_integration.GameUrl(openCriticId, openCriticSlug).String()
 			links[compton_data.OtherLinksProperty] =
 				append(links[compton_data.OtherLinksProperty], openCriticUrl)
 		}
 	}
 
 	if metacriticId, ok := rdx.GetLastVal(vangogh_integration.MetacriticIdProperty, id); ok {
-		metacriticUrl := fmt.Sprintf("%s=%s", compton_data.MetacriticUrlProperty, metacritic_integration.GameUrl(metacriticId))
+		metacriticUrl := compton_data.MetacriticUrlProperty + "=" + metacritic_integration.GameUrl(metacriticId).String()
 		links[compton_data.OtherLinksProperty] =
 			append(links[compton_data.OtherLinksProperty], metacriticUrl)
 	}
@@ -254,7 +253,7 @@ func externalLinks(id string, rdx redux.Readable) map[string][]string {
 
 func otherLink(id, property, urlProperty string, urlFunc func(string) *url.URL, rdx redux.Readable) string {
 	if value, ok := rdx.GetLastVal(property, id); ok && value != "" {
-		return fmt.Sprintf("%s=%s", urlProperty, urlFunc(value))
+		return urlProperty + "=" + urlFunc(value).String()
 	}
 	return ""
 }

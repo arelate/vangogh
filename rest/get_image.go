@@ -1,10 +1,11 @@
 package rest
 
 import (
-	"fmt"
+	"errors"
+	"net/http"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
-	"net/http"
 )
 
 func GetImage(w http.ResponseWriter, r *http.Request) {
@@ -14,7 +15,7 @@ func GetImage(w http.ResponseWriter, r *http.Request) {
 	q := r.URL.Query()
 	imageId := q.Get("id")
 	if imageId == "" {
-		err := fmt.Errorf("empty image id")
+		err := errors.New("empty image id")
 		http.Error(w, nod.Error(err).Error(), http.StatusBadRequest)
 		return
 	}
@@ -23,7 +24,7 @@ func GetImage(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, localImagePath)
 	} else {
 		if err == nil {
-			err = fmt.Errorf("no local image for id %s", imageId)
+			err = errors.New("no local image for id: " + imageId)
 		}
 		http.Error(w, nod.Error(err).Error(), http.StatusNotFound)
 	}

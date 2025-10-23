@@ -2,7 +2,10 @@ package steam_data
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
+	"maps"
+	"strings"
+
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
@@ -12,8 +15,6 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"maps"
-	"strings"
 )
 
 func GetDeckCompatibilityReports(steamGogIds map[string][]string, force bool) error {
@@ -66,7 +67,7 @@ func ReduceDeckCompatibilityReports(steamGogIds map[string][]string, kvDeckCompa
 
 	for steamAppId, gogIds := range steamGogIds {
 		if !kvDeckCompatibilityReports.Has(steamAppId) {
-			nod.LogError(fmt.Errorf("%s is missing %s", dataType, steamAppId))
+			nod.LogError(errors.New("missing: " + dataType.String() + ", " + steamAppId))
 			rdcra.Increment()
 			continue
 		}

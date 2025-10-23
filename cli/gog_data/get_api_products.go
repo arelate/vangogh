@@ -2,7 +2,11 @@ package gog_data
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
+	"maps"
+	"net/http"
+	"strconv"
+
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
@@ -12,9 +16,6 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"maps"
-	"net/http"
-	"strconv"
 )
 
 func GetApiProducts(ids []string, hc *http.Client, uat string, since int64, force bool) error {
@@ -83,7 +84,7 @@ func ReduceApiProducts(kvApiProducts kevlar.KeyValues, since int64) error {
 
 	for id := range updatedApiProducts {
 		if !kvApiProducts.Has(id) {
-			nod.LogError(fmt.Errorf("%s is missing %s", dataType, id))
+			nod.LogError(errors.New("missing: " + dataType.String() + ", " + id))
 			continue
 		}
 

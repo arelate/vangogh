@@ -1,7 +1,10 @@
 package gog_data
 
 import (
-	"fmt"
+	"errors"
+	"maps"
+	"net/http"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
 	"github.com/arelate/vangogh/cli/reqs"
@@ -10,8 +13,6 @@ import (
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"maps"
-	"net/http"
 )
 
 func GetDetails(ids []string, hc *http.Client, uat string, since int64, force bool) error {
@@ -75,7 +76,7 @@ func ReduceDetails(kvDetails kevlar.KeyValues, since int64) error {
 
 	for id := range updatedDetails {
 		if !kvDetails.Has(id) {
-			nod.LogError(fmt.Errorf("%s is missing %s", dataType, id))
+			nod.LogError(errors.New("missing: " + dataType.String() + ", " + id))
 			continue
 		}
 

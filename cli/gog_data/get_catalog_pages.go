@@ -2,7 +2,7 @@ package gog_data
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -63,7 +63,7 @@ func ReduceCatalogPages(kvCatalogPages kevlar.KeyValues, since int64) error {
 
 	for page := range updatedCatalogPages {
 		if !kvCatalogPages.Has(page) {
-			nod.LogError(fmt.Errorf("%s is missing %s", pageType, page))
+			nod.LogError(errors.New("missing: " + pageType.String() + ", " + page))
 			continue
 		}
 

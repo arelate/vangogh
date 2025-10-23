@@ -2,7 +2,10 @@ package hltb_data
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
+	"maps"
+	"strconv"
+
 	"github.com/arelate/southern_light/hltb_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
@@ -13,8 +16,6 @@ import (
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 	"golang.org/x/net/html"
-	"maps"
-	"strconv"
 )
 
 func GetData(hltbGogIds map[string][]string, force bool) error {
@@ -99,7 +100,7 @@ func ReduceData(hltbGogIds map[string][]string, kvData kevlar.KeyValues) error {
 
 	for hltbId, gogIds := range hltbGogIds {
 		if !kvData.Has(hltbId) {
-			nod.LogError(fmt.Errorf("%s is missing %s", dataType, hltbId))
+			nod.LogError(errors.New("missing: " + dataType.String() + ", " + hltbId))
 			rda.Increment()
 			continue
 		}

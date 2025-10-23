@@ -96,7 +96,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 				SetAttribute("style", "view-transition-name:"+property+id)
 		default:
 			for _, value := range values[property] {
-				href := fmt.Sprintf("/search?%s=%s&sort=global-release-date&desc=true", property, value)
+				href := "/search?sort=global-release-date&desc=true&" + property + "=" + value
 				summaryRow.PropLinkColor(compton_data.PropertyTitles[property], color.RepForeground, value, href).
 					SetAttribute("style", "view-transition-name:"+property+id)
 			}
