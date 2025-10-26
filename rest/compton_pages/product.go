@@ -172,7 +172,6 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 			}
 
 		case compton_data.CompatibilitySection:
-			var badge compton.Element
 			var compatText string
 
 			if dcp, ok := rdx.GetLastVal(vangogh_integration.SteamDeckAppCompatibilityCategoryProperty, id); ok {
@@ -186,6 +185,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 			}
 
 			var dcColor color.Color
+			var dcSymbol compton.Symbol
 			switch compatText {
 			case "Platinum":
 				fallthrough
@@ -193,22 +193,37 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 				fallthrough
 			case "Verified":
 				dcColor = color.Green
+				dcSymbol = compton.Circle
 			case "Silver":
 				fallthrough
 			case "Bronze":
 				fallthrough
 			case "Playable":
 				dcColor = color.Orange
+				dcSymbol = compton.Triangle
 			case "Borked":
 				fallthrough
 			case "Unsupported":
 				dcColor = color.Red
+				dcSymbol = compton.Cross
 			default:
 				dcColor = color.RepGray
+				dcSymbol = compton.Square
 			}
 
-			badge = compton.BadgeText(p, compatText, dcColor).FontSize(size.XXSmall)
-			detailsSummary.AppendBadges(badge)
+			compatibilityBadges := compton.FlexItems(p, direction.Row).
+				ColumnGap(size.Small).
+				FontSize(size.XXSmall).
+				BackgroundColor(color.Transparent).
+				JustifyItems(align.Center).
+				AlignItems(align.Center)
+
+			badgeSymbol := compton.BadgeIcon(p, dcSymbol, dcColor)
+			badgeText := compton.BadgeText(p, compatText, dcColor).FontSize(size.XXSmall)
+
+			compatibilityBadges.Append(badgeSymbol, badgeText)
+
+			detailsSummary.AppendBadges(compatibilityBadges)
 
 		case compton_data.ReceptionSection:
 			receptionBadges := compton.FlexItems(p, direction.Row).ColumnGap(size.Small).FontSize(size.XXSmall)
