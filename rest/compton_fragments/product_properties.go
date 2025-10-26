@@ -146,7 +146,7 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 			fmtProperty.values[ct] = noHref()
 		}
 	case vangogh_integration.HltbReviewScoreProperty:
-		if !isZeroValue(firstValue) {
+		if !isNotPositiveRating(firstValue) {
 			fmtProperty.values[fmtHltbRating(firstValue)] = noHref()
 		}
 	case vangogh_integration.DiscountPercentageProperty:
@@ -164,17 +164,19 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 			fmtProperty.values[value] = noHref()
 		}
 	case vangogh_integration.SteamReviewScoreProperty:
-		if !isZeroValue(firstValue) {
+		if !isNotPositiveRating(firstValue) {
 			fmtProperty.values[fmtSteamRating(firstValue)] = noHref()
 		}
 	case vangogh_integration.OpenCriticMedianScoreProperty:
-		fallthrough
+		if !isNotPositiveRating(firstValue) {
+			fmtProperty.values[FmtRating(firstValue)] = noHref()
+		}
 	case vangogh_integration.MetacriticScoreProperty:
-		if !isZeroValue(firstValue) {
+		if !isNotPositiveRating(firstValue) {
 			fmtProperty.values[FmtRating(firstValue)] = noHref()
 		}
 	case vangogh_integration.TopPercentProperty:
-		if !isZeroValue(firstValue) {
+		if !isNotPositiveRating(firstValue) {
 			fmtProperty.values[firstValue] = searchHref(property, url.QueryEscape(firstValue))
 		}
 	case vangogh_integration.CreatorsProperty:
@@ -367,6 +369,6 @@ func formatDate(s string) string {
 	return s
 }
 
-func isZeroValue(v string) bool {
-	return v == "0" || v == ""
+func isNotPositiveRating(v string) bool {
+	return v == "0" || v == "-1" || v == ""
 }
