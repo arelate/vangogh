@@ -52,6 +52,13 @@ var displayTypeColors = map[string]color.Color{
 	"Unknown":     color.RepGray,
 }
 
+var displayTypeSymbols = map[string]compton.Symbol{
+	"Verified":    compton.Circle,
+	"Playable":    compton.Triangle,
+	"Unsupported": compton.Cross,
+	"Unknown":     compton.Square,
+}
+
 func Compatibility(id string, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
 	title, _ := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
 
@@ -204,7 +211,7 @@ func addSteamCompatibilitySection(r compton.Registrar, pageStack compton.Element
 
 			displayTypeIcon := compton.Fspan(r, "").ForegroundColor(displayTypeColors[dt])
 			displayTypeIcon.AddClass("svg")
-			displayTypeIcon.Append(compton.SvgUse(r, compton.Circle))
+			displayTypeIcon.Append(compton.SvgUse(r, displayTypeSymbols[dt]))
 			decodedResult := decodeToken(result)
 			if decodedResult == "" {
 				decodedResult = result
