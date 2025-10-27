@@ -318,8 +318,19 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 			if pvrs, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
 				pvr := vangogh_integration.ParseValidationResult(pvrs)
 
-				validationBadge := compton.BadgeText(p, pvr.HumanReadableString(), compton_fragments.ValidationResultsColors[pvr]).FontSize(size.XXSmall)
-				detailsSummary.AppendBadges(validationBadge)
+				validationBadgesRow := compton.FlexItems(p, direction.Row).ColumnGap(size.Small)
+
+				vrColor := compton_fragments.ValidationResultsColors[pvr]
+
+				if vrSymbol, sure := compton_fragments.ValidationResultsSymbols[pvr]; sure {
+					badgeSymbol := compton.BadgeIcon(p, vrSymbol, vrColor)
+					validationBadgesRow.Append(badgeSymbol)
+				}
+
+				badgeText := compton.BadgeText(p, pvr.HumanReadableString(), vrColor).FontSize(size.XXSmall)
+				validationBadgesRow.Append(badgeText)
+
+				detailsSummary.AppendBadges(validationBadgesRow)
 			}
 		default:
 			detailsSummary.SummaryMarginBlockEnd(size.Normal)

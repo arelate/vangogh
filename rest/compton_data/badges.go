@@ -10,6 +10,7 @@ var InformationBadgeProperties = []string{
 	vangogh_integration.DownloadQueuedProperty,
 	vangogh_integration.DownloadStartedProperty,
 	//vangogh_integration.DownloadCompletedProperty,
+	vangogh_integration.ProductValidationResultProperty,
 	vangogh_integration.UserWishlistProperty,
 	vangogh_integration.IsModProperty,
 	vangogh_integration.StoreTagsProperty, // Good Old Game label

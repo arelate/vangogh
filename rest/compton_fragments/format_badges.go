@@ -23,6 +23,16 @@ var ValidationResultsColors = map[vangogh_integration.ValidationResult]color.Col
 	vangogh_integration.ValidatedChecksumMismatch:    color.Red,
 }
 
+var ValidationResultsSymbols = map[vangogh_integration.ValidationResult]compton.Symbol{
+	vangogh_integration.ValidatedSuccessfully:   compton.Hexagon,
+	vangogh_integration.ValidationValidating:    compton.CyclingHexagon,
+	vangogh_integration.ValidationQueued:        compton.HexagonClockFace,
+	vangogh_integration.ValidationResultUnknown: compton.DashedHexagon,
+	//vangogh_integration.ValidatedMissingChecksum:     compton.DashedHexagon,
+	//vangogh_integration.ValidatedMissingLocalFile:    compton.DashedHexagon,
+	//vangogh_integration.ValidatedUnresolvedManualUrl: compton.DashedHexagon,
+}
+
 func FormatBadges(id string, rdx redux.Readable, badgeProperties []string, permissions ...author.Permission) []compton.FormattedBadge {
 	owned := false
 	if lp, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok {
@@ -64,9 +74,13 @@ func formatBadge(id, property string, owned bool, rdx redux.Readable) compton.Fo
 	}
 
 	switch property {
-	case vangogh_integration.TopPercentProperty:
-		if rdx.HasKey(vangogh_integration.TopPercentProperty, id) {
-			fmtBadge.Icon = compton.Trophy
+	case vangogh_integration.OwnedProperty:
+		if owned {
+			if downloadCompleted == "" && validationResult == vangogh_integration.ValidationResultUnknown && downloadQueued == "" {
+				fmtBadge.Icon = compton.DashedCircle
+			} else if downloadCompleted >= downloadQueued && downloadCompleted >= downloadStarted {
+				fmtBadge.Icon = compton.CompactDisk
+			}
 		}
 	case vangogh_integration.DownloadQueuedProperty:
 		if downloadQueued > downloadStarted &&
@@ -81,13 +95,13 @@ func formatBadge(id, property string, owned bool, rdx redux.Readable) compton.Fo
 		if downloadStarted > downloadCompleted {
 			fmtBadge.Icon = compton.CyclingCircle
 		}
-	case vangogh_integration.OwnedProperty:
-		if owned {
-			if downloadCompleted == "" && validationResult == vangogh_integration.ValidationResultUnknown && downloadQueued == "" {
-				fmtBadge.Icon = compton.DashedCircle
-			} else if downloadCompleted >= downloadQueued && downloadCompleted >= downloadStarted {
-				fmtBadge.Icon = compton.CompactDisk
-			}
+	case vangogh_integration.ProductValidationResultProperty:
+		if vrSymbol, ok := ValidationResultsSymbols[validationResult]; ok {
+			fmtBadge.Icon = vrSymbol
+		}
+	case vangogh_integration.TopPercentProperty:
+		if rdx.HasKey(vangogh_integration.TopPercentProperty, id) {
+			fmtBadge.Icon = compton.Trophy
 		}
 	case vangogh_integration.UserWishlistProperty:
 		if wish, ok := rdx.GetLastVal(vangogh_integration.UserWishlistProperty, id); ok && wish == vangogh_integration.TrueValue {
