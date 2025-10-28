@@ -17,9 +17,10 @@ import (
 // 4. rename _binaries to _wine-binaries
 // 5. deprecate aggregated-rating property
 // 6. rename logs from year-month-date-hour-minute-second.log to sync-year-month-date-hour-minute-second.log // v1.1.9
+// 7. remove previously cascaded validations // v1.2.1
 
 const (
-	latestDataSchema = 7
+	latestDataSchema = 8
 )
 
 func MigrateDataHandler(u *url.URL) error {
@@ -57,7 +58,10 @@ func MigrateData(force bool) error {
 
 	for schema := currentDataSchema; schema < latestDataSchema; schema++ {
 		switch schema {
-		//case 7: // this will be the next migration
+		case 7:
+			if err = cutPreviouslyCascadedValidations(); err != nil {
+				return err
+			}
 		}
 
 		mda.Increment()
@@ -91,4 +95,30 @@ func setLatestDataSchema(rdx redux.Writeable) error {
 	return rdx.ReplaceValues(vangogh_integration.DataSchemeVersionProperty,
 		vangogh_integration.DataSchemeVersionProperty,
 		strconv.FormatInt(latestDataSchema, 10))
+}
+
+func cutPreviouslyCascadedValidations() error {
+
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return err
+	}
+
+	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.ReduxProperties()...)
+	if err != nil {
+		return err
+	}
+
+	packDlcValidations := make([]string, 0)
+
+	for id := range rdx.Keys(vangogh_integration.ProductValidationResultProperty) {
+
+		if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); ok && pt == vangogh_integration.GameProductType {
+			continue
+		}
+
+		packDlcValidations = append(packDlcValidations, id)
+	}
+
+	return rdx.CutKeys(vangogh_integration.ProductValidationResultProperty, packDlcValidations...)
 }

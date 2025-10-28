@@ -98,7 +98,7 @@ func Validate(
 
 	va.EndWithSummary("", summary)
 
-	return CascadeValidation()
+	return nil
 }
 
 func allNotValidIds(rdx redux.Readable) ([]string, error) {

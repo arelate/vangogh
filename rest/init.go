@@ -43,6 +43,9 @@ func Init(layout vangogh_integration.DownloadsLayout) error {
 	downloadsLayout = layout
 
 	rdx, err = redux.NewReader(reduxDir, vangogh_integration.ReduxProperties()...)
+	if err != nil {
+		return err
+	}
 
 	authorDir, err := pathways.GetAbsRelDir(vangogh_integration.Author)
 	if err != nil {
