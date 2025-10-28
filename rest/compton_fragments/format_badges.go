@@ -24,27 +24,25 @@ var ValidationResultsColors = map[vangogh_integration.ValidationResult]color.Col
 }
 
 var ValidationResultsSymbols = map[vangogh_integration.ValidationResult]compton.Symbol{
-	vangogh_integration.ValidatedSuccessfully:   compton.Hexagon,
-	vangogh_integration.ValidationValidating:    compton.CyclingHexagon,
-	vangogh_integration.ValidationQueued:        compton.HexagonClockFace,
-	vangogh_integration.ValidationResultUnknown: compton.DashedHexagon,
-	//vangogh_integration.ValidatedMissingChecksum:     compton.DashedHexagon,
-	//vangogh_integration.ValidatedMissingLocalFile:    compton.DashedHexagon,
-	//vangogh_integration.ValidatedUnresolvedManualUrl: compton.DashedHexagon,
+	vangogh_integration.ValidatedSuccessfully:        compton.Hexagon,
+	vangogh_integration.ValidationValidating:         compton.CyclingHexagon,
+	vangogh_integration.ValidationQueued:             compton.HexagonClockFace,
+	vangogh_integration.ValidationResultUnknown:      compton.DashedHexagon,
+	vangogh_integration.ValidatedMissingChecksum:     compton.Triangle,
+	vangogh_integration.ValidatedMissingLocalFile:    compton.Triangle,
+	vangogh_integration.ValidatedUnresolvedManualUrl: compton.Triangle,
+	vangogh_integration.ValidatedChecksumMismatch:    compton.Cross,
+	vangogh_integration.ValidationError:              compton.Cross,
 }
 
 func FormatBadges(id string, rdx redux.Readable, badgeProperties []string, permissions ...author.Permission) []compton.FormattedBadge {
-	owned := false
-	if lp, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok {
-		owned = lp == vangogh_integration.TrueValue
-	}
 
 	fmtBadges := make([]compton.FormattedBadge, 0, len(badgeProperties))
 
 	ppo := compton_data.PermittedProperties(badgeProperties, permissions...)
 
 	for p := range ppo {
-		if fmtBadge := formatBadge(id, p, owned, rdx); fmtBadge.Title != "" || fmtBadge.Icon != compton.NoSymbol {
+		if fmtBadge := formatBadge(id, p, rdx); fmtBadge.Title != "" || fmtBadge.Icon != compton.NoSymbol {
 			fmtBadges = append(fmtBadges, fmtBadge)
 		}
 	}
@@ -52,12 +50,17 @@ func FormatBadges(id string, rdx redux.Readable, badgeProperties []string, permi
 	return fmtBadges
 }
 
-func formatBadge(id, property string, owned bool, rdx redux.Readable) compton.FormattedBadge {
+func formatBadge(id, property string, rdx redux.Readable) compton.FormattedBadge {
 
 	fmtBadge := compton.FormattedBadge{}
 
 	var downloadQueued, downloadStarted, downloadCompleted string
 	validationResult := vangogh_integration.ValidationResultUnknown
+
+	owned := false
+	if lp, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok {
+		owned = lp == vangogh_integration.TrueValue
+	}
 
 	if dq, ok := rdx.GetLastVal(vangogh_integration.DownloadQueuedProperty, id); ok {
 		downloadQueued = dq
@@ -96,8 +99,10 @@ func formatBadge(id, property string, owned bool, rdx redux.Readable) compton.Fo
 			fmtBadge.Icon = compton.CyclingCircle
 		}
 	case vangogh_integration.ProductValidationResultProperty:
-		if vrSymbol, ok := ValidationResultsSymbols[validationResult]; ok {
-			fmtBadge.Icon = vrSymbol
+		if owned {
+			if vrSymbol, ok := ValidationResultsSymbols[validationResult]; ok {
+				fmtBadge.Icon = vrSymbol
+			}
 		}
 	case vangogh_integration.TopPercentProperty:
 		if rdx.HasKey(vangogh_integration.TopPercentProperty, id) {
