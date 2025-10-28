@@ -208,7 +208,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 				dcSymbol = compton.Cross
 			default:
 				dcColor = color.RepGray
-				dcSymbol = compton.Square
+				dcSymbol = compton.NoSymbol
 			}
 
 			compatibilityBadges := compton.FlexItems(p, direction.Row).

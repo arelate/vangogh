@@ -56,7 +56,7 @@ var displayTypeSymbols = map[string]compton.Symbol{
 	"Verified":    compton.Circle,
 	"Playable":    compton.Triangle,
 	"Unsupported": compton.Cross,
-	"Unknown":     compton.Square,
+	"Unknown":     compton.NoSymbol,
 }
 
 func Compatibility(id string, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
