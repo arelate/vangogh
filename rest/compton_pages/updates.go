@@ -110,7 +110,7 @@ func Updates(section string, rdx redux.Readable, showAll bool, permissions ...au
 	}
 
 	topLevelNav = append(topLevelNav, updateSectionLinks)
-	pageStack.Append(compton.FICenter(p, topLevelNav...).ColumnGap(size.Small))
+	pageStack.Append(compton.FICenter(p, topLevelNav...))
 
 	/* Updates sections */
 

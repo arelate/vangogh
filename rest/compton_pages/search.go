@@ -33,7 +33,7 @@ func Search(query map[string][]string, ids []string, from, to int, rdx redux.Rea
 	searchScope := compton_data.SearchScopeFromQuery(query)
 	searchLinks := compton_fragments.SearchLinks(p, searchScope, permissions...)
 
-	pageStack.Append(compton.FICenter(p, appNavLinks, searchLinks).ColumnGap(size.Small))
+	pageStack.Append(compton.FICenter(p, appNavLinks, searchLinks))
 
 	/* Filter & Search details */
 
