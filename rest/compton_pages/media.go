@@ -1,6 +1,8 @@
 package compton_pages
 
 import (
+	"slices"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
@@ -8,8 +10,8 @@ import (
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
+	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/redux"
-	"slices"
 )
 
 const eagerLoadingScreenshots = 3
@@ -64,7 +66,15 @@ func Media(id string, rdx redux.Readable) compton.PageElement {
 	}
 
 	if len(videoIds) > 0 && len(screenshots) > 0 {
-		pageStack.Append(compton.SectionDivider(s, compton.Text("Screenshots")))
+
+		screenshotsRow := compton.FlexItems(s, direction.Row).
+			AlignItems(align.Center).
+			JustifyContent(align.Center).
+			ColumnGap(size.Small)
+
+		screenshotsRow.Append(compton.SvgUse(s, compton.ImageThumbnail), compton.Text("Screenshots"))
+
+		pageStack.Append(compton.SectionDivider(s, screenshotsRow))
 	}
 
 	if len(screenshots) == 0 {
