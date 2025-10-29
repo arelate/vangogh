@@ -323,9 +323,9 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 
 				validationBadgesRow := compton.FlexItems(p, direction.Row).ColumnGap(size.Small).FontSize(size.XXSmall)
 
-				vrColor := compton_fragments.ValidationResultsColors[pvr]
+				vrColor := compton_data.ValidationResultsColors[pvr]
 
-				if vrSymbol, sure := compton_fragments.ValidationResultsSymbols[pvr]; sure {
+				if vrSymbol, sure := compton_data.ValidationResultsSymbols[pvr]; sure {
 					badgeSymbol := compton.BadgeIcon(p, vrSymbol, vrColor)
 					validationBadgesRow.Append(badgeSymbol)
 				}

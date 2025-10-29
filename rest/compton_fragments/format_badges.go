@@ -7,33 +7,8 @@ import (
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/boggydigital/author"
 	"github.com/boggydigital/compton"
-	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/redux"
 )
-
-var ValidationResultsColors = map[vangogh_integration.ValidationResult]color.Color{
-	vangogh_integration.ValidationQueued:             color.RepGray,
-	vangogh_integration.ValidationValidating:         color.RepGray,
-	vangogh_integration.ValidatedSuccessfully:        color.Green,
-	vangogh_integration.ValidationResultUnknown:      color.RepGray,
-	vangogh_integration.ValidatedUnresolvedManualUrl: color.Teal,
-	vangogh_integration.ValidatedMissingLocalFile:    color.Teal,
-	vangogh_integration.ValidatedMissingChecksum:     color.Teal,
-	vangogh_integration.ValidationError:              color.Orange,
-	vangogh_integration.ValidatedChecksumMismatch:    color.Red,
-}
-
-var ValidationResultsSymbols = map[vangogh_integration.ValidationResult]compton.Symbol{
-	vangogh_integration.ValidatedSuccessfully:        compton.Hexagon,
-	vangogh_integration.ValidationValidating:         compton.CyclingHexagon,
-	vangogh_integration.ValidationQueued:             compton.HexagonClockFace,
-	vangogh_integration.ValidationResultUnknown:      compton.DashedHexagon,
-	vangogh_integration.ValidatedMissingChecksum:     compton.Triangle,
-	vangogh_integration.ValidatedMissingLocalFile:    compton.Triangle,
-	vangogh_integration.ValidatedUnresolvedManualUrl: compton.Triangle,
-	vangogh_integration.ValidatedChecksumMismatch:    compton.Cross,
-	vangogh_integration.ValidationError:              compton.Cross,
-}
 
 func FormatBadges(id string, rdx redux.Readable, badgeProperties []string, permissions ...author.Permission) []compton.FormattedBadge {
 
@@ -110,7 +85,7 @@ func formatBadge(id, property string, rdx redux.Readable) compton.FormattedBadge
 		}
 	case vangogh_integration.ProductValidationResultProperty:
 		if owned && productType == vangogh_integration.GameProductType {
-			if vrSymbol, ok := ValidationResultsSymbols[validationResult]; ok {
+			if vrSymbol, ok := compton_data.ValidationResultsSymbols[validationResult]; ok {
 				fmtBadge.Icon = vrSymbol
 			}
 		}

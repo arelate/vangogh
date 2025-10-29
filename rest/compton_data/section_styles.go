@@ -7,5 +7,5 @@ var SectionStyles = map[string]string{
 	NewsSection:          "news.css",
 	ReceptionSection:     "reception.css",
 	CompatibilitySection: "compatibility.css",
-	InstallersSection:    "downloads.css",
+	InstallersSection:    "installers.css",
 }

@@ -28,22 +28,6 @@ type DownloadVariant struct {
 	validationResult vangogh_integration.ValidationResult
 }
 
-var downloadTypesSymbols = map[vangogh_integration.DownloadType]compton.Symbol{
-	vangogh_integration.Installer: compton.CompactDisk,
-	vangogh_integration.DLC:       compton.ItemPlus,
-	vangogh_integration.Extra:     compton.Sparkle,
-}
-
-var validationResultsFontWeights = map[vangogh_integration.ValidationResult]font_weight.Weight{
-	vangogh_integration.ValidationResultUnknown:      font_weight.Normal,
-	vangogh_integration.ValidatedSuccessfully:        font_weight.Bolder,
-	vangogh_integration.ValidatedUnresolvedManualUrl: font_weight.Normal,
-	vangogh_integration.ValidatedMissingLocalFile:    font_weight.Normal,
-	vangogh_integration.ValidatedMissingChecksum:     font_weight.Normal,
-	vangogh_integration.ValidationError:              font_weight.Bolder,
-	vangogh_integration.ValidatedChecksumMismatch:    font_weight.Bolder,
-}
-
 // Installers will present available installers, DLCs in the following hierarchy:
 // - Operating system heading - Installers and DLCs (separately)
 // - title_values list of downloads by version
@@ -133,7 +117,7 @@ func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 
 	fr := compton.Frow(r).FontSize(size.XSmall)
 
-	fr.IconColor(downloadTypesSymbols[dv.downloadType], color.RepGray)
+	fr.IconColor(compton_data.DownloadTypesSymbols[dv.downloadType], color.RepGray)
 	fr.Heading(dv.downloadType.HumanReadableString())
 
 	if dv.langCode != "" {
@@ -147,30 +131,32 @@ func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 	}
 
 	var downloadValidationStatus string
+	var downloadValidationSymbol compton.Symbol
 	downloadValidationColor := color.RepGray
-	downloadValidationlFontWeight := font_weight.Normal
 
 	if dv.downloadType == vangogh_integration.Installer || dv.downloadType == vangogh_integration.DLC {
 
 		switch dv.validationResult {
 		case vangogh_integration.ValidationResultUnknown:
 			downloadValidationStatus = dv.manualUrlStatus.HumanReadableString()
+			downloadValidationSymbol = compton_data.ManualUrlStatusSymbols[dv.manualUrlStatus]
 		default:
 			downloadValidationStatus = dv.validationResult.HumanReadableString()
-			downloadValidationColor = compton_fragments.ValidationResultsColors[dv.validationResult]
-			downloadValidationlFontWeight = validationResultsFontWeights[dv.validationResult]
+			downloadValidationColor = compton_data.ValidationResultsColors[dv.validationResult]
+			downloadValidationSymbol = compton_data.ValidationResultsSymbols[dv.validationResult]
 		}
 
 	} else {
 		downloadValidationStatus = dv.manualUrlStatus.HumanReadableString()
 	}
 
-	manualUrlStatus := compton.Fspan(r, downloadValidationStatus).
-		FontSize(size.XSmall).
-		ForegroundColor(downloadValidationColor).
-		FontWeight(downloadValidationlFontWeight)
+	if downloadValidationSymbol != compton.NoSymbol {
+		fr.IconColor(downloadValidationSymbol, downloadValidationColor)
+	}
 
-	fr.Elements(manualUrlStatus)
+	fr.Elements(compton.Fspan(r, downloadValidationStatus).
+		FontSize(size.XSmall).
+		ForegroundColor(downloadValidationColor))
 
 	return fr
 }
@@ -255,11 +241,37 @@ func downloadLink(r compton.Registrar,
 
 	dvs := vangogh_integration.NewDvs(dl.ManualUrl, rdx)
 
-	manualUrlStatusValidationResult := compton.Fspan(r, dvs.HumanReadableString()).
+	manualUrlStatusValidationResultRow := compton.FlexItems(r, direction.Row).ColumnGap(size.Small)
+
+	var manualUrlStatusValidationResult string
+	manualUrlStatusValidationResultSymbol := compton.NoSymbol
+	manualUrlStatusValidationResultColor := color.RepGray
+
+	if dl.Type == vangogh_integration.Installer || dl.Type == vangogh_integration.DLC {
+
+		manualUrlStatusValidationResult = dvs.HumanReadableString()
+
+		switch dvs.ValidationResult() {
+		case vangogh_integration.ValidationResultUnknown:
+			manualUrlStatusValidationResultSymbol = compton_data.ManualUrlStatusSymbols[dvs.ManualUrlStatus()]
+		default:
+			manualUrlStatusValidationResultColor = compton_data.ValidationResultsColors[dvs.ValidationResult()]
+			manualUrlStatusValidationResultSymbol = compton_data.ValidationResultsSymbols[dvs.ValidationResult()]
+		}
+	} else {
+		manualUrlStatusValidationResult = dvs.ManualUrlStatus().HumanReadableString()
+	}
+
+	if manualUrlStatusValidationResultSymbol != compton.NoSymbol {
+		manualUrlStatusValidationResultRow.Append(
+			compton.SvgUse(r, manualUrlStatusValidationResultSymbol).ForegroundColor(manualUrlStatusValidationResultColor))
+	}
+
+	manualUrlStatusValidationResultRow.Append(compton.Fspan(r, manualUrlStatusValidationResult).
 		FontSize(size.XSmall).
-		ForegroundColor(compton_fragments.ValidationResultsColors[dvs.ValidationResult()]).
-		FontWeight(validationResultsFontWeights[dvs.ValidationResult()])
-	linkColumn.Append(manualUrlStatusValidationResult)
+		ForegroundColor(manualUrlStatusValidationResultColor))
+
+	linkColumn.Append(manualUrlStatusValidationResultRow)
 
 	link.Append(linkColumn)
 
