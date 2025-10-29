@@ -1,6 +1,9 @@
 package compton_fragments
 
 import (
+	"strconv"
+	"time"
+
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
@@ -8,8 +11,6 @@ import (
 	"github.com/boggydigital/compton/consts/font_weight"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/yet_urls/youtube_urls"
-	"strconv"
-	"time"
 )
 
 func formatSeconds(ts int64) string {
@@ -39,11 +40,19 @@ func VideoOriginLink(r compton.Registrar, videoId, videoTitle, videoDuration str
 		videoTitle = "Watch at origin"
 	}
 
+	linkRow := compton.FlexItems(r, direction.Row).
+		AlignItems(align.Center).
+		JustifyContent(align.Center).
+		ColumnGap(size.Small)
+	linkColumn.Append(linkRow)
+
+	linkRow.Append(compton.SvgUse(r, compton.VideoThumbnail).ForegroundColor(color.Cyan))
+
 	linkText := compton.Fspan(r, videoTitle).
 		TextAlign(align.Center).
 		FontWeight(font_weight.Bolder).
 		ForegroundColor(color.Cyan)
-	linkColumn.Append(linkText)
+	linkRow.Append(linkText)
 
 	if dur, err := strconv.ParseInt(videoDuration, 10, 64); err == nil {
 		frow := compton.Frow(r)

@@ -72,7 +72,7 @@ func Media(id string, rdx redux.Readable) compton.PageElement {
 			JustifyContent(align.Center).
 			ColumnGap(size.Small)
 
-		screenshotsRow.Append(compton.SvgUse(s, compton.ImageThumbnail), compton.Text("Screenshots"))
+		screenshotsRow.Append(compton.BadgeIcon(s, compton.ImageThumbnail, color.RepForeground), compton.Text("Screenshots"))
 
 		pageStack.Append(compton.SectionDivider(s, screenshotsRow))
 	}
