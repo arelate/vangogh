@@ -220,7 +220,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 
 			compatibilityBadges.Append(
 				compton.BadgeIcon(p, dcSymbol, dcColor),
-				compton.BadgeText(p, compatText, dcColor).FontSize(size.XXSmall))
+				compton.BadgeText(p, compatText, dcColor))
 
 			detailsSummary.AppendBadges(compatibilityBadges)
 
@@ -274,20 +274,22 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 				vangogh_integration.RequiresGamesProperty,
 				vangogh_integration.ModifiesGamesProperty}
 
-			offeringsSymbols := make(map[compton.Symbol]any)
+			offeringsSymbols := make(map[compton.Symbol]int)
 
 			for _, op := range ops {
 				if games, sure := rdx.GetAllValues(op, id); sure && len(games) > 0 {
-					offeringsSymbols[compton_data.PropertySymbols[op]] = nil
+					offeringsSymbols[compton_data.PropertySymbols[op]] += len(games)
 				}
 			}
 
 			if len(offeringsSymbols) > 0 {
-				offeringsBadgesRow := compton.FlexItems(p, direction.Row).ColumnGap(size.Small)
+				offeringsBadgesRow := compton.FlexItems(p, direction.Row).ColumnGap(size.Small).FontSize(size.XXSmall)
 
 				for _, os := range offeringsBadgesOrder {
-					if _, sure := offeringsSymbols[os]; sure {
-						offeringsBadgesRow.Append(compton.BadgeIcon(p, os, color.RepGray))
+					if count, sure := offeringsSymbols[os]; sure {
+						offeringsBadgesRow.Append(
+							compton.BadgeIcon(p, os, color.RepGray),
+							compton.BadgeText(p, strconv.Itoa(count), color.RepGray))
 					}
 				}
 
@@ -307,7 +309,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 
 				updateBadges.Append(
 					compton.BadgeIcon(p, compton.NewsBroadcast, updateColor),
-					compton.BadgeText(p, lcut.Format("Jan 2, '06"), updateColor).FontSize(size.XXSmall))
+					compton.BadgeText(p, lcut.Format("Jan 2, '06"), updateColor))
 
 				detailsSummary.AppendBadges(updateBadges)
 
@@ -319,7 +321,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 			if pvrs, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
 				pvr := vangogh_integration.ParseValidationResult(pvrs)
 
-				validationBadgesRow := compton.FlexItems(p, direction.Row).ColumnGap(size.Small)
+				validationBadgesRow := compton.FlexItems(p, direction.Row).ColumnGap(size.Small).FontSize(size.XXSmall)
 
 				vrColor := compton_fragments.ValidationResultsColors[pvr]
 
@@ -328,7 +330,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 					validationBadgesRow.Append(badgeSymbol)
 				}
 
-				validationBadgesRow.Append(compton.BadgeText(p, pvr.HumanReadableString(), vrColor).FontSize(size.XXSmall))
+				validationBadgesRow.Append(compton.BadgeText(p, pvr.HumanReadableString(), vrColor))
 
 				detailsSummary.AppendBadges(validationBadgesRow)
 			}
