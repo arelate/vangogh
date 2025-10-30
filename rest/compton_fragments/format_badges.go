@@ -73,11 +73,7 @@ func formatBadge(id, property string, rdx redux.Readable) compton.FormattedBadge
 	case vangogh_integration.DownloadQueuedProperty:
 		if downloadQueued > downloadStarted &&
 			downloadQueued > downloadCompleted {
-			if downloadCompleted != "" {
-				fmtBadge.Icon = compton.ClockFace
-			} else {
-				fmtBadge.Icon = compton.DashedClockFace
-			}
+			fmtBadge.Icon = compton.ClockFace
 		}
 	case vangogh_integration.DownloadStartedProperty:
 		if downloadStarted > downloadCompleted {
