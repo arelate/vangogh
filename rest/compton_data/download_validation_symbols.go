@@ -22,7 +22,7 @@ var ValidationResultsSymbols = map[vangogh_integration.ValidationResult]compton.
 	vangogh_integration.ValidatedSuccessfully:        compton.Hexagon,
 	vangogh_integration.ValidationResultUnknown:      compton.DashedHexagon,
 	vangogh_integration.ValidationQueued:             compton.HexagonClockFace,
-	vangogh_integration.ValidationValidating:         compton.HexagonClockFace,
+	vangogh_integration.ValidationValidating:         compton.CyclingHexagon,
 	vangogh_integration.ValidatedMissingChecksum:     compton.Triangle,
 	vangogh_integration.ValidatedUnresolvedManualUrl: compton.Triangle,
 	vangogh_integration.ValidatedMissingLocalFile:    compton.Triangle,
