@@ -89,16 +89,11 @@ func Installers(id string, dls vangogh_integration.DownloadsList, rdx redux.Read
 }
 
 func operatingSystemHeading(r compton.Registrar, os vangogh_integration.OperatingSystem) compton.Element {
-	osRow := compton.FlexItems(r, direction.Row).
-		AlignItems(align.Center).
-		JustifyContent(align.Center).
-		ColumnGap(size.Small)
 
 	osSymbol := compton.Sparkle
 	if smb, ok := compton_data.OperatingSystemSymbols[os]; ok {
 		osSymbol = smb
 	}
-	osIcon := compton.SvgUse(r, osSymbol)
 
 	osString := ""
 	switch os {
@@ -108,9 +103,13 @@ func operatingSystemHeading(r compton.Registrar, os vangogh_integration.Operatin
 		osString = os.String()
 	}
 
-	osRow.Append(osIcon, compton.Text(osString))
+	fmtOsBadge := compton.FormattedBadge{
+		Title: osString,
+		Icon:  osSymbol,
+		Color: color.RepForeground,
+	}
 
-	return compton.SectionDivider(r, osRow)
+	return compton.SectionDivider(r, fmtOsBadge)
 }
 
 func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
@@ -130,33 +129,33 @@ func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 		fr.PropVal("Size", vangogh_integration.FormatBytes(dv.estimatedBytes))
 	}
 
-	var downloadValidationStatus string
-	var downloadValidationSymbol compton.Symbol
-	downloadValidationColor := color.RepGray
+	var dvStatus string
+	var dvSymbol compton.Symbol
+	dvColor := color.RepGray
 
 	if dv.downloadType == vangogh_integration.Installer || dv.downloadType == vangogh_integration.DLC {
 
 		switch dv.validationResult {
 		case vangogh_integration.ValidationResultUnknown:
-			downloadValidationStatus = dv.manualUrlStatus.HumanReadableString()
-			downloadValidationSymbol = compton_data.ManualUrlStatusSymbols[dv.manualUrlStatus]
+			dvStatus = dv.manualUrlStatus.HumanReadableString()
+			dvSymbol = compton_data.ManualUrlStatusSymbols[dv.manualUrlStatus]
 		default:
-			downloadValidationStatus = dv.validationResult.HumanReadableString()
-			downloadValidationColor = compton_data.ValidationResultsColors[dv.validationResult]
-			downloadValidationSymbol = compton_data.ValidationResultsSymbols[dv.validationResult]
+			dvStatus = dv.validationResult.HumanReadableString()
+			dvColor = compton_data.ValidationResultsColors[dv.validationResult]
+			dvSymbol = compton_data.ValidationResultsSymbols[dv.validationResult]
 		}
 
 	} else {
-		downloadValidationStatus = dv.manualUrlStatus.HumanReadableString()
+		dvStatus = dv.manualUrlStatus.HumanReadableString()
 	}
 
-	if downloadValidationSymbol != compton.NoSymbol {
-		fr.IconColor(downloadValidationSymbol, downloadValidationColor)
+	fmtDownloadValidationBadge := compton.FormattedBadge{
+		Title: dvStatus,
+		Icon:  dvSymbol,
+		Color: dvColor,
 	}
 
-	fr.Elements(compton.Fspan(r, downloadValidationStatus).
-		FontSize(size.XSmall).
-		ForegroundColor(downloadValidationColor))
+	fr.Elements(compton.Badges(r, fmtDownloadValidationBadge))
 
 	return fr
 }
@@ -241,8 +240,6 @@ func downloadLink(r compton.Registrar,
 
 	dvs := vangogh_integration.NewDvs(dl.ManualUrl, rdx)
 
-	manualUrlStatusValidationResultRow := compton.FlexItems(r, direction.Row).ColumnGap(size.Small)
-
 	var manualUrlStatusValidationResult string
 	manualUrlStatusValidationResultSymbol := compton.NoSymbol
 	manualUrlStatusValidationResultColor := color.RepGray
@@ -262,16 +259,13 @@ func downloadLink(r compton.Registrar,
 		manualUrlStatusValidationResult = dvs.ManualUrlStatus().HumanReadableString()
 	}
 
-	if manualUrlStatusValidationResultSymbol != compton.NoSymbol {
-		manualUrlStatusValidationResultRow.Append(
-			compton.SvgUse(r, manualUrlStatusValidationResultSymbol).ForegroundColor(manualUrlStatusValidationResultColor))
+	fmtManualUrlStatusBadge := compton.FormattedBadge{
+		Title: manualUrlStatusValidationResult,
+		Icon:  manualUrlStatusValidationResultSymbol,
+		Color: manualUrlStatusValidationResultColor,
 	}
 
-	manualUrlStatusValidationResultRow.Append(compton.Fspan(r, manualUrlStatusValidationResult).
-		FontSize(size.XSmall).
-		ForegroundColor(manualUrlStatusValidationResultColor))
-
-	linkColumn.Append(manualUrlStatusValidationResultRow)
+	linkColumn.Append(compton.Badges(r, fmtManualUrlStatusBadge))
 
 	link.Append(linkColumn)
 
@@ -279,18 +273,18 @@ func downloadLink(r compton.Registrar,
 
 	var sizeFr *compton.FrowElement
 
-	if dl.EstimatedBytes > 0 {
-		sizeFr = compton.Frow(r).FontSize(size.XSmall)
-		sizeFr.PropVal("Size", vangogh_integration.FormatBytes(dl.EstimatedBytes))
-		bottomRow.Append(sizeFr)
-	}
-
 	copyManualUrlToClipboard := compton.CopyToClipboard(r,
 		compton.Fspan(r, "Copy Manual URL").FontSize(size.XSmall).ForegroundColor(color.Blue).FontWeight(font_weight.Bolder),
 		compton.Fspan(r, "Copied!").FontSize(size.XSmall).ForegroundColor(color.Green),
 		compton.Fspan(r, "Error").FontSize(size.XSmall).ForegroundColor(color.Red),
 		dl.ManualUrl)
 	bottomRow.Append(copyManualUrlToClipboard)
+
+	if dl.EstimatedBytes > 0 {
+		sizeFr = compton.Frow(r).FontSize(size.XSmall)
+		sizeFr.PropVal("Size", vangogh_integration.FormatBytes(dl.EstimatedBytes))
+		bottomRow.Append(sizeFr)
+	}
 
 	linkContainer.Append(bottomRow)
 

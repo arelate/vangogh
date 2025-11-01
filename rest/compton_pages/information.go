@@ -88,7 +88,14 @@ func Info(id string, rdx redux.Readable, permissions ...author.Permission) compt
 	}
 
 	if shortDescSpan != nil || descriptionFspan != nil {
-		pageStack.Append(compton.SectionDivider(s, compton.Text("Product Details")))
+
+		fmtProductDetailsBadge := compton.FormattedBadge{
+			Title: "Product Details",
+			Icon:  compton.TwoTitleValues,
+			Color: color.RepForeground,
+		}
+
+		pageStack.Append(compton.SectionDivider(s, fmtProductDetailsBadge))
 	}
 
 	items := compton.FlexItems(s, direction.Row).
@@ -103,7 +110,13 @@ func Info(id string, rdx redux.Readable, permissions ...author.Permission) compt
 		items.Append(pp)
 	}
 
-	pageStack.Append(compton.SectionDivider(s, compton.Text("Links")))
+	fmtLinksBadge := compton.FormattedBadge{
+		Title: "Links",
+		Icon:  compton.NoSymbol,
+		Color: color.RepForeground,
+	}
+
+	pageStack.Append(compton.SectionDivider(s, fmtLinksBadge))
 
 	linksStack := compton.FlexItems(s, direction.Row).
 		JustifyContent(align.Start).

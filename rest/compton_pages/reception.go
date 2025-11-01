@@ -35,7 +35,13 @@ func Reception(id string, sar *steam_integration.AppReviews, rdx redux.Readable,
 		return s
 	}
 
-	pageStack.Append(compton.SectionDivider(s, compton.Text("Steam Reviews")))
+	fmtSteamReviewsBadge := compton.FormattedBadge{
+		Title: "Steam Reviews",
+		Icon:  compton.NoSymbol,
+		Color: color.RepForeground,
+	}
+
+	pageStack.Append(compton.SectionDivider(s, fmtSteamReviewsBadge))
 
 	if len(sar.Reviews) == 0 {
 		fs := compton.Fspan(s, "Steam reviews are not available for this product").

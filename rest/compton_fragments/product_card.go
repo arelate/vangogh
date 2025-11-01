@@ -8,10 +8,6 @@ import (
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/boggydigital/author"
 	"github.com/boggydigital/compton"
-	"github.com/boggydigital/compton/consts/align"
-	"github.com/boggydigital/compton/consts/color"
-	"github.com/boggydigital/compton/consts/direction"
-	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/issa"
 	"github.com/boggydigital/redux"
 )
@@ -77,27 +73,29 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx redux.Readab
 		return nil
 	}
 
-	productBadges := compton.FlexItems(r, direction.Row).
-		RowGap(size.Small).
-		ColumnGap(size.Small).
-		FontSize(size.XXXSmall).
-		JustifyContent(align.Start).
-		Width(size.FullWidth).
-		AlignItems(align.Center).
-		AlignContent(align.Center)
+	fmtBadges := FormatBadges(id, rdx, compton_data.InformationBadgeProperties, permissions...)
 
-	for _, fmtBadge := range FormatBadges(id, rdx, compton_data.InformationBadgeProperties, permissions...) {
-		var badge compton.Element
-		switch fmtBadge.Title {
-		case "":
-			badge = compton.BadgeIcon(r, fmtBadge.Icon, color.RepForeground)
-		default:
-			badge = compton.BadgeText(r, fmtBadge.Title, color.RepForeground)
-		}
-		productBadges.Append(badge)
-	}
+	//productBadges := compton.FlexItems(r, direction.Row).
+	//	RowGap(size.Small).
+	//	ColumnGap(size.Small).
+	//	FontSize(size.XXXSmall).
+	//	JustifyContent(align.Start).
+	//	Width(size.FullWidth).
+	//	AlignItems(align.Center).
+	//	AlignContent(align.Center)
+	//
+	//for _, fmtBadge := range FormatBadges(id, rdx, compton_data.InformationBadgeProperties, permissions...) {
+	//	var badge compton.Element
+	//	switch fmtBadge.Title {
+	//	case "":
+	//		badge = compton.BadgeIcon(r, fmtBadge.Icon, color.RepForeground)
+	//	default:
+	//		badge = compton.BadgeText(r, fmtBadge.Title, color.RepForeground)
+	//	}
+	//	productBadges.Append(badge)
+	//}
 
-	pc.AppendBadges(productBadges)
+	pc.AppendBadges(compton.Badges(r, fmtBadges...))
 
 	properties, values := SummarizeProductProperties(id, rdx)
 	osSymbols := make([]compton.Element, 0, 2)

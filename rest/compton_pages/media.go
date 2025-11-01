@@ -10,7 +10,6 @@ import (
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
-	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/redux"
 )
 
@@ -67,14 +66,13 @@ func Media(id string, rdx redux.Readable) compton.PageElement {
 
 	if len(videoIds) > 0 && len(screenshots) > 0 {
 
-		screenshotsRow := compton.FlexItems(s, direction.Row).
-			AlignItems(align.Center).
-			JustifyContent(align.Center).
-			ColumnGap(size.Small)
+		fmtBadge := compton.FormattedBadge{
+			Title: "Screenshots",
+			Icon:  compton.ImageThumbnail,
+			Color: color.RepForeground,
+		}
 
-		screenshotsRow.Append(compton.BadgeIcon(s, compton.ImageThumbnail, color.RepForeground), compton.Text("Screenshots"))
-
-		pageStack.Append(compton.SectionDivider(s, screenshotsRow))
+		pageStack.Append(compton.SectionDivider(s, fmtBadge))
 	}
 
 	if len(screenshots) == 0 {

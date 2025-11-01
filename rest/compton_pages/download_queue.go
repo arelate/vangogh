@@ -38,8 +38,12 @@ func DownloadsQueue(ids []string, rdx redux.Readable, permissions ...author.Perm
 			compton_data.ManyItemsSinglePageTemplate,
 			compton_data.ManyItemsManyPagesTemplate)
 
-		resultsBadge := compton.BadgeText(p, cf.Title(0, len(ids), len(ids)), color.RepForeground).FontSize(size.XXSmall)
-		dqDetails.AppendBadges(resultsBadge)
+		//resultsBadge := compton.BadgeText(p, cf.Title(0, len(ids), len(ids)), color.RepForeground).FontSize(size.XXSmall)
+		dqDetails.AppendBadges(compton.Badges(p, compton.FormattedBadge{
+			Title: cf.Title(0, len(ids), len(ids)),
+			Icon:  compton.NoSymbol,
+			Color: color.RepForeground,
+		}))
 	}
 
 	dqDetails.Append(compton_fragments.ProductsList(p, ids, 0, len(ids), rdx, false, permissions...))

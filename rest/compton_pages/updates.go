@@ -127,8 +127,12 @@ func Updates(section string, rdx redux.Readable, showAll bool, permissions ...au
 		compton_data.ManyItemsSinglePageTemplate,
 		compton_data.ManyItemsManyPagesTemplate)
 
-	itemsBadge := compton.BadgeText(p, cf.Title(0, len(ids), updateTotals[section]), color.Foreground).FontSize(size.XXSmall)
-	dsSection.AppendBadges(itemsBadge)
+	//itemsBadge := compton.BadgeText(p, cf.Title(0, len(ids), updateTotals[section]), color.Foreground).FontSize(size.XXSmall)
+	dsSection.AppendBadges(compton.Badges(p, compton.FormattedBadge{
+		Title: cf.Title(0, len(ids), updateTotals[section]),
+		Icon:  compton.NoSymbol,
+		Color: color.Foreground,
+	}))
 
 	dsSection.SetId(section)
 	pageStack.Append(dsSection)

@@ -130,7 +130,13 @@ func getDeckAppCompatibilityReport(gogId string, rdx redux.Readable) (*steam_int
 
 func addSteamCompatibilitySection(r compton.Registrar, pageStack compton.Element, id, title string, dacr *steam_integration.DeckAppCompatibilityReport, steamDevice string, rdx redux.Readable) {
 
-	pageStack.Append(compton.SectionDivider(r, compton.Text(steamDevice)))
+	fmtCompatBadge := compton.FormattedBadge{
+		Title: steamDevice,
+		Icon:  compton.NoSymbol,
+		Color: color.RepForeground,
+	}
+
+	pageStack.Append(compton.SectionDivider(r, fmtCompatBadge))
 
 	var steamAppCompatibilityProperty string
 	switch steamDevice {

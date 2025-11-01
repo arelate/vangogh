@@ -28,7 +28,13 @@ func News(gogId string, rdx redux.Readable, san *steam_integration.AppNews, all 
 		changelogLink.SetAttribute("target", "_top")
 		changelogLink.AddClass("internal")
 
-		steamNewsSection := compton.SectionDivider(s, compton.Text("Steam News"))
+		fmtNewsBadge := compton.FormattedBadge{
+			Title: "Steam News",
+			Icon:  compton.NewsBroadcast,
+			Color: color.RepForeground,
+		}
+
+		steamNewsSection := compton.SectionDivider(s, fmtNewsBadge)
 
 		pageStack.Append(compton.FICenter(s, changelogLink))
 

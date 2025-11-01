@@ -7,6 +7,7 @@ import (
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/boggydigital/author"
 	"github.com/boggydigital/compton"
+	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/redux"
 )
 
@@ -27,7 +28,9 @@ func FormatBadges(id string, rdx redux.Readable, badgeProperties []string, permi
 
 func formatBadge(id, property string, rdx redux.Readable) compton.FormattedBadge {
 
-	fmtBadge := compton.FormattedBadge{}
+	fmtBadge := compton.FormattedBadge{
+		Color: color.RepGray,
+	}
 
 	var downloadQueued, downloadStarted, downloadCompleted string
 	validationResult := vangogh_integration.ValidationResultUnknown
@@ -83,6 +86,7 @@ func formatBadge(id, property string, rdx redux.Readable) compton.FormattedBadge
 		if owned && productType == vangogh_integration.GameProductType {
 			if vrSymbol, ok := compton_data.ValidationResultsSymbols[validationResult]; ok {
 				fmtBadge.Icon = vrSymbol
+				//fmtBadge.Color = compton_data.ValidationResultsColors[validationResult]
 			}
 		}
 	case vangogh_integration.TopPercentProperty:
