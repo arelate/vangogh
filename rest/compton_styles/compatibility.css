@@ -30,15 +30,15 @@ ul {
     }
 }
 
-.Verified {
+.Verified, .Platinum, .Gold, .Strong, .Good {
     color: var(--c-green)
 }
 
-.Playable {
+.Playable, .Silver, .Bronze, .Moderate, .Low {
     color: var(--c-orange)
 }
 
-.Unsupported {
+.Unsupported, .Borked, .Inadequate {
     color: var(--c-red)
 }
 

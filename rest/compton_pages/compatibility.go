@@ -130,14 +130,6 @@ func getDeckAppCompatibilityReport(gogId string, rdx redux.Readable) (*steam_int
 
 func addSteamCompatibilitySection(r compton.Registrar, pageStack compton.Element, id, title string, dacr *steam_integration.DeckAppCompatibilityReport, steamDevice string, rdx redux.Readable) {
 
-	fmtCompatBadge := compton.FormattedBadge{
-		Title: steamDevice,
-		Icon:  compton.NoSymbol,
-		Color: color.RepForeground,
-	}
-
-	pageStack.Append(compton.SectionDivider(r, fmtCompatBadge))
-
 	var steamAppCompatibilityProperty string
 	switch steamDevice {
 	case steamOs:
@@ -148,12 +140,34 @@ func addSteamCompatibilitySection(r compton.Registrar, pageStack compton.Element
 		steamAppCompatibilityProperty = vangogh_integration.SteamDeckAppCompatibilityCategoryProperty
 	}
 
+	var compatCategory string
+
 	if category, ok := rdx.GetLastVal(steamAppCompatibilityProperty, id); ok {
-		message := fmt.Sprintf(messageByCategory[category], title, steamDevice, steamDevice)
-		divMessage := compton.DivText(message)
-		divMessage.AddClass("message")
-		pageStack.Append(divMessage)
+		compatCategory = category
 	}
+
+	compatSymbol := compton.NoSymbol
+	compatColor := color.RepForeground
+
+	if cs, ok := displayTypeSymbols[compatCategory]; ok {
+		compatSymbol = cs
+	}
+	if cc, ok := displayTypeColors[compatCategory]; ok {
+		compatColor = cc
+	}
+
+	fmtCompatBadge := compton.FormattedBadge{
+		Title: steamDevice,
+		Icon:  compatSymbol,
+		Color: compatColor,
+	}
+
+	pageStack.Append(compton.SectionDivider(r, fmtCompatBadge))
+
+	message := fmt.Sprintf(messageByCategory[compatCategory], title, steamDevice, steamDevice)
+	divMessage := compton.DivText(message)
+	divMessage.AddClass("message")
+	pageStack.Append(divMessage)
 
 	if blogUrl := dacr.GetBlogUrl(); blogUrl != "" {
 		additionalInfo := compton.Span()
@@ -185,6 +199,16 @@ func addSteamCompatibilitySection(r compton.Registrar, pageStack compton.Element
 		pageStack.Append(compton.Hr())
 	}
 
+	var decodeToken func(string) string
+	switch steamDevice {
+	case steamOs:
+		decodeToken = steam_integration.SteamOsDecodeLocToken
+	case steamDeck:
+		fallthrough
+	default:
+		decodeToken = steam_integration.SteamDeckDecodeLocToken
+	}
+
 	var getDisplayTypes func() []string
 	switch steamDevice {
 	case steamOs:
@@ -196,16 +220,6 @@ func addSteamCompatibilitySection(r compton.Registrar, pageStack compton.Element
 	}
 
 	displayTypes := getDisplayTypes()
-
-	var decodeToken func(string) string
-	switch steamDevice {
-	case steamOs:
-		decodeToken = steam_integration.SteamOsDecodeLocToken
-	case steamDeck:
-		fallthrough
-	default:
-		decodeToken = steam_integration.SteamDeckDecodeLocToken
-	}
 
 	ul := compton.Ul()
 	if len(displayTypes) == len(results) {

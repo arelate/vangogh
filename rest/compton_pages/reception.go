@@ -35,10 +35,22 @@ func Reception(id string, sar *steam_integration.AppReviews, rdx redux.Readable,
 		return s
 	}
 
+	rc := compton_fragments.ReviewClass(sar.QuerySummary.ReviewScoreDesc)
+	rcSymbol := compton.NoSymbol
+	rcColor := color.RepForeground
+
+	if rcs, ok := compton_data.ReceptionSymbols[rc]; ok {
+		rcSymbol = rcs
+	}
+
+	if rcc, ok := compton_data.ReceptionColors[rc]; ok {
+		rcColor = rcc
+	}
+
 	fmtSteamReviewsBadge := compton.FormattedBadge{
 		Title: "Steam Reviews",
-		Icon:  compton.NoSymbol,
-		Color: color.RepForeground,
+		Icon:  rcSymbol,
+		Color: rcColor,
 	}
 
 	pageStack.Append(compton.SectionDivider(s, fmtSteamReviewsBadge))

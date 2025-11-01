@@ -233,13 +233,13 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 	case vangogh_integration.LocalTagsProperty:
 		fmtProperty.actions["Edit"] = "/local-tags/edit?id=" + id
 	case vangogh_integration.SteamReviewScoreDescProperty:
-		fmtProperty.class = reviewClass(firstValue)
+		fmtProperty.class = ReviewClass(firstValue)
 	case vangogh_integration.RatingProperty:
-		fmtProperty.class = reviewClass(fmtGOGRating(firstValue))
+		fmtProperty.class = ReviewClass(fmtGOGRating(firstValue))
 	case vangogh_integration.HltbReviewScoreProperty:
-		fmtProperty.class = reviewClass(fmtHltbRating(firstValue))
+		fmtProperty.class = ReviewClass(fmtHltbRating(firstValue))
 	case vangogh_integration.SteamReviewScoreProperty:
-		fmtProperty.class = reviewClass(fmtSteamRating(firstValue))
+		fmtProperty.class = ReviewClass(fmtSteamRating(firstValue))
 	case vangogh_integration.OpenCriticTierProperty:
 		fmtProperty.class = firstValue
 	case vangogh_integration.TopPercentProperty:
@@ -247,10 +247,14 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 	case vangogh_integration.OpenCriticMedianScoreProperty:
 		fallthrough
 	case vangogh_integration.MetacriticScoreProperty:
-		fmtProperty.class = reviewClass(FmtRating(firstValue))
+		fmtProperty.class = ReviewClass(FmtRating(firstValue))
 	case vangogh_integration.SteamOsAppCompatibilityCategoryProperty:
 		fallthrough
 	case vangogh_integration.SteamDeckAppCompatibilityCategoryProperty:
+		fmtProperty.class = firstValue
+	case vangogh_integration.ProtonDBTierProperty:
+		fmtProperty.class = firstValue
+	case vangogh_integration.ProtonDBConfidenceProperty:
 		fmtProperty.class = firstValue
 	}
 
@@ -294,7 +298,7 @@ func propertyTitleValues(r compton.Registrar, property string, fmtProperty forma
 	return tv
 }
 
-func reviewClass(sr string) string {
+func ReviewClass(sr string) string {
 	if strings.Contains(sr, vangogh_integration.RatingPositive) {
 		return vangogh_integration.RatingPositive
 	} else if strings.Contains(sr, vangogh_integration.RatingNegative) {

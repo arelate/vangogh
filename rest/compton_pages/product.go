@@ -164,46 +164,35 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 			}
 
 		case compton_data.CompatibilitySection:
-			var compatText string
-			if dcp, ok := rdx.GetLastVal(vangogh_integration.SteamDeckAppCompatibilityCategoryProperty, id); ok {
-				compatText = dcp
-			}
 
-			if compatText == "" || compatText == "Unknown" {
-				if pt, ok := rdx.GetLastVal(vangogh_integration.ProtonDBTierProperty, id); ok {
-					compatText = pt
+			var dcText string
+			dcColor := color.RepGray
+			dcSymbol := compton.NoSymbol
+
+			if dcp, ok := rdx.GetLastVal(vangogh_integration.SteamDeckAppCompatibilityCategoryProperty, id); ok {
+				dcText = dcp
+				if dcs, sure := compton_data.CompatibilitySymbols[dcp]; sure {
+					dcSymbol = dcs
+				}
+				if dcc, sure := compton_data.CompatibilityColors[dcp]; sure {
+					dcColor = dcc
 				}
 			}
 
-			var dcColor color.Color
-			var dcSymbol compton.Symbol
-			switch compatText {
-			case "Platinum":
-				fallthrough
-			case "Gold":
-				fallthrough
-			case "Verified":
-				dcColor = color.Green
-				dcSymbol = compton.Circle
-			case "Silver":
-				fallthrough
-			case "Bronze":
-				fallthrough
-			case "Playable":
-				dcColor = color.Orange
-				dcSymbol = compton.Triangle
-			case "Borked":
-				fallthrough
-			case "Unsupported":
-				dcColor = color.Red
-				dcSymbol = compton.Cross
-			default:
-				dcColor = color.RepGray
-				dcSymbol = compton.NoSymbol
+			if dcText == "" || dcText == "Unknown" {
+				if pt, ok := rdx.GetLastVal(vangogh_integration.ProtonDBTierProperty, id); ok {
+					dcText = pt
+					if dcs, sure := compton_data.CompatibilitySymbols[pt]; sure {
+						dcSymbol = dcs
+					}
+					if dcc, sure := compton_data.CompatibilityColors[pt]; sure {
+						dcColor = dcc
+					}
+				}
 			}
 
 			fmtCompatBadge := compton.FormattedBadge{
-				Title: compatText,
+				Title: dcText,
 				Icon:  dcSymbol,
 				Color: dcColor,
 			}
@@ -222,23 +211,17 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 				})
 			}
 
-			var receptionSymbol compton.Symbol
+			receptionSymbol := compton.NoSymbol
+			receptionColor := color.RepGray
 
 			if srep, ok := rdx.GetLastVal(vangogh_integration.SummaryReviewsProperty, id); ok {
 
-				var receptionColor color.Color
-				switch srep {
-				case vangogh_integration.RatingPositive:
-					receptionSymbol = compton.ThreeUpwardChevrons
-					receptionColor = color.Green
-				case vangogh_integration.RatingNegative:
-					receptionSymbol = compton.ThreeDownwardChevrons
-					receptionColor = color.Red
-				case vangogh_integration.RatingMixed:
-					receptionSymbol = compton.ThreeHorizontalLines
-					receptionColor = color.Yellow
-				default:
-					receptionColor = color.RepGray
+				if rs, sure := compton_data.ReceptionSymbols[srep]; sure {
+					receptionSymbol = rs
+				}
+
+				if rc, sure := compton_data.ReceptionColors[srep]; sure {
+					receptionColor = rc
 				}
 
 				ratingsReviews := srep
