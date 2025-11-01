@@ -112,8 +112,8 @@ func Info(id string, rdx redux.Readable, permissions ...author.Permission) compt
 
 	fmtLinksBadge := compton.FormattedBadge{
 		Title: "Links",
-		Icon:  compton.NoSymbol,
-		Color: color.RepForeground,
+		Icon:  compton.ExternalLink,
+		Color: color.Cyan,
 	}
 
 	pageStack.Append(compton.SectionDivider(s, fmtLinksBadge))
