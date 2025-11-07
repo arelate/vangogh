@@ -80,7 +80,8 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 	properties, values := compton_fragments.SummarizeProductProperties(id, rdx)
 	osSymbols := make([]compton.Symbol, 0, 2)
 
-	summaryRow := compton.Frow(p).FontSize(size.XSmall)
+	summaryRow := compton.Frow(p).BackgroundColor(color.Transparent)
+	summaryRow.FontSize(size.XSmall)
 
 	for _, property := range properties {
 		switch property {

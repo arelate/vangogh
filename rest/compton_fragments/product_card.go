@@ -75,26 +75,6 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx redux.Readab
 
 	fmtBadges := FormatBadges(id, rdx, compton_data.InformationBadgeProperties, permissions...)
 
-	//productBadges := compton.FlexItems(r, direction.Row).
-	//	RowGap(size.Small).
-	//	ColumnGap(size.Small).
-	//	FontSize(size.XXXSmall).
-	//	JustifyContent(align.Start).
-	//	Width(size.FullWidth).
-	//	AlignItems(align.Center).
-	//	AlignContent(align.Center)
-	//
-	//for _, fmtBadge := range FormatBadges(id, rdx, compton_data.InformationBadgeProperties, permissions...) {
-	//	var badge compton.Element
-	//	switch fmtBadge.Title {
-	//	case "":
-	//		badge = compton.BadgeIcon(r, fmtBadge.Icon, color.RepForeground)
-	//	default:
-	//		badge = compton.BadgeText(r, fmtBadge.Title, color.RepForeground)
-	//	}
-	//	productBadges.Append(badge)
-	//}
-
 	pc.AppendBadges(compton.Badges(r, fmtBadges...))
 
 	properties, values := SummarizeProductProperties(id, rdx)
