@@ -19,10 +19,10 @@ var ValidationResultsColors = map[vangogh_integration.ValidationResult]color.Col
 }
 
 var ValidationResultsSymbols = map[vangogh_integration.ValidationResult]compton.Symbol{
-	vangogh_integration.ValidatedSuccessfully:        compton.Hexagon,
-	vangogh_integration.ValidationResultUnknown:      compton.DashedHexagon,
-	vangogh_integration.ValidationQueued:             compton.HexagonClockFace,
-	vangogh_integration.ValidationValidating:         compton.CyclingHexagon,
+	vangogh_integration.ValidatedSuccessfully:        compton.HexagonSparkling,
+	vangogh_integration.ValidationResultUnknown:      compton.HexagonDiagonalLines,
+	vangogh_integration.ValidationQueued:             compton.HexagonClockArrows,
+	vangogh_integration.ValidationValidating:         compton.HexagonDownwardArrow,
 	vangogh_integration.ValidatedMissingChecksum:     compton.Triangle,
 	vangogh_integration.ValidatedUnresolvedManualUrl: compton.Triangle,
 	vangogh_integration.ValidatedMissingLocalFile:    compton.Triangle,
@@ -31,15 +31,15 @@ var ValidationResultsSymbols = map[vangogh_integration.ValidationResult]compton.
 }
 
 var ManualUrlStatusSymbols = map[vangogh_integration.ManualUrlStatus]compton.Symbol{
-	vangogh_integration.ManualUrlDownloaded:          compton.CompactDisk,
-	vangogh_integration.ManualUrlStatusUnknown:       compton.DashedCircle,
-	vangogh_integration.ManualUrlQueued:              compton.ClockFace,
-	vangogh_integration.ManualUrlDownloading:         compton.CyclingCircle,
+	vangogh_integration.ManualUrlDownloaded:          compton.CircleCompactDisk,
+	vangogh_integration.ManualUrlStatusUnknown:       compton.CircleDashed,
+	vangogh_integration.ManualUrlQueued:              compton.CircleClockArrows,
+	vangogh_integration.ManualUrlDownloading:         compton.CircleDownwardArrow,
 	vangogh_integration.ManualUrlDownloadInterrupted: compton.Cross,
 }
 
 var DownloadTypesSymbols = map[vangogh_integration.DownloadType]compton.Symbol{
-	vangogh_integration.Installer: compton.CompactDisk,
+	vangogh_integration.Installer: compton.CircleCompactDisk,
 	vangogh_integration.DLC:       compton.ItemPlus,
 	vangogh_integration.Extra:     compton.Sparkle,
 }

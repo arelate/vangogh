@@ -123,6 +123,6 @@ var PropertySymbols = map[string]compton.Symbol{
 	vangogh_integration.IsRequiredByGamesProperty: compton.ItemPlus,
 	vangogh_integration.IsModifiedByGamesProperty: compton.PuzzlePiece,
 	vangogh_integration.IncludesGamesProperty:     compton.TwoStackedItems,
-	vangogh_integration.RequiresGamesProperty:     compton.CompactDisk,
+	vangogh_integration.RequiresGamesProperty:     compton.CircleCompactDisk,
 	vangogh_integration.ModifiesGamesProperty:     compton.PuzzlePiece,
 }

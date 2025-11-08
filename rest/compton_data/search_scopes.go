@@ -19,7 +19,7 @@ const (
 
 var SearchScopesSymbols = map[string]compton.Symbol{
 	SearchNew:                    compton.TwoTitleValues,
-	SearchOwned:                  compton.CompactDisk,
+	SearchOwned:                  compton.CircleCompactDisk,
 	SearchWishlist:               compton.Heart,
 	SearchSale:                   compton.Percent,
 	SearchGogPreservationProgram: compton.Gemstone,

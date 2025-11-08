@@ -65,22 +65,22 @@ func formatBadge(id, property string, rdx redux.Readable) compton.FormattedBadge
 			switch productType {
 			case vangogh_integration.GameProductType:
 				if downloadCompleted == "" && validationResult == vangogh_integration.ValidationResultUnknown && downloadQueued == "" {
-					fmtBadge.Icon = compton.DashedCircle
+					fmtBadge.Icon = compton.CircleDashed
 				} else if downloadCompleted >= downloadQueued && downloadCompleted >= downloadStarted {
-					fmtBadge.Icon = compton.CompactDisk
+					fmtBadge.Icon = compton.CircleCompactDisk
 				}
 			default:
-				fmtBadge.Icon = compton.CompactDisk
+				fmtBadge.Icon = compton.CircleCompactDisk
 			}
 		}
 	case vangogh_integration.DownloadQueuedProperty:
 		if downloadQueued > downloadStarted &&
 			downloadQueued > downloadCompleted {
-			fmtBadge.Icon = compton.ClockFace
+			fmtBadge.Icon = compton.CircleClockArrows
 		}
 	case vangogh_integration.DownloadStartedProperty:
 		if downloadStarted > downloadCompleted {
-			fmtBadge.Icon = compton.CyclingCircle
+			fmtBadge.Icon = compton.CircleDownwardArrow
 		}
 	case vangogh_integration.ProductValidationResultProperty:
 		if owned && productType == vangogh_integration.GameProductType {

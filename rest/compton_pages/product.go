@@ -28,7 +28,7 @@ var openSections = []string{
 }
 
 var offeringsBadgesOrder = []compton.Symbol{
-	compton.CompactDisk,
+	compton.CircleCompactDisk,
 	compton.TwoStackedItems,
 	compton.ItemPlus,
 	compton.PuzzlePiece,

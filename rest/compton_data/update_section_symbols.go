@@ -6,7 +6,7 @@ import (
 )
 
 var UpdateSectionSymbols = map[string]compton.Symbol{
-	vangogh_integration.UpdatesInstallers:    compton.CompactDisk,
+	vangogh_integration.UpdatesInstallers:    compton.CircleCompactDisk,
 	vangogh_integration.UpdatesReleasedToday: compton.RisingSun,
 	vangogh_integration.UpdatesNewProducts:   compton.ShoppingLabel,
 	vangogh_integration.UpdatesSteamNews:     compton.NewsBroadcast,
