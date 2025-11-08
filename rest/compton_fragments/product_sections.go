@@ -41,8 +41,9 @@ func ProductSections(id string, rdx redux.Readable, permissions ...author.Permis
 		hasSections = append(hasSections, compton_data.NewsSection)
 	}
 
-	if rdx.HasKey(vangogh_integration.SteamDeckAppCompatibilityCategoryProperty, id) ||
-		rdx.HasKey(vangogh_integration.ProtonDBTierProperty, id) {
+	if sdc, ok := rdx.GetLastVal(vangogh_integration.SteamDeckAppCompatibilityCategoryProperty, id); ok && sdc != "Unknown" {
+		hasSections = append(hasSections, compton_data.CompatibilitySection)
+	} else if pt, sure := rdx.GetLastVal(vangogh_integration.ProtonDBTierProperty, id); sure && pt != "" {
 		hasSections = append(hasSections, compton_data.CompatibilitySection)
 	}
 
