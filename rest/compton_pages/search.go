@@ -85,7 +85,7 @@ func Search(query map[string][]string, ids []string, from, to int, rdx redux.Rea
 		pageStack.Append(productsList)
 	} else if len(query) > 0 {
 		pageStack.Append(compton.Br(), compton.FICenter(p,
-			compton.Fspan(p, "Nothing found.").ForegroundColor(color.RepForeground)))
+			compton.Fspan(p, "Nothing found.").ForegroundColor(color.Yellow)))
 	}
 
 	/* Show more... button */
