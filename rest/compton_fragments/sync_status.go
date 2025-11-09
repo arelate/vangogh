@@ -59,7 +59,13 @@ func SyncStatus(r compton.Registrar, rdx redux.Readable, permissions ...author.P
 	syncStatusFrow := compton.Frow(r).FontSize(size.XXSmall)
 
 	syncStatusFrow.IconColor(syncStatusSymbol, syncStatusColor)
-	syncStatusFrow.PropVal(vangogh_integration.CurrentSyncEventsTitles[currentSyncEvent], syncEventDateText)
+
+	switch currentSyncEvent {
+	case vangogh_integration.SyncDownloadsKey:
+		syncStatusFrow.LinkVal(vangogh_integration.CurrentSyncEventsTitles[currentSyncEvent], "/downloads-queue", syncEventDateText)
+	default:
+		syncStatusFrow.PropVal(vangogh_integration.CurrentSyncEventsTitles[currentSyncEvent], syncEventDateText)
+	}
 
 	if slices.Contains(permissions, perm.ReadLogs) {
 		syncStatusFrow.LinkColor("Logs", "/logs", color.RepForeground)
