@@ -265,12 +265,12 @@ func GetDetailsUpdates(since int64) (map[string]any, error) {
 
 	newUpdatedDetails := make(map[string]any)
 
-	newRequiredGameLicences, err := getNewRequiredGameLicences(kvDetails)
+	newUpdatedOrderPagesProducts, err := getNewUpdatedOrderPagesProducts(since)
 	if err != nil {
 		return nil, err
 	}
 
-	for id := range newRequiredGameLicences {
+	for id := range newUpdatedOrderPagesProducts {
 		newUpdatedDetails[id] = nil
 	}
 
@@ -290,52 +290,9 @@ func GetDetailsUpdates(since int64) (map[string]any, error) {
 	return newUpdatedDetails, nil
 }
 
-func getNewRequiredGameLicences(kvDetails kevlar.KeyValues) (iter.Seq[string], error) {
+func getNewUpdatedOrderPagesProducts(since int64) (iter.Seq[string], error) {
 
-	gnla := nod.NewProgress(" enumerating %s updates...", vangogh_integration.Licences)
-	defer gnla.Done()
-
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return nil, err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir,
-		vangogh_integration.LicencesProperty,
-		vangogh_integration.ProductTypeProperty,
-		vangogh_integration.RequiresGamesProperty)
-	if err != nil {
-		return nil, err
-	}
-
-	return func(yield func(string) bool) {
-		for licenceId := range rdx.Keys(vangogh_integration.LicencesProperty) {
-
-			if productType, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, licenceId); ok {
-				switch productType {
-				case vangogh_integration.GameProductType:
-					// do nothing
-					continue
-				case vangogh_integration.PackProductType:
-					// skip, account products will have the corresponding GAME products
-					continue
-				case vangogh_integration.DlcProductType:
-					// replace DLC licence Id with GAME product that is required for this DLC
-					if requiresGame, sure := rdx.GetLastVal(vangogh_integration.RequiresGamesProperty, licenceId); sure {
-						if !kvDetails.Has(requiresGame) && !yield(requiresGame) {
-							return
-						}
-					}
-				}
-			}
-
-		}
-	}, nil
-}
-
-func getOrderPagesUpdates(since int64) (iter.Seq[string], error) {
-
-	gopa := nod.NewProgress(" enumerating %s updates...", vangogh_integration.OrderPage)
+	gopa := nod.NewProgress(" enumerating %s new, updated products...", vangogh_integration.OrderPage)
 	defer gopa.Done()
 
 	orderPageDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.OrderPage)
@@ -355,75 +312,32 @@ func getOrderPagesUpdates(since int64) (iter.Seq[string], error) {
 
 	rdx, err := redux.NewReader(reduxDir,
 		vangogh_integration.ProductTypeProperty,
-		vangogh_integration.RequiresGamesProperty)
+		vangogh_integration.RequiresGamesProperty,
+		vangogh_integration.IncludesGamesProperty)
+
+	orderPagesProducts := make(map[string]any)
 
 	for opId := range kvOrderPages.Since(since, kevlar.Create, kevlar.Update) {
+
 		var orderPageProductsIds iter.Seq[string]
 		orderPageProductsIds, err = getOrderPageProducts(opId, kvOrderPages)
 		if err != nil {
 			return nil, err
 		}
 
-		for productId := range orderPageProductsIds {
-
-			if productType, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, productId); ok {
-				switch productType {
-				case vangogh_integration.GameProductType:
-					// do nothing
-					continue
-				case vangogh_integration.PackProductType:
-					// skip, account products will have the corresponding GAME products
-					continue
-				case vangogh_integration.DlcProductType:
-					// replace DLC licence Id with GAME product that is required for this DLC
-					//if requiresGame, sure := rdx.GetLastVal(vangogh_integration.RequiresGamesProperty, productId); sure {
-					//if !kvDetails.Has(requiresGame) && !yield(requiresGame) {
-					//	return
-					//}
-					//}
-				}
-			}
-
+		var orderPageIncludesRequires map[string]any
+		orderPageIncludesRequires, err = getOrderProductsIncludesRequires(orderPageProductsIds, rdx)
+		if err != nil {
+			return nil, err
 		}
+
+		for includesRequiresId := range orderPageIncludesRequires {
+			orderPagesProducts[includesRequiresId] = nil
+		}
+
 	}
 
-	return nil, nil
-	//reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//
-	//rdx, err := redux.NewWriter(reduxDir,
-	//	vangogh_integration.LicencesProperty,
-	//	vangogh_integration.ProductTypeProperty,
-	//	vangogh_integration.RequiresGamesProperty)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//
-	//return func(yield func(string) bool) {
-	//	for licenceId := range rdx.Keys(vangogh_integration.LicencesProperty) {
-	//
-	//		if productType, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, licenceId); ok {
-	//			switch productType {
-	//			case vangogh_integration.GameProductType:
-	//				// do nothing
-	//				continue
-	//			case vangogh_integration.PackProductType:
-	//				// skip, account products will have the corresponding GAME products
-	//				continue
-	//			case vangogh_integration.DlcProductType:
-	//				// replace DLC licence Id with GAME product that is required for this DLC
-	//				if requiresGame, sure := rdx.GetLastVal(vangogh_integration.RequiresGamesProperty, licenceId); sure {
-	//					if !kvDetails.Has(requiresGame) && !yield(requiresGame) {
-	//						return
-	//					}
-	//				}
-	//			}
-	//		}
-	//
-	//	}
-	//}, nil
+	return maps.Keys(orderPagesProducts), nil
 }
 
 func getOrderPageProducts(id string, kvOrderPage kevlar.KeyValues) (iter.Seq[string], error) {
@@ -450,6 +364,42 @@ func getOrderPageProducts(id string, kvOrderPage kevlar.KeyValues) (iter.Seq[str
 		}
 	}, nil
 
+}
+
+func getOrderProductsIncludesRequires(orderPageProductsIds iter.Seq[string], rdx redux.Readable) (map[string]any, error) {
+
+	if err := rdx.MustHave(vangogh_integration.IncludesGamesProperty, vangogh_integration.RequiresGamesProperty); err != nil {
+		return nil, err
+	}
+
+	orderedGames := make(map[string]any)
+
+	for productId := range orderPageProductsIds {
+
+		if productType, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, productId); ok {
+
+			switch productType {
+			case vangogh_integration.GameProductType:
+				orderedGames[productId] = nil
+			case vangogh_integration.PackProductType:
+				if includesIds, sure := rdx.GetAllValues(vangogh_integration.IncludesGamesProperty, productId); sure {
+					for _, id := range includesIds {
+						if pt, yeah := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); yeah && pt == vangogh_integration.GameProductType {
+							orderedGames[id] = nil
+						}
+					}
+				}
+			case vangogh_integration.DlcProductType:
+				if requiresIds, sure := rdx.GetAllValues(vangogh_integration.RequiresGamesProperty, productId); sure {
+					for _, id := range requiresIds {
+						orderedGames[id] = nil
+					}
+				}
+			}
+		}
+	}
+
+	return orderedGames, nil
 }
 
 func getNewUpdatedAccountPages(kvDetails kevlar.KeyValues) (iter.Seq[string], error) {
