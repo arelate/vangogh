@@ -320,7 +320,7 @@ func getNewUpdatedOrderPagesProducts(since int64) (iter.Seq[string], error) {
 	for opId := range kvOrderPages.Since(since, kevlar.Create, kevlar.Update) {
 
 		var orderPageProductsIds iter.Seq[string]
-		orderPageProductsIds, err = getOrderPageProducts(opId, kvOrderPages)
+		orderPageProductsIds, err = getOrderPageProducts(opId, since, kvOrderPages)
 		if err != nil {
 			return nil, err
 		}
@@ -340,7 +340,7 @@ func getNewUpdatedOrderPagesProducts(since int64) (iter.Seq[string], error) {
 	return maps.Keys(orderPagesProducts), nil
 }
 
-func getOrderPageProducts(id string, kvOrderPage kevlar.KeyValues) (iter.Seq[string], error) {
+func getOrderPageProducts(id string, since int64, kvOrderPage kevlar.KeyValues) (iter.Seq[string], error) {
 	rcOrderPage, err := kvOrderPage.Get(id)
 	if err != nil {
 		return nil, err
@@ -356,6 +356,9 @@ func getOrderPageProducts(id string, kvOrderPage kevlar.KeyValues) (iter.Seq[str
 
 	return func(yield func(string) bool) {
 		for _, order := range orderPage.Orders {
+			if order.Date < since {
+				continue
+			}
 			for _, op := range order.Products {
 				if !yield(op.Id) {
 					return
