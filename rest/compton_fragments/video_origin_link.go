@@ -40,18 +40,10 @@ func VideoOriginLink(r compton.Registrar, videoId, videoTitle, videoDuration str
 		videoTitle = "Watch at origin"
 	}
 
-	// linkRow := compton.FlexItems(r, direction.Row).
-	// 	AlignItems(align.Center).
-	// 	JustifyContent(align.Center).
-	// 	ColumnGap(size.Small)
-	// linkColumn.Append(linkRow)
-
-	// linkRow.Append(compton.SvgUse(r, compton.VideoThumbnail).ForegroundColor(color.Cyan))
-
 	linkText := compton.Fspan(r, videoTitle).
 		TextAlign(align.Center).
 		FontWeight(font_weight.Bolder).
-		ForegroundColor(color.Cyan)
+		ForegroundColor(color.Mint)
 	linkColumn.Append(linkText)
 
 	if dur, err := strconv.ParseInt(videoDuration, 10, 64); err == nil {

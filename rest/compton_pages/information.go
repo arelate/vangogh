@@ -113,7 +113,7 @@ func Info(id string, rdx redux.Readable, permissions ...author.Permission) compt
 	fmtLinksBadge := compton.FormattedBadge{
 		Title: "Links",
 		Icon:  compton.ExternalLink,
-		Color: color.Cyan,
+		Color: color.Mint,
 	}
 
 	pageStack.Append(compton.SectionDivider(s, fmtLinksBadge))
@@ -282,7 +282,7 @@ func linksTitleValues(r compton.Registrar, property string, links []string) comp
 	propertyTitle := compton_data.PropertyTitles[property]
 	tv := compton.TitleValues(r, propertyTitle).
 		RowGap(size.XSmall).
-		ForegroundColor(color.Cyan).
+		ForegroundColor(color.Mint).
 		TitleForegroundColor(color.Inherit).
 		SetLinksTarget(compton.LinkTargetTop).
 		AppendLinkValues(linksValuesLimit, linksHrefs).

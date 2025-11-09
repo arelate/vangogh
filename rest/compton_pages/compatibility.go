@@ -176,7 +176,7 @@ func addSteamCompatibilitySection(r compton.Registrar, pageStack compton.Element
 		link := compton.A(blogUrl)
 		link.Append(compton.Fspan(r, additionalInfoLink).
 			FontWeight(font_weight.Bolder).
-			ForegroundColor(color.Cyan))
+			ForegroundColor(color.Mint))
 		link.SetAttribute("target", "_top")
 		additionalInfo.Append(link)
 

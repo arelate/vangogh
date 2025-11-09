@@ -2,15 +2,16 @@ package shared_data
 
 import (
 	"encoding/json"
+	"iter"
+	"maps"
+	"strconv"
+
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"iter"
-	"maps"
-	"strconv"
 )
 
 func GetSteamGogIds(gogIds iter.Seq[string]) (map[string][]string, error) {
@@ -330,6 +331,125 @@ func getNewRequiredGameLicences(kvDetails kevlar.KeyValues) (iter.Seq[string], e
 
 		}
 	}, nil
+}
+
+func getOrderPagesUpdates(since int64) (iter.Seq[string], error) {
+
+	gopa := nod.NewProgress(" enumerating %s updates...", vangogh_integration.OrderPage)
+	defer gopa.Done()
+
+	orderPageDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.OrderPage)
+	if err != nil {
+		return nil, err
+	}
+
+	kvOrderPages, err := kevlar.New(orderPageDir, kevlar.JsonExt)
+	if err != nil {
+		return nil, err
+	}
+
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return nil, err
+	}
+
+	rdx, err := redux.NewReader(reduxDir,
+		vangogh_integration.ProductTypeProperty,
+		vangogh_integration.RequiresGamesProperty)
+
+	for opId := range kvOrderPages.Since(since, kevlar.Create, kevlar.Update) {
+		var orderPageProductsIds iter.Seq[string]
+		orderPageProductsIds, err = getOrderPageProducts(opId, kvOrderPages)
+		if err != nil {
+			return nil, err
+		}
+
+		for productId := range orderPageProductsIds {
+
+			if productType, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, productId); ok {
+				switch productType {
+				case vangogh_integration.GameProductType:
+					// do nothing
+					continue
+				case vangogh_integration.PackProductType:
+					// skip, account products will have the corresponding GAME products
+					continue
+				case vangogh_integration.DlcProductType:
+					// replace DLC licence Id with GAME product that is required for this DLC
+					//if requiresGame, sure := rdx.GetLastVal(vangogh_integration.RequiresGamesProperty, productId); sure {
+					//if !kvDetails.Has(requiresGame) && !yield(requiresGame) {
+					//	return
+					//}
+					//}
+				}
+			}
+
+		}
+	}
+
+	return nil, nil
+	//reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//
+	//rdx, err := redux.NewWriter(reduxDir,
+	//	vangogh_integration.LicencesProperty,
+	//	vangogh_integration.ProductTypeProperty,
+	//	vangogh_integration.RequiresGamesProperty)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//
+	//return func(yield func(string) bool) {
+	//	for licenceId := range rdx.Keys(vangogh_integration.LicencesProperty) {
+	//
+	//		if productType, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, licenceId); ok {
+	//			switch productType {
+	//			case vangogh_integration.GameProductType:
+	//				// do nothing
+	//				continue
+	//			case vangogh_integration.PackProductType:
+	//				// skip, account products will have the corresponding GAME products
+	//				continue
+	//			case vangogh_integration.DlcProductType:
+	//				// replace DLC licence Id with GAME product that is required for this DLC
+	//				if requiresGame, sure := rdx.GetLastVal(vangogh_integration.RequiresGamesProperty, licenceId); sure {
+	//					if !kvDetails.Has(requiresGame) && !yield(requiresGame) {
+	//						return
+	//					}
+	//				}
+	//			}
+	//		}
+	//
+	//	}
+	//}, nil
+}
+
+func getOrderPageProducts(id string, kvOrderPage kevlar.KeyValues) (iter.Seq[string], error) {
+	rcOrderPage, err := kvOrderPage.Get(id)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rcOrderPage.Close()
+
+	var orderPage gog_integration.OrderPage
+
+	if err = json.NewDecoder(rcOrderPage).Decode(&orderPage); err != nil {
+		return nil, err
+	}
+
+	return func(yield func(string) bool) {
+		for _, order := range orderPage.Orders {
+			for _, op := range order.Products {
+				if !yield(op.Id) {
+					return
+				}
+			}
+		}
+	}, nil
+
 }
 
 func getNewUpdatedAccountPages(kvDetails kevlar.KeyValues) (iter.Seq[string], error) {

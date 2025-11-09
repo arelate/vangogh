@@ -9,6 +9,9 @@ import (
 
 func GitHubLink(r compton.Registrar) compton.Element {
 	gitHubLink := compton.A("https://github.com/arelate")
-	gitHubLink.Append(compton.Fspan(r, "Bonjour d'Arles").FontWeight(font_weight.Bolder).FontSize(size.XSmall).ForegroundColor(color.Cyan))
+	gitHubLink.Append(compton.Fspan(r, "Bonjour d'Arles").
+		FontWeight(font_weight.Bolder).
+		FontSize(size.XSmall).
+		ForegroundColor(color.Mint))
 	return gitHubLink
 }
