@@ -82,6 +82,24 @@ func GetCatalogAccountProducts(since int64) (map[string]any, error) {
 		catalogAccountProductIds[apId] = nil
 	}
 
+	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
+	if err != nil {
+		return nil, err
+	}
+
+	rdx, err := redux.NewReader(reduxDir, vangogh_integration.RootEditionsProperty)
+	if err != nil {
+		return nil, err
+	}
+
+	for id := range catalogAccountProductIds {
+		if rootEditionIds, ok := rdx.GetAllValues(vangogh_integration.RootEditionsProperty, id); ok {
+			for _, reId := range rootEditionIds {
+				catalogAccountProductIds[reId] = nil
+			}
+		}
+	}
+
 	return catalogAccountProductIds, nil
 }
 

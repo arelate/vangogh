@@ -2,6 +2,10 @@ package cli
 
 import (
 	"errors"
+	"maps"
+	"net/url"
+	"slices"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/gog_data"
 	"github.com/arelate/vangogh/cli/hltb_data"
@@ -12,9 +16,6 @@ import (
 	"github.com/arelate/vangogh/cli/steam_data"
 	"github.com/arelate/vangogh/cli/wikipedia_data"
 	"github.com/boggydigital/kevlar"
-	"maps"
-	"net/url"
-	"slices"
 )
 
 func ReduceHandler(u *url.URL) error {
@@ -69,29 +70,29 @@ func reduceProductType(pt vangogh_integration.ProductType) error {
 		return err
 	}
 
-	gogIds, err := shared_data.GetGameGogIds(catalogAccountProducts)
+	gameGogIds, err := shared_data.GetGameGogIds(catalogAccountProducts)
 	if err != nil {
 		return err
 	}
 
-	steamGogIds, err := shared_data.GetSteamGogIds(maps.Keys(gogIds))
+	steamGogIds, err := shared_data.GetSteamGogIds(maps.Keys(gameGogIds))
 
-	pcgwGogIds, err := shared_data.GetPcgwGogIds(maps.Keys(gogIds))
+	pcgwGogIds, err := shared_data.GetPcgwGogIds(maps.Keys(gameGogIds))
 	if err != nil {
 		return err
 	}
 
-	wikipediaGogIds, err := shared_data.GetWikipediaIds(maps.Keys(gogIds))
+	wikipediaGogIds, err := shared_data.GetWikipediaIds(maps.Keys(gameGogIds))
 	if err != nil {
 		return err
 	}
 
-	hltbGogIds, err := shared_data.GetHltbIds(maps.Keys(gogIds))
+	hltbGogIds, err := shared_data.GetHltbIds(maps.Keys(gameGogIds))
 	if err != nil {
 		return err
 	}
 
-	openCriticGogIds, err := shared_data.GetOpenCriticGogIds(maps.Keys(gogIds))
+	openCriticGogIds, err := shared_data.GetOpenCriticGogIds(maps.Keys(gameGogIds))
 	if err != nil {
 		return err
 	}
@@ -124,7 +125,7 @@ func reduceProductType(pt vangogh_integration.ProductType) error {
 	case vangogh_integration.SteamDeckCompatibilityReport:
 		return steam_data.ReduceDeckCompatibilityReports(steamGogIds, kvPt)
 	case vangogh_integration.PcgwGogPageId:
-		return pcgw_data.ReduceGogPageIds(gogIds, kvPt)
+		return pcgw_data.ReduceGogPageIds(gameGogIds, kvPt)
 	case vangogh_integration.PcgwSteamPageId:
 		return pcgw_data.ReduceSteamPageIds(steamGogIds, kvPt)
 	case vangogh_integration.PcgwRaw:
