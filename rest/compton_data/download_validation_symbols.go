@@ -6,36 +6,36 @@ import (
 	"github.com/boggydigital/compton/consts/color"
 )
 
-var ValidationResultsColors = map[vangogh_integration.ValidationResult]color.Color{
-	vangogh_integration.ValidationQueued:             color.RepGray,
-	vangogh_integration.ValidationValidating:         color.RepGray,
-	vangogh_integration.ValidatedSuccessfully:        color.Green,
-	vangogh_integration.ValidationResultUnknown:      color.RepGray,
-	vangogh_integration.ValidatedUnresolvedManualUrl: color.Orange,
-	vangogh_integration.ValidatedMissingLocalFile:    color.Orange,
-	vangogh_integration.ValidatedMissingChecksum:     color.Orange,
-	vangogh_integration.ValidationError:              color.Red,
-	vangogh_integration.ValidatedChecksumMismatch:    color.Red,
+var ValidationStatusColors = map[vangogh_integration.ValidationStatus]color.Color{
+	vangogh_integration.ValidationStatusQueued:              color.RepGray,
+	vangogh_integration.ValidationStatusValidating:          color.RepGray,
+	vangogh_integration.ValidationStatusSuccess:             color.Green,
+	vangogh_integration.ValidationStatusUnknown:             color.RepGray,
+	vangogh_integration.ValidationStatusUnresolvedManualUrl: color.Orange,
+	vangogh_integration.ValidationStatusMissingLocalFile:    color.Orange,
+	vangogh_integration.ValidationStatusMissingChecksum:     color.Orange,
+	vangogh_integration.ValidationStatusError:               color.Red,
+	vangogh_integration.ValidationStatusChecksumMismatch:    color.Red,
 }
 
-var ValidationResultsSymbols = map[vangogh_integration.ValidationResult]compton.Symbol{
-	vangogh_integration.ValidatedSuccessfully:        compton.HexagonSparkling,
-	vangogh_integration.ValidationResultUnknown:      compton.HexagonDiagonalLines,
-	vangogh_integration.ValidationQueued:             compton.HexagonClockArrows,
-	vangogh_integration.ValidationValidating:         compton.HexagonDownwardArrow,
-	vangogh_integration.ValidatedMissingChecksum:     compton.Triangle,
-	vangogh_integration.ValidatedUnresolvedManualUrl: compton.Triangle,
-	vangogh_integration.ValidatedMissingLocalFile:    compton.Triangle,
-	vangogh_integration.ValidationError:              compton.Cross,
-	vangogh_integration.ValidatedChecksumMismatch:    compton.Cross,
+var ValidationStatusSymbols = map[vangogh_integration.ValidationStatus]compton.Symbol{
+	vangogh_integration.ValidationStatusSuccess:             compton.HexagonSparkling,
+	vangogh_integration.ValidationStatusUnknown:             compton.HexagonDiagonalLines,
+	vangogh_integration.ValidationStatusQueued:              compton.HexagonClockArrows,
+	vangogh_integration.ValidationStatusValidating:          compton.HexagonDownwardArrow,
+	vangogh_integration.ValidationStatusMissingChecksum:     compton.Triangle,
+	vangogh_integration.ValidationStatusUnresolvedManualUrl: compton.Triangle,
+	vangogh_integration.ValidationStatusMissingLocalFile:    compton.Triangle,
+	vangogh_integration.ValidationStatusError:               compton.Cross,
+	vangogh_integration.ValidationStatusChecksumMismatch:    compton.Cross,
 }
 
-var ManualUrlStatusSymbols = map[vangogh_integration.ManualUrlStatus]compton.Symbol{
-	vangogh_integration.ManualUrlDownloaded:          compton.CircleCompactDisk,
-	vangogh_integration.ManualUrlStatusUnknown:       compton.CircleDashed,
-	vangogh_integration.ManualUrlQueued:              compton.CircleClockArrows,
-	vangogh_integration.ManualUrlDownloading:         compton.CircleDownwardArrow,
-	vangogh_integration.ManualUrlDownloadInterrupted: compton.Cross,
+var DownloadStatusSymbols = map[vangogh_integration.DownloadStatus]compton.Symbol{
+	vangogh_integration.DownloadStatusDownloaded:  compton.CircleCompactDisk,
+	vangogh_integration.DownloadStatusUnknown:     compton.CircleDashed,
+	vangogh_integration.DownloadStatusQueued:      compton.CircleClockArrows,
+	vangogh_integration.DownloadStatusDownloading: compton.CircleDownwardArrow,
+	vangogh_integration.DownloadStatusInterrupted: compton.Cross,
 }
 
 var DownloadTypesSymbols = map[vangogh_integration.DownloadType]compton.Symbol{

@@ -33,7 +33,7 @@ func formatBadge(id, property string, rdx redux.Readable) compton.FormattedBadge
 	}
 
 	var downloadQueued, downloadStarted, downloadCompleted string
-	validationResult := vangogh_integration.ValidationResultUnknown
+	validationStatus := vangogh_integration.ValidationStatusUnknown
 
 	owned := false
 	if lp, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok {
@@ -56,7 +56,7 @@ func formatBadge(id, property string, rdx redux.Readable) compton.FormattedBadge
 	}
 
 	if pvr, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
-		validationResult = vangogh_integration.ParseValidationResult(pvr)
+		validationStatus = vangogh_integration.ParseValidationStatus(pvr)
 	}
 
 	switch property {
@@ -64,7 +64,7 @@ func formatBadge(id, property string, rdx redux.Readable) compton.FormattedBadge
 		if owned {
 			switch productType {
 			case vangogh_integration.GameProductType:
-				if downloadCompleted == "" && validationResult == vangogh_integration.ValidationResultUnknown && downloadQueued == "" {
+				if downloadCompleted == "" && validationStatus == vangogh_integration.ValidationStatusUnknown && downloadQueued == "" {
 					fmtBadge.Icon = compton.CircleDashed
 				} else if downloadCompleted >= downloadQueued && downloadCompleted >= downloadStarted {
 					fmtBadge.Icon = compton.CircleCompactDisk
@@ -84,9 +84,8 @@ func formatBadge(id, property string, rdx redux.Readable) compton.FormattedBadge
 		}
 	case vangogh_integration.ProductValidationResultProperty:
 		if owned && productType == vangogh_integration.GameProductType {
-			if vrSymbol, ok := compton_data.ValidationResultsSymbols[validationResult]; ok {
+			if vrSymbol, ok := compton_data.ValidationStatusSymbols[validationStatus]; ok {
 				fmtBadge.Icon = vrSymbol
-				//fmtBadge.Color = compton_data.ValidationResultsColors[validationResult]
 			}
 		}
 	case vangogh_integration.TopPercentProperty:

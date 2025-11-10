@@ -105,7 +105,7 @@ func getProductDetails(id string, dls vangogh_integration.DownloadsList, rdx red
 
 	for _, dl := range dls {
 
-		dvs := vangogh_integration.NewDvs(dl.ManualUrl, rdx)
+		dvs := vangogh_integration.NewManualUrlDvs(dl.ManualUrl, rdx)
 
 		link := vangogh_integration.ProductDownloadLink{
 			ManualUrl:        dl.ManualUrl,
@@ -115,8 +115,8 @@ func getProductDetails(id string, dls vangogh_integration.DownloadsList, rdx red
 			LanguageCode:     dl.LanguageCode,
 			Version:          dl.Version,
 			EstimatedBytes:   dl.EstimatedBytes,
-			ManualUrlStatus:  dvs.ManualUrlStatus(),
-			ValidationResult: dvs.ValidationResult(),
+			DownloadStatus:   dvs.DownloadStatus(),
+			ValidationStatus: dvs.ValidationStatus(),
 		}
 
 		if dl.Type == vangogh_integration.DLC {

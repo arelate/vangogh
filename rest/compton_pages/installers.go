@@ -24,8 +24,8 @@ type DownloadVariant struct {
 	version          string
 	langCode         string
 	estimatedBytes   int64
-	manualUrlStatus  vangogh_integration.ManualUrlStatus
-	validationResult vangogh_integration.ValidationResult
+	downloadStatus   vangogh_integration.DownloadStatus
+	validationStatus vangogh_integration.ValidationStatus
 }
 
 // Installers will present available installers, DLCs in the following hierarchy:
@@ -135,18 +135,18 @@ func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 
 	if dv.downloadType == vangogh_integration.Installer || dv.downloadType == vangogh_integration.DLC {
 
-		switch dv.validationResult {
-		case vangogh_integration.ValidationResultUnknown:
-			dvStatus = dv.manualUrlStatus.HumanReadableString()
-			dvSymbol = compton_data.ManualUrlStatusSymbols[dv.manualUrlStatus]
+		switch dv.validationStatus {
+		case vangogh_integration.ValidationStatusUnknown:
+			dvStatus = dv.downloadStatus.HumanReadableString()
+			dvSymbol = compton_data.DownloadStatusSymbols[dv.downloadStatus]
 		default:
-			dvStatus = dv.validationResult.HumanReadableString()
-			dvColor = compton_data.ValidationResultsColors[dv.validationResult]
-			dvSymbol = compton_data.ValidationResultsSymbols[dv.validationResult]
+			dvStatus = dv.validationStatus.HumanReadableString()
+			dvColor = compton_data.ValidationStatusColors[dv.validationStatus]
+			dvSymbol = compton_data.ValidationStatusSymbols[dv.validationStatus]
 		}
 
 	} else {
-		dvStatus = dv.manualUrlStatus.HumanReadableString()
+		dvStatus = dv.downloadStatus.HumanReadableString()
 	}
 
 	fmtDownloadValidationBadge := compton.FormattedBadge{
@@ -238,31 +238,32 @@ func downloadLink(r compton.Registrar,
 
 	linkColumn.Append(linkTitle)
 
-	dvs := vangogh_integration.NewDvs(dl.ManualUrl, rdx)
+	dvs := vangogh_integration.NewManualUrlDvs(dl.ManualUrl, rdx)
 
-	var manualUrlStatusValidationResult string
-	manualUrlStatusValidationResultSymbol := compton.NoSymbol
-	manualUrlStatusValidationResultColor := color.RepGray
+	var manualUrlStatus string
+	manualUrlStatusSymbol := compton.NoSymbol
+	manualUrlStatusColor := color.RepGray
 
 	if dl.Type == vangogh_integration.Installer || dl.Type == vangogh_integration.DLC {
 
-		manualUrlStatusValidationResult = dvs.HumanReadableString()
+		manualUrlStatus = dvs.HumanReadableString()
+		manualUrlValidationStatus := dvs.ValidationStatus()
 
-		switch dvs.ValidationResult() {
-		case vangogh_integration.ValidationResultUnknown:
-			manualUrlStatusValidationResultSymbol = compton_data.ManualUrlStatusSymbols[dvs.ManualUrlStatus()]
+		switch manualUrlValidationStatus {
+		case vangogh_integration.ValidationStatusUnknown:
+			manualUrlStatusSymbol = compton_data.DownloadStatusSymbols[dvs.DownloadStatus()]
 		default:
-			manualUrlStatusValidationResultColor = compton_data.ValidationResultsColors[dvs.ValidationResult()]
-			manualUrlStatusValidationResultSymbol = compton_data.ValidationResultsSymbols[dvs.ValidationResult()]
+			manualUrlStatusColor = compton_data.ValidationStatusColors[manualUrlValidationStatus]
+			manualUrlStatusSymbol = compton_data.ValidationStatusSymbols[manualUrlValidationStatus]
 		}
 	} else {
-		manualUrlStatusValidationResult = dvs.ManualUrlStatus().HumanReadableString()
+		manualUrlStatus = dvs.DownloadStatus().HumanReadableString()
 	}
 
 	fmtManualUrlStatusBadge := compton.FormattedBadge{
-		Title: manualUrlStatusValidationResult,
-		Icon:  manualUrlStatusValidationResultSymbol,
-		Color: manualUrlStatusValidationResultColor,
+		Title: manualUrlStatus,
+		Icon:  manualUrlStatusSymbol,
+		Color: manualUrlStatusColor,
 	}
 
 	linkColumn.Append(compton.Badges(r, fmtManualUrlStatusBadge))
@@ -346,15 +347,15 @@ func getDownloadVariants(os vangogh_integration.OperatingSystem, title string, d
 			continue
 		}
 
-		dvs := vangogh_integration.NewDvs(dl.ManualUrl, rdx)
+		dvs := vangogh_integration.NewManualUrlDvs(dl.ManualUrl, rdx)
 
 		dv := &DownloadVariant{
 			downloadType:     dl.Type,
 			version:          dl.Version,
 			langCode:         dl.LanguageCode,
 			estimatedBytes:   dl.EstimatedBytes,
-			validationResult: dvs.ValidationResult(),
-			manualUrlStatus:  dvs.ManualUrlStatus(),
+			validationStatus: dvs.ValidationStatus(),
+			downloadStatus:   dvs.DownloadStatus(),
 		}
 
 		if edv := getDownloadVariant(variants, dv); edv == nil {
@@ -362,12 +363,12 @@ func getDownloadVariants(os vangogh_integration.OperatingSystem, title string, d
 		} else {
 			edv.estimatedBytes += dl.EstimatedBytes
 			// use the "worst" validation result, worse = larger value
-			if edv.validationResult < dvs.ValidationResult() {
-				edv.validationResult = dvs.ValidationResult()
+			if edv.validationStatus < dvs.ValidationStatus() {
+				edv.validationStatus = dvs.ValidationStatus()
 			}
 			// use the "worst" manual url status, worse = larger value
-			if edv.manualUrlStatus < dvs.ManualUrlStatus() {
-				edv.manualUrlStatus = dvs.ManualUrlStatus()
+			if edv.downloadStatus < dvs.DownloadStatus() {
+				edv.downloadStatus = dvs.DownloadStatus()
 			}
 		}
 

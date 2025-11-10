@@ -2,15 +2,16 @@ package cli
 
 import (
 	"fmt"
+	"math"
+	"net/url"
+	"os"
+	"path/filepath"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"math"
-	"net/url"
-	"os"
-	"path/filepath"
 )
 
 const spaceSavingsSummary = "est. disk space savings:"
@@ -130,9 +131,9 @@ func (cd *cleanupDelegate) Process(id string, slug string, list vangogh_integrat
 	//2. enumerate all files present for a slug (files present in a `downloads/slug` folder)
 	//3. delete (present files).Except(expected files) and corresponding xml files
 
-	if pvr, ok := cd.rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
-		pv := vangogh_integration.ParseValidationResult(pvr)
-		if pv != vangogh_integration.ValidatedSuccessfully && pv != vangogh_integration.ValidatedMissingChecksum {
+	if pvss, ok := cd.rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
+		pvs := vangogh_integration.ParseValidationStatus(pvss)
+		if pvs != vangogh_integration.ValidationStatusSuccess && pvs != vangogh_integration.ValidationStatusMissingChecksum {
 			// don't cleanup the product unless it's been validated, meaning we've got the latest version downloaded
 			// and it passed checksum validation (or at worst is missing checksum). Don't remove (previous versions of)
 			// installers for products that have validation issues

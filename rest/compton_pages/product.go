@@ -296,24 +296,29 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 			}
 
 		case compton_data.InstallersSection:
-			if pvrs, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
-				pvr := vangogh_integration.ParseValidationResult(pvrs)
 
-				vrColor := compton_data.ValidationResultsColors[pvr]
+			pvs := vangogh_integration.NewProductDvs(id, rdx)
+
+			productValidationStatus := pvs.ValidationStatus()
+
+			switch productValidationStatus {
+			default:
+				vrColor := compton_data.ValidationStatusColors[productValidationStatus]
 				vrSymbol := compton.NoSymbol
 
-				if vrs, sure := compton_data.ValidationResultsSymbols[pvr]; sure {
+				if vrs, sure := compton_data.ValidationStatusSymbols[productValidationStatus]; sure {
 					vrSymbol = vrs
 				}
 
 				fmtPvrBadge := compton.FormattedBadge{
-					Title: pvr.HumanReadableString(),
+					Title: productValidationStatus.HumanReadableString(),
 					Icon:  vrSymbol,
 					Color: vrColor,
 				}
 
 				detailsSummary.AppendBadges(compton.Badges(p, fmtPvrBadge))
 			}
+
 		default:
 			detailsSummary.SummaryMarginBlockEnd(size.Normal)
 		}
