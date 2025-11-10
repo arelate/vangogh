@@ -39,7 +39,7 @@ func SyncStatus(r compton.Registrar, rdx redux.Readable, permissions ...author.P
 
 	syncEventDateText := "Never"
 	if syncEventTimestamp > 0 {
-		syncEventDateText = time.Unix(syncEventTimestamp, 0).Format("02-Jan-06 15:04")
+		syncEventDateText = time.Unix(syncEventTimestamp, 0).Format(time.DateTime)
 	}
 
 	var syncStatusColor color.Color

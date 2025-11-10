@@ -40,8 +40,22 @@ func Installers(id string, dls vangogh_integration.DownloadsList, rdx redux.Read
 
 	if downloadCompleted, ok, err := rdx.ParseLastValTime(vangogh_integration.DownloadCompletedProperty, id); ok && err == nil {
 		dcFrow := compton.Frow(s).FontSize(size.XSmall)
-		dcFrow.PropVal("Downloaded", downloadCompleted.Local().Format(time.RFC1123))
+		dcFrow.PropVal("Downloaded", downloadCompleted.Local().Format(time.DateTime))
 		pageStack.Append(compton.FICenter(s, dcFrow))
+	} else if !ok {
+		var downloadStarted time.Time
+		if downloadStarted, ok, err = rdx.ParseLastValTime(vangogh_integration.DownloadStartedProperty, id); ok && err == nil {
+			dsFrow := compton.Frow(s).FontSize(size.XSmall)
+			dsFrow.PropVal("Download Started", downloadStarted.Local().Format(time.DateTime))
+			pageStack.Append(compton.FICenter(s, dsFrow))
+		} else if !ok {
+			var downloadQueued time.Time
+			if downloadQueued, ok, err = rdx.ParseLastValTime(vangogh_integration.DownloadQueuedProperty, id); ok && err == nil {
+				dqFrow := compton.Frow(s).FontSize(size.XSmall)
+				dqFrow.PropVal("Download Queued", downloadQueued.Local().Format(time.DateTime))
+				pageStack.Append(compton.FICenter(s, dqFrow))
+			}
+		}
 	}
 
 	if owned, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && owned == vangogh_integration.FalseValue {
