@@ -1,12 +1,14 @@
 package itemizations
 
 import (
+	"os"
+	"path/filepath"
+	"strings"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/redux"
-	"os"
-	"path/filepath"
 )
 
 func MissingLocalDownloads(
@@ -57,7 +59,7 @@ func MissingLocalDownloads(
 		downloadsLayout: downloadsLayout,
 	}
 
-	if err := vangogh_integration.MapDownloads(
+	if err = vangogh_integration.MapDownloads(
 		allIds,
 		rdx,
 		operatingSystems,
@@ -67,6 +69,10 @@ func MissingLocalDownloads(
 		mdd,
 		mlda); err != nil {
 		return mdd.missingIds, err
+	}
+
+	if len(mdd.missingIds) > 0 {
+		mlda.EndWithResult("found missing local downloads: " + strings.Join(mdd.missingIds, ","))
 	}
 
 	return mdd.missingIds, nil
