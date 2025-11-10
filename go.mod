@@ -1,6 +1,6 @@
 module github.com/arelate/vangogh
 
-go 1.25.3
+go 1.25.4
 
 require (
 	github.com/arelate/southern_light v0.3.61
