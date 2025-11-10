@@ -101,7 +101,19 @@ func getDeckAppCompatibilityReport(gogId string, rdx redux.Readable) (*steam_int
 	if sai, ok := rdx.GetLastVal(vangogh_integration.SteamAppIdProperty, gogId); ok && sai != "" {
 		steamAppId = sai
 	} else {
-		return nil, errors.New("no steam app id for gog id " + gogId)
+
+		if rootEditionId, sure := rdx.GetLastVal(vangogh_integration.RootEditionsProperty, gogId); sure && rootEditionId != "" {
+
+			if reSai, yeah := rdx.GetLastVal(vangogh_integration.SteamAppIdProperty, rootEditionId); yeah && reSai != "" {
+				steamAppId = reSai
+			} else {
+				return nil, errors.New("no steam app id for root edition id " + gogId)
+			}
+
+		} else {
+			return nil, errors.New("no steam app id for gog id " + gogId + " and no root edition found")
+		}
+
 	}
 
 	deckAppCompatibilityReportDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.SteamDeckCompatibilityReport)
@@ -144,6 +156,8 @@ func addSteamCompatibilitySection(r compton.Registrar, pageStack compton.Element
 
 	if category, ok := rdx.GetLastVal(steamAppCompatibilityProperty, id); ok {
 		compatCategory = category
+	} else {
+		return
 	}
 
 	compatSymbol := compton.NoSymbol
