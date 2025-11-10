@@ -105,11 +105,6 @@ func ReduceAppList(kvAppList kevlar.KeyValues) error {
 
 	for gogId := range rdx.Keys(vangogh_integration.TitleProperty) {
 
-		if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, gogId); ok && pt != vangogh_integration.GameProductType {
-			rala.Increment()
-			continue
-		}
-
 		if demo, ok := rdx.GetLastVal(vangogh_integration.IsDemoProperty, gogId); ok && demo == vangogh_integration.TrueValue {
 			rala.Increment()
 			continue
