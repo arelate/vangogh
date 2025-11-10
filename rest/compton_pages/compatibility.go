@@ -157,7 +157,7 @@ func addSteamCompatibilitySection(r compton.Registrar, pageStack compton.Element
 	if category, ok := rdx.GetLastVal(steamAppCompatibilityProperty, id); ok {
 		compatCategory = category
 	} else {
-		return
+		compatCategory = "Unknown"
 	}
 
 	compatSymbol := compton.NoSymbol
