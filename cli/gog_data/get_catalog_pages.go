@@ -148,6 +148,8 @@ func reduceCatalogPage(page string, kvCatalogPages kevlar.KeyValues, piv shared_
 				values = []string{strconv.FormatBool(cp.GetInDevelopment())}
 			case vangogh_integration.EditionsProperty:
 				values = cp.GetEditions()
+			case vangogh_integration.RootEditionsProperty:
+				values = cp.GetRootEditions()
 			case vangogh_integration.CatalogPageProductsProperty:
 				values = []string{page}
 			case vangogh_integration.UserWishlistProperty:
