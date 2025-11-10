@@ -32,8 +32,9 @@ func formatBadge(id, property string, rdx redux.Readable) compton.FormattedBadge
 		Color: color.RepGray,
 	}
 
-	var downloadQueued, downloadStarted, downloadCompleted string
-	validationStatus := vangogh_integration.ValidationStatusUnknown
+	productDvs := vangogh_integration.NewProductDvs(id, rdx)
+	productDownloadStatus := productDvs.DownloadStatus()
+	productValidationStatus := productDvs.ValidationStatus()
 
 	owned := false
 	if lp, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok {
@@ -45,28 +46,16 @@ func formatBadge(id, property string, rdx redux.Readable) compton.FormattedBadge
 		productType = pt
 	}
 
-	if dq, ok := rdx.GetLastVal(vangogh_integration.DownloadQueuedProperty, id); ok {
-		downloadQueued = dq
-	}
-	if ds, ok := rdx.GetLastVal(vangogh_integration.DownloadStartedProperty, id); ok {
-		downloadStarted = ds
-	}
-	if dc, ok := rdx.GetLastVal(vangogh_integration.DownloadCompletedProperty, id); ok {
-		downloadCompleted = dc
-	}
-
-	if pvr, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
-		validationStatus = vangogh_integration.ParseValidationStatus(pvr)
-	}
-
 	switch property {
 	case vangogh_integration.OwnedProperty:
 		if owned {
 			switch productType {
 			case vangogh_integration.GameProductType:
-				if downloadCompleted == "" && validationStatus == vangogh_integration.ValidationStatusUnknown && downloadQueued == "" {
+				if productDownloadStatus == vangogh_integration.DownloadStatusUnknown &&
+					productValidationStatus == vangogh_integration.ValidationStatusUnknown {
 					fmtBadge.Icon = compton.CircleDashed
-				} else if downloadCompleted >= downloadQueued && downloadCompleted >= downloadStarted {
+				} else if productDownloadStatus == vangogh_integration.DownloadStatusDownloaded ||
+					productDownloadStatus == vangogh_integration.DownloadStatusValidated {
 					fmtBadge.Icon = compton.CircleCompactDisk
 				}
 			default:
@@ -74,17 +63,16 @@ func formatBadge(id, property string, rdx redux.Readable) compton.FormattedBadge
 			}
 		}
 	case vangogh_integration.DownloadQueuedProperty:
-		if downloadQueued > downloadStarted &&
-			downloadQueued > downloadCompleted {
+		if productDownloadStatus == vangogh_integration.DownloadStatusQueued {
 			fmtBadge.Icon = compton.CircleClockArrows
 		}
 	case vangogh_integration.DownloadStartedProperty:
-		if downloadStarted > downloadCompleted {
+		if productDownloadStatus == vangogh_integration.DownloadStatusDownloading {
 			fmtBadge.Icon = compton.CircleDownwardArrow
 		}
 	case vangogh_integration.ProductValidationResultProperty:
 		if owned && productType == vangogh_integration.GameProductType {
-			if vrSymbol, ok := compton_data.ValidationStatusSymbols[validationStatus]; ok {
+			if vrSymbol, ok := compton_data.ValidationStatusSymbols[productValidationStatus]; ok {
 				fmtBadge.Icon = vrSymbol
 			}
 		}

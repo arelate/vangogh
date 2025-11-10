@@ -297,27 +297,33 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 
 		case compton_data.InstallersSection:
 
-			pvs := vangogh_integration.NewProductDvs(id, rdx)
+			productDvs := vangogh_integration.NewProductDvs(id, rdx)
 
-			productValidationStatus := pvs.ValidationStatus()
+			productDownloadStatus := productDvs.DownloadStatus()
+			productValidationStatus := productDvs.ValidationStatus()
+
+			statusColor := color.RepGray
+			statusSymbol := compton.NoSymbol
 
 			switch productValidationStatus {
+			case vangogh_integration.ValidationStatusUnknown:
+				if dss, sure := compton_data.DownloadStatusSymbols[productDownloadStatus]; sure {
+					statusSymbol = dss
+				}
 			default:
-				vrColor := compton_data.ValidationStatusColors[productValidationStatus]
-				vrSymbol := compton.NoSymbol
-
-				if vrs, sure := compton_data.ValidationStatusSymbols[productValidationStatus]; sure {
-					vrSymbol = vrs
+				statusColor = compton_data.ValidationStatusColors[productValidationStatus]
+				if vss, sure := compton_data.ValidationStatusSymbols[productValidationStatus]; sure {
+					statusSymbol = vss
 				}
-
-				fmtPvrBadge := compton.FormattedBadge{
-					Title: productValidationStatus.HumanReadableString(),
-					Icon:  vrSymbol,
-					Color: vrColor,
-				}
-
-				detailsSummary.AppendBadges(compton.Badges(p, fmtPvrBadge))
 			}
+
+			fmtPvrBadge := compton.FormattedBadge{
+				Title: productDvs.HumanReadableString(),
+				Icon:  statusSymbol,
+				Color: statusColor,
+			}
+
+			detailsSummary.AppendBadges(compton.Badges(p, fmtPvrBadge))
 
 		default:
 			detailsSummary.SummaryMarginBlockEnd(size.Normal)
