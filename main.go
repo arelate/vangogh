@@ -94,6 +94,42 @@ func main() {
 		defer logger.Close()
 	}
 
+	//catalogPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.CatalogPage)
+	//if err != nil {
+	//	panic(err)
+	//}
+	//
+	//kvCatalogPages, err := kevlar.New(catalogPagesDir, kevlar.JsonExt)
+	//if err != nil {
+	//	panic(err)
+	//}
+	//
+	//for page := range kvCatalogPages.Keys() {
+	//
+	//	rcCatalogPage, err := kvCatalogPages.Get(page)
+	//	if err != nil {
+	//		panic(err)
+	//	}
+	//
+	//	var catalogPage gog_integration.CatalogPage
+	//	if err = json.NewDecoder(rcCatalogPage).Decode(&catalogPage); err != nil {
+	//		panic(err)
+	//	}
+	//
+	//	if err = rcCatalogPage.Close(); err != nil {
+	//		panic(err)
+	//	}
+	//
+	//	for _, cp := range catalogPage.Products {
+	//
+	//		if res := cp.GetRootEditions(); len(res) > 0 {
+	//			fmt.Println(cp.Id, res)
+	//		}
+	//
+	//	}
+	//
+	//}
+
 	if err = defs.Serve(u); err != nil {
 		vsa.Error(err)
 		log.Fatalln(err)
