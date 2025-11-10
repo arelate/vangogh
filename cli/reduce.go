@@ -124,6 +124,8 @@ func reduceProductType(pt vangogh_integration.ProductType) error {
 		return steam_data.ReduceAppReviews(steamGogIds, kvPt)
 	case vangogh_integration.SteamDeckCompatibilityReport:
 		return steam_data.ReduceDeckCompatibilityReports(steamGogIds, kvPt)
+	case vangogh_integration.SteamAppList:
+		return steam_data.ReduceAppList(kvPt)
 	case vangogh_integration.PcgwGogPageId:
 		return pcgw_data.ReduceGogPageIds(gameGogIds, kvPt)
 	case vangogh_integration.PcgwSteamPageId:
