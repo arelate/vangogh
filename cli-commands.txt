@@ -49,6 +49,7 @@ get-downloads
     downloads-layout$={downloads-layouts^}
     checksums-only
     missing
+    debug
     force
 
 get-images

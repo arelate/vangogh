@@ -47,6 +47,7 @@ func GetDownloadsHandler(u *url.URL) error {
 		vangogh_integration.DownloadsLayoutFromUrl(u),
 		q.Has("checksums-only"),
 		q.Has("missing"),
+		q.Has("debug"),
 		q.Has("force"),
 		manualUrlFilter...)
 }
@@ -58,9 +59,7 @@ func GetDownloads(
 	downloadTypes []vangogh_integration.DownloadType,
 	noPatches bool,
 	downloadsLayout vangogh_integration.DownloadsLayout,
-	checksumsOnly,
-	missing,
-	force bool,
+	checksumsOnly, missing, debug, force bool,
 	manualUrlFilter ...string) error {
 
 	gda := nod.NewProgress("downloading product files...")
@@ -103,7 +102,8 @@ func GetDownloads(
 			downloadTypes,
 			langCodes,
 			noPatches,
-			downloadsLayout)
+			downloadsLayout,
+			debug)
 		if err != nil {
 			return err
 		}

@@ -17,7 +17,8 @@ func MissingLocalDownloads(
 	downloadTypes []vangogh_integration.DownloadType,
 	langCodes []string,
 	noPatches bool,
-	downloadsLayout vangogh_integration.DownloadsLayout) ([]string, error) {
+	downloadsLayout vangogh_integration.DownloadsLayout,
+	debug bool) ([]string, error) {
 	//enumerating missing local downloads is a bit more complicated than images
 	//due to the fact that actual filenames are resolved when downloads are processed, so we can't compare
 	//manualUrls and available files, we need to resolve manualUrls to actual local filenames first.
@@ -57,6 +58,7 @@ func MissingLocalDownloads(
 	mdd := &missingDownloadsDelegate{
 		rdx:             rdx,
 		downloadsLayout: downloadsLayout,
+		debug:           debug,
 	}
 
 	if err = vangogh_integration.MapDownloads(
@@ -73,6 +75,8 @@ func MissingLocalDownloads(
 
 	if len(mdd.missingIds) > 0 {
 		mlda.EndWithResult("found missing local downloads: " + strings.Join(mdd.missingIds, ","))
+	} else {
+		mlda.EndWithResult("found all expected local downloads")
 	}
 
 	return mdd.missingIds, nil
@@ -82,6 +86,7 @@ type missingDownloadsDelegate struct {
 	rdx             redux.Readable
 	missingIds      []string
 	downloadsLayout vangogh_integration.DownloadsLayout
+	debug           bool
 }
 
 func (mdd *missingDownloadsDelegate) Process(id, slug string, list vangogh_integration.DownloadsList) error {
@@ -102,6 +107,14 @@ func (mdd *missingDownloadsDelegate) Process(id, slug string, list vangogh_integ
 		}
 
 		filename, ok := mdd.rdx.GetLastVal(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl)
+		if mdd.debug {
+			mufa := nod.Begin("manual-url %s...", dl.ManualUrl)
+			filenameMsg := filename
+			if filename == "" {
+				filenameMsg = "(empty filename)"
+			}
+			mufa.EndWithResult("filename: " + filenameMsg)
+		}
 		// 2
 		if !ok || filename == "" {
 			mdd.missingIds = append(mdd.missingIds, id)
@@ -115,6 +128,9 @@ func (mdd *missingDownloadsDelegate) Process(id, slug string, list vangogh_integ
 
 		absDownloadPath := filepath.Join(absSlugDownloadDir, filename)
 
+		adpa := nod.Begin(" expected download path for %s...", dl.ManualUrl)
+		adpa.EndWithResult(absDownloadPath)
+
 		absExpectedFiles[absDownloadPath] = true
 	}
 
@@ -127,7 +143,7 @@ func (mdd *missingDownloadsDelegate) Process(id, slug string, list vangogh_integ
 	if err != nil {
 		return err
 	}
-	if _, err := os.Stat(absSlugDownloadsDir); os.IsNotExist(err) {
+	if _, err = os.Stat(absSlugDownloadsDir); os.IsNotExist(err) {
 		mdd.missingIds = append(mdd.missingIds, id)
 		return nil
 	}
@@ -143,6 +159,8 @@ func (mdd *missingDownloadsDelegate) Process(id, slug string, list vangogh_integ
 	for f := range absExpectedFiles {
 		if _, ok := absPresentFiles[f]; !ok {
 			absMissingFiles = append(absMissingFiles, f)
+			amfa := nod.Begin(" file not found...")
+			amfa.EndWithResult("added as missing")
 		}
 	}
 
