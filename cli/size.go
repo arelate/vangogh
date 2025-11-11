@@ -1,13 +1,14 @@
 package cli
 
 import (
+	"net/url"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/itemizations"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"net/url"
 )
 
 func SizeHandler(u *url.URL) error {
@@ -16,6 +17,8 @@ func SizeHandler(u *url.URL) error {
 		return err
 	}
 
+	q := u.Query()
+
 	return Size(
 		ids,
 		vangogh_integration.OperatingSystemsFromUrl(u),
@@ -23,8 +26,9 @@ func SizeHandler(u *url.URL) error {
 		vangogh_integration.DownloadTypesFromUrl(u),
 		vangogh_integration.FlagFromUrl(u, "no-patches"),
 		vangogh_integration.DownloadsLayoutFromUrl(u),
-		vangogh_integration.FlagFromUrl(u, "missing"),
-		vangogh_integration.FlagFromUrl(u, "all"))
+		q.Has("missing"),
+		q.Has("debug"),
+		q.Has("all"))
 }
 
 func Size(
@@ -35,6 +39,7 @@ func Size(
 	noPatches bool,
 	downloadsLayout vangogh_integration.DownloadsLayout,
 	missing bool,
+	debug bool,
 	all bool) error {
 
 	sa := nod.NewProgress("estimating downloads size...")
@@ -63,7 +68,8 @@ func Size(
 			downloadTypes,
 			langCodes,
 			noPatches,
-			downloadsLayout)
+			downloadsLayout,
+			debug)
 		if err != nil {
 			return err
 		}

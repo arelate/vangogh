@@ -110,6 +110,7 @@ size
     no-patches$
     downloads-layout$={downloads-layouts^}
     missing
+    debug
     all
 
 summarize

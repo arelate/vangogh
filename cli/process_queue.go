@@ -58,6 +58,7 @@ func ProcessQueue(
 			downloadsLayout,
 			false,
 			false,
+			false,
 			true); err != nil {
 			return err
 		}

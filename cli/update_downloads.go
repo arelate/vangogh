@@ -101,5 +101,6 @@ func UpdateDownloads(
 		downloadsLayout,
 		false,
 		false,
+		false,
 		true)
 }
