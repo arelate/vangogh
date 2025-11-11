@@ -28,7 +28,7 @@ func MissingLocalDownloads(
 	//3. check if slug dir is not present in downloads -> add to missingIds
 	//4. check if any expected (resolved manualUrls) files are not present -> add to missingIds
 
-	mlda := nod.NewProgress(" itemizing missing local downloads")
+	mlda := nod.NewProgress(" itemizing missing local downloads...")
 	defer mlda.Done()
 
 	if err := rdx.MustHave(
