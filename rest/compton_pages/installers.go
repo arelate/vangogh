@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strconv"
 	"strings"
 	"time"
 
@@ -20,12 +21,14 @@ import (
 )
 
 type DownloadVariant struct {
-	downloadType     vangogh_integration.DownloadType
-	version          string
-	langCode         string
-	estimatedBytes   int64
-	downloadStatus   vangogh_integration.DownloadStatus
-	validationStatus vangogh_integration.ValidationStatus
+	downloadType             vangogh_integration.DownloadType
+	version                  string
+	langCode                 string
+	downloadedEstimatedBytes int64
+	validatedEstimatedBytes  int64
+	totalEstimatedBytes      int64
+	downloadStatus           vangogh_integration.DownloadStatus
+	validationStatus         vangogh_integration.ValidationStatus
 }
 
 // Installers will present available installers, DLCs in the following hierarchy:
@@ -139,8 +142,8 @@ func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 	if dv.version != "" {
 		fr.PropVal("Version", dv.version)
 	}
-	if dv.estimatedBytes > 0 {
-		fr.PropVal("Size", vangogh_integration.FormatBytes(dv.estimatedBytes))
+	if dv.totalEstimatedBytes > 0 {
+		fr.PropVal("Size", vangogh_integration.FormatBytes(dv.totalEstimatedBytes))
 	}
 
 	var dvStatus string
@@ -161,6 +164,22 @@ func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 
 	} else {
 		dvStatus = dv.downloadStatus.HumanReadableString()
+	}
+
+	var progressEstimatedBytes int64
+
+	if dv.downloadStatus == vangogh_integration.DownloadStatusDownloading && dv.downloadedEstimatedBytes > 0 {
+		progressEstimatedBytes = dv.downloadedEstimatedBytes
+	}
+
+	if dv.validationStatus == vangogh_integration.ValidationStatusValidating && dv.validatedEstimatedBytes > 0 {
+		progressEstimatedBytes = dv.validatedEstimatedBytes
+	}
+
+	if progressEstimatedBytes > 0 && dv.totalEstimatedBytes > 0 {
+		progress := 100 * float64(progressEstimatedBytes) / float64(dv.totalEstimatedBytes)
+		progressStr := strconv.FormatFloat(progress, 'f', 0, 64)
+		dvStatus += ", " + progressStr + "% Done"
 	}
 
 	fmtDownloadValidationBadge := compton.FormattedBadge{
@@ -364,18 +383,26 @@ func getDownloadVariants(os vangogh_integration.OperatingSystem, title string, d
 		dvs := vangogh_integration.NewManualUrlDvs(dl.ManualUrl, rdx)
 
 		dv := &DownloadVariant{
-			downloadType:     dl.Type,
-			version:          dl.Version,
-			langCode:         dl.LanguageCode,
-			estimatedBytes:   dl.EstimatedBytes,
-			validationStatus: dvs.ValidationStatus(),
-			downloadStatus:   dvs.DownloadStatus(),
+			downloadType:        dl.Type,
+			version:             dl.Version,
+			langCode:            dl.LanguageCode,
+			totalEstimatedBytes: dl.EstimatedBytes,
+			validationStatus:    dvs.ValidationStatus(),
+			downloadStatus:      dvs.DownloadStatus(),
+		}
+
+		if dv.downloadStatus == vangogh_integration.DownloadStatusDownloaded {
+			dv.downloadedEstimatedBytes += dl.EstimatedBytes
+		}
+
+		if dv.downloadStatus == vangogh_integration.DownloadStatusValidated && dv.validationStatus.IsValidated() {
+			dv.validatedEstimatedBytes += dl.EstimatedBytes
 		}
 
 		if edv := getDownloadVariant(variants, dv); edv == nil {
 			variants = append(variants, dv)
 		} else {
-			edv.estimatedBytes += dl.EstimatedBytes
+			edv.totalEstimatedBytes += dl.EstimatedBytes
 			// use the "worst" validation result, worse = larger value
 			if edv.validationStatus < dvs.ValidationStatus() {
 				edv.validationStatus = dvs.ValidationStatus()
@@ -383,6 +410,13 @@ func getDownloadVariants(os vangogh_integration.OperatingSystem, title string, d
 			// use the "worst" manual url status, worse = larger value
 			if edv.downloadStatus < dvs.DownloadStatus() {
 				edv.downloadStatus = dvs.DownloadStatus()
+			}
+
+			if edv.downloadStatus == vangogh_integration.DownloadStatusDownloaded {
+				edv.downloadedEstimatedBytes += dl.EstimatedBytes
+			}
+			if edv.downloadStatus == vangogh_integration.DownloadStatusValidated && dv.validationStatus.IsValidated() {
+				edv.validatedEstimatedBytes += dl.EstimatedBytes
 			}
 		}
 
