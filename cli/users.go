@@ -25,30 +25,37 @@ func UsersHandler(u *url.URL) error {
 
 	q := u.Query()
 
-	var action userAction
 	username := q.Get("username")
 	password := q.Get("password")
 	newPassword := q.Get("new-password")
 	role := q.Get("role")
 
-	switch q.Get("action") {
-	case "create":
+	action := userActionUnknown
+	if q.Has("create") {
 		action = userActionCreate
+	} else if q.Has("delete") {
+		action = userActionDelete
+	} else if q.Has("change-password") {
+		action = userActionChangePassword
+	} else if q.Has("list") {
+		action = userActionList
+	}
+
+	switch action {
+	case userActionCreate:
 		if username == "" || password == "" || role == "" {
 			return errors.New("username, password and role must be provided")
 		}
-	case "delete":
-		action = userActionDelete
+	case userActionDelete:
 		if username == "" || password == "" {
 			return errors.New("username, password must be provided")
 		}
-	case "change-password":
-		action = userActionChangePassword
+	case userActionChangePassword:
 		if username == "" || password == "" || newPassword == "" {
 			return errors.New("username, password and new-password must be provided")
 		}
-	case "list":
-		action = userActionList
+	case userActionList:
+		// do nothing
 	default:
 		return errors.New("unknown user action: " + q.Get("action"))
 	}
@@ -90,7 +97,6 @@ func Users(action userAction, username, password, newPassword, role string) erro
 		if err = auth.CreateUser(username, password); err != nil {
 			return err
 		}
-
 		if err = auth.SetRole(username, password, role); err != nil {
 			return err
 		}
@@ -103,7 +109,6 @@ func Users(action userAction, username, password, newPassword, role string) erro
 			return err
 		}
 	case userActionList:
-
 		var userRoles map[string][]string
 		userRoles, err = auth.GetUserRoles()
 		if err != nil {
