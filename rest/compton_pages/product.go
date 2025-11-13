@@ -120,6 +120,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 			SummaryMarginBlockEnd(size.Normal)
 		detailsSummary.SetId(section)
 		detailsSummary.SetTabIndex(ii + 1)
+		detailsSummary.SetAccessKey(compton_data.SectionAccessKeys[section])
 
 		pageStack.Append(detailsSummary)
 
