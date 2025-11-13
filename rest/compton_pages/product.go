@@ -24,7 +24,7 @@ import (
 )
 
 var openSections = []string{
-	compton_data.InfoSection,
+	//compton_data.InfoSection,
 }
 
 var offeringsBadgesOrder = []compton.Symbol{

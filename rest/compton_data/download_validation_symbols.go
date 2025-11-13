@@ -23,11 +23,11 @@ var ValidationStatusSymbols = map[vangogh_integration.ValidationStatus]compton.S
 	vangogh_integration.ValidationStatusUnknown:             compton.HexagonDiagonalLines,
 	vangogh_integration.ValidationStatusQueued:              compton.HexagonClockArrows,
 	vangogh_integration.ValidationStatusValidating:          compton.HexagonDownwardArrow,
-	vangogh_integration.ValidationStatusMissingChecksum:     compton.Triangle,
-	vangogh_integration.ValidationStatusUnresolvedManualUrl: compton.Triangle,
-	vangogh_integration.ValidationStatusMissingLocalFile:    compton.Triangle,
-	vangogh_integration.ValidationStatusError:               compton.Cross,
-	vangogh_integration.ValidationStatusChecksumMismatch:    compton.Cross,
+	vangogh_integration.ValidationStatusMissingChecksum:     compton.TriangleNeutral,
+	vangogh_integration.ValidationStatusUnresolvedManualUrl: compton.TriangleNeutral,
+	vangogh_integration.ValidationStatusMissingLocalFile:    compton.TriangleNeutral,
+	vangogh_integration.ValidationStatusError:               compton.CrossNegative,
+	vangogh_integration.ValidationStatusChecksumMismatch:    compton.CrossNegative,
 }
 
 var DownloadStatusSymbols = map[vangogh_integration.DownloadStatus]compton.Symbol{
@@ -35,7 +35,7 @@ var DownloadStatusSymbols = map[vangogh_integration.DownloadStatus]compton.Symbo
 	vangogh_integration.DownloadStatusUnknown:     compton.CircleDashed,
 	vangogh_integration.DownloadStatusQueued:      compton.CircleClockArrows,
 	vangogh_integration.DownloadStatusDownloading: compton.CircleDownwardArrow,
-	vangogh_integration.DownloadStatusInterrupted: compton.Cross,
+	vangogh_integration.DownloadStatusInterrupted: compton.CrossNegative,
 }
 
 var DownloadTypesSymbols = map[vangogh_integration.DownloadType]compton.Symbol{

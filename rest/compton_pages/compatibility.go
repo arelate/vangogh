@@ -53,9 +53,9 @@ var displayTypeColors = map[string]color.Color{
 }
 
 var displayTypeSymbols = map[string]compton.Symbol{
-	"Verified":    compton.Circle,
-	"Playable":    compton.Triangle,
-	"Unsupported": compton.Cross,
+	"Verified":    compton.CirclePositive,
+	"Playable":    compton.TriangleNeutral,
+	"Unsupported": compton.CrossNegative,
 	"Unknown":     compton.NoSymbol,
 }
 

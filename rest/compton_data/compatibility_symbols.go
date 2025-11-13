@@ -6,14 +6,14 @@ import (
 )
 
 var CompatibilitySymbols = map[string]compton.Symbol{
-	"Platinum":    compton.Circle,
-	"Gold":        compton.Circle,
-	"Verified":    compton.Circle,
-	"Silver":      compton.Triangle,
-	"Bronze":      compton.Triangle,
-	"Playable":    compton.Triangle,
-	"Borked":      compton.Cross,
-	"Unsupported": compton.Cross,
+	"Platinum":    compton.CirclePositive,
+	"Gold":        compton.CirclePositive,
+	"Verified":    compton.CirclePositive,
+	"Silver":      compton.TriangleNeutral,
+	"Bronze":      compton.TriangleNeutral,
+	"Playable":    compton.TriangleNeutral,
+	"Borked":      compton.CrossNegative,
+	"Unsupported": compton.CrossNegative,
 }
 
 var CompatibilityColors = map[string]color.Color{

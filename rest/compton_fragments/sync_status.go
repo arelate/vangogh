@@ -47,13 +47,13 @@ func SyncStatus(r compton.Registrar, rdx redux.Readable, permissions ...author.P
 	switch lastCompletedSyncEvent {
 	case vangogh_integration.SyncCompleteKey:
 		syncStatusColor = color.Green
-		syncStatusSymbol = compton.Circle
+		syncStatusSymbol = compton.CirclePositive
 	case vangogh_integration.SyncInterruptedKey:
 		syncStatusColor = color.Red
-		syncStatusSymbol = compton.Cross
+		syncStatusSymbol = compton.CrossNegative
 	default:
 		syncStatusColor = color.Yellow
-		syncStatusSymbol = compton.Triangle
+		syncStatusSymbol = compton.TriangleNeutral
 	}
 
 	syncStatusFrow := compton.Frow(r).FontSize(size.XXSmall)
