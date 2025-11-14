@@ -266,7 +266,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	//1
 	if !gdd.forceUpdate {
 		if filename, ok := gdd.rdx.GetLastVal(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl); ok && filename != "" {
-			absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.Type, gdd.downloadsLayout)
+			absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.DownloadType, gdd.downloadsLayout)
 			if err != nil {
 				return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 			}
@@ -317,7 +317,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	}
 
 	//4
-	absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.Type, gdd.downloadsLayout)
+	absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.DownloadType, gdd.downloadsLayout)
 	if err != nil {
 		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 	}
@@ -325,7 +325,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	absDownloadPath := filepath.Join(absSlugDownloadDir, resolvedFilename)
 
 	//5
-	if dl.Type == vangogh_integration.Installer || dl.Type == vangogh_integration.DLC {
+	if dl.DownloadType == vangogh_integration.Installer || dl.DownloadType == vangogh_integration.DLC {
 		if remoteChecksumPath := resolvedUrl.Path + kevlar.XmlExt; remoteChecksumPath != "" {
 
 			var absChecksumPath string

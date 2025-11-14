@@ -121,7 +121,7 @@ func (mdd *missingDownloadsDelegate) Process(id, slug string, list vangogh_integ
 			break
 		}
 
-		absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.Type, mdd.downloadsLayout)
+		absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.DownloadType, mdd.downloadsLayout)
 		if err != nil {
 			return err
 		}

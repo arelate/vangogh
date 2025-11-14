@@ -161,7 +161,7 @@ func validateManualUrl(
 		return vs, nil
 	}
 
-	absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.Type, layout)
+	absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.DownloadType, layout)
 	if err != nil {
 		return vangogh_integration.ValidationStatusError, err
 	}
@@ -238,7 +238,7 @@ type validateDelegate struct {
 
 func downloadsListIsExtrasOnly(dls vangogh_integration.DownloadsList) bool {
 	for _, dl := range dls {
-		if dl.Type != vangogh_integration.Extra {
+		if dl.DownloadType != vangogh_integration.Extra {
 			return false
 		}
 	}
@@ -271,7 +271,7 @@ func (vd *validateDelegate) Process(id, slug string, list vangogh_integration.Do
 
 	for _, dl := range list {
 
-		if dl.Type != vangogh_integration.Installer && dl.Type != vangogh_integration.DLC {
+		if dl.DownloadType != vangogh_integration.Installer && dl.DownloadType != vangogh_integration.DLC {
 			continue
 		}
 
@@ -288,7 +288,7 @@ func (vd *validateDelegate) Process(id, slug string, list vangogh_integration.Do
 			sva.Error(err)
 		}
 
-		if dl.Type == vangogh_integration.Installer || dl.Type == vangogh_integration.DLC {
+		if dl.DownloadType == vangogh_integration.Installer || dl.DownloadType == vangogh_integration.DLC {
 			productVrs = append(productVrs, vr)
 		}
 

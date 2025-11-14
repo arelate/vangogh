@@ -145,7 +145,7 @@ func (cd *cleanupDelegate) Process(id string, slug string, list vangogh_integrat
 
 	for _, dl := range list {
 
-		absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.Type, cd.downloadsLayout)
+		absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.DownloadType, cd.downloadsLayout)
 		if err != nil {
 			return err
 		}

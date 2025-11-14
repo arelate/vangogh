@@ -111,7 +111,7 @@ func getProductDetails(id string, dls vangogh_integration.DownloadsList, rdx red
 			ManualUrl:        dl.ManualUrl,
 			Name:             dl.Name,
 			OperatingSystem:  dl.OS,
-			Type:             dl.Type,
+			DownloadType:     dl.DownloadType,
 			LanguageCode:     dl.LanguageCode,
 			Version:          dl.Version,
 			EstimatedBytes:   dl.EstimatedBytes,
@@ -119,11 +119,11 @@ func getProductDetails(id string, dls vangogh_integration.DownloadsList, rdx red
 			ValidationStatus: dvs.ValidationStatus(),
 		}
 
-		if dl.Type == vangogh_integration.DLC {
+		if dl.DownloadType == vangogh_integration.DLC {
 			link.Name = dl.ProductTitle
 		}
 
-		absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(productDetails.Slug, dl.Type, downloadsLayout)
+		absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(productDetails.Slug, dl.DownloadType, downloadsLayout)
 		if err != nil {
 			return nil, err
 		}

@@ -235,20 +235,20 @@ func downloadLink(r compton.Registrar,
 
 	q := url.Values{}
 	q.Set("id", id)
-	q.Set("download-type", dl.Type.String())
+	q.Set("download-type", dl.DownloadType.String())
 	q.Set("manual-url", dl.ManualUrl)
 
 	linkContainer := compton.FlexItems(r, direction.Column).RowGap(size.Small)
 
 	link := compton.A("/files?" + q.Encode())
-	link.AddClass("download", dl.Type.String())
+	link.AddClass("download", dl.DownloadType.String())
 
 	linkContainer.Append(link)
 
 	linkColumn := compton.FlexItems(r, direction.Column).RowGap(size.Small)
 
 	name := dl.Name
-	if dl.Type == vangogh_integration.DLC {
+	if dl.DownloadType == vangogh_integration.DLC {
 		name = dl.ProductTitle
 	}
 
@@ -277,7 +277,7 @@ func downloadLink(r compton.Registrar,
 	manualUrlStatusSymbol := compton.NoSymbol
 	manualUrlStatusColor := color.RepGray
 
-	if dl.Type == vangogh_integration.Installer || dl.Type == vangogh_integration.DLC {
+	if dl.DownloadType == vangogh_integration.Installer || dl.DownloadType == vangogh_integration.DLC {
 
 		manualUrlStatus = dvs.HumanReadableString()
 		manualUrlValidationStatus := dvs.ValidationStatus()
@@ -383,7 +383,7 @@ func getDownloadVariants(os vangogh_integration.OperatingSystem, title string, d
 		dvs := vangogh_integration.NewManualUrlDvs(dl.ManualUrl, rdx)
 
 		dv := &DownloadVariant{
-			downloadType:        dl.Type,
+			downloadType:        dl.DownloadType,
 			version:             dl.Version,
 			langCode:            dl.LanguageCode,
 			totalEstimatedBytes: dl.EstimatedBytes,
@@ -428,7 +428,7 @@ func filterDownloads(os vangogh_integration.OperatingSystem, dls vangogh_integra
 	downloads := make([]vangogh_integration.Download, 0)
 	for _, dl := range dls {
 		if dl.OS != os ||
-			dl.Type != dv.downloadType ||
+			dl.DownloadType != dv.downloadType ||
 			dv.version != dl.Version ||
 			dv.langCode != dl.LanguageCode ||
 			productTitle != dl.ProductTitle {
