@@ -240,16 +240,30 @@ func downloadLink(r compton.Registrar,
 
 	linkContainer := compton.FlexItems(r, direction.Column).RowGap(size.Small)
 
-	link := compton.A("/files?" + q.Encode())
-	link.AddClass("download", dl.DownloadType.String())
+	var link compton.Element
 
+	switch dl.DownloadType {
+	case vangogh_integration.Extra:
+		if dl.Info > 0 && dl.EstimatedBytes > 0 {
+			link = compton.A("/files?" + q.Encode())
+		} else {
+			link = compton.Content()
+		}
+	default:
+		link = compton.A("/files?" + q.Encode())
+	}
+
+	link.AddClass("download", dl.DownloadType.String())
 	linkContainer.Append(link)
 
 	linkColumn := compton.FlexItems(r, direction.Column).RowGap(size.Small)
 
-	name := dl.Name
-	if dl.DownloadType == vangogh_integration.DLC {
+	var name string
+	switch dl.DownloadType {
+	case vangogh_integration.DLC:
 		name = dl.ProductTitle
+	default:
+		name = dl.Name
 	}
 
 	namePrefix := ""
@@ -305,8 +319,6 @@ func downloadLink(r compton.Registrar,
 
 	bottomRow := compton.FlexItems(r, direction.Row).ColumnGap(size.Small).AlignItems(align.Center)
 
-	var sizeFr *compton.FrowElement
-
 	copyManualUrlToClipboard := compton.CopyToClipboard(r,
 		compton.Fspan(r, "Copy Manual URL").FontSize(size.XSmall).ForegroundColor(color.Blue).FontWeight(font_weight.Bolder),
 		compton.Fspan(r, "Copied!").FontSize(size.XSmall).ForegroundColor(color.Green),
@@ -314,8 +326,14 @@ func downloadLink(r compton.Registrar,
 		dl.ManualUrl)
 	bottomRow.Append(copyManualUrlToClipboard)
 
+	if dl.Type != "" {
+		typeFr := compton.Frow(r).FontSize(size.XSmall)
+		typeFr.PropVal("Type", dl.Type)
+		bottomRow.Append(typeFr)
+	}
+
 	if dl.EstimatedBytes > 0 {
-		sizeFr = compton.Frow(r).FontSize(size.XSmall)
+		sizeFr := compton.Frow(r).FontSize(size.XSmall)
 		sizeFr.PropVal("Size", vangogh_integration.FormatBytes(dl.EstimatedBytes))
 		bottomRow.Append(sizeFr)
 	}
