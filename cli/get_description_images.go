@@ -1,16 +1,17 @@
 package cli
 
 import (
+	"net/url"
+	"os"
+	"path/filepath"
+	"strings"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"net/url"
-	"os"
-	"path/filepath"
-	"strings"
 )
 
 func GetDescriptionImagesHandler(u *url.URL) error {
@@ -19,17 +20,20 @@ func GetDescriptionImagesHandler(u *url.URL) error {
 		return nil
 	}
 
+	q := u.Query()
+
 	ids, err := vangogh_integration.IdsFromUrl(u)
 	if err != nil {
 		return err
 	}
 
-	force := u.Query().Has("force")
+	all := q.Has("all")
+	force := q.Has("force")
 
-	return GetDescriptionImages(ids, since, force)
+	return GetDescriptionImages(ids, since, all, force)
 }
 
-func GetDescriptionImages(ids []string, since int64, force bool) error {
+func GetDescriptionImages(ids []string, since int64, all, force bool) error {
 
 	gdia := nod.NewProgress("getting description images...")
 	defer gdia.Done()
@@ -58,6 +62,9 @@ func GetDescriptionImages(ids []string, since int64, force bool) error {
 	}
 
 	if len(ids) == 0 {
+		if all {
+			since = -1
+		}
 		newApiProducts := kvApiProducts.Since(since, kevlar.Create, kevlar.Update)
 		for id := range newApiProducts {
 			ids = append(ids, id)

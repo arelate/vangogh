@@ -145,7 +145,7 @@ func Sync(
 
 	// get description images
 	if syncOpts.descriptionImages {
-		if err = GetDescriptionImages(nil, since, force); err != nil {
+		if err = GetDescriptionImages(nil, since, false, force); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
 
