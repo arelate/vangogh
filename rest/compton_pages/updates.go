@@ -3,6 +3,8 @@ package compton_pages
 import (
 	"errors"
 	"slices"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/arelate/southern_light/vangogh_integration"
@@ -26,6 +28,15 @@ func Updates(section string, rdx redux.Readable, showAll bool, permissions ...au
 	updateTotals := make(map[string]int)
 
 	paginate := false
+
+	var month time.Month
+	var day int
+
+	if sdt, ok := rdx.GetLastVal(vangogh_integration.SyncEventsProperty, vangogh_integration.SyncDataKey); ok {
+		if sdi, err := strconv.ParseInt(sdt, 10, 64); err == nil {
+			_, month, day = time.Unix(sdi, 0).Date()
+		}
+	}
 
 	for updateSection := range rdx.Keys(vangogh_integration.LastSyncUpdatesProperty) {
 
@@ -99,8 +110,6 @@ func Updates(section string, rdx redux.Readable, showAll bool, permissions ...au
 
 		var iconElement compton.Element
 
-		_, month, day := time.Now().Date()
-
 		switch updateSection {
 		case vangogh_integration.UpdatesReleasedToday:
 			iconElement = compton.MonthDay(p, month, day)
@@ -128,7 +137,17 @@ func Updates(section string, rdx redux.Readable, showAll bool, permissions ...au
 
 	ids := updates[section]
 
-	dsSection := compton.DSLarge(p, vangogh_integration.UpdatesLongerTitles[section], true).
+	sectionTitle := vangogh_integration.UpdatesLongerTitles[section]
+
+	switch section {
+	case vangogh_integration.UpdatesReleasedToday:
+		sectionTitle = strings.Replace(sectionTitle, "{month}", month.String(), 1)
+		sectionTitle = strings.Replace(sectionTitle, "{day}", strconv.FormatInt(int64(day), 10), 1)
+	default:
+		// do nothing
+	}
+
+	dsSection := compton.DSLarge(p, sectionTitle, true).
 		BackgroundColor(color.Highlight).
 		SummaryMarginBlockEnd(size.Normal).
 		DetailsMarginBlockEnd(size.Unset).
@@ -139,7 +158,6 @@ func Updates(section string, rdx redux.Readable, showAll bool, permissions ...au
 		compton_data.ManyItemsSinglePageTemplate,
 		compton_data.ManyItemsManyPagesTemplate)
 
-	//itemsBadge := compton.BadgeText(p, cf.Title(0, len(ids), updateTotals[section]), color.Foreground).FontSize(size.XXSmall)
 	dsSection.AppendBadges(compton.Badges(p, compton.FormattedBadge{
 		Title: cf.Title(0, len(ids), updateTotals[section]),
 		Icon:  compton.NoSymbol,
