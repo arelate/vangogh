@@ -3,6 +3,7 @@ package compton_pages
 import (
 	"errors"
 	"slices"
+	"time"
 
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
@@ -96,11 +97,22 @@ func Updates(section string, rdx redux.Readable, showAll bool, permissions ...au
 			sectionSymbol = symbol
 		}
 
+		var iconElement compton.Element
+
+		_, month, day := time.Now().Date()
+
+		switch updateSection {
+		case vangogh_integration.UpdatesReleasedToday:
+			iconElement = compton.MonthDay(p, month, day)
+		default:
+			iconElement = compton.SvgUse(p, sectionSymbol)
+		}
+
 		sectionLink := updateSectionLinks.AppendLink(p, &compton.NavTarget{
-			Href:     "/updates?section=" + updateSection,
-			Title:    vangogh_integration.UpdatesShorterTitles[updateSection],
-			Symbol:   sectionSymbol,
-			Selected: updateSection == section,
+			Href:        "/updates?section=" + updateSection,
+			Title:       vangogh_integration.UpdatesShorterTitles[updateSection],
+			IconElement: iconElement,
+			Selected:    updateSection == section,
 		})
 
 		if updateSection == section {

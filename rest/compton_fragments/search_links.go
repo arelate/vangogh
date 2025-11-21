@@ -22,10 +22,11 @@ func SearchLinks(r compton.Registrar, current string, permissions ...author.Perm
 		}
 
 		searchLink := searchNavLinks.AppendLink(r, &compton.NavTarget{
-			Href:     "/search?" + searchScopes[scope],
-			Title:    scope,
-			Selected: current == scope,
-			Symbol:   compton_data.SearchScopesSymbols[scope],
+			Href:        "/search?" + searchScopes[scope],
+			Title:       scope,
+			Selected:    current == scope,
+			IconElement: compton.SvgUse(r, compton_data.SearchScopesSymbols[scope]),
+			//Symbol:   compton_data.SearchScopesSymbols[scope],
 		})
 		if current == scope {
 			searchLink.SetAttribute("style", "view-transition-name:current-search-link")
