@@ -118,7 +118,7 @@ func formatBadge(id, property string, rdx redux.Readable) compton.FormattedBadge
 		if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); ok && pt != vangogh_integration.GameProductType {
 			switch pt {
 			case vangogh_integration.PackProductType:
-				fmtBadge.Icon = compton.TwoStackedItems
+				fmtBadge.Icon = compton.ItemsPack
 			case vangogh_integration.DlcProductType:
 				fmtBadge.Icon = compton.ItemPlus
 			}

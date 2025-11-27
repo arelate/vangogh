@@ -119,10 +119,10 @@ var ShortPropertyTitles = map[string]string{
 }
 
 var PropertySymbols = map[string]compton.Symbol{
-	vangogh_integration.IsIncludedByGamesProperty: compton.TwoStackedItems,
+	vangogh_integration.IsIncludedByGamesProperty: compton.ItemsPack,
 	vangogh_integration.IsRequiredByGamesProperty: compton.ItemPlus,
 	vangogh_integration.IsModifiedByGamesProperty: compton.PuzzlePiece,
-	vangogh_integration.IncludesGamesProperty:     compton.TwoStackedItems,
+	vangogh_integration.IncludesGamesProperty:     compton.ItemsPack,
 	vangogh_integration.RequiresGamesProperty:     compton.CircleCompactDisk,
 	vangogh_integration.ModifiesGamesProperty:     compton.PuzzlePiece,
 }
