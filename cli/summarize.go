@@ -4,6 +4,7 @@ import (
 	"iter"
 	"net/url"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -86,8 +87,22 @@ func Summarize(since int64) error {
 		return err
 	}
 
+	var month time.Month
+	var day int
+
+	if sdt, ok := rdx.GetLastVal(vangogh_integration.SyncEventsProperty, vangogh_integration.SyncDataKey); ok {
+		if sdi, err := strconv.ParseInt(sdt, 10, 64); err == nil {
+			_, month, day = time.Unix(sdi, 0).Date()
+		}
+	}
+
+	updatesReleasedToday := vangogh_integration.UpdatesReleasedToday
+
+	updatesReleasedToday = strings.Replace(updatesReleasedToday, "{month}", month.String(), 1)
+	updatesReleasedToday = strings.Replace(updatesReleasedToday, "{day}", strconv.FormatInt(int64(day), 10), 1)
+
 	for id := range rt {
-		summary[vangogh_integration.UpdatesReleasedToday] = append(summary[vangogh_integration.UpdatesReleasedToday], id)
+		summary[updatesReleasedToday] = append(summary[updatesReleasedToday], id)
 	}
 
 	// updated installers
