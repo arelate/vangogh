@@ -95,7 +95,7 @@ func GetDescriptionImages(ids []string, since int64, all, force bool) error {
 		for _, descriptionImageUrl := range descriptionImages {
 			descriptionImageUrl = strings.Replace(descriptionImageUrl, "\n", "", -1)
 			if err = getDescriptionImage(descriptionImageUrl, force); err != nil {
-				return err
+				gdia.Error(err)
 			}
 		}
 
