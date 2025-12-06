@@ -89,11 +89,11 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx redux.Readab
 					osSymbols = append(osSymbols, compton.SvgUse(r, compton_data.OperatingSystemSymbols[os]))
 				}
 			}
-			pc.AppendProperty(compton_data.PropertyTitles[p], osSymbols...).
-				SetAttribute("style", "view-transition-name:"+p+id)
+			pc.AppendProperty(compton_data.PropertyTitles[p], osSymbols...)
+			//SetAttribute("style", "view-transition-name:"+p+id)
 		default:
-			pc.AppendProperty(compton_data.ShortPropertyTitles[p], compton.Text(strings.Join(values[p], ", "))).
-				SetAttribute("style", "view-transition-name:"+p+id)
+			pc.AppendProperty(compton_data.ShortPropertyTitles[p], compton.Text(strings.Join(values[p], ", ")))
+			//SetAttribute("style", "view-transition-name:"+p+id)
 		}
 	}
 

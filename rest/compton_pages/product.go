@@ -69,7 +69,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 
 	productTitle := compton.Heading(2)
 	productTitle.Append(compton.Fspan(p, title).TextAlign(align.Center))
-	productTitle.SetAttribute("style", "view-transition-name:product-title-"+id)
+	//productTitle.SetAttribute("style", "view-transition-name:product-title-"+id)
 
 	/* Product labels */
 
@@ -92,13 +92,13 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 					osSymbols = append(osSymbols, compton_data.OperatingSystemSymbols[os])
 				}
 			}
-			summaryRow.PropIcons(compton_data.PropertyTitles[property], osSymbols...).
-				SetAttribute("style", "view-transition-name:"+property+id)
+			summaryRow.PropIcons(compton_data.PropertyTitles[property], osSymbols...)
+			//SetAttribute("style", "view-transition-name:"+property+id)
 		default:
 			for _, value := range values[property] {
 				href := "/search?sort=global-release-date&desc=true&" + property + "=" + value
-				summaryRow.PropLinkColor(compton_data.PropertyTitles[property], color.RepForeground, value, href).
-					SetAttribute("style", "view-transition-name:"+property+id)
+				summaryRow.PropLinkColor(compton_data.PropertyTitles[property], color.RepForeground, value, href)
+				//SetAttribute("style", "view-transition-name:"+property+id)
 			}
 		}
 
@@ -131,7 +131,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 
 			productBadges := compton.Badges(p, fmtBadges...)
 
-			productBadges.SetAttribute("style", "view-transition-name:product-badges-"+id)
+			//productBadges.SetAttribute("style", "view-transition-name:product-badges-"+id)
 
 			detailsSummary.AppendBadges(productBadges)
 		case compton_data.MediaSection:

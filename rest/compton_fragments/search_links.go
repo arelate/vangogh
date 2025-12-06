@@ -11,7 +11,7 @@ import (
 func SearchLinks(r compton.Registrar, current string, permissions ...author.Permission) compton.Element {
 
 	searchNavLinks := compton.NavLinks(r)
-	searchNavLinks.SetAttribute("style", "view-transition-name:secondary-nav")
+	//searchNavLinks.SetAttribute("style", "view-transition-name:secondary-nav")
 
 	searchScopes := compton_data.SearchScopes()
 
@@ -21,16 +21,17 @@ func SearchLinks(r compton.Registrar, current string, permissions ...author.Perm
 			continue
 		}
 
-		searchLink := searchNavLinks.AppendLink(r, &compton.NavTarget{
+		searchNavLinks.AppendLink(r, &compton.NavTarget{
+			//searchLink := searchNavLinks.AppendLink(r, &compton.NavTarget{
 			Href:        "/search?" + searchScopes[scope],
 			Title:       scope,
 			Selected:    current == scope,
 			IconElement: compton.SvgUse(r, compton_data.SearchScopesSymbols[scope]),
 			//Symbol:   compton_data.SearchScopesSymbols[scope],
 		})
-		if current == scope {
-			searchLink.SetAttribute("style", "view-transition-name:current-search-link")
-		}
+		//if current == scope {
+		//searchLink.SetAttribute("style", "view-transition-name:current-search-link")
+		//}
 	}
 
 	return searchNavLinks

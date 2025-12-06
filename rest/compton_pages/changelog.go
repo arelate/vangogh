@@ -42,7 +42,7 @@ func Changelog(id string, rdx redux.Readable) compton.PageElement {
 
 	heading := compton.Heading(2)
 	heading.Append(compton.Fspan(p, pageTitle).TextAlign(align.Center))
-	heading.SetAttribute("style", "view-transition-name:product-title-"+id)
+	//heading.SetAttribute("style", "view-transition-name:product-title-"+id)
 	headingRow.Append(heading)
 
 	subHeading := compton.Heading(3)

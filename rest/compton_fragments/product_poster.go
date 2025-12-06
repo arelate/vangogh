@@ -22,7 +22,7 @@ func ProductPoster(r compton.Registrar, id string, rdx redux.Readable) compton.E
 		}
 
 		poster.AddClass("product-poster")
-		poster.SetAttribute("style", "view-transition-name:product-image-"+id)
+		//poster.SetAttribute("style", "view-transition-name:product-image-"+id)
 
 		return poster
 	}

@@ -91,7 +91,7 @@ func Updates(section string, rdx redux.Readable, showAll bool, permissions ...au
 	topLevelNav := []compton.Element{compton_fragments.AppNavLinks(p, current)}
 
 	updateSectionLinks := compton.NavLinks(p)
-	updateSectionLinks.SetAttribute("style", "view-transition-name:secondary-nav")
+	//updateSectionLinks.SetAttribute("style", "view-transition-name:secondary-nav")
 
 	for _, updateSection := range vangogh_integration.UpdatesOrder {
 
@@ -117,16 +117,17 @@ func Updates(section string, rdx redux.Readable, showAll bool, permissions ...au
 			iconElement = compton.SvgUse(p, sectionSymbol)
 		}
 
-		sectionLink := updateSectionLinks.AppendLink(p, &compton.NavTarget{
+		updateSectionLinks.AppendLink(p, &compton.NavTarget{
+			//sectionLink := updateSectionLinks.AppendLink(p, &compton.NavTarget{
 			Href:        "/updates?section=" + updateSection,
 			Title:       vangogh_integration.UpdatesShorterTitles[updateSection],
 			IconElement: iconElement,
 			Selected:    updateSection == section,
 		})
 
-		if updateSection == section {
-			sectionLink.SetAttribute("style", "view-transition-name:current-update-section")
-		}
+		//if updateSection == section {
+		//	sectionLink.SetAttribute("style", "view-transition-name:current-update-section")
+		//}
 
 	}
 
@@ -177,7 +178,7 @@ func Updates(section string, rdx redux.Readable, showAll bool, permissions ...au
 
 	if len(updates[section]) < updateTotals[section] {
 		showAllNavLinks := compton.NavLinks(p)
-		showAllNavLinks.SetAttribute("style", "view-transition-name:tertiary-nav")
+		//showAllNavLinks.SetAttribute("style", "view-transition-name:tertiary-nav")
 		showAllNavLinks.AppendLink(p, &compton.NavTarget{Href: "/updates?section=" + section + "&all", Title: "Show all"})
 
 		backToTopNavLinks := compton.NavLinks(p)
