@@ -95,7 +95,10 @@ func TagsEditor(
 	}
 
 	editTagsForm := compton.Form(action, http.MethodGet)
-	swColumn := compton.FlexItems(p, direction.Column).AlignContent(align.Center)
+	swColumn := compton.FlexItems(p, direction.Column).
+		AlignContent(align.Center).
+		JustifyContent(align.Start).
+		Width(size.XXXLarge)
 
 	idInput := compton.InputValue(p, input_types.Hidden, id)
 	idInput.SetName(vangogh_integration.IdProperty)
@@ -127,7 +130,10 @@ func TagsEditor(
 	})
 	swColumn.Append(applyNavLink)
 
-	editTagsForm.Append(swColumn)
+	centerColumn := compton.FlexItems(p, direction.Column).AlignItems(align.Center)
+	centerColumn.Append(swColumn)
+
+	editTagsForm.Append(centerColumn)
 	dsTags.Append(editTagsForm)
 
 	/* Footer */
