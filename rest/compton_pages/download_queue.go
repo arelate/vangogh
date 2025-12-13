@@ -17,6 +17,8 @@ func DownloadsQueue(ids []string, rdx redux.Readable, permissions ...author.Perm
 
 	p := compton.Page(title)
 
+	p.SetAttribute("style", "--c-rep:var(--c-background)")
+
 	pageStack := compton.FlexItems(p, direction.Column)
 	p.Append(pageStack)
 
