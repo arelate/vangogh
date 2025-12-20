@@ -74,12 +74,11 @@ func Updates(section string, rdx redux.Readable, showAll bool, permissions ...au
 	current := compton_data.AppNavUpdates
 	p, pageStack := compton_fragments.AppPage(current)
 
-	if section == "" {
-		p.Error(errors.New("section not found"))
-		return p
-	} else if prm, ok := compton_data.UpdateSectionPermissions[section]; ok && !slices.Contains(permissions, prm) {
-		p.Error(errors.New("section access restricted"))
-		return p
+	if section != "" {
+		if prm, ok := compton_data.UpdateSectionPermissions[section]; ok && !slices.Contains(permissions, prm) {
+			p.Error(errors.New("section access restricted"))
+			return p
+		}
 	}
 
 	p.AppendSpeculationRules(compton.SpeculationRulesConservativeEagerness, "/*")
@@ -91,7 +90,6 @@ func Updates(section string, rdx redux.Readable, showAll bool, permissions ...au
 	topLevelNav := []compton.Element{compton_fragments.AppNavLinks(p, current)}
 
 	updateSectionLinks := compton.NavLinks(p)
-	//updateSectionLinks.SetAttribute("style", "view-transition-name:secondary-nav")
 
 	for _, updateSection := range vangogh_integration.UpdatesOrder {
 
@@ -118,20 +116,18 @@ func Updates(section string, rdx redux.Readable, showAll bool, permissions ...au
 		}
 
 		updateSectionLinks.AppendLink(p, &compton.NavTarget{
-			//sectionLink := updateSectionLinks.AppendLink(p, &compton.NavTarget{
 			Href:        "/updates?section=" + updateSection,
 			Title:       vangogh_integration.UpdatesShorterTitles[updateSection],
 			IconElement: iconElement,
 			Selected:    updateSection == section,
 		})
 
-		//if updateSection == section {
-		//	sectionLink.SetAttribute("style", "view-transition-name:current-update-section")
-		//}
-
 	}
 
-	topLevelNav = append(topLevelNav, updateSectionLinks)
+	if len(updates) > 0 {
+		topLevelNav = append(topLevelNav, updateSectionLinks)
+	}
+
 	pageStack.Append(compton.FICenter(p, topLevelNav...))
 
 	/* Updates sections */
@@ -166,7 +162,13 @@ func Updates(section string, rdx redux.Readable, showAll bool, permissions ...au
 	}))
 
 	dsSection.SetId(section)
-	pageStack.Append(dsSection)
+
+	if len(updates) > 0 {
+		pageStack.Append(dsSection)
+	} else {
+		pageStack.Append(compton.Br(), compton.FICenter(p,
+			compton.Fspan(p, "No recent updates.").ForegroundColor(color.Yellow)))
+	}
 
 	sectionStack := compton.FlexItems(p, direction.Column)
 	dsSection.Append(sectionStack)
