@@ -191,7 +191,7 @@ func downloadHttpWineBinaries(urls map[string]*url.URL, force bool) error {
 
 	for _, u := range urls {
 		if err = downloadHttpWineBinary(u, wineBinariesDir, force); err != nil {
-			nod.Log(err)
+			dhba.Error(err)
 		}
 		dhba.Increment()
 	}
