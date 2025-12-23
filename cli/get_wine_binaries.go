@@ -2,13 +2,6 @@ package cli
 
 import (
 	"errors"
-	"github.com/arelate/southern_light/github_integration"
-	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/arelate/southern_light/wine_integration"
-	"github.com/boggydigital/dolo"
-	"github.com/boggydigital/kevlar"
-	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"net/http"
 	"net/url"
 	"os"
@@ -17,6 +10,14 @@ import (
 	"slices"
 	"strings"
 	"time"
+
+	"github.com/arelate/southern_light/github_integration"
+	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/southern_light/wine_integration"
+	"github.com/boggydigital/dolo"
+	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/nod"
+	"github.com/boggydigital/pathways"
 )
 
 func GetWineBinariesHandler(u *url.URL) error {
@@ -190,7 +191,7 @@ func downloadHttpWineBinaries(urls map[string]*url.URL, force bool) error {
 
 	for _, u := range urls {
 		if err = downloadHttpWineBinary(u, wineBinariesDir, force); err != nil {
-			return err
+			nod.Log(err)
 		}
 		dhba.Increment()
 	}
