@@ -20,7 +20,6 @@ import (
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
@@ -75,12 +74,7 @@ func GetDownloads(
 		return err
 	}
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir,
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
 		append(
 			vangogh_integration.DownloadsLifecycleProperties(),
 			vangogh_integration.SlugProperty,
@@ -376,12 +370,8 @@ func getQueuedDownloads() ([]string, error) {
 	gqda := nod.Begin("getting queued downloads...")
 	defer gqda.Done()
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return nil, err
-	}
-
-	rdx, err := redux.NewReader(reduxDir, vangogh_integration.DownloadQueuedProperty)
+	rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(),
+		vangogh_integration.DownloadQueuedProperty)
 	if err != nil {
 		return nil, err
 	}
@@ -414,12 +404,8 @@ func queueDownloads(ids iter.Seq[string]) error {
 	qda := nod.Begin("adding downloads to the queue...")
 	defer qda.Done()
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.DownloadQueuedProperty)
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
+		vangogh_integration.DownloadQueuedProperty)
 	if err != nil {
 		return err
 	}

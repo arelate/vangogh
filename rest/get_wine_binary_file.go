@@ -1,15 +1,15 @@
 package rest
 
 import (
-	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/arelate/southern_light/wine_integration"
-	"github.com/boggydigital/kevlar"
-	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/southern_light/wine_integration"
+	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/nod"
 )
 
 func GetWineBinaryFile(w http.ResponseWriter, r *http.Request) {
@@ -37,17 +37,8 @@ func GetWineBinaryFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	wineBinariesDir, err := pathways.GetAbsRelDir(vangogh_integration.WineBinaries)
-	if err != nil {
-		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-		return
-	}
-
-	gitHubReleasesDir, err := pathways.GetAbsRelDir(vangogh_integration.GitHubReleases)
-	if err != nil {
-		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-		return
-	}
+	wineBinariesDir := vangogh_integration.Pwd.AbsRelDirPath(vangogh_integration.WineBinaries, vangogh_integration.Downloads)
+	gitHubReleasesDir := vangogh_integration.Pwd.AbsRelDirPath(vangogh_integration.GitHubReleases, vangogh_integration.Metadata)
 
 	kvGitHubReleases, err := kevlar.New(gitHubReleasesDir, kevlar.JsonExt)
 	if err != nil {

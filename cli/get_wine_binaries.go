@@ -17,7 +17,6 @@ import (
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 )
 
 func GetWineBinariesHandler(u *url.URL) error {
@@ -51,10 +50,7 @@ func GetWineBinaries(operatingSystems []vangogh_integration.OperatingSystem, for
 		operatingSystems = vangogh_integration.AllOperatingSystems()
 	}
 
-	gitHubReleasesDir, err := pathways.GetAbsRelDir(vangogh_integration.GitHubReleases)
-	if err != nil {
-		return err
-	}
+	gitHubReleasesDir := vangogh_integration.Pwd.AbsRelDirPath(vangogh_integration.GitHubReleases, vangogh_integration.Metadata)
 
 	kvGitHubReleases, err := kevlar.New(gitHubReleasesDir, kevlar.JsonExt)
 	if err != nil {
@@ -182,15 +178,12 @@ func downloadHttpWineBinaries(urls map[string]*url.URL, force bool) error {
 	dhba := nod.NewProgress("downloading binaries...")
 	defer dhba.Done()
 
-	wineBinariesDir, err := pathways.GetAbsRelDir(vangogh_integration.WineBinaries)
-	if err != nil {
-		return err
-	}
+	wineBinariesDir := vangogh_integration.Pwd.AbsRelDirPath(vangogh_integration.WineBinaries, vangogh_integration.Downloads)
 
 	dhba.TotalInt(len(urls))
 
 	for _, u := range urls {
-		if err = downloadHttpWineBinary(u, wineBinariesDir, force); err != nil {
+		if err := downloadHttpWineBinary(u, wineBinariesDir, force); err != nil {
 			dhba.Error(err)
 		}
 		dhba.Increment()
@@ -214,17 +207,13 @@ func validateWineBinaries(binaries []wine_integration.Binary, urls map[string]*u
 	vwba := nod.NewProgress("validating binaries...")
 	defer vwba.Done()
 
-	wineBinariesDir, err := pathways.GetAbsRelDir(vangogh_integration.WineBinaries)
-	if err != nil {
-		return err
-	}
+	wineBinariesDir := vangogh_integration.Pwd.AbsRelDirPath(vangogh_integration.WineBinaries, vangogh_integration.Downloads)
 
 	for _, binary := range binaries {
 
 		if u, ok := urls[binary.String()]; ok && u != nil {
 
-			var version string
-			version, err = binary.GetVersion(kvGitHubReleases)
+			version, err := binary.GetVersion(kvGitHubReleases)
 			if err != nil {
 				return err
 			}
@@ -257,10 +246,7 @@ func cleanupWineBinaries(urls map[string]*url.URL) error {
 	cba := nod.Begin("cleaning up older binaries versions...")
 	defer cba.Done()
 
-	wineBinariesDir, err := pathways.GetAbsRelDir(vangogh_integration.WineBinaries)
-	if err != nil {
-		return err
-	}
+	wineBinariesDir := vangogh_integration.Pwd.AbsRelDirPath(vangogh_integration.WineBinaries, vangogh_integration.Downloads)
 
 	expectedFilenames := make([]string, 0, len(urls))
 	for _, u := range urls {
@@ -272,6 +258,8 @@ func cleanupWineBinaries(urls map[string]*url.URL) error {
 	if err != nil {
 		return err
 	}
+
+	defer bd.Close()
 
 	actualFilenames, err := bd.Readdirnames(-1)
 	if err != nil {

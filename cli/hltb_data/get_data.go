@@ -13,7 +13,6 @@ import (
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 	"golang.org/x/net/html"
 )
@@ -84,12 +83,7 @@ func ReduceData(hltbGogIds map[string][]string, kvData kevlar.KeyValues) error {
 	rda := nod.NewProgress(" reducing %s...", dataType)
 	defer rda.Done()
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.HltbDataProperties()...)
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), vangogh_integration.HltbDataProperties()...)
 	if err != nil {
 		return err
 	}

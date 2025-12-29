@@ -1,20 +1,9 @@
-backups
-    /var/lib/vangogh/backups
-downloads
-    /var/lib/vangogh/downloads
-checksums
-    /var/lib/vangogh/checksums
-images
-    /var/lib/vangogh/images
-input
-    # cookies.txt, skiplist.txt
-    /var/lib/vangogh
-description_images
-    /var/lib/vangogh/description_images
-logs
-    # logs
-    /var/lib/vangogh/logs
-metadata
-    /var/lib/vangogh/metadata
-output
-    /var/lib/vangogh
+backups=/var/lib/vangogh/backups
+downloads=/var/lib/vangogh/downloads
+checksums=/var/lib/vangogh/checksums
+images=/var/lib/vangogh/images
+input=/var/lib/vangogh
+description_images=/var/lib/vangogh/description_images
+logs=/var/lib/vangogh/logs
+metadata=/var/lib/vangogh/metadata
+output=/var/lib/vangogh

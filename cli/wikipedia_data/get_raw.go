@@ -13,7 +13,6 @@ import (
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
@@ -48,12 +47,7 @@ func ReduceRaw(wikipediaGogIds map[string][]string, kvRaw kevlar.KeyValues) erro
 	rra := nod.NewProgress(" reducing %s...", dataType)
 	defer rra.Done()
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.WikipediaRawProperties()...)
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), vangogh_integration.WikipediaRawProperties()...)
 	if err != nil {
 		return err
 	}

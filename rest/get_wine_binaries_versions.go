@@ -9,7 +9,6 @@ import (
 	"github.com/arelate/southern_light/wine_integration"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 )
 
 func GetWineBinariesVersions(w http.ResponseWriter, r *http.Request) {
@@ -18,11 +17,7 @@ func GetWineBinariesVersions(w http.ResponseWriter, r *http.Request) {
 
 	binariesVersions := make([]vangogh_integration.WineBinaryDetails, 0, len(wine_integration.OsWineBinaries))
 
-	gitHubReleasesDir, err := pathways.GetAbsRelDir(vangogh_integration.GitHubReleases)
-	if err != nil {
-		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-		return
-	}
+	gitHubReleasesDir := vangogh_integration.Pwd.AbsRelDirPath(vangogh_integration.GitHubReleases, vangogh_integration.Metadata)
 
 	kvGitHubReleases, err := kevlar.New(gitHubReleasesDir, kevlar.JsonExt)
 	if err != nil {

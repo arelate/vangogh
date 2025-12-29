@@ -14,7 +14,6 @@ import (
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
@@ -49,12 +48,8 @@ func ReduceAppNews(steamGogIds map[string][]string, kvAppNews kevlar.KeyValues) 
 	rana := nod.NewProgress(" reducing %s...", dataType)
 	defer rana.Done()
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.SteamAppNewsProperties()...)
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
+		vangogh_integration.SteamAppNewsProperties()...)
 	if err != nil {
 		return err
 	}

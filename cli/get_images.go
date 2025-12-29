@@ -10,7 +10,6 @@ import (
 	"github.com/arelate/vangogh/cli/itemizations"
 	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
@@ -153,12 +152,7 @@ func imageTypesReduxAssets(otherProperties []string, its []vangogh_integration.I
 		properties = append(properties, p)
 	}
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return nil, err
-	}
-
-	return redux.NewWriter(reduxDir, properties...)
+	return redux.NewWriter(vangogh_integration.AbsReduxDir(), properties...)
 }
 
 func getImage(imageUrl *url.URL, force bool) error {

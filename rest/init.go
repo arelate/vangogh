@@ -4,7 +4,6 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/perm"
 	"github.com/boggydigital/author"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
@@ -35,22 +34,15 @@ func SetDefaultDownloadsFilters(
 
 func Init(layout vangogh_integration.DownloadsLayout) error {
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
 	downloadsLayout = layout
 
-	rdx, err = redux.NewReader(reduxDir, vangogh_integration.ReduxProperties()...)
+	var err error
+	rdx, err = redux.NewReader(vangogh_integration.AbsReduxDir(), vangogh_integration.ReduxProperties()...)
 	if err != nil {
 		return err
 	}
 
-	authorDir, err := pathways.GetAbsRelDir(vangogh_integration.Author)
-	if err != nil {
-		return err
-	}
+	authorDir := vangogh_integration.Pwd.AbsRelDirPath(vangogh_integration.Author, vangogh_integration.Metadata)
 
 	sb, err = author.NewSessionBouncer(authorDir, perm.GetRolesPermissions(), "/login")
 	if err != nil {

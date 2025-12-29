@@ -2,15 +2,15 @@ package cli
 
 import (
 	"errors"
-	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/boggydigital/kevlar"
-	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
-	"github.com/boggydigital/redux"
 	"io/fs"
 	"net/url"
 	"os"
 	"path/filepath"
+
+	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/kevlar"
+	"github.com/boggydigital/nod"
+	"github.com/boggydigital/redux"
 )
 
 func RelayoutDownloadsHandler(u *url.URL) error {
@@ -59,12 +59,7 @@ func RelayoutDownloads(
 		ids = append(ids, id)
 	}
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir,
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
 		vangogh_integration.SlugProperty,
 		vangogh_integration.ProductTypeProperty)
 	if err != nil {

@@ -13,7 +13,6 @@ import (
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
@@ -48,15 +47,10 @@ func ReduceDeckCompatibilityReports(steamGogIds map[string][]string, kvDeckCompa
 	rdcra := nod.NewProgress(" reducing %s...", dataType)
 	defer rdcra.Done()
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
 	// need to append SteamAppId property to allow mapping to GOG ids
 	properties := append(vangogh_integration.SteamDeckCompatibilityReportProperties(), vangogh_integration.SteamAppIdProperty)
 
-	rdx, err := redux.NewWriter(reduxDir, properties...)
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), properties...)
 	if err != nil {
 		return err
 	}

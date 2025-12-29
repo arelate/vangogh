@@ -12,7 +12,6 @@ import (
 	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
@@ -27,12 +26,8 @@ func fetchGogPages(pageReq *reqs.Params, kv kevlar.KeyValues, tpw nod.TotalProgr
 		return err
 	}
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.GetDataProperties()...)
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
+		vangogh_integration.GetDataProperties()...)
 	if err != nil {
 		return err
 	}

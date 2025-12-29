@@ -19,12 +19,7 @@ func GetAtom(w http.ResponseWriter, r *http.Request) {
 
 	// GET /atom
 
-	absAtomFeedPath, err := vangogh_integration.AbsAtomFeedPath()
-	if err != nil {
-		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-		return
-	}
-
+	absAtomFeedPath := vangogh_integration.AbsAtomFeedPath()
 	if stat, err := os.Stat(absAtomFeedPath); err == nil {
 
 		w.Header().Set(LastModifiedHeader, stat.ModTime().UTC().Format(http.TimeFormat))

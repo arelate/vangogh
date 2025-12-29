@@ -6,7 +6,6 @@ import (
 
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
@@ -31,12 +30,8 @@ func MigrateData(force bool) error {
 	mda := nod.NewProgress("migrating data to the latest schema...")
 	defer mda.Done()
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.DataSchemeVersionProperty)
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
+		vangogh_integration.DataSchemeVersionProperty)
 	if err != nil {
 		return err
 	}
@@ -99,12 +94,8 @@ func setLatestDataSchema(rdx redux.Writeable) error {
 
 func cutPreviouslyCascadedValidations() error {
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.ReduxProperties()...)
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
+		vangogh_integration.ReduxProperties()...)
 	if err != nil {
 		return err
 	}

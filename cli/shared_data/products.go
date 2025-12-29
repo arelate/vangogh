@@ -10,7 +10,6 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
@@ -35,12 +34,8 @@ func GetHltbIds(gogIds iter.Seq[string]) (map[string][]string, error) {
 }
 
 func getExternalIdGogIds(gogIds iter.Seq[string], externalIdProperty string) (map[string][]string, error) {
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return nil, err
-	}
 
-	rdx, err := redux.NewReader(reduxDir, externalIdProperty)
+	rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(), externalIdProperty)
 	if err != nil {
 		return nil, err
 	}
@@ -82,12 +77,9 @@ func GetCatalogAccountProducts(since int64) (map[string]any, error) {
 		catalogAccountProductIds[apId] = nil
 	}
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return nil, err
-	}
-
-	rdx, err := redux.NewReader(reduxDir, vangogh_integration.RootEditionsProperty, vangogh_integration.IncludesGamesProperty)
+	rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(),
+		vangogh_integration.RootEditionsProperty,
+		vangogh_integration.IncludesGamesProperty)
 	if err != nil {
 		return nil, err
 	}
@@ -110,12 +102,9 @@ func GetCatalogAccountProducts(since int64) (map[string]any, error) {
 
 func GetGameGogIds(gogIds map[string]any) (map[string]any, error) {
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return nil, err
-	}
-
-	rdx, err := redux.NewReader(reduxDir, vangogh_integration.ProductTypeProperty, vangogh_integration.IsDemoProperty)
+	rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(),
+		vangogh_integration.ProductTypeProperty,
+		vangogh_integration.IsDemoProperty)
 	if err != nil {
 		return nil, err
 	}
@@ -137,12 +126,7 @@ func GetGameGogIds(gogIds map[string]any) (map[string]any, error) {
 
 func AppendEditions(products map[string]any) (map[string]any, error) {
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return nil, err
-	}
-
-	rdx, err := redux.NewReader(reduxDir, vangogh_integration.EditionsProperty)
+	rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(), vangogh_integration.EditionsProperty)
 	if err != nil {
 		return nil, err
 	}
@@ -328,12 +312,7 @@ func getNewUpdatedOrderPagesProducts(since int64) (iter.Seq[string], error) {
 		return nil, err
 	}
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return nil, err
-	}
-
-	rdx, err := redux.NewReader(reduxDir,
+	rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(),
 		vangogh_integration.ProductTypeProperty,
 		vangogh_integration.RequiresGamesProperty,
 		vangogh_integration.IncludesGamesProperty)

@@ -412,10 +412,7 @@ func requiresUserAccessToken(productTypes ...vangogh_integration.ProductType) bo
 }
 
 func gogAuthHttpClient() (*http.Client, error) {
-	acp, err := vangogh_integration.AbsCookiePath()
-	if err != nil {
-		return nil, err
-	}
+	acp := vangogh_integration.AbsCookiePath()
 
 	jar, err := coost.Read(gog_integration.DefaultUrl(), acp)
 	if os.IsNotExist(err) {

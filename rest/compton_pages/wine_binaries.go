@@ -8,7 +8,6 @@ import (
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/kevlar"
-	"github.com/boggydigital/pathways"
 )
 
 func WineBinaries() compton.PageElement {
@@ -30,11 +29,7 @@ func WineBinaries() compton.PageElement {
 
 	operatingSystems := []vangogh_integration.OperatingSystem{vangogh_integration.Windows, vangogh_integration.MacOS, vangogh_integration.Linux}
 
-	gitHubReleasesDir, err := pathways.GetAbsRelDir(vangogh_integration.GitHubReleases)
-	if err != nil {
-		p.Error(err)
-		return p
-	}
+	gitHubReleasesDir := vangogh_integration.Pwd.AbsRelDirPath(vangogh_integration.GitHubReleases, vangogh_integration.Metadata)
 
 	kvGitHubReleases, err := kevlar.New(gitHubReleasesDir, kevlar.JsonExt)
 	if err != nil {

@@ -12,7 +12,6 @@ import (
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
@@ -47,12 +46,8 @@ func ReduceSummary(steamGogIds map[string][]string, kvSummary kevlar.KeyValues) 
 	rsa := nod.NewProgress(" reducing %s...", dataType)
 	defer rsa.Done()
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.ProtonDbSummaryProperties()...)
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
+		vangogh_integration.ProtonDbSummaryProperties()...)
 	if err != nil {
 		return err
 	}

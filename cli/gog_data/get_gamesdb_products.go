@@ -14,7 +14,6 @@ import (
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
@@ -60,12 +59,8 @@ func ReduceGamesDbGogProducts(kvGamesDbGogProducts kevlar.KeyValues, since int64
 	rgdgpa := nod.Begin(" reducing %s...", dataType)
 	defer rgdgpa.Done()
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.GOGGamesDbProperties()...)
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
+		vangogh_integration.GOGGamesDbProperties()...)
 	if err != nil {
 		return err
 	}

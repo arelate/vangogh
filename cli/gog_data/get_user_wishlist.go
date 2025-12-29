@@ -3,17 +3,17 @@ package gog_data
 import (
 	"encoding/json"
 	"errors"
+	"net/http"
+	"slices"
+	"time"
+
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
 	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"net/http"
-	"slices"
-	"time"
 )
 
 func GetUserWishlist(hc *http.Client, uat string) error {
@@ -36,12 +36,7 @@ func GetUserWishlist(hc *http.Client, uat string) error {
 	userWishlistId := productType.String()
 	userWishlistUrl := gog_integration.UserWishlistUrl()
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.GetDataProperties()...)
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), vangogh_integration.GetDataProperties()...)
 	if err != nil {
 		return err
 	}
@@ -74,14 +69,9 @@ func ReduceUserWishlist(kvUserWishlist kevlar.KeyValues) error {
 	ruwa := nod.Begin(" reducing %s...", vangogh_integration.UserWishlist)
 	defer ruwa.Done()
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
 	key := vangogh_integration.UserWishlistProperty
 
-	rdx, err := redux.NewWriter(reduxDir, key)
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), key)
 	if err != nil {
 		return err
 	}

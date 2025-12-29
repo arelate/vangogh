@@ -1,16 +1,16 @@
 package gog_data
 
 import (
+	"iter"
+	"maps"
+	"net/http"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
 	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"iter"
-	"maps"
-	"net/http"
 )
 
 func GetRelatedApiProducts(hc *http.Client, uat string, since int64, force bool) error {
@@ -27,11 +27,6 @@ func GetRelatedApiProducts(hc *http.Client, uat string, since int64, force bool)
 		return err
 	}
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
 	relatedApiProductProperties := []string{
 		vangogh_integration.RequiresGamesProperty,
 		vangogh_integration.IsRequiredByGamesProperty,
@@ -39,7 +34,7 @@ func GetRelatedApiProducts(hc *http.Client, uat string, since int64, force bool)
 		vangogh_integration.IsIncludedByGamesProperty,
 	}
 
-	rdx, err := redux.NewWriter(reduxDir, relatedApiProductProperties...)
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), relatedApiProductProperties...)
 	if err != nil {
 		return err
 	}

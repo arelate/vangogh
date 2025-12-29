@@ -1,16 +1,16 @@
 package gog_data
 
 import (
+	"net/http"
+	"time"
+
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
 	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"net/http"
-	"time"
 )
 
 func GetUserAccessToken(hc *http.Client) error {
@@ -33,12 +33,8 @@ func GetUserAccessToken(hc *http.Client) error {
 	uatId := productType.String()
 	uatUrl := gog_integration.UserAccessTokenUrl()
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.GetDataProperties()...)
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
+		vangogh_integration.GetDataProperties()...)
 	if err != nil {
 		return err
 	}

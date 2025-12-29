@@ -12,7 +12,6 @@ import (
 	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
@@ -36,12 +35,8 @@ func GetLicences(hc *http.Client, userAccessToken string) error {
 	licencesId := productType.String()
 	licencesUrl := gog_integration.LicencesUrl()
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.GetDataProperties()...)
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
+		vangogh_integration.GetDataProperties()...)
 	if err != nil {
 		return err
 	}
@@ -73,12 +68,8 @@ func ReduceLicences(kvLicences kevlar.KeyValues) error {
 	rla := nod.Begin(" reducing %s...", vangogh_integration.Licences)
 	defer rla.Done()
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.LicencesProperty)
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
+		vangogh_integration.LicencesProperty)
 	if err != nil {
 		return err
 	}

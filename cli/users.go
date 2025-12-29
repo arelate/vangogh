@@ -8,7 +8,6 @@ import (
 	"github.com/arelate/vangogh/perm"
 	"github.com/boggydigital/author"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 )
 
 type userAction int
@@ -82,10 +81,7 @@ func Users(action userAction, username, password, newPassword, role string) erro
 	ua := nod.Begin("%s users...", actionVerb)
 	defer ua.Done()
 
-	authorDir, err := pathways.GetAbsRelDir(vangogh_integration.Author)
-	if err != nil {
-		return err
-	}
+	authorDir := vangogh_integration.Pwd.AbsRelDirPath(vangogh_integration.Author, vangogh_integration.Metadata)
 
 	auth, err := author.NewAuthenticator(authorDir, perm.GetRolesPermissions())
 	if err != nil {

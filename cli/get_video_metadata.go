@@ -1,13 +1,13 @@
 package cli
 
 import (
-	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
-	"github.com/boggydigital/redux"
-	"github.com/boggydigital/yet_urls/youtube_urls"
 	"net/http"
 	"net/url"
+
+	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/nod"
+	"github.com/boggydigital/redux"
+	"github.com/boggydigital/yet_urls/youtube_urls"
 )
 
 const limitVideoRequests = 1000
@@ -32,12 +32,7 @@ func GetVideoMetadata(ids []string, missing, force bool) error {
 	properties := vangogh_integration.VideoProperties()
 	properties = append(properties, vangogh_integration.TitleProperty)
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir, properties...)
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), properties...)
 
 	videoIds := make([]string, 0, len(ids))
 	for _, id := range ids {

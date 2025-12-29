@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/arelate/vangogh/cli/shared_data"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 
 	"github.com/arelate/southern_light/vangogh_integration"
@@ -111,12 +110,7 @@ func Sync(
 		syncStart = time.Now().Unix()
 	}
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	syncEventsRdx, err := redux.NewWriter(reduxDir, vangogh_integration.SyncEventsProperty)
+	syncEventsRdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), vangogh_integration.SyncEventsProperty)
 	if err != nil {
 		return err
 	}

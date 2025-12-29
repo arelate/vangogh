@@ -21,18 +21,12 @@ import (
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/size"
 	"github.com/boggydigital/kevlar"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
 func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageElement, error) {
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return nil, err
-	}
-
-	rdx, err := redux.NewReader(reduxDir, vangogh_integration.GetDataProperties()...)
+	rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(), vangogh_integration.GetDataProperties()...)
 	if err != nil {
 		return nil, err
 	}

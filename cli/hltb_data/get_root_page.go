@@ -1,15 +1,15 @@
 package hltb_data
 
 import (
+	"time"
+
 	"github.com/arelate/southern_light/hltb_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
 	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
-	"time"
 )
 
 func GetRootPage() error {
@@ -32,12 +32,8 @@ func GetRootPage() error {
 	rootPageId := productType.String()
 	rootPageUrl := hltb_integration.RootUrl()
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.GetDataProperties()...)
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
+		vangogh_integration.GetDataProperties()...)
 	if err != nil {
 		return err
 	}

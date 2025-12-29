@@ -12,7 +12,6 @@ import (
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
@@ -47,12 +46,8 @@ func GetSteamPageId(steamGogIds map[string][]string, force bool) error {
 
 func GetGameSteamGogIds(steamGogIds map[string][]string) (map[string][]string, error) {
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return nil, err
-	}
-
-	rdx, err := redux.NewReader(reduxDir, vangogh_integration.ProductTypeProperty)
+	rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(),
+		vangogh_integration.ProductTypeProperty)
 	if err != nil {
 		return nil, err
 	}
@@ -77,12 +72,7 @@ func ReduceSteamPageIds(steamGogIds map[string][]string, kvPageId kevlar.KeyValu
 	rpia := nod.Begin(" reducing %s...", dataType)
 	defer rpia.Done()
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.PcgwPageIdProperties()...)
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), vangogh_integration.PcgwPageIdProperties()...)
 	if err != nil {
 		return err
 	}

@@ -11,7 +11,6 @@ import (
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/atomus"
 	"github.com/boggydigital/kevlar"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 
 	"maps"
@@ -67,12 +66,7 @@ func Summarize(since int64) error {
 
 	// released today
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir,
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
 		vangogh_integration.TitleProperty,
 		vangogh_integration.SteamAppIdProperty,
 		vangogh_integration.GOGReleaseDateProperty,
@@ -184,10 +178,7 @@ func publishAtom(rdx redux.Readable, summary map[string][]string) error {
 	paa := nod.Begin(" publishing atom...")
 	defer paa.Done()
 
-	afp, err := vangogh_integration.AbsAtomFeedPath()
-	if err != nil {
-		return err
-	}
+	afp := vangogh_integration.AbsAtomFeedPath()
 
 	atomFile, err := os.Create(afp)
 	if err != nil {

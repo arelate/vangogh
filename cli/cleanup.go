@@ -10,7 +10,6 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
@@ -45,12 +44,7 @@ func Cleanup(
 	ca := nod.NewProgress("cleaning up...")
 	defer ca.Done()
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewReader(reduxDir,
+	rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(),
 		vangogh_integration.SlugProperty,
 		vangogh_integration.ProductTypeProperty,
 		vangogh_integration.ManualUrlFilenameProperty,
@@ -190,10 +184,7 @@ func (cd *cleanupDelegate) Process(id string, slug string, list vangogh_integrat
 			prefix = "DELETE"
 		}
 
-		adp, err := pathways.GetAbsDir(vangogh_integration.Downloads)
-		if err != nil {
-			return err
-		}
+		adp := vangogh_integration.Pwd.AbsDirPath(vangogh_integration.Downloads)
 
 		relDownloadFilename, err := filepath.Rel(adp, absUnexpectedFile)
 		if err != nil {
@@ -220,10 +211,7 @@ func (cd *cleanupDelegate) Process(id string, slug string, list vangogh_integrat
 			return err
 		}
 
-		acp, err := pathways.GetAbsDir(vangogh_integration.Checksums)
-		if err != nil {
-			return err
-		}
+		acp := vangogh_integration.Pwd.AbsDirPath(vangogh_integration.Checksums)
 
 		relChecksumFile, err := filepath.Rel(acp, absChecksumFile)
 		if err != nil {

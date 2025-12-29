@@ -12,7 +12,6 @@ import (
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
@@ -52,12 +51,8 @@ func ReduceGogPageIds(gogIds map[string]any, kvPageId kevlar.KeyValues) error {
 	rpia := nod.Begin(" reducing %s...", dataType)
 	defer rpia.Done()
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.PcgwPageIdProperties()...)
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
+		vangogh_integration.PcgwPageIdProperties()...)
 	if err != nil {
 		return err
 	}

@@ -12,7 +12,6 @@ import (
 	"github.com/arelate/vangogh/clo_delegates"
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 )
 
 var (
@@ -32,11 +31,8 @@ func main() {
 	vsa := nod.Begin("vangogh is serving your DRM-free needs")
 	defer vsa.Done()
 
-	if err := pathways.Setup(dirsOverrideFilename,
-		vangogh_integration.DefaultRootDir,
-		vangogh_integration.RelToAbsDirs,
-		vangogh_integration.AllAbsDirs...); err != nil {
-		log.Fatalln(err)
+	if err := vangogh_integration.InitPathways(); err != nil {
+		log.Fatalln(nod.Error(err))
 	}
 
 	defs, err := clo.Load(
@@ -44,7 +40,7 @@ func main() {
 		bytes.NewBuffer(cliHelp),
 		clo_delegates.FuncMap)
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatalln(nod.Error(err))
 	}
 
 	clo.HandleFuncs(map[string]clo.Handler{
@@ -74,7 +70,7 @@ func main() {
 	})
 
 	if err = defs.AssertCommandsHaveHandlers(); err != nil {
-		log.Fatalln(err)
+		log.Fatalln(nod.Error(err))
 	}
 
 	var u *url.URL
@@ -84,11 +80,7 @@ func main() {
 	}
 
 	if q := u.Query(); q.Has(debugParam) {
-		absLogsDir, err := pathways.GetAbsDir(vangogh_integration.Logs)
-		if err != nil {
-			log.Fatalln(err)
-		}
-		logger, err := nod.EnableFileLogger(u.Path, absLogsDir)
+		logger, err := nod.EnableFileLogger(u.Path, vangogh_integration.Pwd.AbsDirPath(vangogh_integration.Logs))
 		if err != nil {
 			log.Fatalln(err)
 		}
@@ -96,7 +88,6 @@ func main() {
 	}
 
 	if err = defs.Serve(u); err != nil {
-		vsa.Error(err)
-		log.Fatalln(err)
+		log.Fatalln(nod.Error(err))
 	}
 }

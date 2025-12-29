@@ -14,7 +14,6 @@ import (
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
@@ -68,12 +67,8 @@ func ReduceApiProducts(kvApiProducts kevlar.KeyValues, since int64) error {
 	rapa := nod.Begin(" reducing %s...", dataType)
 	defer rapa.Done()
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.GOGApiProductProperties()...)
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
+		vangogh_integration.GOGApiProductProperties()...)
 	if err != nil {
 		return err
 	}

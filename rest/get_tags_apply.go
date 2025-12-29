@@ -41,12 +41,7 @@ func GetTagsApply(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		acp, err := vangogh_integration.AbsCookiePath()
-		if err != nil {
-			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-			return
-		}
-
+		acp := vangogh_integration.AbsCookiePath()
 		jar, err := coost.Read(gog_integration.DefaultUrl(), acp)
 		if err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)

@@ -12,7 +12,6 @@ import (
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
@@ -46,12 +45,7 @@ func Validate(
 
 	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir,
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
 		vangogh_integration.SlugProperty,
 		vangogh_integration.ProductTypeProperty,
 		vangogh_integration.ManualUrlFilenameProperty,

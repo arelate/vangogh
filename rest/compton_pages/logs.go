@@ -11,7 +11,6 @@ import (
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/size"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
@@ -32,11 +31,7 @@ func Logs(rdx redux.Readable) compton.PageElement {
 	titleHeading := compton.HeadingText(title, 1)
 	pageStack.Append(compton.FICenter(p, titleHeading))
 
-	absLogsDir, err := pathways.GetAbsDir(vangogh_integration.Logs)
-	if err != nil {
-		p.Error(err)
-		return p
-	}
+	absLogsDir := vangogh_integration.Pwd.AbsDirPath(vangogh_integration.Logs)
 
 	ld, err := os.Open(absLogsDir)
 	if err != nil {

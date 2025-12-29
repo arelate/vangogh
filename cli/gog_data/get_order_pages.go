@@ -12,7 +12,6 @@ import (
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
@@ -44,15 +43,10 @@ func ReduceOrderPages(kvOrderPages kevlar.KeyValues, since int64) error {
 	ropa := nod.Begin(" reducing %s...", pageType)
 	defer ropa.Done()
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
 	properties := vangogh_integration.GOGOrderPageProperties()
 	properties = append(properties, vangogh_integration.IncludesGamesProperty)
 
-	rdx, err := redux.NewWriter(reduxDir, properties...)
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), properties...)
 	if err != nil {
 		return err
 	}

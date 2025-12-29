@@ -2,18 +2,12 @@ package shared_data
 
 import (
 	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
 func ReduceMisc() error {
 
-	reduxDir, err := pathways.GetAbsRelDir(vangogh_integration.Redux)
-	if err != nil {
-		return err
-	}
-
-	rdx, err := redux.NewWriter(reduxDir, vangogh_integration.ReduxProperties()...)
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), vangogh_integration.ReduxProperties()...)
 	if err != nil {
 		return err
 	}
