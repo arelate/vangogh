@@ -1,10 +1,12 @@
 package rest
 
 import (
+	"net/http"
+
+	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/coost"
 	"github.com/boggydigital/nod"
-	"net/http"
 )
 
 func GetTagsApply(w http.ResponseWriter, r *http.Request) {
@@ -45,11 +47,14 @@ func GetTagsApply(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		hc, err := coost.NewHttpClientFromFile(acp)
+		jar, err := coost.Read(gog_integration.DefaultUrl(), acp)
 		if err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 			return
 		}
+
+		hc := http.DefaultClient
+		hc.Jar = jar
 
 		if len(add) > 0 {
 			if err := vangogh_integration.AddTags(hc, []string{id}, add, nil); err != nil {

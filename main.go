@@ -58,6 +58,7 @@ func main() {
 		"get-summary":            cli.GetSummaryHandler,
 		"get-video-metadata":     cli.GetVideoMetadataHandler,
 		"get-wine-binaries":      cli.GetWineBinariesHandler,
+		"import-cookies":         cli.ImportCookiesHandler,
 		"migrate-data":           cli.MigrateDataHandler,
 		"process-queue":          cli.ProcessQueueHandler,
 		"reduce":                 cli.ReduceHandler,

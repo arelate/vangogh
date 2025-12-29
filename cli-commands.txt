@@ -72,6 +72,9 @@ get-wine-binaries
     os&$={operating-systems^}
     force
 
+import-cookies
+    cookies^*
+
 migrate-data
     force
 

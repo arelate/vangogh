@@ -17,7 +17,6 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/itemizations"
 	"github.com/arelate/vangogh/cli/reqs"
-	"github.com/boggydigital/coost"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
@@ -67,12 +66,7 @@ func GetDownloads(
 
 	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
 
-	acp, err := vangogh_integration.AbsCookiePath()
-	if err != nil {
-		return err
-	}
-
-	hc, err := coost.NewHttpClientFromFile(acp)
+	hc, err := gogAuthHttpClient()
 	if err != nil {
 		return err
 	}
@@ -205,12 +199,7 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 		return err
 	}
 
-	acp, err := vangogh_integration.AbsCookiePath()
-	if err != nil {
-		return err
-	}
-
-	hc, err := coost.NewHttpClientFromFile(acp)
+	hc, err := gogAuthHttpClient()
 	if err != nil {
 		return err
 	}

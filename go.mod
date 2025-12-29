@@ -1,21 +1,21 @@
 module github.com/arelate/vangogh
 
-go 1.25.4
+go 1.25.5
 
 require (
-	github.com/arelate/southern_light v0.3.69
+	github.com/arelate/southern_light v0.3.70
 	github.com/boggydigital/atomus v0.1.11
 	github.com/boggydigital/author v0.1.24
 	github.com/boggydigital/backups v0.1.7
 	github.com/boggydigital/clo v1.0.8
 	github.com/boggydigital/compton v0.4.57
-	github.com/boggydigital/coost v0.3.11
+	github.com/boggydigital/coost v0.4.1
 	github.com/boggydigital/dolo v0.2.24
 	github.com/boggydigital/issa v0.1.23
 	github.com/boggydigital/kevlar v0.6.9
 	github.com/boggydigital/nod v0.1.30
 	github.com/boggydigital/pathways v0.1.15
-	github.com/boggydigital/redux v0.1.9
+	github.com/boggydigital/redux v0.1.10
 	github.com/boggydigital/yet_urls v0.1.57
 	golang.org/x/net v0.48.0
 )

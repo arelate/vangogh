@@ -2,9 +2,11 @@ package cli
 
 import (
 	"encoding/json"
+	"errors"
 	"maps"
 	"net/http"
 	"net/url"
+	"os"
 	"slices"
 
 	"github.com/arelate/southern_light/gog_integration"
@@ -415,10 +417,15 @@ func gogAuthHttpClient() (*http.Client, error) {
 		return nil, err
 	}
 
-	hc, err := coost.NewHttpClientFromFile(acp)
-	if err != nil {
+	jar, err := coost.Read(gog_integration.DefaultUrl(), acp)
+	if os.IsNotExist(err) {
+		return nil, errors.New("cookies file not found, use import-cookies command to add")
+	} else if err != nil {
 		return nil, err
 	}
+
+	hc := http.DefaultClient
+	hc.Jar = jar
 
 	if err = gog_integration.IsLoggedIn(hc); err != nil {
 		return nil, err
