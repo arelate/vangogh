@@ -211,7 +211,8 @@ func NewAtomFeedContent(rdx redux.Readable, summary map[string][]string) string 
 		sb.WriteString("<h1>" + sectionTitle + "</h1>")
 		sb.WriteString("<ul>")
 		for _, id := range summary[section] {
-			if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
+			var title string
+			if title, ok = rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
 				sb.WriteString("<li>" + title + " (" + id + ")</li>")
 			} else {
 				sb.WriteString("<li>" + id + "</li>")
