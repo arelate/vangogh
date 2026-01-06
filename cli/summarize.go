@@ -201,7 +201,14 @@ func NewAtomFeedContent(rdx redux.Readable, summary map[string][]string) string 
 		if len(summary[section]) == 0 {
 			continue
 		}
-		sb.WriteString("<h1>" + vangogh_integration.UpdatesLongerTitles[section] + "</h1>")
+
+		var sectionTitle string
+		var ok bool
+		if sectionTitle, ok = vangogh_integration.UpdatesAtomTitles[section]; !ok {
+			sectionTitle = vangogh_integration.UpdatesLongerTitles[section]
+		}
+
+		sb.WriteString("<h1>" + sectionTitle + "</h1>")
 		sb.WriteString("<ul>")
 		for _, id := range summary[section] {
 			if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
