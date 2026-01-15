@@ -16,13 +16,13 @@ require (
 	github.com/boggydigital/nod v0.1.30
 	github.com/boggydigital/redux v0.1.11
 	github.com/boggydigital/yet_urls v0.1.57
-	golang.org/x/net v0.48.0
+	golang.org/x/net v0.49.0
 )
 
 require (
 	github.com/boggydigital/match_node v0.1.19 // indirect
 	github.com/boggydigital/pathways v0.2.1 // indirect
 	github.com/boggydigital/wits v0.2.3 // indirect
-	golang.org/x/crypto v0.46.0 // indirect
-	golang.org/x/image v0.34.0 // indirect
+	golang.org/x/crypto v0.47.0 // indirect
+	golang.org/x/image v0.35.0 // indirect
 )
