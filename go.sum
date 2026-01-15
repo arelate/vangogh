@@ -8,6 +8,8 @@ github.com/boggydigital/atomus v0.1.11 h1:n9XRgPqF3OgnK8UK7yJ3aG5sQkwacBjtqzzOxC
 github.com/boggydigital/atomus v0.1.11/go.mod h1:/ga4zus10Z3FiNDU4JmRw5fdm0IW78qoezV/Ni44V5s=
 github.com/boggydigital/author v0.1.25 h1:TclaDKvuQECImrTXGjC/n8gAD/0lDre9oxuDUIBobAE=
 github.com/boggydigital/author v0.1.25/go.mod h1:dCqaAkZMxVEwqshy8m//UfhlaSozk8zwO8mMFWvtbH8=
+github.com/boggydigital/author v0.1.26 h1:/KcHk779TJNRd4fiskwXgNELALAArJA68ELEpuvMGcg=
+github.com/boggydigital/author v0.1.26/go.mod h1:dCqaAkZMxVEwqshy8m//UfhlaSozk8zwO8mMFWvtbH8=
 github.com/boggydigital/backups v0.1.7 h1:X+qFblWtF3+zMx8IteZG/bGHXIiboR3EAtAtJiXCryc=
 github.com/boggydigital/backups v0.1.7/go.mod h1:JOQ9JgnpHRRrdDE+yRSbdedFdl5uv6kJ960zBWInHMo=
 github.com/boggydigital/clo v1.0.8 h1:/E+xA4e+tvQrtSmMHN/DeKaVEhiSI2aHDx63dJ98lCU=
