@@ -79,7 +79,7 @@ func GetSteamCmdBinaries(operatingSystems []vangogh_integration.OperatingSystem,
 
 	for _, operatingSystem := range operatingSystems {
 
-		osa := nod.NewProgress(" %s...", operatingSystem)
+		osa := nod.NewProgress(" SteamCMD for %s...", operatingSystem)
 
 		scbu, err := url.Parse(steamcmd.Urls[operatingSystem])
 		if err != nil {
