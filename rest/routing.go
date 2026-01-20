@@ -27,7 +27,7 @@ func HandleFuncs() {
 		"GET /login":  Log(http.HandlerFunc(GetLogin)),
 		"GET /logout": Log(http.HandlerFunc(sb.DeauthSession)),
 		"POST /auth":  Log(http.HandlerFunc(sb.AuthBrowserUsernamePassword)),
-		// soon to be authenticated endpoints
+		// authenticated endpoints
 		"GET /updates":       AuthSt(sb, Log(http.HandlerFunc(GetUpdates)), perm.ReadUpdates),
 		"GET /search":        AuthSt(sb, Log(http.HandlerFunc(GetSearch)), perm.ReadSearch),
 		"GET /product":       AuthSt(sb, Log(http.HandlerFunc(GetProduct)), perm.ReadProductData),
@@ -40,12 +40,13 @@ func HandleFuncs() {
 		"GET /changelog":     AuthSt(sb, Log(http.HandlerFunc(GetChangelog)), perm.ReadProductData),
 		"GET /compatibility": AuthSt(sb, Log(http.HandlerFunc(GetCompatibility)), perm.ReadProductData),
 		"GET /installers":    AuthSt(sb, Log(http.HandlerFunc(GetInstallers)), perm.ReadFiles),
-		"GET /wine-binaries": AuthSt(sb, Log(http.HandlerFunc(GetWineBinaries)), perm.ReadFiles),
+		"GET /binaries":      AuthSt(sb, Log(http.HandlerFunc(GetBinaries)), perm.ReadFiles),
 		// public media endpoints
 		"GET /image":               AuthSt(sb, Log(http.HandlerFunc(GetImage)), perm.ReadImages),
 		"GET /description-images/": AuthSt(sb, Log(http.HandlerFunc(GetDescriptionImages)), perm.ReadImages),
-		// public files endpoints
-		"GET /wine-binary-file": AuthSt(sb, Log(http.HandlerFunc(GetWineBinaryFile)), perm.ReadFiles),
+		// binaries endpoints
+		"GET /wine-binary-file":     AuthSt(sb, Log(http.HandlerFunc(GetWineBinaryFile)), perm.ReadFiles),
+		"GET /steamcmd-binary-file": AuthSt(sb, Log(http.HandlerFunc(GetSteamCmdBinaryFile)), perm.ReadFiles),
 		// auth data endpoints
 		"GET /wishlist/add":     AuthSt(sb, Log(http.HandlerFunc(GetWishlistAdd)), perm.WriteWishlist),
 		"GET /wishlist/remove":  AuthSt(sb, Log(http.HandlerFunc(GetWishlistRemove)), perm.WriteWishlist),

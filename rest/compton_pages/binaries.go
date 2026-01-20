@@ -10,9 +10,9 @@ import (
 	"github.com/boggydigital/kevlar"
 )
 
-func WineBinaries() compton.PageElement {
+func Binaries() compton.PageElement {
 
-	title := "WINE binaries"
+	title := "Binaries"
 
 	p := compton.Page(title)
 
@@ -74,6 +74,11 @@ func WineBinaries() compton.PageElement {
 
 		}
 
+		link := compton.A("/steamcmd-binary-file?os=" + operatingSystem.String())
+		linkFrow := compton.Frow(p).FontSize(size.Small)
+		link.Append(compton.FICenter(p, linkFrow))
+		linkFrow.Heading("SteamCMD")
+		pageStack.Append(link)
 	}
 
 	pageStack.Append(compton.Br(), compton.FICenter(p, compton_fragments.GitHubLink(p), compton_fragments.LogoutLink(p)))
