@@ -24,7 +24,7 @@ EXPOSE 1853
 VOLUME /var/lib/vangogh/backups
 # downloads (cold storage)
 VOLUME /var/lib/vangogh/downloads
-# checksums (cold storage)
+# checksums (hot storage)
 VOLUME /var/lib/vangogh/checksums
 # images (hot storage)
 VOLUME /var/lib/vangogh/images
