@@ -40,7 +40,7 @@ func syncOptions() []string {
 		cli.SyncOptionScreenshots,
 		cli.SyncOptionVideosMetadata,
 		cli.SyncOptionDownloadsUpdates,
-		cli.SynOptionWineBinaries,
+		cli.SynOptionBinaries,
 	})
 }
 

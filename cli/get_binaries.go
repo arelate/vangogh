@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/arelate/southern_light/github_integration"
+	"github.com/arelate/southern_light/steamcmd"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/southern_light/wine_integration"
 	"github.com/boggydigital/dolo"
@@ -19,7 +20,7 @@ import (
 	"github.com/boggydigital/nod"
 )
 
-func GetWineBinariesHandler(u *url.URL) error {
+func GetBinariesHandler(u *url.URL) error {
 
 	q := u.Query()
 
@@ -31,18 +32,79 @@ func GetWineBinariesHandler(u *url.URL) error {
 			strings.Split(q.Get(vangogh_integration.OperatingSystemsProperty), ","))
 	}
 
-	return GetWineBinaries(operatingSystems, force)
+	wine := q.Has("wine")
+	steamCmd := q.Has("steamcmd")
+
+	if q.Has("all") {
+		wine = true
+		steamCmd = true
+	}
+
+	return GetBinaries(operatingSystems, wine, steamCmd, force)
+}
+
+func GetBinaries(operatingSystems []vangogh_integration.OperatingSystem, wine, steamCmd, force bool) error {
+
+	if wine {
+		if err := GetWineBinaries(operatingSystems, force); err != nil {
+			return err
+		}
+	}
+
+	if steamCmd {
+		if err := GetSteamCmdBinaries(operatingSystems, force); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func GetSteamCmdBinaries(operatingSystems []vangogh_integration.OperatingSystem, force bool) error {
+
+	gscba := nod.Begin("getting SteamCMD binaries...")
+	defer gscba.Done()
+
+	if len(operatingSystems) == 0 {
+		gscba.EndWithResult("no operating system specified for SteamCMD binaries")
+		return nil
+	}
+
+	if slices.Contains(operatingSystems, vangogh_integration.AnyOperatingSystem) {
+		operatingSystems = vangogh_integration.AllOperatingSystems()
+	}
+
+	steamCmdBinariesDir := vangogh_integration.Pwd.AbsRelDirPath(vangogh_integration.SteamCmdBinaries, vangogh_integration.Downloads)
+	dc := dolo.DefaultClient
+
+	for _, operatingSystem := range operatingSystems {
+
+		osa := nod.NewProgress(" %s...", operatingSystem)
+
+		scbu, err := url.Parse(steamcmd.Urls[operatingSystem])
+		if err != nil {
+			return err
+		}
+
+		if err = dc.Download(scbu, force, osa, steamCmdBinariesDir); err != nil {
+			return err
+		}
+
+		osa.Done()
+	}
+
+	return nil
 }
 
 func GetWineBinaries(operatingSystems []vangogh_integration.OperatingSystem, force bool) error {
 
-	gba := nod.Begin("getting WINE binaries...")
-	defer gba.Done()
+	gwba := nod.Begin("getting WINE binaries...")
+	defer gwba.Done()
 
 	start := time.Now()
 
 	if len(operatingSystems) == 0 {
-		gba.EndWithResult("no operating system specified for WINE binaries")
+		gwba.EndWithResult("no operating system specified for WINE binaries")
 		return nil
 	}
 

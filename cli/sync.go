@@ -23,7 +23,7 @@ const (
 	SyncOptionScreenshots       = "screenshots"
 	SyncOptionVideosMetadata    = "videos-metadata"
 	SyncOptionDownloadsUpdates  = "downloads-updates"
-	SynOptionWineBinaries       = "wine-binaries"
+	SynOptionBinaries           = "binaries"
 	negativePrefix              = "no-"
 )
 
@@ -34,7 +34,7 @@ type syncOptions struct {
 	screenshots       bool
 	videosMetadata    bool
 	downloadsUpdates  bool
-	wineBinaries      bool
+	binaries          bool
 }
 
 func NegOpt(option string) string {
@@ -53,7 +53,7 @@ func initSyncOptions(u *url.URL) *syncOptions {
 		screenshots:       vangogh_integration.FlagFromUrl(u, SyncOptionScreenshots),
 		videosMetadata:    vangogh_integration.FlagFromUrl(u, SyncOptionVideosMetadata),
 		downloadsUpdates:  vangogh_integration.FlagFromUrl(u, SyncOptionDownloadsUpdates),
-		wineBinaries:      vangogh_integration.FlagFromUrl(u, SynOptionWineBinaries),
+		binaries:          vangogh_integration.FlagFromUrl(u, SynOptionBinaries),
 	}
 
 	if vangogh_integration.FlagFromUrl(u, "all") {
@@ -63,7 +63,7 @@ func initSyncOptions(u *url.URL) *syncOptions {
 		so.screenshots = !vangogh_integration.FlagFromUrl(u, NegOpt(SyncOptionScreenshots))
 		so.videosMetadata = !vangogh_integration.FlagFromUrl(u, NegOpt(SyncOptionVideosMetadata))
 		so.downloadsUpdates = !vangogh_integration.FlagFromUrl(u, NegOpt(SyncOptionDownloadsUpdates))
-		so.wineBinaries = !vangogh_integration.FlagFromUrl(u, NegOpt(SynOptionWineBinaries))
+		so.binaries = !vangogh_integration.FlagFromUrl(u, NegOpt(SynOptionBinaries))
 	}
 
 	return so
@@ -235,12 +235,12 @@ func Sync(
 
 	}
 
-	if syncOpts.wineBinaries {
-		if err = GetWineBinaries(operatingSystems, force); err != nil {
+	if syncOpts.binaries {
+		if err = GetBinaries(operatingSystems, true, true, force); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
 
-		if err = setSyncEvent(vangogh_integration.SyncWineBinaries, syncEventsRdx); err != nil {
+		if err = setSyncEvent(vangogh_integration.SyncBinaries, syncEventsRdx); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
 	}
