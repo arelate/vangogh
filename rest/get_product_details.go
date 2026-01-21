@@ -2,10 +2,7 @@ package rest
 
 import (
 	"encoding/json"
-	"encoding/xml"
 	"net/http"
-	"os"
-	"path/filepath"
 
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
@@ -16,7 +13,7 @@ const applicationJsonContentType = "application/json"
 
 func GetProductDetails(w http.ResponseWriter, r *http.Request) {
 
-	// GET /product-details?id
+	// GET /api/product-details?id
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
@@ -123,21 +120,6 @@ func getProductDetails(id string, dls vangogh_integration.DownloadsList, rdx red
 			link.Name = dl.ProductTitle
 		}
 
-		absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(productDetails.Slug, dl.DownloadType, downloadsLayout)
-		if err != nil {
-			return nil, err
-		}
-
-		if filename, ok := rdx.GetLastVal(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl); ok {
-			link.LocalFilename = filename
-
-			absDownloadPath := filepath.Join(absSlugDownloadDir, filename)
-
-			if md5, err := getMd5Checksum(absDownloadPath); err == nil {
-				link.Md5 = md5
-			}
-		}
-
 		productDetails.DownloadLinks = append(productDetails.DownloadLinks, link)
 	}
 
@@ -157,25 +139,4 @@ func getProductDetails(id string, dls vangogh_integration.DownloadsList, rdx red
 	}
 
 	return productDetails, nil
-}
-
-func getMd5Checksum(absDownloadPath string) (string, error) {
-
-	absChecksumPath, err := vangogh_integration.AbsChecksumPath(absDownloadPath)
-	if err != nil {
-		return "", err
-	}
-
-	chkFile, err := os.Open(absChecksumPath)
-	if err != nil {
-		return "", err
-	}
-	defer chkFile.Close()
-
-	var chkData vangogh_integration.ValidationFile
-	if err = xml.NewDecoder(chkFile).Decode(&chkData); err != nil {
-		return "", err
-	}
-
-	return chkData.MD5, nil
 }

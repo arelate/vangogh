@@ -62,6 +62,7 @@ func HandleFuncs() {
 		"POST /api/auth-user":             Log(http.HandlerFunc(sb.AuthApiUsernamePassword)),
 		"POST /api/auth-session":          Log(http.HandlerFunc(sb.AuthApiSession)),
 		"GET /api/product-details":        AuthSt(sb, Log(http.HandlerFunc(GetProductDetails)), perm.ReadApi),
+		"GET /api/manual-url-checksums":   AuthSt(sb, Log(http.HandlerFunc(GetManualUrlChecksums)), perm.ReadApi),
 		"GET /api/wine-binaries-versions": AuthSt(sb, Log(http.HandlerFunc(GetWineBinariesVersions)), perm.ReadApi),
 		// debug endpoints
 		"GET /debug":           AuthSt(sb, Log(http.HandlerFunc(GetDebug)), perm.ReadDebug),
