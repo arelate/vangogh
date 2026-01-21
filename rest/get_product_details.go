@@ -120,6 +120,10 @@ func getProductDetails(id string, dls vangogh_integration.DownloadsList, rdx red
 			link.Name = dl.ProductTitle
 		}
 
+		if filename, ok := rdx.GetLastVal(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl); ok {
+			link.LocalFilename = filename
+		}
+
 		productDetails.DownloadLinks = append(productDetails.DownloadLinks, link)
 	}
 
