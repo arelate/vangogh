@@ -23,6 +23,14 @@ import (
 	"github.com/boggydigital/redux"
 )
 
+type getDownloadOptions struct {
+	checksumsOnly bool
+	all           bool
+	missing       bool
+	debug         bool
+	force         bool
+}
+
 func GetDownloadsHandler(u *url.URL) error {
 	ids, err := vangogh_integration.IdsFromUrl(u)
 	if err != nil {
@@ -36,6 +44,13 @@ func GetDownloadsHandler(u *url.URL) error {
 		manualUrlFilter = strings.Split(q.Get("manual-url-filter"), ",")
 	}
 
+	gdo := &getDownloadOptions{
+		checksumsOnly: q.Has("checksums-only"),
+		missing:       q.Has("missing"),
+		debug:         q.Has("debug"),
+		force:         q.Has("force"),
+	}
+
 	return GetDownloads(
 		ids,
 		vangogh_integration.OperatingSystemsFromUrl(u),
@@ -43,10 +58,7 @@ func GetDownloadsHandler(u *url.URL) error {
 		vangogh_integration.DownloadTypesFromUrl(u),
 		vangogh_integration.FlagFromUrl(u, "no-patches"),
 		vangogh_integration.DownloadsLayoutFromUrl(u),
-		q.Has("checksums-only"),
-		q.Has("missing"),
-		q.Has("debug"),
-		q.Has("force"),
+		gdo,
 		manualUrlFilter...)
 }
 
@@ -57,7 +69,7 @@ func GetDownloads(
 	downloadTypes []vangogh_integration.DownloadType,
 	noPatches bool,
 	downloadsLayout vangogh_integration.DownloadsLayout,
-	checksumsOnly, missing, debug, force bool,
+	options *getDownloadOptions,
 	manualUrlFilter ...string) error {
 
 	gda := nod.NewProgress("downloading product files...")
@@ -83,7 +95,7 @@ func GetDownloads(
 		return err
 	}
 
-	if missing {
+	if options.missing {
 		missingIds, err := itemizations.MissingLocalDownloads(
 			rdx,
 			operatingSystems,
@@ -91,7 +103,7 @@ func GetDownloads(
 			langCodes,
 			noPatches,
 			downloadsLayout,
-			debug)
+			options.debug)
 		if err != nil {
 			return err
 		}
@@ -104,11 +116,25 @@ func GetDownloads(
 		ids = append(ids, missingIds...)
 	}
 
+	if options.all {
+		detailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.Details)
+		if err != nil {
+			return err
+		}
+
+		kvDetails, err := kevlar.New(detailsDir, kevlar.JsonExt)
+		if err != nil {
+			return err
+		}
+
+		ids = slices.Collect(kvDetails.Keys())
+	}
+
 	gdd := &getDownloadsDelegate{
 		rdx:             rdx,
-		forceUpdate:     force,
+		forceUpdate:     options.force,
 		downloadsLayout: downloadsLayout,
-		checksumsOnly:   checksumsOnly,
+		checksumsOnly:   options.checksumsOnly,
 		manualUrlFilter: manualUrlFilter,
 	}
 

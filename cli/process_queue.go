@@ -51,10 +51,13 @@ func ProcessQueue(
 			downloadTypes,
 			noPatches,
 			downloadsLayout,
-			false,
-			false,
-			false,
-			true); err != nil {
+			&getDownloadOptions{
+				checksumsOnly: false,
+				all:           false,
+				missing:       false,
+				debug:         false,
+				force:         true,
+			}); err != nil {
 			return err
 		}
 

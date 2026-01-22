@@ -21,7 +21,6 @@ var (
 	cliHelp []byte
 )
 
-const dirsOverrideFilename = "directories.txt"
 const debugParam = "debug"
 
 func main() {
