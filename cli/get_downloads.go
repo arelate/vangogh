@@ -25,8 +25,8 @@ import (
 
 type getDownloadOptions struct {
 	checksumsOnly bool
-	all           bool
 	missing       bool
+	all           bool
 	debug         bool
 	force         bool
 }
@@ -47,6 +47,7 @@ func GetDownloadsHandler(u *url.URL) error {
 	gdo := &getDownloadOptions{
 		checksumsOnly: q.Has("checksums-only"),
 		missing:       q.Has("missing"),
+		all:           q.Has("all"),
 		debug:         q.Has("debug"),
 		force:         q.Has("force"),
 	}
