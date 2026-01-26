@@ -268,12 +268,13 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	//6 - download authorized session URL to a file
 	//7 - set the manual-url status to downloaded
 
+	// 0
 	if err := gdd.rdx.ReplaceValues(vangogh_integration.ManualUrlStatusProperty,
 		dl.ManualUrl, vangogh_integration.DownloadStatusDownloading.String()); err != nil {
 		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 	}
 
-	//1
+	// 1
 	if !gdd.forceUpdate {
 		if filename, ok := gdd.rdx.GetLastVal(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl); ok && filename != "" {
 			absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.DownloadType, gdd.downloadsLayout)
@@ -299,7 +300,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 		}
 	}
 
-	//2
+	// 2
 	resp, err := httpClient.Head(gog_integration.ManualDownloadUrl(dl.ManualUrl).String())
 	if err != nil {
 		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
@@ -320,13 +321,13 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 	}
 
-	//3
+	// 3
 	_, resolvedFilename := path.Split(resolvedUrl.Path)
 	if err = gdd.rdx.ReplaceValues(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl, resolvedFilename); err != nil {
 		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 	}
 
-	//4
+	// 4
 	absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.DownloadType, gdd.downloadsLayout)
 	if err != nil {
 		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
@@ -334,7 +335,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 
 	absDownloadPath := filepath.Join(absSlugDownloadDir, resolvedFilename)
 
-	//5
+	// 5
 	if dl.DownloadType == vangogh_integration.Installer || dl.DownloadType == vangogh_integration.DLC {
 		if remoteChecksumPath := resolvedUrl.Path + kevlar.XmlExt; remoteChecksumPath != "" {
 
@@ -373,7 +374,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 		return nil
 	}
 
-	//6
+	// 6
 	lfa := nod.NewProgress(" - %s", resolvedFilename)
 	defer lfa.Done()
 
@@ -381,7 +382,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 	}
 
-	//7
+	// 7
 	if err = gdd.rdx.ReplaceValues(vangogh_integration.ManualUrlStatusProperty,
 		dl.ManualUrl, vangogh_integration.DownloadStatusDownloaded.String()); err != nil {
 		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
