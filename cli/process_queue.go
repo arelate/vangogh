@@ -53,8 +53,8 @@ func ProcessQueue(
 			downloadsLayout,
 			&getDownloadOptions{
 				checksumsOnly: false,
-				all:           false,
 				missing:       false,
+				all:           false,
 				debug:         false,
 				force:         true,
 			}); err != nil {

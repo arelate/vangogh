@@ -95,8 +95,8 @@ func UpdateDownloads(
 		downloadsLayout,
 		&getDownloadOptions{
 			checksumsOnly: false,
-			all:           false,
 			missing:       false,
+			all:           false,
 			debug:         false,
 			force:         true,
 		})
