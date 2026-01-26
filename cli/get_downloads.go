@@ -24,6 +24,8 @@ import (
 )
 
 type getDownloadOptions struct {
+	updateDetails bool
+	validate      bool
 	checksumsOnly bool
 	missing       bool
 	all           bool
@@ -45,6 +47,8 @@ func GetDownloadsHandler(u *url.URL) error {
 	}
 
 	gdo := &getDownloadOptions{
+		updateDetails: q.Has("update-details"),
+		validate:      q.Has("validate"),
 		checksumsOnly: q.Has("checksums-only"),
 		missing:       q.Has("missing"),
 		all:           q.Has("all"),
@@ -91,7 +95,12 @@ func GetDownloads(
 		append(
 			vangogh_integration.DownloadsLifecycleProperties(),
 			vangogh_integration.SlugProperty,
-			vangogh_integration.ProductTypeProperty)...)
+			vangogh_integration.ProductTypeProperty,
+			// for optional validations
+			vangogh_integration.ManualUrlFilenameProperty,
+			vangogh_integration.ManualUrlStatusProperty,
+			vangogh_integration.ManualUrlValidationResultProperty,
+			vangogh_integration.ProductValidationResultProperty)...)
 	if err != nil {
 		return err
 	}
@@ -131,12 +140,31 @@ func GetDownloads(
 		ids = slices.Collect(kvDetails.Keys())
 	}
 
+	if options.updateDetails {
+		if err = GetData(ids,
+			[]vangogh_integration.ProductType{vangogh_integration.Details},
+			-1,
+			false,
+			false,
+			true); err != nil {
+			return err
+		}
+	}
+
 	gdd := &getDownloadsDelegate{
 		rdx:             rdx,
 		forceUpdate:     options.force,
 		downloadsLayout: downloadsLayout,
 		checksumsOnly:   options.checksumsOnly,
 		manualUrlFilter: manualUrlFilter,
+	}
+
+	if options.validate {
+		gdd.validateDelegate = &validateDelegate{
+			rdx:             rdx,
+			downloadsLayout: downloadsLayout,
+			statuses:        make(map[vangogh_integration.ValidationStatus]int),
+		}
 	}
 
 	if err = vangogh_integration.MapDownloads(
@@ -155,11 +183,12 @@ func GetDownloads(
 }
 
 type getDownloadsDelegate struct {
-	rdx             redux.Writeable
-	forceUpdate     bool
-	downloadsLayout vangogh_integration.DownloadsLayout
-	checksumsOnly   bool
-	manualUrlFilter []string
+	rdx              redux.Writeable
+	forceUpdate      bool
+	downloadsLayout  vangogh_integration.DownloadsLayout
+	checksumsOnly    bool
+	manualUrlFilter  []string
+	validateDelegate *validateDelegate
 }
 
 func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integration.DownloadsList) error {
@@ -244,6 +273,12 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 
 	if err = gdd.rdx.CutKeys(vangogh_integration.DownloadQueuedProperty, id); err != nil {
 		return err
+	}
+
+	if gdd.validateDelegate != nil {
+		if err = gdd.validateDelegate.Process(id, slug, list); err != nil {
+			return err
+		}
 	}
 
 	return nil

@@ -55,6 +55,8 @@ get-downloads
     no-patches$
     manual-url-filter&
     downloads-layout$={downloads-layouts^}
+    update-details
+    validate
     checksums-only
     missing
     all
