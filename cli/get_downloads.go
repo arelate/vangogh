@@ -192,7 +192,7 @@ type getDownloadsDelegate struct {
 }
 
 func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integration.DownloadsList) error {
-	sda := nod.Begin(" downloading %s...", slug)
+	sda := nod.Begin("downloading %s...", slug)
 	defer sda.Done()
 
 	if len(list) == 0 {

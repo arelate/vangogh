@@ -241,7 +241,7 @@ func downloadsListIsExtrasOnly(dls vangogh_integration.DownloadsList) bool {
 
 func (vd *validateDelegate) Process(id, slug string, list vangogh_integration.DownloadsList) error {
 
-	sva := nod.Begin(" validating %s...", slug)
+	sva := nod.Begin("validating %s...", slug)
 	defer sva.Done()
 
 	if err := vd.rdx.ReplaceValues(vangogh_integration.ProductValidationResultProperty,
