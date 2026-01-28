@@ -231,8 +231,9 @@ func fixSlugDtDlDownloads(slug, slugDownloadsDir string, dt vangogh_integration.
 	path := absWrongPath
 	for {
 
-		absWrongSubdir, _ := filepath.Split(path)
-		if absWrongSubdir == slugDownloadsDir {
+		absWrongSubdir := filepath.Dir(path)
+
+		if len(absWrongSubdir) <= len(slugDownloadsDir) {
 			break
 		}
 
