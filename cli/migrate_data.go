@@ -191,9 +191,6 @@ func fixSlugDtDlDownloads(slug, slugDownloadsDir string, dt vangogh_integration.
 
 	absWrongPath := filepath.Join(slugDownloadsDir, wrongRelDir)
 
-	awp := nod.Begin(" checking %s...", absWrongPath)
-	awp.Done()
-
 	if _, err := os.Stat(absWrongPath); err == nil {
 
 		problem := nod.Begin(" - found %s...", absWrongPath)
@@ -229,6 +226,33 @@ func fixSlugDtDlDownloads(slug, slugDownloadsDir string, dt vangogh_integration.
 		// do nothing
 	} else {
 		return err
+	}
+
+	path := absWrongPath
+	for {
+
+		if _, err := os.Stat(path); os.IsNotExist(err) {
+			break
+		}
+
+		absWrongSubdir, _ := filepath.Split(path)
+		if filepath.Clean(absWrongPath) == filepath.Clean(slugDownloadsDir) {
+			break
+		}
+
+		if _, err := os.Stat(absWrongSubdir); err == nil {
+
+			rema := nod.Begin("WILL remove %s", absWrongSubdir)
+			rema.Done()
+
+			//if err = os.RemoveAll(absWrongSubdir); err != nil {
+			//	return err
+			//}
+		} else if os.IsNotExist(err) {
+			break
+		}
+
+		path = absWrongSubdir
 	}
 
 	return nil
