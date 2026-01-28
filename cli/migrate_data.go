@@ -21,6 +21,7 @@ import (
 // 5. deprecate aggregated-rating property
 // 6. rename logs from year-month-date-hour-minute-second.log to sync-year-month-date-hour-minute-second.log // v1.1.9
 // 7. remove previously cascaded validations // v1.2.1
+// 8. fix incorrect dlc, extras sub-directories in downloads // 1.2.6
 
 const (
 	latestDataSchema = 9
@@ -65,14 +66,12 @@ func MigrateData(force bool) error {
 			if err = fixDlcExtrasDownloads(); err != nil {
 				return err
 			}
-
 		}
 
 		mda.Increment()
 	}
 
-	//return setLatestDataSchema(rdx)
-	return nil
+	return setLatestDataSchema(rdx)
 }
 
 func getCurrentDataSchema(rdx redux.Readable) (int, error) {
