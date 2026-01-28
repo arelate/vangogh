@@ -126,7 +126,7 @@ func cutPreviouslyCascadedValidations() error {
 
 func fixDlcExtrasDownloads() error {
 
-	fdeda := nod.Begin(" checking for wrong DLCs, Extras, please wait...")
+	fdeda := nod.Begin(" fixing DLCs, Extras directories, please wait...")
 	defer fdeda.Done()
 
 	detailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.Details)
@@ -190,6 +190,8 @@ func fixSlugDtDlDownloads(slug, slugDownloadsDir string, dt vangogh_integration.
 	wrongRelDir := vangogh_integration.Pwd.AbsRelDirPath(rd, vangogh_integration.Downloads)
 
 	absWrongPath := filepath.Join(slugDownloadsDir, wrongRelDir)
+
+	nod.Log(" checking %s...", absWrongPath)
 
 	if _, err := os.Stat(absWrongPath); err == nil {
 
