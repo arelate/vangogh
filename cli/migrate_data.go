@@ -232,7 +232,7 @@ func fixSlugDtDlDownloads(slug, slugDownloadsDir string, dt vangogh_integration.
 	for {
 
 		absWrongSubdir, _ := filepath.Split(path)
-		if filepath.Clean(absWrongPath) == filepath.Clean(slugDownloadsDir) {
+		if absWrongSubdir == slugDownloadsDir {
 			break
 		}
 
