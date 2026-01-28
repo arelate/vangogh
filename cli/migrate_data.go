@@ -191,7 +191,8 @@ func fixSlugDtDlDownloads(slug, slugDownloadsDir string, dt vangogh_integration.
 
 	absWrongPath := filepath.Join(slugDownloadsDir, wrongRelDir)
 
-	nod.Log(" checking %s...", absWrongPath)
+	awp := nod.Begin(" checking %s...", absWrongPath)
+	awp.Done()
 
 	if _, err := os.Stat(absWrongPath); err == nil {
 
