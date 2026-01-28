@@ -2,10 +2,14 @@ package cli
 
 import (
 	"net/url"
+	"os"
+	"path/filepath"
 	"strconv"
 
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
@@ -19,7 +23,7 @@ import (
 // 7. remove previously cascaded validations // v1.2.1
 
 const (
-	latestDataSchema = 8
+	latestDataSchema = 9
 )
 
 func MigrateDataHandler(u *url.URL) error {
@@ -57,12 +61,18 @@ func MigrateData(force bool) error {
 			if err = cutPreviouslyCascadedValidations(); err != nil {
 				return err
 			}
+		case 8:
+			if err = fixDlcExtrasDownloads(); err != nil {
+				return err
+			}
+
 		}
 
 		mda.Increment()
 	}
 
-	return setLatestDataSchema(rdx)
+	//return setLatestDataSchema(rdx)
+	return nil
 }
 
 func getCurrentDataSchema(rdx redux.Readable) (int, error) {
@@ -112,4 +122,111 @@ func cutPreviouslyCascadedValidations() error {
 	}
 
 	return rdx.CutKeys(vangogh_integration.ProductValidationResultProperty, packDlcValidations...)
+}
+
+func fixDlcExtrasDownloads() error {
+
+	fdeda := nod.Begin(" checking for wrong DLCs, Extras, please wait...")
+	defer fdeda.Done()
+
+	detailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.Details)
+	if err != nil {
+		return err
+	}
+
+	kvDetails, err := kevlar.New(detailsDir, kevlar.JsonExt)
+	if err != nil {
+		return err
+	}
+
+	rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(), vangogh_integration.SlugProperty)
+	if err != nil {
+		return err
+	}
+
+	for id := range kvDetails.Keys() {
+
+		var slug string
+		if sp, ok := rdx.GetLastVal(vangogh_integration.SlugProperty, id); ok && sp != "" {
+			slug = sp
+		}
+
+		if slug == "" {
+			continue
+		}
+
+		for _, dl := range []vangogh_integration.DownloadsLayout{vangogh_integration.FlatDownloadsLayout, vangogh_integration.ShardedDownloadsLayout} {
+
+			var slugDownloadsDir string
+			slugDownloadsDir, err = vangogh_integration.AbsSlugDownloadDir(slug, vangogh_integration.Installer, dl)
+
+			for _, dt := range []vangogh_integration.DownloadType{vangogh_integration.DLC, vangogh_integration.Extra} {
+
+				if err = fixSlugDtDlDownloads(slug, slugDownloadsDir, dt, dl); err != nil {
+					return err
+				}
+			}
+		}
+	}
+
+	return nil
+}
+
+func fixSlugDtDlDownloads(slug, slugDownloadsDir string, dt vangogh_integration.DownloadType, dl vangogh_integration.DownloadsLayout) error {
+	var rd pathways.RelDir
+	switch dt {
+	case vangogh_integration.DLC:
+		rd = vangogh_integration.DLCs
+	case vangogh_integration.Extra:
+		rd = vangogh_integration.Extras
+	default:
+		// do nothing
+	}
+
+	if rd == "" {
+		return nil
+	}
+
+	wrongRelDir := vangogh_integration.Pwd.AbsRelDirPath(rd, vangogh_integration.Downloads)
+
+	absWrongPath := filepath.Join(slugDownloadsDir, wrongRelDir)
+
+	if _, err := os.Stat(absWrongPath); err == nil {
+
+		problem := nod.Begin(" - found %s...", absWrongPath)
+		defer problem.Done()
+
+		var absCorrectPath string
+		absCorrectPath, err = vangogh_integration.AbsSlugDownloadDir(slug, dt, dl)
+		if err != nil {
+			return nil
+		}
+
+		if _, err = os.Stat(absCorrectPath); err == nil {
+
+			if err = os.RemoveAll(absWrongPath); err != nil {
+				return err
+			}
+
+			problem.EndWithResult("removed")
+
+		} else if os.IsNotExist(err) {
+
+			if err = os.Rename(absWrongPath, absCorrectPath); err != nil {
+				return nil
+			}
+
+			problem.EndWithResult("moved to %s", absCorrectPath)
+
+		} else {
+			return err
+		}
+
+	} else if os.IsNotExist(err) {
+		// do nothing
+	} else {
+		return err
+	}
+
+	return nil
 }
