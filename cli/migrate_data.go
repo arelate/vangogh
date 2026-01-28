@@ -228,6 +228,11 @@ func fixSlugDtDlDownloads(slug, slugDownloadsDir string, dt vangogh_integration.
 		return err
 	}
 
+	return removeRemaingWrongDownloadsSubDirs(absWrongPath, slugDownloadsDir)
+}
+
+func removeRemaingWrongDownloadsSubDirs(absWrongPath, slugDownloadsDir string) error {
+
 	path := absWrongPath
 	for {
 
@@ -238,19 +243,15 @@ func fixSlugDtDlDownloads(slug, slugDownloadsDir string, dt vangogh_integration.
 		}
 
 		if _, err := os.Stat(absWrongSubdir); err == nil {
+			if err = os.RemoveAll(absWrongSubdir); err != nil {
+				return err
+			}
 
-			rema := nod.Begin("WILL remove %s", absWrongSubdir)
-			rema.Done()
-
-			//if err = os.RemoveAll(absWrongSubdir); err != nil {
-			//	return err
-			//}
 		} else if os.IsNotExist(err) {
 			// do nothing
 		}
 
 		path = absWrongSubdir
 	}
-
 	return nil
 }
