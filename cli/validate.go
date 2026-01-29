@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/dolo"
@@ -51,7 +52,8 @@ func Validate(
 		vangogh_integration.ManualUrlFilenameProperty,
 		vangogh_integration.ManualUrlStatusProperty,
 		vangogh_integration.ManualUrlValidationResultProperty,
-		vangogh_integration.ProductValidationResultProperty)
+		vangogh_integration.ProductValidationResultProperty,
+		vangogh_integration.ProductValidationDateProperty)
 	if err != nil {
 		return err
 	}
@@ -250,6 +252,10 @@ func (vd *validateDelegate) Process(id, slug string, list vangogh_integration.Do
 		return err
 	}
 
+	if err := vd.rdx.CutKeys(vangogh_integration.ProductValidationDateProperty, id); err != nil {
+		return err
+	}
+
 	manualUrlsValidationResults := make(map[string][]string)
 
 	productVrs := make([]vangogh_integration.ValidationStatus, 0, len(list))
@@ -310,6 +316,10 @@ func (vd *validateDelegate) Process(id, slug string, list vangogh_integration.Do
 	}
 
 	if err := vd.rdx.ReplaceValues(vangogh_integration.ProductValidationResultProperty, id, productValidationResult.String()); err != nil {
+		return err
+	}
+
+	if err := vd.rdx.ReplaceValues(vangogh_integration.ProductValidationDateProperty, id, time.Now().UTC().Format(nod.TimeFormat)); err != nil {
 		return err
 	}
 

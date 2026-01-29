@@ -17,6 +17,7 @@ import (
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/font_weight"
 	"github.com/boggydigital/compton/consts/size"
+	"github.com/boggydigital/nod"
 	"github.com/boggydigital/redux"
 )
 
@@ -58,6 +59,14 @@ func Installers(id string, dls vangogh_integration.DownloadsList, rdx redux.Read
 				dqFrow.PropVal("Download Queued", downloadQueued.Local().Format(time.DateTime))
 				pageStack.Append(compton.FICenter(s, dqFrow))
 			}
+		}
+	}
+
+	if validationDate, ok := rdx.GetLastVal(vangogh_integration.ProductValidationDateProperty, id); ok && validationDate != "" {
+		if vdt, err := time.Parse(validationDate, nod.TimeFormat); err == nil {
+			vdFrow := compton.Frow(s).FontSize(size.XSmall)
+			vdFrow.PropVal("Validated", vdt.Local().Format(time.DateTime))
+			pageStack.Append(compton.FICenter(s, vdFrow))
 		}
 	}
 
