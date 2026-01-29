@@ -42,32 +42,36 @@ func Installers(id string, dls vangogh_integration.DownloadsList, rdx redux.Read
 	pageStack := compton.FlexItems(s, direction.Column).RowGap(size.Normal)
 	s.Append(pageStack)
 
+	var dvRow *compton.FrowElement
+
 	if downloadCompleted, ok, err := rdx.ParseLastValTime(vangogh_integration.DownloadCompletedProperty, id); ok && err == nil {
-		dcFrow := compton.Frow(s).FontSize(size.XSmall)
-		dcFrow.PropVal("Downloaded", downloadCompleted.Local().Format(time.DateTime))
-		pageStack.Append(compton.FICenter(s, dcFrow))
+		dvRow = compton.Frow(s).FontSize(size.XSmall)
+		dvRow.PropVal("Downloaded", downloadCompleted.Local().Format(time.DateTime))
 	} else if !ok {
 		var downloadStarted time.Time
 		if downloadStarted, ok, err = rdx.ParseLastValTime(vangogh_integration.DownloadStartedProperty, id); ok && err == nil {
-			dsFrow := compton.Frow(s).FontSize(size.XSmall)
-			dsFrow.PropVal("Download Started", downloadStarted.Local().Format(time.DateTime))
-			pageStack.Append(compton.FICenter(s, dsFrow))
+			dvRow = compton.Frow(s).FontSize(size.XSmall)
+			dvRow.PropVal("Download Started", downloadStarted.Local().Format(time.DateTime))
 		} else if !ok {
 			var downloadQueued time.Time
 			if downloadQueued, ok, err = rdx.ParseLastValTime(vangogh_integration.DownloadQueuedProperty, id); ok && err == nil {
-				dqFrow := compton.Frow(s).FontSize(size.XSmall)
-				dqFrow.PropVal("Download Queued", downloadQueued.Local().Format(time.DateTime))
-				pageStack.Append(compton.FICenter(s, dqFrow))
+				dvRow = compton.Frow(s).FontSize(size.XSmall)
+				dvRow.PropVal("Download Queued", downloadQueued.Local().Format(time.DateTime))
 			}
 		}
 	}
 
 	if validationDate, ok := rdx.GetLastVal(vangogh_integration.ProductValidationDateProperty, id); ok && validationDate != "" {
-		if vdt, err := time.Parse(validationDate, nod.TimeFormat); err == nil {
-			vdFrow := compton.Frow(s).FontSize(size.XSmall)
-			vdFrow.PropVal("Validated", vdt.Local().Format(time.DateTime))
-			pageStack.Append(compton.FICenter(s, vdFrow))
+		if vdt, err := time.Parse(nod.TimeFormat, validationDate); err == nil {
+			if dvRow == nil {
+				dvRow = compton.Frow(s).FontSize(size.XSmall)
+			}
+			dvRow.PropVal("Validated", vdt.Local().Format(time.DateTime))
 		}
+	}
+
+	if dvRow != nil {
+		pageStack.Append(compton.FICenter(s, dvRow))
 	}
 
 	if owned, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && owned == vangogh_integration.FalseValue {
