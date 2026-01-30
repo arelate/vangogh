@@ -11,15 +11,16 @@ import (
 )
 
 var FuncMap = map[string]func() []string{
-	"all-product-types": vangogh_integration.ProductTypesCloValues,
-	"image-types":       vangogh_integration.ImageTypesCloValues,
-	"redux-properties":  vangogh_integration.ReduxProperties,
-	"operating-systems": vangogh_integration.OperatingSystemsCloValues,
-	"download-types":    vangogh_integration.DownloadTypesCloValues,
-	"downloads-layouts": vangogh_integration.DownloadsLayoutsCloValues,
-	"language-codes":    gog_integration.LanguageCodesCloValues,
-	"sync-options":      syncOptions,
-	"roles":             roles,
+	"all-product-types":   vangogh_integration.ProductTypesCloValues,
+	"image-types":         vangogh_integration.ImageTypesCloValues,
+	"redux-properties":    vangogh_integration.ReduxProperties,
+	"operating-systems":   vangogh_integration.OperatingSystemsCloValues,
+	"download-types":      vangogh_integration.DownloadTypesCloValues,
+	"downloads-layouts":   vangogh_integration.DownloadsLayoutsCloValues,
+	"language-codes":      gog_integration.LanguageCodesCloValues,
+	"validation-statuses": vangogh_integration.AllValidationStatusCloValues,
+	"sync-options":        syncOptions,
+	"roles":               roles,
 }
 
 func options(opts []string) []string {

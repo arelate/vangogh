@@ -165,6 +165,8 @@ validate
     download-type&$={download-types^}
     no-patches$
     downloads-layout$={downloads-layouts^}
-    all-not-valid
+    validation-status&={validation-statuses}
+    not-valid
+    all
 
 version

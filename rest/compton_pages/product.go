@@ -93,12 +93,10 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 				}
 			}
 			summaryRow.PropIcons(compton_data.PropertyTitles[property], osSymbols...)
-			//SetAttribute("style", "view-transition-name:"+property+id)
 		default:
 			for _, value := range values[property] {
 				href := "/search?sort=global-release-date&desc=true&" + property + "=" + value
 				summaryRow.PropLinkColor(compton_data.PropertyTitles[property], color.RepForeground, value, href)
-				//SetAttribute("style", "view-transition-name:"+property+id)
 			}
 		}
 

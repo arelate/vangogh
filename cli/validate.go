@@ -7,6 +7,8 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"slices"
+	"strings"
 	"time"
 
 	"github.com/arelate/southern_light/vangogh_integration"
@@ -22,14 +24,25 @@ func ValidateHandler(u *url.URL) error {
 		return err
 	}
 
+	q := u.Query()
+
+	var validationStatuses []vangogh_integration.ValidationStatus
+	if q.Has("validation-status") {
+		for _, vs := range strings.Split(q.Get("validation-status"), ",") {
+			validationStatuses = append(validationStatuses, vangogh_integration.ParseValidationStatus(vs))
+		}
+	}
+
 	return Validate(
 		ids,
 		vangogh_integration.OperatingSystemsFromUrl(u),
 		vangogh_integration.LanguageCodesFromUrl(u),
 		vangogh_integration.DownloadTypesFromUrl(u),
-		vangogh_integration.FlagFromUrl(u, "no-patches"),
+		q.Has("no-patches"),
 		vangogh_integration.DownloadsLayoutFromUrl(u),
-		vangogh_integration.FlagFromUrl(u, "all-not-valid"))
+		validationStatuses,
+		q.Has("not-valid"),
+		q.Has("all"))
 }
 
 func Validate(
@@ -39,7 +52,9 @@ func Validate(
 	downloadTypes []vangogh_integration.DownloadType,
 	noPatches bool,
 	downloadsLayout vangogh_integration.DownloadsLayout,
-	allNotValid bool) error {
+	validationStatuses []vangogh_integration.ValidationStatus,
+	notValid bool,
+	all bool) error {
 
 	va := nod.NewProgress("validating...")
 	defer va.Done()
@@ -58,11 +73,41 @@ func Validate(
 		return err
 	}
 
-	if allNotValid {
-		ids, err = allNotValidIds(rdx)
+	if len(validationStatuses) > 0 {
+		ids, err = validationStatusIds(rdx, validationStatuses...)
 		if err != nil {
 			return err
 		}
+	}
+
+	if notValid {
+
+		var notValidStatuses []vangogh_integration.ValidationStatus
+		for _, vs := range vangogh_integration.AllValidationStatuses() {
+			if vs == vangogh_integration.ValidationStatusSuccess {
+				continue
+			}
+			notValidStatuses = append(notValidStatuses, vs)
+		}
+
+		ids, err = validationStatusIds(rdx, notValidStatuses...)
+		if err != nil {
+			return err
+		}
+	}
+
+	if all {
+		detailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.Details)
+		if err != nil {
+			return err
+		}
+
+		kvDetails, err := kevlar.New(detailsDir, kevlar.JsonExt)
+		if err != nil {
+			return err
+		}
+
+		ids = slices.Collect(kvDetails.Keys())
 	}
 
 	vd := &validateDelegate{
@@ -97,7 +142,7 @@ func Validate(
 	return nil
 }
 
-func allNotValidIds(rdx redux.Readable) ([]string, error) {
+func validationStatusIds(rdx redux.Readable, validationStatuses ...vangogh_integration.ValidationStatus) ([]string, error) {
 
 	avia := nod.NewProgress("itemizing all not valid products...")
 	defer avia.Done()
@@ -118,13 +163,11 @@ func allNotValidIds(rdx redux.Readable) ([]string, error) {
 	for id := range kvDetails.Keys() {
 
 		if pvss, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
-			if pvs := vangogh_integration.ParseValidationStatus(pvss); pvs == vangogh_integration.ValidationStatusSuccess {
-				avia.Increment()
-				continue
+			if pvs := vangogh_integration.ParseValidationStatus(pvss); slices.Contains(validationStatuses, pvs) {
+				ids = append(ids, id)
 			}
 		}
 
-		ids = append(ids, id)
 		avia.Increment()
 	}
 
