@@ -19,17 +19,20 @@ func GetImagesHandler(u *url.URL) error {
 		return err
 	}
 
+	q := u.Query()
+
 	return GetImages(
 		ids,
 		vangogh_integration.ImageTypesFromUrl(u),
 		vangogh_integration.FlagFromUrl(u, "missing"),
-		u.Query().Has("force"))
+		q.Has("all-image-types"),
+		q.Has("force"))
 }
 
 // GetImages fetches remote images for a given type (box-art, screenshots, background, etc.).
 // If requested it can check locally present files and download all missing (used in data files,
 // but not present locally) images for a given type.
-func GetImages(ids []string, its []vangogh_integration.ImageType, missing, force bool) error {
+func GetImages(ids []string, its []vangogh_integration.ImageType, missing, allImageTypes, force bool) error {
 
 	gia := nod.NewProgress("getting images...")
 	defer gia.Done()
@@ -37,6 +40,10 @@ func GetImages(ids []string, its []vangogh_integration.ImageType, missing, force
 	rdx, err := imageTypesReduxAssets(nil, its)
 	if err != nil {
 		return err
+	}
+
+	if allImageTypes {
+		its = vangogh_integration.AllImageTypes()
 	}
 
 	//for every product we'll collect image types missing for id and download only those

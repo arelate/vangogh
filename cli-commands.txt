@@ -64,10 +64,11 @@ get-downloads
     force
 
 get-images
-    id&
+    id^&
     slug&
     missing
-    image-type&*^={image-types}
+    image-type&={image-types}
+    all-image-types
     force
 
 get-summary
