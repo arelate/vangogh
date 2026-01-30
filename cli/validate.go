@@ -18,6 +18,12 @@ import (
 	"github.com/boggydigital/redux"
 )
 
+type validationOptions struct {
+	validationStatuses []vangogh_integration.ValidationStatus
+	notValid           bool
+	all                bool
+}
+
 func ValidateHandler(u *url.URL) error {
 	ids, err := vangogh_integration.IdsFromUrl(u)
 	if err != nil {
@@ -33,6 +39,12 @@ func ValidateHandler(u *url.URL) error {
 		}
 	}
 
+	vo := &validationOptions{
+		validationStatuses: validationStatuses,
+		notValid:           q.Has("not-valid"),
+		all:                q.Has("all"),
+	}
+
 	return Validate(
 		ids,
 		vangogh_integration.OperatingSystemsFromUrl(u),
@@ -40,9 +52,7 @@ func ValidateHandler(u *url.URL) error {
 		vangogh_integration.DownloadTypesFromUrl(u),
 		q.Has("no-patches"),
 		vangogh_integration.DownloadsLayoutFromUrl(u),
-		validationStatuses,
-		q.Has("not-valid"),
-		q.Has("all"))
+		vo)
 }
 
 func Validate(
@@ -52,9 +62,7 @@ func Validate(
 	downloadTypes []vangogh_integration.DownloadType,
 	noPatches bool,
 	downloadsLayout vangogh_integration.DownloadsLayout,
-	validationStatuses []vangogh_integration.ValidationStatus,
-	notValid bool,
-	all bool) error {
+	vo *validationOptions) error {
 
 	va := nod.NewProgress("validating...")
 	defer va.Done()
@@ -73,14 +81,14 @@ func Validate(
 		return err
 	}
 
-	if len(validationStatuses) > 0 {
-		ids, err = validationStatusIds(rdx, validationStatuses...)
+	if len(vo.validationStatuses) > 0 {
+		ids, err = validationStatusIds(rdx, vo.validationStatuses...)
 		if err != nil {
 			return err
 		}
 	}
 
-	if notValid {
+	if vo.notValid {
 
 		var notValidStatuses []vangogh_integration.ValidationStatus
 		for _, vs := range vangogh_integration.AllValidationStatuses() {
@@ -96,7 +104,7 @@ func Validate(
 		}
 	}
 
-	if all {
+	if vo.all {
 		detailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.Details)
 		if err != nil {
 			return err

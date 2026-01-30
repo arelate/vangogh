@@ -68,7 +68,7 @@ func ProcessQueue(
 			downloadTypes,
 			noPatches,
 			downloadsLayout,
-			false); err != nil {
+			&validationOptions{}); err != nil {
 			return err
 		}
 	} else {
