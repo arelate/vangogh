@@ -128,8 +128,8 @@ func (mdd *missingDownloadsDelegate) Process(id, slug string, list vangogh_integ
 
 		absDownloadPath := filepath.Join(absSlugDownloadDir, filename)
 
-		adpa := nod.Begin(" expected download path for %s...", dl.ManualUrl)
-		adpa.EndWithResult(absDownloadPath)
+		//adpa := nod.Begin(" expected download path for %s...", dl.ManualUrl)
+		//adpa.EndWithResult(absDownloadPath)
 
 		absExpectedFiles[absDownloadPath] = true
 	}
