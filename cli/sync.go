@@ -157,7 +157,7 @@ func Sync(
 			}
 			imageTypes = append(imageTypes, it)
 		}
-		if err = GetImages(nil, imageTypes, true, force); err != nil {
+		if err = GetImages(nil, imageTypes, true, false, force); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
 
