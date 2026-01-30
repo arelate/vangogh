@@ -159,8 +159,8 @@ func (mdd *missingDownloadsDelegate) Process(id, slug string, list vangogh_integ
 	for f := range absExpectedFiles {
 		if _, ok := absPresentFiles[f]; !ok {
 			absMissingFiles = append(absMissingFiles, f)
-			amfa := nod.Begin(" file not found...")
-			amfa.EndWithResult("added as missing")
+			//amfa := nod.Begin(" file not found...")
+			//amfa.EndWithResult("added as missing")
 		}
 	}
 
