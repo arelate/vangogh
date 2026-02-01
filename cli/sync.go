@@ -150,14 +150,8 @@ func Sync(
 
 	// get images
 	if syncOpts.images {
-		imageTypes := make([]vangogh_integration.ImageType, 0, len(vangogh_integration.AllImageTypes()))
-		for _, it := range vangogh_integration.AllImageTypes() {
-			if !syncOpts.screenshots && it == vangogh_integration.Screenshots {
-				continue
-			}
-			imageTypes = append(imageTypes, it)
-		}
-		if err = GetImages(nil, imageTypes, true, false, force); err != nil {
+
+		if err = GetImages(nil, nil, true, true, force); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
 
