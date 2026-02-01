@@ -63,6 +63,10 @@ func getManualUrlChecksums(id string, dls vangogh_integration.DownloadsList, rdx
 
 	for _, dl := range dls {
 
+		if dl.DownloadType == vangogh_integration.Extra {
+			continue
+		}
+
 		absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.DownloadType, downloadsLayout)
 		if err != nil {
 			return nil, err
@@ -87,6 +91,10 @@ func getMd5Checksum(absDownloadPath string) (string, error) {
 	absChecksumPath, err := vangogh_integration.AbsChecksumPath(absDownloadPath)
 	if err != nil {
 		return "", err
+	}
+
+	if _, err = os.Stat(absChecksumPath); os.IsNotExist(err) {
+		return "", nil
 	}
 
 	chkFile, err := os.Open(absChecksumPath)
