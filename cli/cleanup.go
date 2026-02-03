@@ -21,15 +21,17 @@ func CleanupHandler(u *url.URL) error {
 		return err
 	}
 
+	q := u.Query()
+
 	return Cleanup(
 		ids,
 		vangogh_integration.OperatingSystemsFromUrl(u),
 		vangogh_integration.LanguageCodesFromUrl(u),
 		vangogh_integration.DownloadTypesFromUrl(u),
-		vangogh_integration.FlagFromUrl(u, "no-patches"),
+		q.Has("no-patches"),
 		vangogh_integration.DownloadsLayoutFromUrl(u),
-		vangogh_integration.FlagFromUrl(u, "all"),
-		vangogh_integration.FlagFromUrl(u, "test"))
+		q.Has("all"),
+		q.Has("test"))
 }
 
 func Cleanup(

@@ -61,7 +61,7 @@ func GetDownloadsHandler(u *url.URL) error {
 		vangogh_integration.OperatingSystemsFromUrl(u),
 		vangogh_integration.LanguageCodesFromUrl(u),
 		vangogh_integration.DownloadTypesFromUrl(u),
-		vangogh_integration.FlagFromUrl(u, "no-patches"),
+		q.Has("no-patches"),
 		vangogh_integration.DownloadsLayoutFromUrl(u),
 		gdo,
 		manualUrlFilter...)

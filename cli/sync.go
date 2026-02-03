@@ -46,24 +46,26 @@ func NegOpt(option string) string {
 
 func initSyncOptions(u *url.URL) *syncOptions {
 
+	q := u.Query()
+
 	so := &syncOptions{
-		purchases:         vangogh_integration.FlagFromUrl(u, SyncOptionPurchases),
-		descriptionImages: vangogh_integration.FlagFromUrl(u, SyncOptionDescriptionImages),
-		images:            vangogh_integration.FlagFromUrl(u, SyncOptionImages),
-		screenshots:       vangogh_integration.FlagFromUrl(u, SyncOptionScreenshots),
-		videosMetadata:    vangogh_integration.FlagFromUrl(u, SyncOptionVideosMetadata),
-		downloadsUpdates:  vangogh_integration.FlagFromUrl(u, SyncOptionDownloadsUpdates),
-		binaries:          vangogh_integration.FlagFromUrl(u, SynOptionBinaries),
+		purchases:         q.Has(SyncOptionPurchases),
+		descriptionImages: q.Has(SyncOptionDescriptionImages),
+		images:            q.Has(SyncOptionImages),
+		screenshots:       q.Has(SyncOptionScreenshots),
+		videosMetadata:    q.Has(SyncOptionVideosMetadata),
+		downloadsUpdates:  q.Has(SyncOptionDownloadsUpdates),
+		binaries:          q.Has(SynOptionBinaries),
 	}
 
-	if vangogh_integration.FlagFromUrl(u, "all") {
+	if q.Has("all") {
 		// not handling purchases here - doesn't make sense to negate it
-		so.descriptionImages = !vangogh_integration.FlagFromUrl(u, NegOpt(SyncOptionDescriptionImages))
-		so.images = !vangogh_integration.FlagFromUrl(u, NegOpt(SyncOptionImages))
-		so.screenshots = !vangogh_integration.FlagFromUrl(u, NegOpt(SyncOptionScreenshots))
-		so.videosMetadata = !vangogh_integration.FlagFromUrl(u, NegOpt(SyncOptionVideosMetadata))
-		so.downloadsUpdates = !vangogh_integration.FlagFromUrl(u, NegOpt(SyncOptionDownloadsUpdates))
-		so.binaries = !vangogh_integration.FlagFromUrl(u, NegOpt(SynOptionBinaries))
+		so.descriptionImages = !q.Has(NegOpt(SyncOptionDescriptionImages))
+		so.images = !q.Has(NegOpt(SyncOptionImages))
+		so.screenshots = !q.Has(NegOpt(SyncOptionScreenshots))
+		so.videosMetadata = !q.Has(NegOpt(SyncOptionVideosMetadata))
+		so.downloadsUpdates = !q.Has(NegOpt(SyncOptionDownloadsUpdates))
+		so.binaries = !q.Has(NegOpt(SynOptionBinaries))
 	}
 
 	return so
@@ -151,7 +153,9 @@ func Sync(
 	// get images
 	if syncOpts.images {
 
-		if err = GetImages(nil, nil, true, true, force); err != nil {
+		imageTypes := vangogh_integration.AllImageTypes()
+
+		if err = GetImages(nil, imageTypes, true, force); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
 

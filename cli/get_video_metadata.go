@@ -18,10 +18,12 @@ func GetVideoMetadataHandler(u *url.URL) error {
 		return err
 	}
 
+	q := u.Query()
+
 	return GetVideoMetadata(
 		ids,
-		vangogh_integration.FlagFromUrl(u, "missing"),
-		vangogh_integration.FlagFromUrl(u, "force"))
+		q.Has("missing"),
+		q.Has("force"))
 }
 
 func GetVideoMetadata(ids []string, missing, force bool) error {

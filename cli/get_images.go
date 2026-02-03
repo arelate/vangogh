@@ -21,18 +21,24 @@ func GetImagesHandler(u *url.URL) error {
 
 	q := u.Query()
 
+	its := strings.Split(q.Get("image-type"), ",")
+	imageTypes := vangogh_integration.ParseManyImageTypes(its...)
+
+	if q.Has("all-image-types") {
+		imageTypes = vangogh_integration.AllImageTypes()
+	}
+
 	return GetImages(
 		ids,
-		vangogh_integration.ImageTypesFromUrl(u),
-		vangogh_integration.FlagFromUrl(u, "missing"),
-		q.Has("all-image-types"),
+		imageTypes,
+		q.Has("missing"),
 		q.Has("force"))
 }
 
 // GetImages fetches remote images for a given type (box-art, screenshots, background, etc.).
 // If requested it can check locally present files and download all missing (used in data files,
 // but not present locally) images for a given type.
-func GetImages(ids []string, its []vangogh_integration.ImageType, missing, allImageTypes, force bool) error {
+func GetImages(ids []string, its []vangogh_integration.ImageType, missing, force bool) error {
 
 	gia := nod.NewProgress("getting images...")
 	defer gia.Done()
@@ -42,12 +48,8 @@ func GetImages(ids []string, its []vangogh_integration.ImageType, missing, allIm
 		return err
 	}
 
-	if allImageTypes {
-		its = vangogh_integration.AllImageTypes()
-	}
-
 	//for every product we'll collect image types missing for id and download only those
-	idMissingTypes := map[string][]vangogh_integration.ImageType{}
+	idMissingTypes := make(map[string][]vangogh_integration.ImageType)
 
 	if missing {
 		localImageSet, err := vangogh_integration.LocalImageIds()
@@ -66,9 +68,6 @@ func GetImages(ids []string, its []vangogh_integration.ImageType, missing, allIm
 
 			//2
 			for id := range missingImageIds {
-				if idMissingTypes[id] == nil {
-					idMissingTypes[id] = make([]vangogh_integration.ImageType, 0)
-				}
 				idMissingTypes[id] = append(idMissingTypes[id], it)
 			}
 		}

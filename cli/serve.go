@@ -12,7 +12,10 @@ import (
 )
 
 func ServeHandler(u *url.URL) error {
-	portStr := vangogh_integration.ValueFromUrl(u, "port")
+
+	q := u.Query()
+
+	portStr := q.Get("port")
 	port, err := strconv.Atoi(portStr)
 	if err != nil {
 		return err
@@ -25,13 +28,11 @@ func ServeHandler(u *url.URL) error {
 		oses = []vangogh_integration.OperatingSystem{vangogh_integration.AnyOperatingSystem}
 	}
 
-	noPatches := vangogh_integration.FlagFromUrl(u, "no-patches")
-
 	layout := vangogh_integration.DownloadsLayoutFromUrl(u)
 
-	rest.SetDefaultDownloadsFilters(oses, langCodes, noPatches)
+	rest.SetDefaultDownloadsFilters(oses, langCodes, q.Has("no-patches"))
 
-	return Serve(port, layout, vangogh_integration.FlagFromUrl(u, "stderr"))
+	return Serve(port, layout, q.Has("stderr"))
 }
 
 // Serve starts a web server, listening to the specified port with optional logging

@@ -14,6 +14,8 @@ import (
 
 func UpdateDownloadsHandler(u *url.URL) error {
 
+	q := u.Query()
+
 	since, err := vangogh_integration.SinceFromUrl(u)
 	if err != nil {
 		return err
@@ -24,10 +26,10 @@ func UpdateDownloadsHandler(u *url.URL) error {
 		vangogh_integration.OperatingSystemsFromUrl(u),
 		vangogh_integration.LanguageCodesFromUrl(u),
 		vangogh_integration.DownloadTypesFromUrl(u),
-		vangogh_integration.FlagFromUrl(u, "no-patches"),
+		q.Has("no-patches"),
 		vangogh_integration.DownloadsLayoutFromUrl(u),
 		since,
-		vangogh_integration.FlagFromUrl(u, "updates-only"))
+		q.Has("updates-only"))
 }
 
 func UpdateDownloads(
