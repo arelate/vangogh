@@ -2,12 +2,13 @@ package rest
 
 import (
 	"encoding/json"
+	"net/http"
+
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_pages"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"net/http"
 )
 
 func GetNews(w http.ResponseWriter, r *http.Request) {
@@ -52,6 +53,10 @@ func getAppNews(gogId string) (*steam_integration.AppNews, error) {
 	kvAppNews, err := kevlar.New(appNewsDir, kevlar.JsonExt)
 	if err != nil {
 		return nil, err
+	}
+
+	if !kvAppNews.Has(steamAppId) {
+		return nil, nil
 	}
 
 	rcAppNews, err := kvAppNews.Get(steamAppId)
