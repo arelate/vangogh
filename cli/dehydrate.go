@@ -26,7 +26,7 @@ func DehydrateHandler(u *url.URL) error {
 	}
 
 	if q.Has("all-dehydrated-image-types") {
-		imageTypes = []vangogh_integration.ImageType{vangogh_integration.Image, vangogh_integration.VerticalImage}
+		imageTypes = vangogh_integration.AllDehydratedImageTypes()
 	}
 
 	if len(imageTypes) == 0 {

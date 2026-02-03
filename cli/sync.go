@@ -153,9 +153,7 @@ func Sync(
 	// get images
 	if syncOpts.images {
 
-		imageTypes := vangogh_integration.AllImageTypes()
-
-		if err = GetImages(nil, imageTypes, true, force); err != nil {
+		if err = GetImages(nil, vangogh_integration.AllImageTypes(), true, force); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
 
@@ -163,8 +161,7 @@ func Sync(
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
 
-		dehydratedImageTypes := []vangogh_integration.ImageType{vangogh_integration.Image, vangogh_integration.VerticalImage}
-		if err = Dehydrate(nil, dehydratedImageTypes, false); err != nil {
+		if err = Dehydrate(nil, vangogh_integration.AllDehydratedImageTypes(), false); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
 
