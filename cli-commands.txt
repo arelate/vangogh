@@ -20,9 +20,9 @@ cleanup
     test
 
 dehydrate
-    id&
+    id^&
     slug&
-    image-type&*^={image-types}
+    image-type&={image-types}
     all-dehydrated-image-types
     force
 
