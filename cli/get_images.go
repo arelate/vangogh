@@ -52,7 +52,8 @@ func GetImages(ids []string, its []vangogh_integration.ImageType, missing, force
 	idMissingTypes := make(map[string][]vangogh_integration.ImageType)
 
 	if missing {
-		localImageSet, err := vangogh_integration.LocalImageIds()
+		var localImageSet map[string]any
+		localImageSet, err = vangogh_integration.LocalImageIds()
 		if err != nil {
 			return err
 		}
@@ -61,7 +62,8 @@ func GetImages(ids []string, its []vangogh_integration.ImageType, missing, force
 		//2. for every product id we get this way - add this image type to idMissingTypes[id]
 		for _, it := range its {
 			//1
-			missingImageIds, err := itemizations.MissingLocalImages(it, rdx, localImageSet)
+			var missingImageIds map[string]any
+			missingImageIds, err = itemizations.MissingLocalImages(it, rdx, localImageSet)
 			if err != nil {
 				return err
 			}

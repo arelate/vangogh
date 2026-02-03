@@ -8,9 +8,9 @@ func missingLocalFiles(
 	all iter.Seq[string],
 	localSet map[string]any,
 	getById func(id string) ([]string, bool),
-	exclude func(id string) bool) (map[string]bool, error) {
+	exclude func(id string) bool) (map[string]any, error) {
 
-	idSet := make(map[string]bool)
+	idSet := make(map[string]any)
 	var err error
 
 	for id := range all {
@@ -24,7 +24,7 @@ func missingLocalFiles(
 				continue
 			}
 			if _, present := localSet[item]; !present {
-				idSet[id] = true
+				idSet[id] = nil
 				break
 			}
 		}

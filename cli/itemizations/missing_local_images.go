@@ -27,14 +27,14 @@ func (ieg *imageReduxGetter) GetImageIds(id string) ([]string, bool) {
 func MissingLocalImages(
 	it vangogh_integration.ImageType,
 	rdx redux.Readable,
-	localImageIds map[string]any) (map[string]bool, error) {
+	localImageIds map[string]any) (map[string]any, error) {
 
 	all := rdx.Keys(vangogh_integration.PropertyFromImageType(it))
 
 	if localImageIds == nil {
 		var err error
 		if localImageIds, err = vangogh_integration.LocalImageIds(); err != nil {
-			return map[string]bool{}, err
+			return map[string]any{}, err
 		}
 	}
 
