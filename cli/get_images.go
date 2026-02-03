@@ -21,9 +21,19 @@ func GetImagesHandler(u *url.URL) error {
 
 	q := u.Query()
 
-	imageTypes, err := imageTypesQuery(q)
-	if err != nil {
-		return err
+	var imageTypes []vangogh_integration.ImageType
+
+	if q.Has("image-type") {
+		its := strings.Split(q.Get("image-type"), ",")
+		imageTypes = vangogh_integration.ParseManyImageTypes(its...)
+	}
+
+	if q.Has("all-image-types") {
+		imageTypes = vangogh_integration.AllImageTypes()
+	}
+
+	if len(imageTypes) == 0 {
+		return errors.New("need at least one valid image type")
 	}
 
 	return GetImages(
@@ -180,23 +190,4 @@ func getImage(imageUrl *url.URL, force bool) error {
 	dc := reqs.GetDoloClient()
 
 	return dc.Download(imageUrl, force, gia, dstImageDir)
-}
-
-func imageTypesQuery(q url.Values) ([]vangogh_integration.ImageType, error) {
-	var imageTypes []vangogh_integration.ImageType
-
-	if q.Has("image-type") {
-		its := strings.Split(q.Get("image-type"), ",")
-		imageTypes = vangogh_integration.ParseManyImageTypes(its...)
-	}
-
-	if q.Has("all-image-types") {
-		imageTypes = vangogh_integration.AllImageTypes()
-	}
-
-	if len(imageTypes) == 0 {
-		return nil, errors.New("need at least one valid image type")
-	}
-
-	return imageTypes, nil
 }

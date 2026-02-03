@@ -23,7 +23,7 @@ dehydrate
     id&
     slug&
     image-type&*^={image-types}
-    all-image-types
+    all-dehydrated-image-types
     force
 
 get-binaries

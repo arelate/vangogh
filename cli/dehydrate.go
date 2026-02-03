@@ -1,7 +1,9 @@
 package cli
 
 import (
+	"errors"
 	"net/url"
+	"strings"
 
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/issa"
@@ -16,9 +18,19 @@ func DehydrateHandler(u *url.URL) error {
 
 	q := u.Query()
 
-	imageTypes, err := imageTypesQuery(q)
-	if err != nil {
-		return err
+	var imageTypes []vangogh_integration.ImageType
+
+	if q.Has("image-type") {
+		its := strings.Split(q.Get("image-type"), ",")
+		imageTypes = vangogh_integration.ParseManyImageTypes(its...)
+	}
+
+	if q.Has("all-dehydrated-image-types") {
+		imageTypes = []vangogh_integration.ImageType{vangogh_integration.Image, vangogh_integration.VerticalImage}
+	}
+
+	if len(imageTypes) == 0 {
+		return errors.New("need at least one valid image type")
 	}
 
 	return Dehydrate(
