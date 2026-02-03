@@ -2,7 +2,6 @@ package cli
 
 import (
 	"net/url"
-	"strings"
 
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/issa"
@@ -17,8 +16,10 @@ func DehydrateHandler(u *url.URL) error {
 
 	q := u.Query()
 
-	its := strings.Split(q.Get("image-type"), ",")
-	imageTypes := vangogh_integration.ParseManyImageTypes(its...)
+	imageTypes, err := imageTypesQuery(q)
+	if err != nil {
+		return err
+	}
 
 	return Dehydrate(
 		ids,
