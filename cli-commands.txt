@@ -26,6 +26,13 @@ dehydrate
     all-dehydrated-image-types
     force
 
+generate-missing-checksums
+    os&$={operating-systems^}
+    lang-code&$={language-codes^}
+    download-type&$={download-types^}
+    no-patches$
+    downloads-layout$={downloads-layouts^}
+
 get-binaries
     os&$={operating-systems^}
     wine

@@ -192,6 +192,23 @@ func maybeAddTopic(summary map[string][]string,
 	}
 }
 
+func hashPathMd5(absPath string, tpw nod.TotalProgressWriter) (string, error) {
+
+	sourceFile, err := os.Open(absPath)
+	if err != nil {
+		return "", err
+	}
+	defer sourceFile.Close()
+
+	h := md5.New()
+
+	if err = dolo.CopyWithProgress(h, sourceFile, tpw); err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("%x", h.Sum(nil)), nil
+}
+
 func validateManualUrl(
 	slug string,
 	dl *vangogh_integration.Download,
@@ -243,30 +260,20 @@ func validateManualUrl(
 		return vangogh_integration.ValidationStatusError, err
 	}
 
-	sourceFile, err := os.Open(absDownloadPath)
-	if err != nil {
-		return vangogh_integration.ValidationStatusError, err
-	}
-	defer sourceFile.Close()
-
-	h := md5.New()
-
-	stat, err := sourceFile.Stat()
+	stat, err := os.Stat(absDownloadPath)
 	if err != nil {
 		return vangogh_integration.ValidationStatusError, err
 	}
 
 	vlfa := nod.NewProgress(" - %s", filename)
-
 	vlfa.Total(uint64(stat.Size()))
 
-	if err = dolo.CopyWithProgress(h, sourceFile, vlfa); err != nil {
+	sourceFileMd5, err := hashPathMd5(absDownloadPath, vlfa)
+	if err != nil {
 		return vangogh_integration.ValidationStatusError, err
 	}
 
-	sourceFileMD5 := fmt.Sprintf("%x", h.Sum(nil))
-
-	if chkData.MD5 != sourceFileMD5 {
+	if chkData.MD5 != sourceFileMd5 {
 		vr := vangogh_integration.ValidationStatusChecksumMismatch
 		vlfa.EndWithResult(vr.String())
 		return vr, nil
