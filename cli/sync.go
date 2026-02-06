@@ -201,7 +201,7 @@ func Sync(
 			&getDownloadOptions{
 				validate: true,
 				queued:   true,
-				force:    force,
+				force:    true,
 			}); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
