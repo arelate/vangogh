@@ -29,6 +29,7 @@ type DownloadVariant struct {
 	validatedEstimatedBytes  int64
 	totalEstimatedBytes      int64
 	downloadStatus           vangogh_integration.DownloadStatus
+	generatedChecksum        bool
 	validationStatus         vangogh_integration.ValidationStatus
 }
 
@@ -201,7 +202,18 @@ func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 		Color: dvColor,
 	}
 
-	fr.Elements(compton.Badges(r, fmtDownloadValidationBadge))
+	var badges []compton.FormattedBadge
+	badges = append(badges, fmtDownloadValidationBadge)
+
+	if dv.generatedChecksum {
+		generatedChecksumBadge := compton.FormattedBadge{
+			Title: "Generated Checksum",
+			Color: color.Yellow,
+		}
+		badges = append(badges, generatedChecksumBadge)
+	}
+
+	fr.Elements(compton.Badges(r, badges...))
 
 	return fr
 }
@@ -320,13 +332,24 @@ func downloadLink(r compton.Registrar,
 		manualUrlStatus = dvs.DownloadStatus().HumanReadableString()
 	}
 
-	fmtManualUrlStatusBadge := compton.FormattedBadge{
+	manualUrlStatusBadge := compton.FormattedBadge{
 		Title: manualUrlStatus,
 		Icon:  manualUrlStatusSymbol,
 		Color: manualUrlStatusColor,
 	}
 
-	linkColumn.Append(compton.Badges(r, fmtManualUrlStatusBadge))
+	var badges []compton.FormattedBadge
+	badges = append(badges, manualUrlStatusBadge)
+
+	if rdx.HasKey(vangogh_integration.ManualUrlGeneratedChecksumProperty, dl.ManualUrl) {
+		generatedChecksumBadge := compton.FormattedBadge{
+			Title: "Generated Checksum",
+			Color: color.Yellow,
+		}
+		badges = append(badges, generatedChecksumBadge)
+	}
+
+	linkColumn.Append(compton.Badges(r, badges...))
 
 	link.Append(linkColumn)
 
@@ -419,6 +442,7 @@ func getDownloadVariants(os vangogh_integration.OperatingSystem, title string, d
 			langCode:            dl.LanguageCode,
 			totalEstimatedBytes: dl.EstimatedBytes,
 			validationStatus:    dvs.ValidationStatus(),
+			generatedChecksum:   rdx.HasKey(vangogh_integration.ManualUrlGeneratedChecksumProperty, dl.ManualUrl),
 			downloadStatus:      dvs.DownloadStatus(),
 		}
 
@@ -442,6 +466,8 @@ func getDownloadVariants(os vangogh_integration.OperatingSystem, title string, d
 			if edv.downloadStatus < dvs.DownloadStatus() {
 				edv.downloadStatus = dvs.DownloadStatus()
 			}
+
+			edv.generatedChecksum = edv.generatedChecksum || rdx.HasKey(vangogh_integration.ManualUrlGeneratedChecksumProperty, dl.ManualUrl)
 
 			if edv.downloadStatus == vangogh_integration.DownloadStatusDownloaded {
 				edv.downloadedEstimatedBytes += dl.EstimatedBytes

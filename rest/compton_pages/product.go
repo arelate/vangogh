@@ -322,7 +322,18 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 				Color: statusColor,
 			}
 
-			detailsSummary.AppendBadges(compton.Badges(p, fmtPvrBadge))
+			var badges []compton.FormattedBadge
+			badges = append(badges, fmtPvrBadge)
+
+			if pgs, sure := rdx.GetLastVal(vangogh_integration.ProductGeneratedChecksumProperty, id); sure && pgs == vangogh_integration.TrueValue {
+				generatedChecksumBadge := compton.FormattedBadge{
+					Title: "Generated Checksum",
+					Color: color.Yellow,
+				}
+				badges = append(badges, generatedChecksumBadge)
+			}
+
+			detailsSummary.AppendBadges(compton.Badges(p, badges...))
 
 		default:
 			detailsSummary.SummaryMarginBlockEnd(size.Normal)
