@@ -10,6 +10,7 @@ var ValidationStatusColors = map[vangogh_integration.ValidationStatus]color.Colo
 	vangogh_integration.ValidationStatusQueued:              color.RepGray,
 	vangogh_integration.ValidationStatusValidating:          color.RepGray,
 	vangogh_integration.ValidationStatusSuccess:             color.Green,
+	vangogh_integration.ValidationStatusSelfValidated:       color.Orange,
 	vangogh_integration.ValidationStatusUnknown:             color.RepGray,
 	vangogh_integration.ValidationStatusUnresolvedManualUrl: color.Orange,
 	vangogh_integration.ValidationStatusMissingLocalFile:    color.Orange,
@@ -20,6 +21,7 @@ var ValidationStatusColors = map[vangogh_integration.ValidationStatus]color.Colo
 
 var ValidationStatusSymbols = map[vangogh_integration.ValidationStatus]compton.Symbol{
 	vangogh_integration.ValidationStatusSuccess:             compton.HexagonSparkling,
+	vangogh_integration.ValidationStatusSelfValidated:       compton.HexagonNegativeDiagonalLine,
 	vangogh_integration.ValidationStatusUnknown:             compton.HexagonDiagonalLines,
 	vangogh_integration.ValidationStatusQueued:              compton.HexagonClockArrows,
 	vangogh_integration.ValidationStatusValidating:          compton.HexagonDownwardArrow,

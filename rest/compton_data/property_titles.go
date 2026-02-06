@@ -55,7 +55,7 @@ var PropertyTitles = map[string]string{
 	vangogh_integration.GOGReleaseDateProperty:                    "GOG.com Release",
 	vangogh_integration.GOGOrderDateProperty:                      "GOG.com Order",
 	vangogh_integration.ProductValidationResultProperty:           "Validation Result",
-	vangogh_integration.ProductGeneratedChecksumProperty:          "Generated Checksum",
+	vangogh_integration.ProductGeneratedChecksumProperty:          "Self-Validated",
 	vangogh_integration.RatingProperty:                            "GOG.com Rating",
 	vangogh_integration.SteamReviewScoreProperty:                  "Steam Rating",
 	vangogh_integration.MetacriticScoreProperty:                   "Metacritic Rating",

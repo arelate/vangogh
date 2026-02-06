@@ -202,23 +202,7 @@ func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 		Color: dvColor,
 	}
 
-	var badges []*compton.FormattedBadge
-	badges = append(badges, fmtDownloadValidationBadge)
-
-	if dv.generatedChecksum {
-		generatedChecksumBadge := &compton.FormattedBadge{
-			Title: "Generated Checksum",
-			Color: color.Yellow,
-		}
-
-		if fmtDownloadValidationBadge.Icon == compton.HexagonSparkling {
-			fmtDownloadValidationBadge.Icon = compton.HexagonNegativeDiagonalLine
-		}
-
-		badges = append(badges, generatedChecksumBadge)
-	}
-
-	fr.Elements(compton.Badges(r, badges...))
+	fr.Elements(compton.Badges(r, fmtDownloadValidationBadge))
 
 	return fr
 }
@@ -343,23 +327,7 @@ func downloadLink(r compton.Registrar,
 		Color: manualUrlStatusColor,
 	}
 
-	var badges []*compton.FormattedBadge
-	badges = append(badges, manualUrlStatusBadge)
-
-	if rdx.HasKey(vangogh_integration.ManualUrlGeneratedChecksumProperty, dl.ManualUrl) {
-		generatedChecksumBadge := &compton.FormattedBadge{
-			Title: "Generated Checksum",
-			Color: color.Yellow,
-		}
-
-		if manualUrlStatusBadge.Icon == compton.HexagonSparkling {
-			manualUrlStatusBadge.Icon = compton.HexagonNegativeDiagonalLine
-		}
-
-		badges = append(badges, generatedChecksumBadge)
-	}
-
-	linkColumn.Append(compton.Badges(r, badges...))
+	linkColumn.Append(compton.Badges(r, manualUrlStatusBadge))
 
 	link.Append(linkColumn)
 
