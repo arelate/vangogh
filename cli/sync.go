@@ -210,6 +210,14 @@ func Sync(
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
 
+		if err = GenerateMissingChecksums(operatingSystems, langCodes, downloadTypes, noPatches, downloadsLayout); err != nil {
+			return setSyncInterrupted(err, syncEventsRdx)
+		}
+
+		if err = setSyncEvent(vangogh_integration.SyncGenerateMissingChecksums, syncEventsRdx); err != nil {
+			return setSyncInterrupted(err, syncEventsRdx)
+		}
+
 		if cleanup {
 			if err = Cleanup(nil,
 				operatingSystems,

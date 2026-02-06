@@ -52,6 +52,11 @@ func GenerateMissingChecksums(operatingSystems []vangogh_integration.OperatingSy
 
 	ids := slices.Collect(rdx.Match(productsMissingChecksumsQuery, redux.FullMatch))
 
+	if len(ids) == 0 {
+		gmca.EndWithResult("no missing checksums")
+		return nil
+	}
+
 	mcp := &missingChecksumProcessor{
 		rdx:             rdx,
 		downloadsLayout: downloadsLayout,
