@@ -82,7 +82,7 @@ func (mcp *missingChecksumProcessor) Process(id string, slug string, downloadsLi
 
 		if vrs, ok := mcp.rdx.GetLastVal(vangogh_integration.ManualUrlValidationResultProperty, dl.ManualUrl); ok && vrs != "" {
 			if vr := vangogh_integration.ParseValidationStatus(vrs); vr == vangogh_integration.ValidationStatusMissingChecksum {
-				if err := mcp.generateMissingChecksum(slug, dl.ManualUrl, dl.DownloadType); err != nil {
+				if err := mcp.generateManualUrlMissingChecksum(slug, dl.ManualUrl, dl.DownloadType); err != nil {
 					return err
 				}
 			}
@@ -100,7 +100,7 @@ func (mcp *missingChecksumProcessor) Process(id string, slug string, downloadsLi
 	return nil
 }
 
-func (mcp *missingChecksumProcessor) generateMissingChecksum(slug, manualUrl string, dt vangogh_integration.DownloadType) error {
+func (mcp *missingChecksumProcessor) generateManualUrlMissingChecksum(slug, manualUrl string, dt vangogh_integration.DownloadType) error {
 
 	absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dt, mcp.downloadsLayout)
 	if err != nil {

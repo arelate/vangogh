@@ -220,6 +220,7 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 
 	// reset manual-urls download status to queued prior to downloading
 	// reset manual-urls validation result to unknown prior to downloading
+	// reset manual-urls generated checksums prior to downloading
 	manualUrlDq := make(map[string][]string)
 	manualUrlVsu := make(map[string][]string)
 	for _, manualUrl := range manualUrls {
@@ -235,11 +236,20 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 		return err
 	}
 
+	if err := gdd.rdx.CutKeys(vangogh_integration.ManualUrlGeneratedChecksumProperty, manualUrls...); err != nil {
+		return err
+	}
+
 	// (re-)set product validation result prior to downloading
+	// (re-)set product generated checksum prior to downloading
 	if err := gdd.rdx.ReplaceValues(
 		vangogh_integration.ProductValidationResultProperty,
 		id,
 		vangogh_integration.ValidationStatusUnknown.String()); err != nil {
+		return err
+	}
+
+	if err := gdd.rdx.CutKeys(vangogh_integration.ProductGeneratedChecksumProperty, id); err != nil {
 		return err
 	}
 
