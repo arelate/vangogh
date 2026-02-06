@@ -38,8 +38,6 @@ func GenerateMissingChecksums(operatingSystems []vangogh_integration.OperatingSy
 
 	properties := append(
 		vangogh_integration.DownloadsLifecycleProperties(),
-		vangogh_integration.ProductGeneratedChecksumProperty,
-		vangogh_integration.ManualUrlGeneratedChecksumProperty,
 		vangogh_integration.ProductTypeProperty,
 		vangogh_integration.SlugProperty)
 

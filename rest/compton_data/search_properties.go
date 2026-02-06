@@ -56,6 +56,7 @@ var SearchProperties = []string{
 	vangogh_integration.GOGOrderDateProperty,
 
 	vangogh_integration.ProductValidationResultProperty,
+	vangogh_integration.ProductGeneratedChecksumProperty,
 
 	vangogh_integration.SortProperty,
 	vangogh_integration.DescendingProperty,
