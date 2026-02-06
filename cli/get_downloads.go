@@ -27,6 +27,7 @@ type getDownloadOptions struct {
 	updateDetails bool
 	validate      bool
 	checksumsOnly bool
+	queued        bool
 	missing       bool
 	all           bool
 	debug         bool
@@ -50,6 +51,7 @@ func GetDownloadsHandler(u *url.URL) error {
 		updateDetails: q.Has("update-details"),
 		validate:      q.Has("validate"),
 		checksumsOnly: q.Has("checksums-only"),
+		queued:        q.Has("queued"),
 		missing:       q.Has("missing"),
 		all:           q.Has("all"),
 		debug:         q.Has("debug"),
@@ -103,6 +105,13 @@ func GetDownloads(
 			vangogh_integration.ProductValidationResultProperty)...)
 	if err != nil {
 		return err
+	}
+
+	if options.queued {
+		ids, err = getQueuedDownloads()
+		if err != nil {
+			return err
+		}
 	}
 
 	if options.missing {

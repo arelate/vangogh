@@ -66,6 +66,7 @@ get-downloads
     update-details
     validate
     checksums-only
+    queued
     missing
     all
     debug
@@ -91,14 +92,6 @@ import-cookies
     cookies^*
 
 migrate-data
-    force
-
-process-queue
-    os&$={operating-systems^}
-    lang-code&$={language-codes^}
-    download-type&$={download-types^}
-    no-patches$
-    downloads-layout$={downloads-layouts^}
     force
 
 reduce

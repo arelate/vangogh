@@ -192,18 +192,17 @@ func Sync(
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
 
-		// process remaining queued downloads, e.g. downloads that were queued before this sync
-		// and were not completed successfully due to an interruption. Download updates
-		// itemized earlier in the sync cycle (ids) are intentionally excluded to
-		// focus on previously queued and avoid attempting to download problematic ids
-		// right after they didn't download successfully, waiting until the next sync
-		// is likely a better strategy in that case
-		if err = ProcessQueue(
+		if err = GetDownloads(nil,
 			operatingSystems,
 			langCodes,
 			downloadTypes,
 			noPatches,
-			downloadsLayout); err != nil {
+			downloadsLayout,
+			&getDownloadOptions{
+				validate: true,
+				queued:   true,
+				force:    force,
+			}); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
 

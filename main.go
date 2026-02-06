@@ -56,7 +56,6 @@ func main() {
 		"get-video-metadata":         cli.GetVideoMetadataHandler,
 		"import-cookies":             cli.ImportCookiesHandler,
 		"migrate-data":               cli.MigrateDataHandler,
-		"process-queue":              cli.ProcessQueueHandler,
 		"reduce":                     cli.ReduceHandler,
 		"relayout-downloads":         cli.RelayoutDownloadsHandler,
 		"serve":                      cli.ServeHandler,
