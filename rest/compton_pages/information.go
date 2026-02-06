@@ -89,7 +89,7 @@ func Info(id string, rdx redux.Readable, permissions ...author.Permission) compt
 
 	if shortDescSpan != nil || descriptionFspan != nil {
 
-		fmtProductDetailsBadge := compton.FormattedBadge{
+		fmtProductDetailsBadge := &compton.FormattedBadge{
 			Title: "Product Details",
 			Icon:  compton.TwoTitleValues,
 			Color: color.RepForeground,
@@ -110,7 +110,7 @@ func Info(id string, rdx redux.Readable, permissions ...author.Permission) compt
 		items.Append(pp)
 	}
 
-	fmtLinksBadge := compton.FormattedBadge{
+	fmtLinksBadge := &compton.FormattedBadge{
 		Title: "Links",
 		Icon:  compton.ExternalLink,
 		Color: color.Mint,

@@ -134,7 +134,7 @@ func operatingSystemHeading(r compton.Registrar, os vangogh_integration.Operatin
 		osString = os.String()
 	}
 
-	fmtOsBadge := compton.FormattedBadge{
+	fmtOsBadge := &compton.FormattedBadge{
 		Title: osString,
 		Icon:  osSymbol,
 		Color: color.RepForeground,
@@ -196,20 +196,25 @@ func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 		dvStatus += ", " + progressStr + "% Done"
 	}
 
-	fmtDownloadValidationBadge := compton.FormattedBadge{
+	fmtDownloadValidationBadge := &compton.FormattedBadge{
 		Title: dvStatus,
 		Icon:  dvSymbol,
 		Color: dvColor,
 	}
 
-	var badges []compton.FormattedBadge
+	var badges []*compton.FormattedBadge
 	badges = append(badges, fmtDownloadValidationBadge)
 
 	if dv.generatedChecksum {
-		generatedChecksumBadge := compton.FormattedBadge{
+		generatedChecksumBadge := &compton.FormattedBadge{
 			Title: "Generated Checksum",
 			Color: color.Yellow,
 		}
+
+		if fmtDownloadValidationBadge.Icon == compton.HexagonSparkling {
+			fmtDownloadValidationBadge.Icon = compton.HexagonNegativeDiagonalLine
+		}
+
 		badges = append(badges, generatedChecksumBadge)
 	}
 
@@ -332,20 +337,25 @@ func downloadLink(r compton.Registrar,
 		manualUrlStatus = dvs.DownloadStatus().HumanReadableString()
 	}
 
-	manualUrlStatusBadge := compton.FormattedBadge{
+	manualUrlStatusBadge := &compton.FormattedBadge{
 		Title: manualUrlStatus,
 		Icon:  manualUrlStatusSymbol,
 		Color: manualUrlStatusColor,
 	}
 
-	var badges []compton.FormattedBadge
+	var badges []*compton.FormattedBadge
 	badges = append(badges, manualUrlStatusBadge)
 
 	if rdx.HasKey(vangogh_integration.ManualUrlGeneratedChecksumProperty, dl.ManualUrl) {
-		generatedChecksumBadge := compton.FormattedBadge{
+		generatedChecksumBadge := &compton.FormattedBadge{
 			Title: "Generated Checksum",
 			Color: color.Yellow,
 		}
+
+		if manualUrlStatusBadge.Icon == compton.HexagonSparkling {
+			manualUrlStatusBadge.Icon = compton.HexagonNegativeDiagonalLine
+		}
+
 		badges = append(badges, generatedChecksumBadge)
 	}
 

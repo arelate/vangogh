@@ -8,7 +8,7 @@ require (
 	github.com/boggydigital/author v0.1.27
 	github.com/boggydigital/backups v0.1.7
 	github.com/boggydigital/clo v1.0.8
-	github.com/boggydigital/compton v0.4.58
+	github.com/boggydigital/compton v0.4.59
 	github.com/boggydigital/coost v0.4.1
 	github.com/boggydigital/dolo v0.2.24
 	github.com/boggydigital/issa v0.1.23

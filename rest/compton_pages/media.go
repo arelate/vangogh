@@ -66,7 +66,7 @@ func Media(id string, rdx redux.Readable) compton.PageElement {
 
 	if len(videoIds) > 0 && len(screenshots) > 0 {
 
-		fmtBadge := compton.FormattedBadge{
+		fmtBadge := &compton.FormattedBadge{
 			Title: "Screenshots",
 			Icon:  compton.ImageThumbnail,
 			Color: color.RepForeground,

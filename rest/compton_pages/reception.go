@@ -47,7 +47,7 @@ func Reception(id string, sar *steam_integration.AppReviews, rdx redux.Readable,
 		rcColor = rcc
 	}
 
-	fmtSteamReviewsBadge := compton.FormattedBadge{
+	fmtSteamReviewsBadge := &compton.FormattedBadge{
 		Title: "Steam Reviews",
 		Icon:  rcSymbol,
 		Color: rcColor,

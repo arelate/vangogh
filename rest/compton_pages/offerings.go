@@ -23,7 +23,7 @@ func Offerings(id string, rdx redux.Readable, permissions ...author.Permission) 
 	for _, op := range compton_data.OfferingsProperties {
 		if rps, ok := rdx.GetAllValues(op, id); ok && len(rps) > 0 {
 
-			fmtPtBadge := compton.FormattedBadge{
+			fmtPtBadge := &compton.FormattedBadge{
 				Title: compton_data.PropertyTitles[op],
 				Icon:  compton_data.PropertySymbols[op],
 				Color: color.RepForeground,

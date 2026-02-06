@@ -11,9 +11,9 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-func FormatBadges(id string, rdx redux.Readable, badgeProperties []string, permissions ...author.Permission) []compton.FormattedBadge {
+func FormatBadges(id string, rdx redux.Readable, badgeProperties []string, permissions ...author.Permission) []*compton.FormattedBadge {
 
-	fmtBadges := make([]compton.FormattedBadge, 0, len(badgeProperties))
+	fmtBadges := make([]*compton.FormattedBadge, 0, len(badgeProperties))
 
 	ppo := compton_data.PermittedProperties(badgeProperties, permissions...)
 
@@ -26,9 +26,9 @@ func FormatBadges(id string, rdx redux.Readable, badgeProperties []string, permi
 	return fmtBadges
 }
 
-func formatBadge(id, property string, rdx redux.Readable) compton.FormattedBadge {
+func formatBadge(id, property string, rdx redux.Readable) *compton.FormattedBadge {
 
-	fmtBadge := compton.FormattedBadge{
+	fmtBadge := &compton.FormattedBadge{
 		Color: color.RepGray,
 	}
 
@@ -74,6 +74,12 @@ func formatBadge(id, property string, rdx redux.Readable) compton.FormattedBadge
 		if owned && productType == vangogh_integration.GameProductType {
 			if vrSymbol, ok := compton_data.ValidationStatusSymbols[productValidationStatus]; ok {
 				fmtBadge.Icon = vrSymbol
+
+				if pgc, sure := rdx.GetLastVal(vangogh_integration.ProductGeneratedChecksumProperty, id); sure && pgc == vangogh_integration.TrueValue {
+					if fmtBadge.Icon == compton.HexagonSparkling {
+						fmtBadge.Icon = compton.HexagonNegativeDiagonalLine
+					}
+				}
 			}
 		}
 	case vangogh_integration.TopPercentProperty:

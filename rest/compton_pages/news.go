@@ -28,7 +28,7 @@ func News(gogId string, rdx redux.Readable, san *steam_integration.AppNews, all 
 		changelogLink.SetAttribute("target", "_top")
 		changelogLink.AddClass("internal")
 
-		fmtNewsBadge := compton.FormattedBadge{
+		fmtNewsBadge := &compton.FormattedBadge{
 			Title: "Steam News",
 			Icon:  compton.NewsBroadcast,
 			Color: color.RepForeground,

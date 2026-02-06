@@ -129,8 +129,6 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 
 			productBadges := compton.Badges(p, fmtBadges...)
 
-			//productBadges.SetAttribute("style", "view-transition-name:product-badges-"+id)
-
 			detailsSummary.AppendBadges(productBadges)
 		case compton_data.MediaSection:
 			var videos, images int
@@ -141,10 +139,10 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 				images = len(sp)
 			}
 
-			var fmtMediaBadges []compton.FormattedBadge
+			var fmtMediaBadges []*compton.FormattedBadge
 
 			if videos > 0 {
-				fmtMediaBadges = append(fmtMediaBadges, compton.FormattedBadge{
+				fmtMediaBadges = append(fmtMediaBadges, &compton.FormattedBadge{
 					Icon:  compton.VideoThumbnail,
 					Title: strconv.Itoa(videos),
 					Color: color.RepGray,
@@ -152,7 +150,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 			}
 
 			if images > 0 {
-				fmtMediaBadges = append(fmtMediaBadges, compton.FormattedBadge{
+				fmtMediaBadges = append(fmtMediaBadges, &compton.FormattedBadge{
 					Icon:  compton.ImageThumbnail,
 					Title: strconv.Itoa(images),
 					Color: color.RepGray,
@@ -191,7 +189,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 				}
 			}
 
-			fmtCompatBadge := compton.FormattedBadge{
+			fmtCompatBadge := &compton.FormattedBadge{
 				Title: dcText,
 				Icon:  dcSymbol,
 				Color: dcColor,
@@ -201,10 +199,10 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 
 		case compton_data.ReceptionSection:
 
-			var fmtReceptionBadges []compton.FormattedBadge
+			var fmtReceptionBadges []*compton.FormattedBadge
 
 			if tp, sure := rdx.GetLastVal(vangogh_integration.TopPercentProperty, id); sure && tp != "" {
-				fmtReceptionBadges = append(fmtReceptionBadges, compton.FormattedBadge{
+				fmtReceptionBadges = append(fmtReceptionBadges, &compton.FormattedBadge{
 					Title: tp,
 					Icon:  compton.Trophy,
 					Color: color.Green,
@@ -230,7 +228,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 					ratingsReviews = compton_fragments.FmtRatingValue(srap)
 				}
 
-				fmtReceptionBadges = append(fmtReceptionBadges, compton.FormattedBadge{
+				fmtReceptionBadges = append(fmtReceptionBadges, &compton.FormattedBadge{
 					Title: ratingsReviews,
 					Icon:  receptionSymbol,
 					Color: receptionColor,
@@ -258,11 +256,11 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 
 			if len(offeringsSymbols) > 0 {
 
-				fmtOfferingsBadges := make([]compton.FormattedBadge, 0, len(offeringsSymbols))
+				fmtOfferingsBadges := make([]*compton.FormattedBadge, 0, len(offeringsSymbols))
 
 				for _, os := range offeringsBadgesOrder {
 					if count, sure := offeringsSymbols[os]; sure {
-						fmtOfferingsBadges = append(fmtOfferingsBadges, compton.FormattedBadge{
+						fmtOfferingsBadges = append(fmtOfferingsBadges, &compton.FormattedBadge{
 							Title: strconv.Itoa(count),
 							Icon:  os,
 							Color: color.RepGray,
@@ -282,7 +280,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 					updateColor = color.Green
 				}
 
-				fmtNewsBadge := compton.FormattedBadge{
+				fmtNewsBadge := &compton.FormattedBadge{
 					Title: lcut.Format("Jan 2, '06"),
 					Icon:  compton.NewsBroadcast,
 					Color: updateColor,
@@ -316,20 +314,25 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 				}
 			}
 
-			fmtPvrBadge := compton.FormattedBadge{
+			fmtPvrBadge := &compton.FormattedBadge{
 				Title: productDvs.HumanReadableString(),
 				Icon:  statusSymbol,
 				Color: statusColor,
 			}
 
-			var badges []compton.FormattedBadge
+			var badges []*compton.FormattedBadge
 			badges = append(badges, fmtPvrBadge)
 
 			if pgs, sure := rdx.GetLastVal(vangogh_integration.ProductGeneratedChecksumProperty, id); sure && pgs == vangogh_integration.TrueValue {
-				generatedChecksumBadge := compton.FormattedBadge{
+				generatedChecksumBadge := &compton.FormattedBadge{
 					Title: "Generated Checksum",
 					Color: color.Yellow,
 				}
+
+				if fmtPvrBadge.Icon == compton.HexagonSparkling {
+					fmtPvrBadge.Icon = compton.HexagonNegativeDiagonalLine
+				}
+
 				badges = append(badges, generatedChecksumBadge)
 			}
 

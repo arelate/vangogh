@@ -170,7 +170,7 @@ func addSteamCompatibilitySection(r compton.Registrar, pageStack compton.Element
 		compatColor = cc
 	}
 
-	fmtCompatBadge := compton.FormattedBadge{
+	fmtCompatBadge := &compton.FormattedBadge{
 		Title: steamDevice,
 		Icon:  compatSymbol,
 		Color: compatColor,

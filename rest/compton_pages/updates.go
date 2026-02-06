@@ -155,7 +155,7 @@ func Updates(section string, rdx redux.Readable, showAll bool, permissions ...au
 		compton_data.ManyItemsSinglePageTemplate,
 		compton_data.ManyItemsManyPagesTemplate)
 
-	dsSection.AppendBadges(compton.Badges(p, compton.FormattedBadge{
+	dsSection.AppendBadges(compton.Badges(p, &compton.FormattedBadge{
 		Title: cf.Title(0, len(ids), updateTotals[section]),
 		Icon:  compton.NoSymbol,
 		Color: color.Foreground,
