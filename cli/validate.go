@@ -69,14 +69,11 @@ func Validate(
 
 	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
 
-	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
+	properties := append(vangogh_integration.DownloadsLifecycleProperties(),
 		vangogh_integration.SlugProperty,
-		vangogh_integration.ProductTypeProperty,
-		vangogh_integration.ManualUrlFilenameProperty,
-		vangogh_integration.ManualUrlStatusProperty,
-		vangogh_integration.ManualUrlValidationResultProperty,
-		vangogh_integration.ProductValidationResultProperty,
-		vangogh_integration.ProductValidationDateProperty)
+		vangogh_integration.ProductTypeProperty)
+
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), properties...)
 	if err != nil {
 		return err
 	}
@@ -209,6 +206,26 @@ func hashPathMd5(absPath string, tpw nod.TotalProgressWriter) (string, error) {
 	return fmt.Sprintf("%x", h.Sum(nil)), nil
 }
 
+func readMd5(absChecksumPath string) (*vangogh_integration.ValidationFile, error) {
+
+	if _, err := os.Stat(absChecksumPath); err != nil {
+		return nil, err
+	}
+
+	chkFile, err := os.Open(absChecksumPath)
+	if err != nil {
+		return nil, err
+	}
+	defer chkFile.Close()
+
+	var chkData vangogh_integration.ValidationFile
+	if err = xml.NewDecoder(chkFile).Decode(&chkData); err != nil {
+		return nil, err
+	}
+
+	return &chkData, nil
+}
+
 func validateManualUrl(
 	slug string,
 	dl *vangogh_integration.Download,
@@ -243,21 +260,23 @@ func validateManualUrl(
 		return vangogh_integration.ValidationStatusError, err
 	}
 
-	if _, err = os.Stat(absChecksumFile); os.IsNotExist(err) {
+	var targetMd5 string
+
+	chkData, err := readMd5(absChecksumFile)
+	if os.IsNotExist(err) {
+		if genChk, sure := rdx.GetLastVal(vangogh_integration.ManualUrlGeneratedChecksumProperty, dl.ManualUrl); sure && genChk != "" {
+			targetMd5 = genChk
+		}
+	} else if err != nil {
+		return vangogh_integration.ValidationStatusError, err
+	} else {
+		targetMd5 = chkData.MD5
+	}
+
+	if targetMd5 == "" {
 		vr := vangogh_integration.ValidationStatusMissingChecksum
 		mua.EndWithResult(vr.String())
 		return vr, nil
-	}
-
-	chkFile, err := os.Open(absChecksumFile)
-	if err != nil {
-		return vangogh_integration.ValidationStatusError, err
-	}
-	defer chkFile.Close()
-
-	var chkData vangogh_integration.ValidationFile
-	if err = xml.NewDecoder(chkFile).Decode(&chkData); err != nil {
-		return vangogh_integration.ValidationStatusError, err
 	}
 
 	stat, err := os.Stat(absDownloadPath)
@@ -273,7 +292,7 @@ func validateManualUrl(
 		return vangogh_integration.ValidationStatusError, err
 	}
 
-	if chkData.MD5 != sourceFileMd5 {
+	if targetMd5 != sourceFileMd5 {
 		vr := vangogh_integration.ValidationStatusChecksumMismatch
 		vlfa.EndWithResult(vr.String())
 		return vr, nil
