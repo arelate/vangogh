@@ -1,7 +1,7 @@
 package rest
 
 import (
-	"encoding/json"
+	"encoding/json/v2"
 	"encoding/xml"
 	"net/http"
 	"os"
@@ -46,7 +46,7 @@ func GetManualUrlChecksums(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err = json.NewEncoder(w).Encode(muc); err != nil {
+	if err = json.MarshalWrite(w, muc); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}
 

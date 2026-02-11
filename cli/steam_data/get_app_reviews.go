@@ -1,7 +1,7 @@
 package steam_data
 
 import (
-	"encoding/json"
+	"encoding/json/v2"
 	"errors"
 	"maps"
 	"strconv"
@@ -86,7 +86,7 @@ func reduceAppReviewsProduct(gogIds []string, steamAppId string, kvAppReviews ke
 	defer rcAppReview.Close()
 
 	var sar steam_integration.AppReviews
-	if err = json.NewDecoder(rcAppReview).Decode(&sar); err != nil {
+	if err = json.UnmarshalRead(rcAppReview, &sar); err != nil {
 		return err
 	}
 

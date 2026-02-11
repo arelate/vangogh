@@ -1,7 +1,7 @@
 package rest
 
 import (
-	"encoding/json"
+	"encoding/json/v2"
 	"net/http"
 
 	"github.com/arelate/southern_light/steam_integration"
@@ -66,7 +66,7 @@ func getAppNews(gogId string) (*steam_integration.AppNews, error) {
 	defer rcAppNews.Close()
 
 	var appNewsResponse steam_integration.GetNewsForAppResponse
-	if err = json.NewDecoder(rcAppNews).Decode(&appNewsResponse); err != nil {
+	if err = json.UnmarshalRead(rcAppNews, &appNewsResponse); err != nil {
 		return nil, err
 	}
 

@@ -1,7 +1,7 @@
 package rest
 
 import (
-	"encoding/json"
+	"encoding/json/v2"
 	"net/http"
 
 	"github.com/arelate/southern_light/vangogh_integration"
@@ -45,7 +45,7 @@ func GetProductDetails(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err = json.NewEncoder(w).Encode(pdm); err != nil {
+	if err = json.MarshalWrite(w, pdm); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}
 

@@ -1,7 +1,7 @@
 package steam_data
 
 import (
-	"encoding/json"
+	"encoding/json/v2"
 	"errors"
 	"maps"
 	"time"
@@ -84,7 +84,7 @@ func reduceAppNewsProduct(gogIds []string, steamAppId string, kvAppNews kevlar.K
 	defer rcAppNews.Close()
 
 	var gnfar steam_integration.GetNewsForAppResponse
-	if err = json.NewDecoder(rcAppNews).Decode(&gnfar); err != nil {
+	if err = json.UnmarshalRead(rcAppNews, &gnfar); err != nil {
 		return err
 	}
 

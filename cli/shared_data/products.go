@@ -1,7 +1,7 @@
 package shared_data
 
 import (
-	"encoding/json"
+	"encoding/json/v2"
 	"iter"
 	"maps"
 	"strconv"
@@ -188,7 +188,7 @@ func getCatalogPageProducts(page string, kvCatalogPages kevlar.KeyValues) ([]str
 	defer rcCatalogPage.Close()
 
 	var catalogPage gog_integration.CatalogPage
-	if err = json.NewDecoder(rcCatalogPage).Decode(&catalogPage); err != nil {
+	if err = json.UnmarshalRead(rcCatalogPage, &catalogPage); err != nil {
 		return nil, err
 	}
 
@@ -245,7 +245,7 @@ func getAccountPageProducts(page string, kvAccountPages kevlar.KeyValues) ([]str
 	defer rcAccountPage.Close()
 
 	var accountPage gog_integration.AccountPage
-	if err = json.NewDecoder(rcAccountPage).Decode(&accountPage); err != nil {
+	if err = json.UnmarshalRead(rcAccountPage, &accountPage); err != nil {
 		return nil, err
 	}
 
@@ -352,7 +352,7 @@ func getOrderPageProducts(id string, since int64, kvOrderPage kevlar.KeyValues) 
 
 	var orderPage gog_integration.OrderPage
 
-	if err = json.NewDecoder(rcOrderPage).Decode(&orderPage); err != nil {
+	if err = json.UnmarshalRead(rcOrderPage, &orderPage); err != nil {
 		return nil, err
 	}
 
@@ -454,7 +454,7 @@ func getPageNewUpdatedAccountProducts(page string, kvAccountPages, kvDetails kev
 	defer rcAccountPage.Close()
 
 	var accountPage gog_integration.AccountPage
-	if err = json.NewDecoder(rcAccountPage).Decode(&accountPage); err != nil {
+	if err = json.UnmarshalRead(rcAccountPage, &accountPage); err != nil {
 		return nil, err
 	}
 

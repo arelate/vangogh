@@ -1,7 +1,7 @@
 package gog_data
 
 import (
-	"encoding/json"
+	"encoding/json/v2"
 	"strconv"
 	"time"
 
@@ -99,7 +99,7 @@ func getProductCountLastId(currentPage int, kvCatalogPage kevlar.KeyValues) (int
 	defer rcCatalogPage.Close()
 
 	var catalogPage gog_integration.CatalogPage
-	if err = json.NewDecoder(rcCatalogPage).Decode(&catalogPage); err != nil {
+	if err = json.UnmarshalRead(rcCatalogPage, &catalogPage); err != nil {
 		return -1, "", err
 	}
 

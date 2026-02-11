@@ -1,7 +1,7 @@
 package rest
 
 import (
-	"encoding/json"
+	"encoding/json/v2"
 	"errors"
 	"net/http"
 
@@ -67,7 +67,7 @@ func getSteamReviews(gogId string) (*steam_integration.AppReviews, error) {
 	defer rcAppReviews.Close()
 
 	var appReviews steam_integration.AppReviews
-	if err = json.NewDecoder(rcAppReviews).Decode(&appReviews); err != nil {
+	if err = json.UnmarshalRead(rcAppReviews, &appReviews); err != nil {
 		return nil, err
 	}
 

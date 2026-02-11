@@ -1,7 +1,7 @@
 package steam_data
 
 import (
-	"encoding/json"
+	"encoding/json/v2"
 	"strconv"
 	"time"
 
@@ -84,7 +84,7 @@ func ReduceAppList(kvAppList kevlar.KeyValues) error {
 	defer rcLicences.Close()
 
 	var appList steam_integration.GetAppListV2Response
-	if err = json.NewDecoder(rcLicences).Decode(&appList); err != nil {
+	if err = json.UnmarshalRead(rcLicences, &appList); err != nil {
 		return err
 	}
 

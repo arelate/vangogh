@@ -1,7 +1,7 @@
 package gog_data
 
 import (
-	"encoding/json"
+	"encoding/json/v2"
 	"net/http"
 	"slices"
 	"time"
@@ -86,7 +86,7 @@ func ReduceLicences(kvLicences kevlar.KeyValues) error {
 	defer rcLicences.Close()
 
 	var licences []string
-	if err = json.NewDecoder(rcLicences).Decode(&licences); err != nil {
+	if err = json.UnmarshalRead(rcLicences, &licences); err != nil {
 		return err
 	}
 

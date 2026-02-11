@@ -1,7 +1,7 @@
 package gog_data
 
 import (
-	"encoding/json"
+	"encoding/json/v2"
 	"errors"
 	"net/http"
 	"strconv"
@@ -79,7 +79,7 @@ func reduceCatalogPage(page string, kvCatalogPages kevlar.KeyValues, piv shared_
 	defer rcCatalogPage.Close()
 
 	var catalogPage gog_integration.CatalogPage
-	if err = json.NewDecoder(rcCatalogPage).Decode(&catalogPage); err != nil {
+	if err = json.UnmarshalRead(rcCatalogPage, &catalogPage); err != nil {
 		return err
 	}
 

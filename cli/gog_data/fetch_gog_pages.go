@@ -1,7 +1,7 @@
 package gog_data
 
 import (
-	"encoding/json"
+	"encoding/json/v2"
 	"slices"
 	"strconv"
 	"time"
@@ -64,7 +64,7 @@ func fetchGogPages(pageReq *reqs.Params, kv kevlar.KeyValues, tpw nod.TotalProgr
 	defer rcFirstPage.Close()
 
 	var tpp gog_integration.TotalPagesProxy
-	if err = json.NewDecoder(rcFirstPage).Decode(&tpp); err != nil {
+	if err = json.UnmarshalRead(rcFirstPage, &tpp); err != nil {
 		return err
 	}
 

@@ -1,7 +1,7 @@
 package gog_data
 
 import (
-	"encoding/json"
+	"encoding/json/v2"
 	"errors"
 	"net/http"
 	"slices"
@@ -83,7 +83,7 @@ func ReduceUserWishlist(kvUserWishlist kevlar.KeyValues) error {
 	defer rcUserWishlist.Close()
 
 	var userWishlist gog_integration.UserWishlist
-	if err = json.NewDecoder(rcUserWishlist).Decode(&userWishlist); err != nil {
+	if err = json.UnmarshalRead(rcUserWishlist, &userWishlist); err != nil {
 		return err
 	}
 

@@ -1,7 +1,7 @@
 package opencritic_data
 
 import (
-	"encoding/json"
+	"encoding/json/v2"
 	"errors"
 	"maps"
 	"strconv"
@@ -78,7 +78,7 @@ func reduceApiGameProduct(gogIds []string, openCriticId string, kvApiGame kevlar
 	defer rcApiGame.Close()
 
 	var apiGame opencritic_integration.ApiGame
-	if err = json.NewDecoder(rcApiGame).Decode(&apiGame); err != nil {
+	if err = json.UnmarshalRead(rcApiGame, &apiGame); err != nil {
 		return nil
 	}
 

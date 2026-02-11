@@ -1,7 +1,7 @@
 package gog_data
 
 import (
-	"encoding/json"
+	"encoding/json/v2"
 	"errors"
 	"net/http"
 	"strconv"
@@ -77,7 +77,7 @@ func reduceAccountPage(page string, kvAccountPages kevlar.KeyValues, piv shared_
 	defer rcAccountPage.Close()
 
 	var accountPage gog_integration.AccountPage
-	if err = json.NewDecoder(rcAccountPage).Decode(&accountPage); err != nil {
+	if err = json.UnmarshalRead(rcAccountPage, &accountPage); err != nil {
 		return err
 	}
 

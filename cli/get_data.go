@@ -1,7 +1,7 @@
 package cli
 
 import (
-	"encoding/json"
+	"encoding/json/v2"
 	"errors"
 	"maps"
 	"net/http"
@@ -450,7 +450,7 @@ func readUserAccessToken() (string, error) {
 
 	var uat gog_integration.UserAccessToken
 
-	if err = json.NewDecoder(rcUserAccessToken).Decode(&uat); err != nil {
+	if err = json.UnmarshalRead(rcUserAccessToken, &uat); err != nil {
 		return "", err
 	}
 

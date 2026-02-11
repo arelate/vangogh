@@ -1,7 +1,7 @@
 package gog_data
 
 import (
-	"encoding/json"
+	"encoding/json/v2"
 	"errors"
 	"net/http"
 	"time"
@@ -78,7 +78,7 @@ func reduceOrderPage(page string, kvOrderPages kevlar.KeyValues, piv shared_data
 	defer rcOrderPage.Close()
 
 	var orderPage gog_integration.OrderPage
-	if err = json.NewDecoder(rcOrderPage).Decode(&orderPage); err != nil {
+	if err = json.UnmarshalRead(rcOrderPage, &orderPage); err != nil {
 		return err
 	}
 

@@ -1,7 +1,7 @@
 package gog_data
 
 import (
-	"encoding/json"
+	"encoding/json/v2"
 	"errors"
 	"net/http"
 	"slices"
@@ -92,7 +92,7 @@ func reduceGamesDbGogProduct(id string, kvGamesDbGogProducts kevlar.KeyValues, p
 	defer rcGamesDbGogProduct.Close()
 
 	var gdgp gog_integration.GamesDbProduct
-	if err = json.NewDecoder(rcGamesDbGogProduct).Decode(&gdgp); err != nil {
+	if err = json.UnmarshalRead(rcGamesDbGogProduct, &gdgp); err != nil {
 		return err
 	}
 

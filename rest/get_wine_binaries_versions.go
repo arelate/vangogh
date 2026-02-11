@@ -1,7 +1,7 @@
 package rest
 
 import (
-	"encoding/json"
+	"encoding/json/v2"
 	"net/http"
 	"path"
 
@@ -61,7 +61,7 @@ func GetWineBinariesVersions(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Content-Type", applicationJsonContentType)
 
-	if err = json.NewEncoder(w).Encode(binariesVersions); err != nil {
+	if err = json.MarshalWrite(w, binariesVersions); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}
 }

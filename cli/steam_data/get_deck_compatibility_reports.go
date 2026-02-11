@@ -1,7 +1,7 @@
 package steam_data
 
 import (
-	"encoding/json"
+	"encoding/json/v2"
 	"errors"
 	"maps"
 	"strings"
@@ -85,7 +85,7 @@ func reduceDeckCompatibilityReportsProduct(gogIds []string, steamAppId string, k
 	defer rcDeckCompatibilityReport.Close()
 
 	var dcr steam_integration.DeckAppCompatibilityReport
-	if err = json.NewDecoder(rcDeckCompatibilityReport).Decode(&dcr); err != nil {
+	if err = json.UnmarshalRead(rcDeckCompatibilityReport, &dcr); err != nil {
 		// handle known empty results that return empty array instead of results
 		if strings.Contains(err.Error(), "cannot unmarshal array into Go struct field DeckAppCompatibilityReport.results") {
 			return nil

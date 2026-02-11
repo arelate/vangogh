@@ -2,7 +2,8 @@ package compton_pages
 
 import (
 	"bytes"
-	"encoding/json"
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"io"
 	"net/url"
 	"strings"
@@ -189,23 +190,19 @@ func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageEleme
 
 func formatJson(rc io.ReadCloser) (compton.Element, error) {
 
-	var ptBuf bytes.Buffer
-	if _, err := io.Copy(&ptBuf, rc); err != nil {
-		return nil, err
-	}
 	defer rc.Close()
 
-	var preBuf bytes.Buffer
-	if err := json.Indent(&preBuf, ptBuf.Bytes(), "", "    "); err != nil {
+	var unrBuf map[any]any
+	if err := json.UnmarshalRead(rc, &unrBuf); err != nil {
 		return nil, err
 	}
 
-	jsonString := preBuf.String()
+	var ptBuf bytes.Buffer
+	if err := json.MarshalWrite(&ptBuf, unrBuf, jsontext.WithIndent("  "), jsontext.EscapeForHTML(true)); err != nil {
+		return nil, err
+	}
 
-	jsonString = strings.Replace(jsonString, "<", "&lt;", -1)
-	jsonString = strings.Replace(jsonString, ">", "&gt;", -1)
-
-	return compton.PreText(jsonString), nil
+	return compton.PreText(ptBuf.String()), nil
 }
 
 func preText(rc io.ReadCloser) (compton.Element, error) {

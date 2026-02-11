@@ -1,7 +1,7 @@
 package gog_data
 
 import (
-	"encoding/json"
+	"encoding/json/v2"
 	"errors"
 	"maps"
 	"net/http"
@@ -100,7 +100,7 @@ func reduceApiProduct(id string, kvApiProduct kevlar.KeyValues, piv shared_data.
 	defer rcApiProduct.Close()
 
 	var ap gog_integration.ApiProduct
-	if err = json.NewDecoder(rcApiProduct).Decode(&ap); err != nil {
+	if err = json.UnmarshalRead(rcApiProduct, &ap); err != nil {
 		return err
 	}
 

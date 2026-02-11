@@ -1,7 +1,7 @@
 package steam_data
 
 import (
-	"encoding/json"
+	"encoding/json/v2"
 	"errors"
 	"maps"
 	"strconv"
@@ -83,7 +83,7 @@ func reduceAppDetailsProduct(gogIds []string, steamAppId string, kvAppDetails ke
 	defer rcSteamAppDetailsResponse.Close()
 
 	var sadr steam_integration.AppDetailsResponse
-	if err = json.NewDecoder(rcSteamAppDetailsResponse).Decode(&sadr); err != nil {
+	if err = json.UnmarshalRead(rcSteamAppDetailsResponse, &sadr); err != nil {
 		return err
 	}
 

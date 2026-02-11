@@ -1,7 +1,7 @@
 package compton_pages
 
 import (
-	"encoding/json"
+	"encoding/json/v2"
 	"errors"
 	"fmt"
 
@@ -133,7 +133,7 @@ func getDeckAppCompatibilityReport(gogId string, rdx redux.Readable) (*steam_int
 	defer rcDeckAppCompatibilityReport.Close()
 
 	var deckCompatibilityReport steam_integration.DeckAppCompatibilityReport
-	if err = json.NewDecoder(rcDeckAppCompatibilityReport).Decode(&deckCompatibilityReport); err != nil {
+	if err = json.UnmarshalRead(rcDeckAppCompatibilityReport, &deckCompatibilityReport); err != nil {
 		return nil, err
 	}
 

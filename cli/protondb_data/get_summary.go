@@ -1,7 +1,7 @@
 package protondb_data
 
 import (
-	"encoding/json"
+	"encoding/json/v2"
 	"errors"
 	"maps"
 
@@ -82,7 +82,7 @@ func reduceSummaryProduct(gogIds []string, steamAppId string, kvSummary kevlar.K
 	defer rcSummary.Close()
 
 	var sum protondb_integration.Summary
-	if err = json.NewDecoder(rcSummary).Decode(&sum); err != nil {
+	if err = json.UnmarshalRead(rcSummary, &sum); err != nil {
 		return err
 	}
 

@@ -1,7 +1,7 @@
 package hltb_data
 
 import (
-	"encoding/json"
+	"encoding/json/v2"
 	"errors"
 	"maps"
 	"strconv"
@@ -118,7 +118,7 @@ func reduceDataProduct(gogIds []string, hltbId string, kvData kevlar.KeyValues, 
 	defer rcData.Close()
 
 	var data hltb_integration.Data
-	if err = json.NewDecoder(rcData).Decode(&data); err != nil {
+	if err = json.UnmarshalRead(rcData, &data); err != nil {
 		return err
 	}
 

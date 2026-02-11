@@ -1,7 +1,7 @@
 package pcgw_data
 
 import (
-	"encoding/json"
+	"encoding/json/v2"
 	"errors"
 	"maps"
 
@@ -82,7 +82,7 @@ func reduceGogPageIdProduct(gogId string, kvPageId kevlar.KeyValues, piv shared_
 	defer rcPageId.Close()
 
 	var pageId pcgw_integration.PageId
-	if err = json.NewDecoder(rcPageId).Decode(&pageId); err != nil {
+	if err = json.UnmarshalRead(rcPageId, &pageId); err != nil {
 		return err
 	}
 
