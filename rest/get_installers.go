@@ -20,25 +20,38 @@ func GetInstallers(w http.ResponseWriter, r *http.Request) {
 
 	id := r.URL.Query().Get("id")
 
-	if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); ok {
-		switch pt {
-		case vangogh_integration.PackProductType:
-			// do nothing
-		case vangogh_integration.DlcProductType:
-			// do nothing
-		case vangogh_integration.GameProductType:
-			dls, err := getDownloadsList(id, operatingSystems, langCodes, noPatches)
-			if err != nil {
-				http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-				return
-			}
-			gameInstallersPage := compton_pages.Installers(id, dls, rdx)
-			if err = gameInstallersPage.WriteResponse(w); err != nil {
-				http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-				return
-			}
+	if owned, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); !ok || owned != vangogh_integration.TrueValue {
+		w.WriteHeader(http.StatusNoContent)
+		if _, err := w.Write([]byte("not owned")); err != nil {
+			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+			return
+		}
+		return
+	}
+
+	// do not check existance in case of products that are Owned (see above) but don't have a product type
+	pt, _ := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id)
+
+	switch pt {
+	case vangogh_integration.PackProductType:
+		// do nothing
+	case vangogh_integration.DlcProductType:
+		// do nothing
+	case vangogh_integration.GameProductType:
+		fallthrough
+	default:
+		dls, err := getDownloadsList(id, operatingSystems, langCodes, noPatches)
+		if err != nil {
+			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+			return
+		}
+		gameInstallersPage := compton_pages.Installers(id, dls, rdx)
+		if err = gameInstallersPage.WriteResponse(w); err != nil {
+			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+			return
 		}
 	}
+
 }
 
 func getDownloadsList(id string,

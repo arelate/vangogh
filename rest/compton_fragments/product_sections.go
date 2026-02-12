@@ -49,7 +49,8 @@ func ProductSections(id string, rdx redux.Readable, permissions ...author.Permis
 
 	if slices.Contains(permissions, perm.ReadFiles) {
 		if val, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && val == vangogh_integration.TrueValue {
-			if productType, sure := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); sure && productType == vangogh_integration.GameProductType {
+			if productType, _ := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); productType != vangogh_integration.DlcProductType &&
+				productType != vangogh_integration.PackProductType {
 				if preorder, yeah := rdx.GetLastVal(vangogh_integration.PreOrderProperty, id); yeah && preorder == vangogh_integration.TrueValue {
 					// do nothing
 				} else {
