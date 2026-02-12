@@ -71,7 +71,7 @@ func formatBadge(id, property string, rdx redux.Readable) *compton.FormattedBadg
 			fmtBadge.Icon = compton.CircleDownwardArrow
 		}
 	case vangogh_integration.ProductValidationResultProperty:
-		if owned && productType == vangogh_integration.GameProductType {
+		if owned && productType != vangogh_integration.DlcProductType && productType != vangogh_integration.PackProductType {
 			if vrSymbol, ok := compton_data.ValidationStatusSymbols[productValidationStatus]; ok {
 				fmtBadge.Icon = vrSymbol
 
