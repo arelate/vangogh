@@ -5,6 +5,7 @@ import (
 	"maps"
 	"net/http"
 
+	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
 	"github.com/arelate/vangogh/cli/reqs"
@@ -116,6 +117,8 @@ func reduceDetailsProduct(id string, kvDetails kevlar.KeyValues, piv shared_data
 			if err != nil {
 				return err
 			}
+		case vangogh_integration.BackgroundProperty:
+			values = []string{gog_integration.ImageId(det.GetBackground())}
 		}
 
 		if shared_data.IsNotEmpty(values...) {

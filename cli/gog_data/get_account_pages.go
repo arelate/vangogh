@@ -103,6 +103,9 @@ func reduceAccountPage(page string, kvAccountPages kevlar.KeyValues, piv shared_
 				values = []string{ap.Slug}
 			case vangogh_integration.AccountPageProductsProperty:
 				values = []string{page}
+			case vangogh_integration.ImageProperty:
+				values = []string{gog_integration.ImageId(ap.GetImage())}
+
 			}
 
 			if shared_data.IsNotEmpty(values...) {
