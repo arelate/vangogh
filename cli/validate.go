@@ -34,7 +34,7 @@ func ValidateHandler(u *url.URL) error {
 
 	var validationStatuses []vangogh_integration.ValidationStatus
 	if q.Has("validation-status") {
-		for _, vs := range strings.Split(q.Get("validation-status"), ",") {
+		for vs := range strings.SplitSeq(q.Get("validation-status"), ",") {
 			validationStatuses = append(validationStatuses, vangogh_integration.ParseValidationStatus(vs))
 		}
 	}

@@ -306,13 +306,13 @@ func parseVndbLines(lines []string) []string {
 }
 
 func parseInfoboxEngineLine(line string) (name string, build string) {
-	for _, part := range strings.Split(line, "|") {
-		if strings.HasPrefix(part, "name=") {
-			name = strings.TrimPrefix(part, "name=")
+	for part := range strings.SplitSeq(line, "|") {
+		if after, ok := strings.CutPrefix(part, "name="); ok {
+			name = after
 			name = strings.TrimSuffix(name, "}}")
 		}
-		if strings.HasPrefix(part, "build=") {
-			build = strings.TrimPrefix(part, "build=")
+		if after, ok := strings.CutPrefix(part, "build="); ok {
+			build = after
 			build = strings.TrimSuffix(build, "}}")
 		}
 	}
