@@ -9,8 +9,6 @@ RUN GOEXPERIMENT=jsonv2 go build \
     -ldflags="-s -w -X 'github.com/arelate/vangogh/reqs.GitTag=`git describe --tags --abbrev=0`'" \
     main.go
 
-RUN addgroup -S vincentvangogh && adduser -S vincentvangogh -G vincentvangogh
-
 FROM alpine:latest
 COPY --from=build /go/src/app/vangogh /usr/bin/vangogh
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
@@ -41,6 +39,7 @@ VOLUME /var/lib/vangogh/metadata
 # output (hot storage)
 VOLUME /var/lib/vangogh/output
 
+RUN addgroup -S vincentvangogh && adduser -S vincentvangogh -G vincentvangogh
 USER vincentvangogh
 
 ENTRYPOINT ["/usr/bin/vangogh"]
