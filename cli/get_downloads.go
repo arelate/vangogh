@@ -98,6 +98,7 @@ func GetDownloads(
 			vangogh_integration.DownloadsLifecycleProperties(),
 			vangogh_integration.SlugProperty,
 			vangogh_integration.ProductTypeProperty,
+			vangogh_integration.GOGOrderDateProperty,
 			// for optional validations
 			vangogh_integration.ManualUrlFilenameProperty,
 			vangogh_integration.ManualUrlStatusProperty,
@@ -108,7 +109,7 @@ func GetDownloads(
 	}
 
 	if options.queued {
-		ids, err = getQueuedDownloads()
+		ids, err = getQueuedDownloads(rdx)
 		if err != nil {
 			return err
 		}
@@ -447,14 +448,12 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	return nil
 }
 
-func getQueuedDownloads() ([]string, error) {
+func getQueuedDownloads(rdx redux.Readable) ([]string, error) {
 
 	gqda := nod.Begin("getting queued downloads...")
 	defer gqda.Done()
 
-	rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(),
-		vangogh_integration.DownloadQueuedProperty)
-	if err != nil {
+	if err := rdx.MustHave(vangogh_integration.GOGOrderDateProperty, vangogh_integration.DownloadQueuedProperty); err != nil {
 		return nil, err
 	}
 
@@ -469,7 +468,7 @@ func getQueuedDownloads() ([]string, error) {
 		gqda.EndWithResult("%d downloads in the queue", len(queuedDownloads))
 	}
 
-	return queuedDownloads, nil
+	return rdx.Sort(queuedDownloads, true, vangogh_integration.GOGOrderDateProperty)
 }
 
 func errManualUrlDownloadInterrupted(manualUrl string, rdx redux.Writeable, sourceErr error) error {
