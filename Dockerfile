@@ -9,9 +9,11 @@ RUN GOEXPERIMENT=jsonv2 go build \
     -ldflags="-s -w -X 'github.com/arelate/vangogh/reqs.GitTag=`git describe --tags --abbrev=0`'" \
     main.go
 
+RUN addgroup -S vincentvangogh && adduser -S vincentvangogh -G vincentvangogh
+
 FROM alpine:latest
-COPY --from=build /go/src/app/vangogh /usr/bin/vangogh
-COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=build --chown vincentvangogh:vincentvangogh /go/src/app/vangogh /usr/bin/vangogh
+COPY --from=build --chown vincentvangogh:vincentvangogh /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 EXPOSE 1853
 
@@ -19,11 +21,6 @@ EXPOSE 1853
 # that can be stored on hibernating HDD.
 # hot storage is frequently accessed data,
 # that can benefit from being stored on SSD.
-
-RUN addgroup -S vincentvangogh && adduser -S vincentvangogh -G vincentvangogh
-
-RUN chown -R vincentvangogh:vincentvangogh /var/lib/vangogh
-RUN chown -R vincentvangogh:vincentvangogh /var/log/vangogh
 
 # backups (cold storage)
 VOLUME /var/lib/vangogh/backups
