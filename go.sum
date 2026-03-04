@@ -50,6 +50,8 @@ github.com/arelate/southern_light v0.4.12 h1:81ZsXXezjXe7LWB72U2ot5WkZ/JrrDMNrPZ
 github.com/arelate/southern_light v0.4.12/go.mod h1:7f2P4ed+aGv88qcUfeW1UGFs/zmIirIqyu2SqR2hRSw=
 github.com/arelate/southern_light v0.4.17 h1:6RjsAke+A4G8B2CXFFW3hikV2CkM+b7hVOTj2xgAT4E=
 github.com/arelate/southern_light v0.4.17/go.mod h1:7f2P4ed+aGv88qcUfeW1UGFs/zmIirIqyu2SqR2hRSw=
+github.com/arelate/southern_light v0.4.24 h1:J9yZC+R1yhnEVTc8IBGEW7WVDDKC4cCOFggsZkRm6bI=
+github.com/arelate/southern_light v0.4.24/go.mod h1:7f2P4ed+aGv88qcUfeW1UGFs/zmIirIqyu2SqR2hRSw=
 github.com/boggydigital/atomus v0.1.11 h1:n9XRgPqF3OgnK8UK7yJ3aG5sQkwacBjtqzzOxCXz33A=
 github.com/boggydigital/atomus v0.1.11/go.mod h1:/ga4zus10Z3FiNDU4JmRw5fdm0IW78qoezV/Ni44V5s=
 github.com/boggydigital/author v0.1.25 h1:TclaDKvuQECImrTXGjC/n8gAD/0lDre9oxuDUIBobAE=
@@ -92,6 +94,8 @@ github.com/boggydigital/wits v0.2.3 h1:Z0eB+QlIA18fJmblyV6ZJQ/swPYSFhOxfgMXOQz4/
 github.com/boggydigital/wits v0.2.3/go.mod h1:aR/z0vfMLtg0b4hcts0qiSTZcA51O8A2N3U9laqd2Lc=
 github.com/boggydigital/yet_urls v0.1.57 h1:wMnDpjc2xDlP2ScGRcskfQj+X6s95S+HGtWior5maog=
 github.com/boggydigital/yet_urls v0.1.57/go.mod h1:Cn2NQWWljMw9iJSdQh7UZh2jXNeanG0JQE8nbBG9oFY=
+github.com/boggydigital/yet_urls v0.1.58 h1:z5X5aZHCXNo7f/Z499x/e2yige+BRmv1SOHvL2wfsM8=
+github.com/boggydigital/yet_urls v0.1.58/go.mod h1:U5iLBGC3bOPy4DCVcDxfGeIt0uRlp3WBkaFlVL9LDfA=
 golang.org/x/crypto v0.46.0 h1:cKRW/pmt1pKAfetfu+RCEvjvZkA9RimPbh7bhFjGVBU=
 golang.org/x/crypto v0.46.0/go.mod h1:Evb/oLKmMraqjZ2iQTwDwvCtJkczlDuTmdJXoZVzqU0=
 golang.org/x/crypto v0.47.0 h1:V6e3FRj+n4dbpw86FJ8Fv7XVOql7TEwpHapKoMJ/GO8=
@@ -110,3 +114,5 @@ golang.org/x/net v0.49.0 h1:eeHFmOGUTtaaPSGNmjBKpbng9MulQsJURQUAfUwY++o=
 golang.org/x/net v0.49.0/go.mod h1:/ysNB2EvaqvesRkuLAyjI1ycPZlQHM3q01F02UY/MV8=
 golang.org/x/net v0.50.0 h1:ucWh9eiCGyDR3vtzso0WMQinm2Dnt8cFMuQa9K33J60=
 golang.org/x/net v0.50.0/go.mod h1:UgoSli3F/pBgdJBHCTc+tp3gmrU4XswgGRgtnwWTfyM=
+golang.org/x/net v0.51.0 h1:94R/GTO7mt3/4wIKpcR5gkGmRLOuE/2hNGeWq/GBIFo=
+golang.org/x/net v0.51.0/go.mod h1:aamm+2QF5ogm02fjy5Bb7CQ0WMt1/WVM7FtyaTLlA9Y=
