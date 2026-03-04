@@ -1,5 +1,5 @@
 FROM golang:alpine AS build
-RUN apk add --no-cache --update git
+RUN apk add --no-cache --update git shadow
 ADD . /go/src/app
 WORKDIR /go/src/app
 RUN go get ./...
