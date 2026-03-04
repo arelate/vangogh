@@ -12,8 +12,8 @@ RUN GOEXPERIMENT=jsonv2 go build \
 RUN addgroup -S vincentvangogh && adduser -S vincentvangogh -G vincentvangogh
 
 FROM alpine:latest
-COPY --from=build --chown vincentvangogh:vincentvangogh /go/src/app/vangogh /usr/bin/vangogh
-COPY --from=build --chown vincentvangogh:vincentvangogh /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=build /go/src/app/vangogh /usr/bin/vangogh
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 EXPOSE 1853
 
