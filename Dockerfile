@@ -15,15 +15,7 @@ COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 EXPOSE 1853
 
-RUN addgroup \
-    -S -g 1000 \
-    vincentvangogh && \
-  adduser \
-    -S -H -D \
-    -u 1000 \
-    -G vincentvangogh \
-    vincentvangogh
-
+RUN su addgroup -S -g 1000 vincentvangogh && su adduser -S -H -D -u 1000 -G vincentvangogh vincentvangogh
 RUN mkdir -p /var/lib/vangogh /var/log/vangogh
 RUN chown vincentvangogh:vincentvangogh /var/lib/vangogh /var/log/vangogh
 
