@@ -1,5 +1,5 @@
 FROM golang:alpine AS build
-RUN apk add --no-cache --update git shadow
+RUN apk add --no-cache --update git
 ADD . /go/src/app
 WORKDIR /go/src/app
 RUN go get ./...
@@ -20,7 +20,7 @@ EXPOSE 1853
 # hot storage is frequently accessed data,
 # that can benefit from being stored on SSD.
 
-RUN groupadd -r vincentvangogh && useradd --no-log-init -r -g vincentvangogh vincentvangogh
+RUN addgroup -S vincentvangogh && adduser -S vincentvangogh -G vincentvangogh
 
 RUN chown -R vincentvangogh:vincentvangogh /var/lib/vangogh
 RUN chown -R vincentvangogh:vincentvangogh /var/log/vangogh
