@@ -20,6 +20,11 @@ EXPOSE 1853
 # hot storage is frequently accessed data,
 # that can benefit from being stored on SSD.
 
+RUN groupadd -r vincentvangogh && useradd --no-log-init -r -g vincentvangogh vincentvangogh
+
+RUN chown -R vincentvangogh:vincentvangogh /var/lib/vangogh
+RUN chown -R vincentvangogh:vincentvangogh /var/log/vangogh
+
 # backups (cold storage)
 VOLUME /var/lib/vangogh/backups
 # downloads (cold storage)
@@ -39,7 +44,7 @@ VOLUME /var/lib/vangogh/metadata
 # output (hot storage)
 VOLUME /var/lib/vangogh/output
 
-USER nobody
+USER vincentvangogh
 
 ENTRYPOINT ["/usr/bin/vangogh"]
 CMD ["serve","-port", "1853", "-stderr"]
