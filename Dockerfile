@@ -39,5 +39,7 @@ VOLUME /var/lib/vangogh/metadata
 # output (hot storage)
 VOLUME /var/lib/vangogh/output
 
+USER nobody
+
 ENTRYPOINT ["/usr/bin/vangogh"]
 CMD ["serve","-port", "1853", "-stderr"]

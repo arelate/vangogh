@@ -165,10 +165,11 @@ func GetCatalogPagesProducts(since int64) ([]string, error) {
 
 	gcppa.TotalInt(len(updatedPages))
 
-	catalogProductIds := make([]string, 0, kvCatalogPages.Len())
+	catalogProductIds := make([]string, 0)
 
 	for _, page := range updatedPages {
-		ids, err := getCatalogPageProducts(page, kvCatalogPages)
+		var ids []string
+		ids, err = getCatalogPageProducts(page, kvCatalogPages)
 		if err != nil {
 			return nil, err
 		}
@@ -222,10 +223,11 @@ func GetAccountPagesProducts(since int64) ([]string, error) {
 
 	gappa.TotalInt(len(updatedPages))
 
-	accountProductIds := make([]string, 0, kvAccountPages.Len())
+	accountProductIds := make([]string, 0)
 
 	for _, page := range updatedPages {
-		ids, err := getAccountPageProducts(page, kvAccountPages)
+		var ids []string
+		ids, err = getAccountPageProducts(page, kvAccountPages)
 		if err != nil {
 			return nil, err
 		}

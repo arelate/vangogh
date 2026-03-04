@@ -17,7 +17,7 @@ func GetWishlistAdd(w http.ResponseWriter, r *http.Request) {
 
 	acp := vangogh_integration.AbsCookiePath()
 
-	jar, err := coost.Read(gog_integration.DefaultUrl(), acp)
+	jar, err := coost.Read(gog_integration.HostUrl(), acp)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return

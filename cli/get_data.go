@@ -414,7 +414,7 @@ func requiresUserAccessToken(productTypes ...vangogh_integration.ProductType) bo
 func gogAuthHttpClient() (*http.Client, error) {
 	acp := vangogh_integration.AbsCookiePath()
 
-	jar, err := coost.Read(gog_integration.DefaultUrl(), acp)
+	jar, err := coost.Read(gog_integration.HostUrl(), acp)
 	if os.IsNotExist(err) {
 		return nil, errors.New("cookies file not found, use import-cookies command to add")
 	} else if err != nil {

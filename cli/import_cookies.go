@@ -18,5 +18,5 @@ func ImportCookiesHandler(u *url.URL) error {
 
 	absCookiesFilename := vangogh_integration.AbsCookiePath()
 
-	return coost.Import(cookieStr, gog_integration.DefaultUrl(), absCookiesFilename)
+	return coost.Import(cookieStr, gog_integration.HostUrl(), absCookiesFilename)
 }
