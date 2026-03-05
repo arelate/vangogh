@@ -10,6 +10,7 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
@@ -115,7 +116,7 @@ func (drp *downloadsRelayoutProcessor) Process(_ string, slug string, downloadsL
 	// currently this is required for sharded layout, but is a good practice to check in general
 	parentToDir, _ := filepath.Split(toDir)
 	if _, err = os.Stat(parentToDir); os.IsNotExist(err) {
-		if err = os.MkdirAll(parentToDir, 0755); err != nil {
+		if err = os.MkdirAll(parentToDir, pathways.PermUrwGrwOr); err != nil {
 			return err
 		}
 	}

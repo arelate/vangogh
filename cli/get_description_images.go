@@ -10,6 +10,7 @@ import (
 	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
@@ -116,7 +117,7 @@ func getDescriptionImage(descriptionImageUrl string, force bool) error {
 
 	adiDir, _ := filepath.Split(adip)
 	if _, err = os.Stat(adiDir); os.IsNotExist(err) {
-		if err = os.MkdirAll(adiDir, 0755); err != nil {
+		if err = os.MkdirAll(adiDir, pathways.PermUrwGrwOr); err != nil {
 			return err
 		}
 	}

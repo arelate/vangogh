@@ -10,6 +10,7 @@ import (
 	"github.com/arelate/vangogh/cli/itemizations"
 	"github.com/arelate/vangogh/cli/reqs"
 	"github.com/boggydigital/nod"
+	"github.com/boggydigital/pathways"
 	"github.com/boggydigital/redux"
 )
 
@@ -182,7 +183,7 @@ func getImage(imageUrl *url.URL, force bool) error {
 	}
 
 	if _, err = os.Stat(dstImageDir); os.IsNotExist(err) {
-		if err = os.MkdirAll(dstImageDir, 0755); err != nil {
+		if err = os.MkdirAll(dstImageDir, pathways.PermUrwGrwOr); err != nil {
 			return err
 		}
 	}
