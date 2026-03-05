@@ -14,7 +14,7 @@ require (
 	github.com/boggydigital/issa v0.1.23
 	github.com/boggydigital/kevlar v0.6.10
 	github.com/boggydigital/nod v0.1.30
-	github.com/boggydigital/pathways v0.2.3
+	github.com/boggydigital/pathways v0.2.4
 	github.com/boggydigital/redux v0.1.11
 	github.com/boggydigital/yet_urls v0.1.58
 	golang.org/x/net v0.51.0

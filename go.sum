@@ -90,6 +90,8 @@ github.com/boggydigital/pathways v0.2.2 h1:GUXi9ZdjYrYuvcqIktLopOCAan1Yp062WtL/U
 github.com/boggydigital/pathways v0.2.2/go.mod h1:4zo+EQWew/KR0h2zOCtZQq6DL7zvhdDOcHWXm17nYDI=
 github.com/boggydigital/pathways v0.2.3 h1:3PeLADxoBF7yCASa0fFCKoazw3LxbuLG0laeuMhiqa4=
 github.com/boggydigital/pathways v0.2.3/go.mod h1:4zo+EQWew/KR0h2zOCtZQq6DL7zvhdDOcHWXm17nYDI=
+github.com/boggydigital/pathways v0.2.4 h1:mQwH+75H6FDssx2sYrCYzTDSbah8iUWDHzpY6fLxhEM=
+github.com/boggydigital/pathways v0.2.4/go.mod h1:4zo+EQWew/KR0h2zOCtZQq6DL7zvhdDOcHWXm17nYDI=
 github.com/boggydigital/redux v0.1.11 h1:o1O+SuoHR7xoGtgs4GSF9rc1JhTl9WhOhFL3fJKxOyo=
 github.com/boggydigital/redux v0.1.11/go.mod h1:vjmX7ffyfOdu3WKky6yX2QNi06S4WK2xDaMv93XD6kg=
 github.com/boggydigital/testo v0.1.8 h1:NKuKLpWKn8gG3dYq8xNrFYHimxoCTdzLOs242q6jeQo=
