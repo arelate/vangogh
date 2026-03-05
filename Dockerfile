@@ -15,12 +15,6 @@ COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 EXPOSE 1853
 
-RUN su addgroup -S -g 1000 vincentvangogh && su adduser -S -H -D -u 1000 -G vincentvangogh vincentvangogh
-RUN mkdir -p /var/lib/vangogh /var/log/vangogh
-RUN chown vincentvangogh:vincentvangogh /var/lib/vangogh /var/log/vangogh
-
-USER 1000:1000
-
 # cold storage is less frequently accessed data,
 # that can be stored on hibernating HDD.
 # hot storage is frequently accessed data,
@@ -45,8 +39,7 @@ VOLUME /var/lib/vangogh/metadata
 # output (hot storage)
 VOLUME /var/lib/vangogh/output
 
-RUN addgroup -S vincentvangogh && adduser -S vincentvangogh -G vincentvangogh
-USER vincentvangogh
+USER nobody
 
 ENTRYPOINT ["/usr/bin/vangogh"]
 CMD ["serve","-port", "1853", "-stderr"]
