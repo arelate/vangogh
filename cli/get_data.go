@@ -214,12 +214,6 @@ func GetData(ids []string, productTypes []vangogh_integration.ProductType, since
 		}
 	}
 
-	if slices.Contains(productTypes, vangogh_integration.SteamAppList) {
-		if err = steam_data.GetAppList(); err != nil {
-			return err
-		}
-	}
-
 	if slices.Contains(productTypes, vangogh_integration.SteamAppDetails) {
 		if err = steam_data.GetAppDetails(steamGogIds, force); err != nil {
 			return err

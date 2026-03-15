@@ -148,15 +148,6 @@ func GamesDbGogProduct(authHttpClient *http.Client, authBearer string) *Params {
 	}
 }
 
-func SteamAppList() *Params {
-	return &Params{
-		ProductType: vangogh_integration.SteamAppList,
-		UrlFunc:     steam_integration.AppListParamUrl,
-		HttpClient:  http.DefaultClient,
-		HttpMethod:  http.MethodGet,
-	}
-}
-
 func SteamAppDetails() *Params {
 	return &Params{
 		ProductType:           vangogh_integration.SteamAppDetails,
