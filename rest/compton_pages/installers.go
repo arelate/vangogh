@@ -36,7 +36,7 @@ type DownloadVariant struct {
 // Installers will present available installers, DLCs in the following hierarchy:
 // - Operating system heading - Installers and DLCs (separately)
 // - title_values list of downloads by version
-func Installers(id string, dls vangogh_integration.DownloadsList, rdx redux.Readable) compton.PageElement {
+func Installers(id string, messages []string, dls vangogh_integration.DownloadsList, rdx redux.Readable) compton.PageElement {
 
 	s := compton_fragments.ProductSection(compton_data.InstallersSection, id, rdx)
 

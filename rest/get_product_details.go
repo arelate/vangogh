@@ -24,7 +24,13 @@ func GetProductDetails(w http.ResponseWriter, r *http.Request) {
 
 	id := q.Get("id")
 
-	dls, err := getDownloadsList(id, operatingSystems, langCodes, noPatches)
+	det, err := getDetails(id)
+	if err != nil {
+		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+		return
+	}
+
+	dls, err := getDownloadsList(det, operatingSystems, langCodes, noPatches)
 	if err != nil && vangogh_integration.IsDetailsNotFound(err) {
 		// details not found is only a fatal error for GAME products,
 		// details don't exist for PACK and DLC products

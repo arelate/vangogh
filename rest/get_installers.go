@@ -3,6 +3,7 @@ package rest
 import (
 	"net/http"
 
+	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_pages"
 	"github.com/boggydigital/kevlar"
@@ -40,12 +41,18 @@ func GetInstallers(w http.ResponseWriter, r *http.Request) {
 	case vangogh_integration.GameProductType:
 		fallthrough
 	default:
-		dls, err := getDownloadsList(id, operatingSystems, langCodes, noPatches)
+		det, err := getDetails(id)
 		if err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 			return
 		}
-		gameInstallersPage := compton_pages.Installers(id, dls, rdx)
+
+		dls, err := getDownloadsList(det, operatingSystems, langCodes, noPatches)
+		if err != nil {
+			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+			return
+		}
+		gameInstallersPage := compton_pages.Installers(id, det.Messages, dls, rdx)
 		if err = gameInstallersPage.WriteResponse(w); err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 			return
@@ -54,11 +61,7 @@ func GetInstallers(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func getDownloadsList(id string,
-	operatingSystems []vangogh_integration.OperatingSystem,
-	langCodes []string,
-	noPatches bool) (vangogh_integration.DownloadsList, error) {
-
+func getDetails(id string) (*gog_integration.Details, error) {
 	detailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.Details)
 	if err != nil {
 		return nil, err
@@ -83,6 +86,14 @@ func getDownloadsList(id string,
 	if det == nil {
 		return nil, vangogh_integration.NilDetailsErr(id)
 	}
+
+	return det, nil
+}
+
+func getDownloadsList(det *gog_integration.Details,
+	operatingSystems []vangogh_integration.OperatingSystem,
+	langCodes []string,
+	noPatches bool) (vangogh_integration.DownloadsList, error) {
 
 	dl, err := vangogh_integration.FromDetails(det, rdx)
 	if err != nil {
