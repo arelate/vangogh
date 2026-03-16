@@ -76,7 +76,10 @@ func Installers(id string, messages []string, dls vangogh_integration.DownloadsL
 	}
 
 	if len(messages) > 0 {
-		messagesSpan := compton.Fspan(s, strings.Join(messages, "\n")).FontSize(size.XSmall).TextAlign(align.Center)
+		messagesSpan := compton.Fspan(s, strings.Join(messages, "\n")).
+			FontSize(size.XSmall).
+			TextAlign(align.Center).
+			ForegroundColor(color.Orange)
 		pageStack.Append(compton.FICenter(s, messagesSpan))
 	}
 
