@@ -293,7 +293,9 @@ func downloadLink(r compton.Registrar,
 	linkColumn.Append(linkTitle)
 
 	if localFilename, ok := rdx.GetLastVal(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl); ok {
-		linkColumn.Append(compton.Fspan(r, localFilename).FontSize(size.XSmall).ForegroundColor(color.Gray))
+		localFilenameSpan := compton.Fspan(r, localFilename).FontSize(size.XSmall).ForegroundColor(color.Gray)
+		localFilenameSpan.AddClass("local-filename")
+		linkColumn.Append(localFilenameSpan)
 	}
 
 	dvs := vangogh_integration.NewManualUrlDvs(dl.ManualUrl, rdx)
