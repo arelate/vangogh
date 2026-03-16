@@ -75,6 +75,11 @@ func Installers(id string, messages []string, dls vangogh_integration.DownloadsL
 		pageStack.Append(compton.FICenter(s, dvRow))
 	}
 
+	if len(messages) > 0 {
+		messagesSpan := compton.Fspan(s, strings.Join(messages, "\n")).FontSize(size.XSmall).TextAlign(align.Center)
+		pageStack.Append(compton.FICenter(s, messagesSpan))
+	}
+
 	if owned, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && owned == vangogh_integration.FalseValue {
 		ownershipRequiredNotice := compton.Fspan(s, "Installers are available for owned products only").
 			ForegroundColor(color.Gray)
