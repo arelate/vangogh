@@ -44,7 +44,7 @@ func Media(id string, rdx redux.Readable) compton.PageElement {
 
 	if len(videoIds) == 0 {
 		fs := compton.Fspan(s, "Videos are not available for this product").
-			ForegroundColor(color.RepGray).
+			ForegroundColor(color.Gray).
 			TextAlign(align.Center)
 		pageStack.Append(compton.FICenter(s, fs))
 	}
@@ -69,7 +69,7 @@ func Media(id string, rdx redux.Readable) compton.PageElement {
 		fmtBadge := &compton.FormattedBadge{
 			Title: "Screenshots",
 			Icon:  compton.ImageThumbnail,
-			Color: color.RepForeground,
+			Color: color.Foreground,
 		}
 
 		pageStack.Append(compton.SectionDivider(s, fmtBadge))
@@ -77,7 +77,7 @@ func Media(id string, rdx redux.Readable) compton.PageElement {
 
 	if len(screenshots) == 0 {
 		fs := compton.Fspan(s, "Screenshots are not available for this product").
-			ForegroundColor(color.RepGray).
+			ForegroundColor(color.Gray).
 			TextAlign(align.Center)
 		pageStack.Append(compton.FICenter(s, fs))
 	}

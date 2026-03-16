@@ -17,8 +17,6 @@ func DownloadsQueue(ids []string, rdx redux.Readable, permissions ...author.Perm
 
 	p := compton.Page(title)
 
-	p.SetAttribute("style", "--c-rep:var(--c-background)")
-
 	pageStack := compton.FlexItems(p, direction.Column)
 	p.Append(pageStack)
 
@@ -40,11 +38,10 @@ func DownloadsQueue(ids []string, rdx redux.Readable, permissions ...author.Perm
 			compton_data.ManyItemsSinglePageTemplate,
 			compton_data.ManyItemsManyPagesTemplate)
 
-		//resultsBadge := compton.BadgeText(p, cf.Title(0, len(ids), len(ids)), color.RepForeground).FontSize(size.XXSmall)
 		dqDetails.AppendBadges(compton.Badges(p, &compton.FormattedBadge{
 			Title: cf.Title(0, len(ids), len(ids)),
 			Icon:  compton.NoSymbol,
-			Color: color.RepForeground,
+			Color: color.DimmedForeground,
 		}))
 	}
 

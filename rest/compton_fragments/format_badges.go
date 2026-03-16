@@ -29,7 +29,7 @@ func FormatBadges(id string, rdx redux.Readable, badgeProperties []string, permi
 func formatBadge(id, property string, rdx redux.Readable) *compton.FormattedBadge {
 
 	fmtBadge := &compton.FormattedBadge{
-		Color: color.RepGray,
+		Color: color.Gray,
 	}
 
 	productDvs := vangogh_integration.NewProductDvs(id, rdx)
@@ -76,7 +76,7 @@ func formatBadge(id, property string, rdx redux.Readable) *compton.FormattedBadg
 				fmtBadge.Icon = vrSymbol
 
 				if pgc, sure := rdx.GetLastVal(vangogh_integration.ProductGeneratedChecksumProperty, id); sure && pgc == vangogh_integration.TrueValue {
-					if fmtBadge.Icon == compton.HexagonSparkling {
+					if fmtBadge.Icon == compton.Hexagon {
 						fmtBadge.Icon = compton.HexagonNegativeDiagonalLine
 					}
 				}

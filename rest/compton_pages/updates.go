@@ -83,8 +83,6 @@ func Updates(section string, rdx redux.Readable, showAll bool, permissions ...au
 
 	p.AppendSpeculationRules(compton.SpeculationRulesConservativeEagerness, "/*")
 
-	p.SetAttribute("style", "--c-rep:var(--c-background)")
-
 	/* Nav stack = App navigation + Show all + (popup) Updates sections shortcuts */
 
 	topLevelNav := []compton.Element{compton_fragments.AppNavLinks(p, current)}

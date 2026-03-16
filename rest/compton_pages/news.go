@@ -24,14 +24,14 @@ func News(gogId string, rdx redux.Readable, san *steam_integration.AppNews, all 
 		changelogLink := compton.A("/changelog?id=" + gogId)
 		changelogLink.Append(compton.Fspan(s, "View GOG.com Changelog").
 			FontSize(size.Small).
-			ForegroundColor(color.RepForeground))
+			ForegroundColor(color.Foreground))
 		changelogLink.SetAttribute("target", "_top")
 		changelogLink.AddClass("internal")
 
 		fmtNewsBadge := &compton.FormattedBadge{
 			Title: "Steam News",
 			Icon:  compton.NewsBroadcast,
-			Color: color.RepForeground,
+			Color: color.Foreground,
 		}
 
 		steamNewsSection := compton.SectionDivider(s, fmtNewsBadge)
@@ -84,7 +84,7 @@ func News(gogId string, rdx redux.Readable, san *steam_integration.AppNews, all 
 			title = "Steam news are not available for this product"
 		}
 		fs := compton.Fspan(s, title).
-			ForegroundColor(color.RepGray).
+			ForegroundColor(color.Gray).
 			TextAlign(align.Center)
 		pageStack.Append(compton.FICenter(s, fs))
 	}

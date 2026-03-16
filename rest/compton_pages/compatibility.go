@@ -49,7 +49,7 @@ var displayTypeColors = map[string]color.Color{
 	"Verified":    color.Green,
 	"Playable":    color.Orange,
 	"Unsupported": color.Red,
-	"Unknown":     color.RepGray,
+	"Unknown":     color.Gray,
 }
 
 var displayTypeSymbols = map[string]compton.Symbol{
@@ -161,7 +161,7 @@ func addSteamCompatibilitySection(r compton.Registrar, pageStack compton.Element
 	}
 
 	compatSymbol := compton.NoSymbol
-	compatColor := color.RepForeground
+	compatColor := color.Foreground
 
 	if cs, ok := displayTypeSymbols[compatCategory]; ok {
 		compatSymbol = cs
@@ -252,7 +252,7 @@ func addSteamCompatibilitySection(r compton.Registrar, pageStack compton.Element
 			}
 			displayTypeMessage := compton.Fspan(r, decodedResult).FontSize(size.Small)
 			if dt == "Unknown" {
-				displayTypeMessage.ForegroundColor(color.RepGray)
+				displayTypeMessage.ForegroundColor(color.Gray)
 			}
 			resultRow.Append(displayTypeIcon, displayTypeMessage)
 

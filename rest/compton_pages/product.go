@@ -18,7 +18,6 @@ import (
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/loading"
 	"github.com/boggydigital/compton/consts/size"
-	"github.com/boggydigital/issa"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/redux"
 )
@@ -46,13 +45,6 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 	p.AppendSpeculationRules(compton.SpeculationRulesConservativeEagerness, "/*")
 
 	p.RegisterStyles(compton_styles.Styles, "product.css")
-
-	// tinting document background color to the representative product color
-	if imageId, ok := rdx.GetLastVal(vangogh_integration.ImageProperty, id); ok && imageId != "" {
-		if repColor, sure := rdx.GetLastVal(vangogh_integration.RepColorProperty, imageId); sure && repColor != issa.NeutralRepColor {
-			p.SetAttribute("style", "--c-rep:"+repColor)
-		}
-	}
 
 	/* App navigation */
 
@@ -96,7 +88,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 		default:
 			for _, value := range values[property] {
 				href := "/search?sort=global-release-date&desc=true&" + property + "=" + value
-				summaryRow.PropLinkColor(compton_data.PropertyTitles[property], color.RepForeground, value, href)
+				summaryRow.PropLinkColor(compton_data.PropertyTitles[property], color.Foreground, value, href)
 			}
 		}
 
@@ -113,7 +105,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 		detailsSummary := compton.DSLarge(p, sectionTitle,
 			slices.Contains(openSections, section)).
 			BackgroundColor(color.Highlight).
-			MarkerColor(color.RepGray).
+			MarkerColor(color.Gray).
 			DetailsMarginBlockEnd(size.Unset).
 			SummaryMarginBlockEnd(size.Normal)
 		detailsSummary.SetId(section)
@@ -145,7 +137,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 				fmtMediaBadges = append(fmtMediaBadges, &compton.FormattedBadge{
 					Icon:  compton.VideoThumbnail,
 					Title: strconv.Itoa(videos),
-					Color: color.RepGray,
+					Color: color.Gray,
 				})
 			}
 
@@ -153,7 +145,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 				fmtMediaBadges = append(fmtMediaBadges, &compton.FormattedBadge{
 					Icon:  compton.ImageThumbnail,
 					Title: strconv.Itoa(images),
-					Color: color.RepGray,
+					Color: color.Gray,
 				})
 			}
 
@@ -164,7 +156,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 		case compton_data.CompatibilitySection:
 
 			var dcText string
-			dcColor := color.RepGray
+			dcColor := color.Gray
 			dcSymbol := compton.NoSymbol
 
 			if dcp, ok := rdx.GetLastVal(vangogh_integration.SteamDeckAppCompatibilityCategoryProperty, id); ok {
@@ -210,7 +202,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 			}
 
 			receptionSymbol := compton.NoSymbol
-			receptionColor := color.RepGray
+			receptionColor := color.Gray
 
 			if srep, ok := rdx.GetLastVal(vangogh_integration.SummaryReviewsProperty, id); ok {
 
@@ -263,7 +255,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 						fmtOfferingsBadges = append(fmtOfferingsBadges, &compton.FormattedBadge{
 							Title: strconv.Itoa(count),
 							Icon:  os,
-							Color: color.RepGray,
+							Color: color.Gray,
 						})
 					}
 				}
@@ -274,7 +266,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 
 			if lcut, ok, err := rdx.ParseLastValTime(vangogh_integration.SteamLastCommunityUpdateProperty, id); ok && err == nil {
 
-				updateColor := color.RepGray
+				updateColor := color.Gray
 
 				if (time.Since(lcut).Hours() / 24) < 30 {
 					updateColor = color.Green
@@ -299,7 +291,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 			productDownloadStatus := productDvs.DownloadStatus()
 			productValidationStatus := productDvs.ValidationStatus()
 
-			statusColor := color.RepGray
+			statusColor := color.Gray
 			statusSymbol := compton.NoSymbol
 
 			switch productValidationStatus {
@@ -362,7 +354,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 		if len(hintSentences) > 0 {
 			noInstallersHint := compton.Fspan(p, strings.Join(hintSentences, " ")).
 				FontSize(size.Small).
-				ForegroundColor(color.RepGray).
+				ForegroundColor(color.Gray).
 				TextAlign(align.Center)
 
 			pageStack.Append(

@@ -61,7 +61,6 @@ func ProductCard(r compton.Registrar, id string, hydrated bool, rdx redux.Readab
 
 	}
 
-	pc.SetAttribute("style", "--c-rep:"+repColor)
 	poster := pc.AppendPoster(repColor, dehydratedImage, imageUrl, hydrated)
 
 	poster.WidthPixels(85.5)

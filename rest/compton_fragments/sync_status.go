@@ -68,7 +68,7 @@ func SyncStatus(r compton.Registrar, rdx redux.Readable, permissions ...author.P
 	}
 
 	if slices.Contains(permissions, perm.ReadLogs) {
-		syncStatusFrow.LinkColor("Logs", "/logs", color.RepForeground)
+		syncStatusFrow.LinkColor("Logs", "/logs", color.Foreground)
 	}
 
 	return compton.FICenter(r, syncStatusFrow).ColumnGap(size.Small)

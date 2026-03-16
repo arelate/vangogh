@@ -13,7 +13,6 @@ import (
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/size"
-	"github.com/boggydigital/issa"
 	"github.com/boggydigital/redux"
 )
 
@@ -27,13 +26,6 @@ func Description(id string, rdx redux.Readable) compton.PageElement {
 	p := compton.Page(pageTitle)
 
 	p.RegisterStyles(compton_styles.Styles, "description.css")
-
-	// tinting document background color to the representative product color
-	if imageId, ok := rdx.GetLastVal(vangogh_integration.ImageProperty, id); ok && imageId != "" {
-		if repColor, sure := rdx.GetLastVal(vangogh_integration.RepColorProperty, imageId); sure && repColor != issa.NeutralRepColor {
-			p.SetAttribute("style", "--c-rep:"+repColor)
-		}
-	}
 
 	var desc string
 	if dop, ok := rdx.GetLastVal(vangogh_integration.DescriptionOverviewProperty, id); ok {
@@ -57,7 +49,7 @@ func Description(id string, rdx redux.Readable) compton.PageElement {
 	subHeading := compton.Heading(3)
 	subHeading.Append(compton.Fspan(p, "Description").
 		TextAlign(align.Center).
-		ForegroundColor(color.RepGray))
+		ForegroundColor(color.Gray))
 	headingRow.Append(subHeading)
 
 	pageStack.Append(compton.FICenter(p, headingRow))
@@ -73,7 +65,7 @@ func Description(id string, rdx redux.Readable) compton.PageElement {
 
 	if desc == "" {
 		fs := compton.Fspan(p, "Description is not available for this product").
-			ForegroundColor(color.RepGray).
+			ForegroundColor(color.Gray).
 			TextAlign(align.Center)
 		descriptionDiv.Append(compton.FICenter(p, fs))
 	} else {

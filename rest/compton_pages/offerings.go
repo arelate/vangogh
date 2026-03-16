@@ -26,7 +26,7 @@ func Offerings(id string, rdx redux.Readable, permissions ...author.Permission) 
 			fmtPtBadge := &compton.FormattedBadge{
 				Title: compton_data.PropertyTitles[op],
 				Icon:  compton_data.PropertySymbols[op],
-				Color: color.RepForeground,
+				Color: color.Foreground,
 			}
 
 			propertyTitleRow := compton.SectionDivider(s, fmtPtBadge)

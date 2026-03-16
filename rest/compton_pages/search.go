@@ -24,8 +24,6 @@ func Search(query map[string][]string, ids []string, from, to int, rdx redux.Rea
 
 	p.AppendSpeculationRules(compton.SpeculationRulesConservativeEagerness, "/*")
 
-	p.SetAttribute("style", "--c-rep:var(--c-background)")
-
 	/* Nav stack = App navigation + Search shortcuts */
 
 	appNavLinks := compton_fragments.AppNavLinks(p, compton_data.AppNavSearch)

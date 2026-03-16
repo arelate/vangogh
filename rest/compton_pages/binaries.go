@@ -16,8 +16,6 @@ func Binaries() compton.PageElement {
 
 	p := compton.Page(title)
 
-	p.SetAttribute("style", "--c-rep:var(--c-background)")
-
 	pageStack := compton.FlexItems(p, direction.Column)
 	p.Append(pageStack)
 

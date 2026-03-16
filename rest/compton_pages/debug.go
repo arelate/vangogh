@@ -15,7 +15,6 @@ import (
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/loading"
 	"github.com/boggydigital/compton/consts/size"
-	"github.com/boggydigital/issa"
 	"github.com/boggydigital/redux"
 )
 
@@ -46,13 +45,6 @@ func Debug(gogId string, rdx redux.Readable) (compton.PageElement, error) {
 	p := compton.Page(productTitle)
 	p.RegisterStyles(compton_styles.Styles, "debug.css")
 
-	// tinting document background color to the representative product color
-	if imageId, ok := rdx.GetLastVal(vangogh_integration.ImageProperty, gogId); ok && imageId != "" {
-		if repColor, sure := rdx.GetLastVal(vangogh_integration.RepColorProperty, imageId); sure && repColor != issa.NeutralRepColor {
-			p.SetAttribute("style", "--c-rep:"+repColor)
-		}
-	}
-
 	pageStack := compton.FlexItems(p, direction.Column)
 	p.Append(pageStack)
 
@@ -69,7 +61,7 @@ func Debug(gogId string, rdx redux.Readable) (compton.PageElement, error) {
 	subHeading := compton.Heading(3)
 	subHeading.Append(compton.Fspan(p, "Debug").
 		TextAlign(align.Center).
-		ForegroundColor(color.RepGray))
+		ForegroundColor(color.Gray))
 	headingRow.Append(subHeading)
 
 	pageStack.Append(compton.FICenter(p, headingRow))
@@ -251,7 +243,7 @@ func Debug(gogId string, rdx redux.Readable) (compton.PageElement, error) {
 		}
 	}
 
-	reduxDs := compton.DSLarge(p, "Redux", false).BackgroundColor(color.RepHighlight)
+	reduxDs := compton.DSLarge(p, "Redux", false).BackgroundColor(color.Highlight)
 	pageStack.Append(reduxDs)
 
 	reduxStack := compton.FlexItems(p, direction.Column)

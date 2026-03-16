@@ -37,7 +37,7 @@ func Reception(id string, sar *steam_integration.AppReviews, rdx redux.Readable,
 
 	rc := compton_fragments.ReviewClass(sar.QuerySummary.ReviewScoreDesc)
 	rcSymbol := compton.NoSymbol
-	rcColor := color.RepForeground
+	rcColor := color.Foreground
 
 	if rcs, ok := compton_data.ReceptionSymbols[rc]; ok {
 		rcSymbol = rcs
@@ -57,7 +57,7 @@ func Reception(id string, sar *steam_integration.AppReviews, rdx redux.Readable,
 
 	if len(sar.Reviews) == 0 {
 		fs := compton.Fspan(s, "Steam reviews are not available for this product").
-			ForegroundColor(color.RepGray).
+			ForegroundColor(color.Gray).
 			TextAlign(align.Center)
 		pageStack.Append(compton.FICenter(s, fs))
 	}

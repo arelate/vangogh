@@ -77,7 +77,7 @@ func Installers(id string, dls vangogh_integration.DownloadsList, rdx redux.Read
 
 	if owned, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && owned == vangogh_integration.FalseValue {
 		ownershipRequiredNotice := compton.Fspan(s, "Installers are available for owned products only").
-			ForegroundColor(color.RepGray)
+			ForegroundColor(color.Gray)
 		pageStack.Append(ownershipRequiredNotice)
 		return s
 	}
@@ -137,7 +137,7 @@ func operatingSystemHeading(r compton.Registrar, os vangogh_integration.Operatin
 	fmtOsBadge := &compton.FormattedBadge{
 		Title: osString,
 		Icon:  osSymbol,
-		Color: color.RepForeground,
+		Color: color.Foreground,
 	}
 
 	return compton.SectionDivider(r, fmtOsBadge)
@@ -147,7 +147,7 @@ func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 
 	fr := compton.Frow(r).FontSize(size.XSmall)
 
-	fr.IconColor(compton_data.DownloadTypesSymbols[dv.downloadType], color.RepGray)
+	fr.IconColor(compton_data.DownloadTypesSymbols[dv.downloadType], color.Gray)
 	fr.Heading(dv.downloadType.HumanReadableString())
 
 	if dv.langCode != "" {
@@ -162,7 +162,7 @@ func downloadVariant(r compton.Registrar, dv *DownloadVariant) compton.Element {
 
 	var dvStatus string
 	var dvSymbol compton.Symbol
-	dvColor := color.RepGray
+	dvColor := color.Gray
 
 	if dv.downloadType == vangogh_integration.Installer || dv.downloadType == vangogh_integration.DLC {
 
@@ -289,11 +289,11 @@ func downloadLink(r compton.Registrar,
 	linkTitle := compton.FlexItems(r, direction.Row).ColumnGap(size.XSmall).FontWeight(font_weight.Normal)
 
 	if namePrefix != "" {
-		linkPrefix := compton.Fspan(r, namePrefix).ForegroundColor(color.RepGray)
+		linkPrefix := compton.Fspan(r, namePrefix).ForegroundColor(color.Gray)
 		linkTitle.Append(linkPrefix)
 	}
 	if nameSuffix != "" {
-		linkSuffix := compton.Fspan(r, nameSuffix).ForegroundColor(color.RepForeground)
+		linkSuffix := compton.Fspan(r, nameSuffix).ForegroundColor(color.Foreground)
 		linkTitle.Append(linkSuffix)
 	}
 
@@ -303,7 +303,7 @@ func downloadLink(r compton.Registrar,
 
 	var manualUrlStatus string
 	manualUrlStatusSymbol := compton.NoSymbol
-	manualUrlStatusColor := color.RepGray
+	manualUrlStatusColor := color.Gray
 
 	if dl.DownloadType == vangogh_integration.Installer || dl.DownloadType == vangogh_integration.DLC {
 

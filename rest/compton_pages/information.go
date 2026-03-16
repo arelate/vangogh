@@ -39,12 +39,6 @@ func Info(id string, rdx redux.Readable, permissions ...author.Permission) compt
 
 	s := compton_fragments.ProductSection(compton_data.InfoSection, id, rdx)
 
-	if imageId, ok := rdx.GetLastVal(vangogh_integration.ImageProperty, id); ok && imageId != "" {
-		if rc, sure := rdx.GetLastVal(vangogh_integration.RepColorProperty, imageId); sure && rc != "" {
-			s.SetAttribute("style", "--c-rep:"+rc)
-		}
-	}
-
 	pageStack := compton.FlexItems(s, direction.Column).RowGap(size.Normal)
 	s.Append(pageStack)
 
@@ -57,7 +51,7 @@ func Info(id string, rdx redux.Readable, permissions ...author.Permission) compt
 	if shortDesc != "" {
 		shortDescSpan = compton.Fspan(s, shortDesc).
 			MaxWidth(size.MaxWidth).
-			ForegroundColor(color.RepGray).
+			ForegroundColor(color.Gray).
 			BorderRadius(size.XSmall).
 			FontSize(size.Small).
 			TextAlign(align.Start)
@@ -67,7 +61,7 @@ func Info(id string, rdx redux.Readable, permissions ...author.Permission) compt
 	var descriptionFspan *compton.FspanElement
 	if rdx.HasKey(vangogh_integration.DescriptionOverviewProperty, id) {
 		descriptionFspan = compton.Fspan(s, "").
-			ForegroundColor(color.RepForeground).
+			ForegroundColor(color.Foreground).
 			FontWeight(font_weight.Bolder)
 
 		descriptionLinkTitle := "More..."
@@ -92,7 +86,7 @@ func Info(id string, rdx redux.Readable, permissions ...author.Permission) compt
 		fmtProductDetailsBadge := &compton.FormattedBadge{
 			Title: "Product Details",
 			Icon:  compton.TwoTitleValues,
-			Color: color.RepForeground,
+			Color: color.Foreground,
 		}
 
 		pageStack.Append(compton.SectionDivider(s, fmtProductDetailsBadge))

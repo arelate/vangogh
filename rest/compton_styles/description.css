@@ -113,7 +113,7 @@ body {
         margin-top: var(--s-l);
         font-size: var(--fs-s);
         line-height: calc(1.2 * var(--s-n));
-        color: var(--c-repgray);
+        color: var(--c-gray);
     }
 
     & .description__features-point {

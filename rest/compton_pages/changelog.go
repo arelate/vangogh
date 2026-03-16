@@ -9,7 +9,6 @@ import (
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/size"
-	"github.com/boggydigital/issa"
 	"github.com/boggydigital/redux"
 )
 
@@ -24,13 +23,6 @@ func Changelog(id string, rdx redux.Readable) compton.PageElement {
 	p := compton.Page(pageTitle)
 
 	p.RegisterStyles(compton_styles.Styles, "changelog.css")
-
-	// tinting document background color to the representative product color
-	if imageId, ok := rdx.GetLastVal(vangogh_integration.ImageProperty, id); ok && imageId != "" {
-		if repColor, sure := rdx.GetLastVal(vangogh_integration.RepColorProperty, imageId); sure && repColor != issa.NeutralRepColor {
-			p.SetAttribute("style", "--c-rep:"+repColor)
-		}
-	}
 
 	pageStack := compton.FlexItems(p, direction.Column)
 	p.Append(compton.FICenter(p, pageStack))
@@ -48,14 +40,14 @@ func Changelog(id string, rdx redux.Readable) compton.PageElement {
 	subHeading := compton.Heading(3)
 	subHeading.Append(compton.Fspan(p, "Changelog").
 		TextAlign(align.Center).
-		ForegroundColor(color.RepGray))
+		ForegroundColor(color.Gray))
 	headingRow.Append(subHeading)
 
 	pageStack.Append(compton.FICenter(p, headingRow))
 
 	if changelog, ok := rdx.GetAllValues(vangogh_integration.ChangelogProperty, id); !ok || len(changelog) == 0 {
 		fs := compton.Fspan(p, "Changelog is not available for this product").
-			ForegroundColor(color.RepGray).
+			ForegroundColor(color.Gray).
 			TextAlign(align.Center)
 		pageStack.Append(compton.FICenter(p, fs))
 	} else {

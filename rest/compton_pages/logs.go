@@ -20,8 +20,6 @@ func Logs(rdx redux.Readable) compton.PageElement {
 
 	p := compton.Page(title)
 
-	p.SetAttribute("style", "--c-rep:var(--c-background)")
-
 	pageStack := compton.FlexItems(p, direction.Column)
 	p.Append(pageStack)
 
@@ -58,7 +56,7 @@ func Logs(rdx redux.Readable) compton.PageElement {
 
 	if len(files) == 0 {
 		logList.Append(compton.Fspan(p, "No logs found on this server.").
-			ForegroundColor(color.RepGray).
+			ForegroundColor(color.Gray).
 			TextAlign(align.Center))
 	}
 

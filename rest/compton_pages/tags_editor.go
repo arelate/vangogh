@@ -17,7 +17,6 @@ import (
 	"github.com/boggydigital/compton/consts/font_weight"
 	"github.com/boggydigital/compton/consts/input_types"
 	"github.com/boggydigital/compton/consts/size"
-	"github.com/boggydigital/issa"
 	"github.com/boggydigital/redux"
 )
 
@@ -34,13 +33,6 @@ func TagsEditor(
 	p, pageStack := compton_fragments.AppPage("Edit " + tagsPropertyTitle)
 	p.RegisterStyles(compton_styles.Styles, "product.css")
 	p.RegisterStyles(compton_styles.Styles, "tag-editors.css")
-
-	// tinting document background color to the representative product color
-	if imageId, ok := rdx.GetLastVal(vangogh_integration.ImageProperty, id); ok && imageId != "" {
-		if repColor, sure := rdx.GetLastVal(vangogh_integration.RepColorProperty, imageId); sure && repColor != issa.NeutralRepColor {
-			p.SetAttribute("style", "--c-rep:"+repColor)
-		}
-	}
 
 	var title string
 	if tp, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {

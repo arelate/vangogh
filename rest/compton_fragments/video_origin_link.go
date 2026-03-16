@@ -48,7 +48,7 @@ func VideoOriginLink(r compton.Registrar, videoId, videoTitle, videoDuration str
 
 	if dur, err := strconv.ParseInt(videoDuration, 10, 64); err == nil {
 		durFrow := compton.Frow(r)
-		durFrow.IconColor(compton.VideoThumbnail, color.RepGray)
+		durFrow.IconColor(compton.VideoThumbnail, color.Gray)
 		durFrow.FontSize(size.XSmall)
 		durFrow.PropVal("Duration", formatSeconds(dur))
 		linkColumn.Append(compton.FICenter(r, durFrow))
