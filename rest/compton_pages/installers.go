@@ -288,24 +288,13 @@ func downloadLink(r compton.Registrar,
 		name = dl.Name
 	}
 
-	namePrefix := ""
-	if strings.Contains(name, productTitle) {
-		namePrefix = productTitle
-	}
-	nameSuffix := strings.TrimPrefix(name, productTitle)
-
-	linkTitle := compton.FlexItems(r, direction.Row).ColumnGap(size.XSmall).FontWeight(font_weight.Normal)
-
-	if namePrefix != "" {
-		linkPrefix := compton.Fspan(r, namePrefix).ForegroundColor(color.Gray)
-		linkTitle.Append(linkPrefix)
-	}
-	if nameSuffix != "" {
-		linkSuffix := compton.Fspan(r, nameSuffix).ForegroundColor(color.Foreground)
-		linkTitle.Append(linkSuffix)
-	}
+	linkTitle := compton.Fspan(r, name).ForegroundColor(color.Foreground)
 
 	linkColumn.Append(linkTitle)
+
+	if localFilename, ok := rdx.GetLastVal(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl); ok {
+		linkColumn.Append(compton.Fspan(r, localFilename).FontSize(size.XSmall).ForegroundColor(color.Gray))
+	}
 
 	dvs := vangogh_integration.NewManualUrlDvs(dl.ManualUrl, rdx)
 
