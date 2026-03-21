@@ -9,7 +9,7 @@ import (
 )
 
 func ProductPoster(id string, rdx redux.Readable) compton.Element {
-	if imgSrc, ok := rdx.GetLastVal(vangogh_integration.ImageProperty, id); ok {
+	if imgSrc, ok := rdx.GetLastVal(vangogh_integration.ImageProperty, id); ok && imgSrc != "" {
 		relImgSrc := "/image?id=" + imgSrc
 
 		imgLazy := compton.ImageEager(relImgSrc)

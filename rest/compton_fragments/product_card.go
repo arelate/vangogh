@@ -46,13 +46,15 @@ func ProductCard(r compton.Registrar, id string, rdx redux.Readable, permissions
 
 	var imageUrl string
 
-	if verticalImageId, ok := rdx.GetLastVal(vangogh_integration.VerticalImageProperty, id); ok {
+	if verticalImageId, ok := rdx.GetLastVal(vangogh_integration.VerticalImageProperty, id); ok && verticalImageId != "" {
 		imageUrl = "/image?id=" + verticalImageId
 	}
 
 	poster := pc.AppendImage(imageUrl)
+	poster.AddClass("poster")
 	poster.SetAttribute("width", "85.5px")
 	poster.SetAttribute("height", "120.5px")
+	poster.SetAttribute("style", "width:85.5px;height:120.5px")
 
 	if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
 		pc.AppendTitle(title)
@@ -77,10 +79,8 @@ func ProductCard(r compton.Registrar, id string, rdx redux.Readable, permissions
 				}
 			}
 			pc.AppendProperty(compton_data.PropertyTitles[p], osSymbols...)
-			//SetAttribute("style", "view-transition-name:"+p+id)
 		default:
 			pc.AppendProperty(compton_data.ShortPropertyTitles[p], compton.Text(strings.Join(values[p], ", ")))
-			//SetAttribute("style", "view-transition-name:"+p+id)
 		}
 	}
 
