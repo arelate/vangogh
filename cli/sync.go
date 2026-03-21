@@ -160,14 +160,6 @@ func Sync(
 		if err = setSyncEvent(vangogh_integration.SyncImagesKey, syncEventsRdx); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
-
-		if err = Dehydrate(nil, vangogh_integration.AllDehydratedImageTypes(), false); err != nil {
-			return setSyncInterrupted(err, syncEventsRdx)
-		}
-
-		if err = setSyncEvent(vangogh_integration.SyncDehydrateKey, syncEventsRdx); err != nil {
-			return setSyncInterrupted(err, syncEventsRdx)
-		}
 	}
 
 	if syncOpts.videosMetadata {

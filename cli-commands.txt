@@ -19,13 +19,6 @@ cleanup
     all
     test
 
-dehydrate
-    id^&
-    slug&
-    image-type&={image-types}
-    all-dehydrated-image-types
-    force
-
 generate-missing-checksums
     os&$={operating-systems^}
     lang-code&$={language-codes^}

@@ -1,20 +1,14 @@
-issa-image.product-poster {
+.product-poster {
 
     border-radius: var(--s-s);
-
-    & img {
-        --w: 800px;
-        --h: 370px;
-        object-fit: cover;
-        border-radius: var(--s-s);
-    }
+    width: 800px;
+    height: 370px;
+    object-fit: cover;
 }
 
 @media only screen and (max-width: 800px) {
-    issa-image.product-poster {
-        & img {
-            max-width: 100%;
-            --h: fit-content;
-        }
+    .product-poster {
+        max-width: 100%;
+        height: fit-content;
     }
 }

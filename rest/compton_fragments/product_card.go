@@ -8,7 +8,6 @@ import (
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/boggydigital/author"
 	"github.com/boggydigital/compton"
-	"github.com/boggydigital/issa"
 	"github.com/boggydigital/redux"
 )
 
@@ -41,30 +40,19 @@ func SummarizeProductProperties(id string, rdx redux.Readable) ([]string, map[st
 	return properties, values
 }
 
-func ProductCard(r compton.Registrar, id string, hydrated bool, rdx redux.Readable, permissions ...author.Permission) compton.Element {
+func ProductCard(r compton.Registrar, id string, rdx redux.Readable, permissions ...author.Permission) compton.Element {
 
 	pc := compton.Card(r, id)
 
-	var repColor = issa.NeutralRepColor
 	var imageUrl string
-	var dehydratedImage string
 
 	if verticalImageId, ok := rdx.GetLastVal(vangogh_integration.VerticalImageProperty, id); ok {
-
 		imageUrl = "/image?id=" + verticalImageId
-		if dhi, sure := rdx.GetLastVal(vangogh_integration.DehydratedImageProperty, verticalImageId); sure {
-			dehydratedImage = dhi
-		}
-		if rp, sure := rdx.GetLastVal(vangogh_integration.RepColorProperty, verticalImageId); sure && rp != issa.NeutralRepColor {
-			repColor = rp
-		}
-
 	}
 
-	poster := pc.AppendPoster(repColor, dehydratedImage, imageUrl, hydrated)
-
-	poster.WidthPixels(85.5)
-	poster.HeightPixels(120.5)
+	poster := pc.AppendImage(imageUrl)
+	poster.SetAttribute("width", "85.5px")
+	poster.SetAttribute("height", "120.5px")
 
 	if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
 		pc.AppendTitle(title)

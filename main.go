@@ -45,7 +45,6 @@ func main() {
 	clo.HandleFuncs(map[string]clo.Handler{
 		"backup":                     cli.BackupHandler,
 		"cleanup":                    cli.CleanupHandler,
-		"dehydrate":                  cli.DehydrateHandler,
 		"generate-missing-checksums": cli.GenerateMissingChecksumsHandler,
 		"get-data":                   cli.GetDataHandler,
 		"get-description-images":     cli.GetDescriptionImagesHandler,

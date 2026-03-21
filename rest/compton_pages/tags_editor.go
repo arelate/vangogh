@@ -46,7 +46,7 @@ func TagsEditor(
 
 	/* Product poster */
 
-	if poster := compton_fragments.ProductPoster(p, id, rdx); poster != nil {
+	if poster := compton_fragments.ProductPoster(id, rdx); poster != nil {
 		pageStack.Append(compton.FICenter(p, poster))
 	}
 
