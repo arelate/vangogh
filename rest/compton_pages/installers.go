@@ -236,7 +236,7 @@ func downloadLinks(r compton.Registrar,
 	dsDownloadLinks.Append(downloadsColumn)
 
 	for ii, dl := range downloads {
-		if link := downloadLink(r, id, productTitle, dl, rdx); link != nil {
+		if link := downloadLink(r, id, dl, rdx); link != nil {
 			downloadsColumn.Append(link)
 		}
 		if ii != len(downloads)-1 {
@@ -251,7 +251,6 @@ func downloadLinks(r compton.Registrar,
 
 func downloadLink(r compton.Registrar,
 	id string,
-	productTitle string,
 	dl vangogh_integration.Download,
 	rdx redux.Readable) compton.Element {
 
@@ -292,10 +291,12 @@ func downloadLink(r compton.Registrar,
 
 	linkColumn.Append(linkTitle)
 
+	localFilenameRow := compton.FlexItems(r, direction.Row)
+
 	if localFilename, ok := rdx.GetLastVal(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl); ok {
 		localFilenameSpan := compton.Fspan(r, localFilename).FontSize(size.XSmall).ForegroundColor(color.Gray)
 		localFilenameSpan.AddClass("local-filename")
-		linkColumn.Append(localFilenameSpan)
+		localFilenameRow.Append(localFilenameSpan)
 	}
 
 	dvs := vangogh_integration.NewManualUrlDvs(dl.ManualUrl, rdx)
@@ -326,7 +327,15 @@ func downloadLink(r compton.Registrar,
 		Color: manualUrlStatusColor,
 	}
 
-	linkColumn.Append(compton.Badges(r, manualUrlStatusBadge))
+	localFilenameRow.Append(compton.Badges(r, manualUrlStatusBadge))
+
+	if dl.EstimatedBytes > 0 {
+		sizeFr := compton.Frow(r).FontSize(size.XSmall)
+		sizeFr.PropVal("Size", vangogh_integration.FormatBytes(dl.EstimatedBytes))
+		localFilenameRow.Append(sizeFr)
+	}
+
+	linkColumn.Append(localFilenameRow)
 
 	link.Append(linkColumn)
 
@@ -343,12 +352,6 @@ func downloadLink(r compton.Registrar,
 		typeFr := compton.Frow(r).FontSize(size.XSmall)
 		typeFr.PropVal("Type", dl.Type)
 		bottomRow.Append(typeFr)
-	}
-
-	if dl.EstimatedBytes > 0 {
-		sizeFr := compton.Frow(r).FontSize(size.XSmall)
-		sizeFr.PropVal("Size", vangogh_integration.FormatBytes(dl.EstimatedBytes))
-		bottomRow.Append(sizeFr)
 	}
 
 	linkContainer.Append(bottomRow)
