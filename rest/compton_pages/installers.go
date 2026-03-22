@@ -294,7 +294,7 @@ func downloadLink(r compton.Registrar,
 	localFilenameRow := compton.FlexItems(r, direction.Row)
 
 	if localFilename, ok := rdx.GetLastVal(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl); ok {
-		localFilenameSpan := compton.Fspan(r, localFilename).FontSize(size.XSmall).ForegroundColor(color.Gray)
+		localFilenameSpan := compton.Fspan(r, localFilename).FontSize(size.XXSmall).ForegroundColor(color.Gray)
 		localFilenameSpan.AddClass("local-filename")
 		localFilenameRow.Append(localFilenameSpan)
 	}
@@ -330,7 +330,7 @@ func downloadLink(r compton.Registrar,
 	localFilenameRow.Append(compton.Badges(r, manualUrlStatusBadge))
 
 	if dl.EstimatedBytes > 0 {
-		sizeFr := compton.Frow(r).FontSize(size.XSmall)
+		sizeFr := compton.Frow(r).FontSize(size.XXSmall)
 		sizeFr.PropVal("Size", vangogh_integration.FormatBytes(dl.EstimatedBytes))
 		localFilenameRow.Append(sizeFr)
 	}
