@@ -195,7 +195,9 @@ func reduceCatalogPageKeyValues(catalogPage *gog_integration.CatalogPage, catalo
 			switch kv {
 			case vangogh_integration.ScreenshotsKeyValues:
 				screenshotImageIds := gog_integration.ImageIds(cp.GetScreenshots()...)
-				reader = strings.NewReader(strings.Join(screenshotImageIds, ","))
+				if len(screenshotImageIds) > 0 {
+					reader = strings.NewReader(strings.Join(screenshotImageIds, ","))
+				}
 			}
 
 			if reader != nil {

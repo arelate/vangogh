@@ -227,12 +227,20 @@ func reduceApiProductKeyValues(id string, ap *gog_integration.ApiProduct, apiPro
 
 		switch kv {
 		case vangogh_integration.DescriptionOverviewKeyValues:
-			reader = strings.NewReader(ap.GetDescriptionOverview())
+			do := ap.GetDescriptionOverview()
+			if do != "" {
+				reader = strings.NewReader(do)
+			}
 		case vangogh_integration.DescriptionFeaturesKeyValues:
-			reader = strings.NewReader(ap.GetDescriptionFeatures())
+			df := ap.GetDescriptionFeatures()
+			if df != "" {
+				reader = strings.NewReader(df)
+			}
 		case vangogh_integration.ScreenshotsKeyValues:
 			screenshotImageIds := gog_integration.ImageIds(ap.GetScreenshots()...)
-			reader = strings.NewReader(strings.Join(screenshotImageIds, ","))
+			if len(screenshotImageIds) > 0 {
+				reader = strings.NewReader(strings.Join(screenshotImageIds, ","))
+			}
 		}
 
 		if reader != nil {
