@@ -16,6 +16,10 @@ func GetKeyValuesBytes(id, property string, keyValues map[string]kevlar.KeyValue
 		return nil, errors.New("keyValues not initialized for " + property)
 	}
 
+	if !kv.Has(id) {
+		return nil, nil
+	}
+
 	rc, err := kv.Get(id)
 	if err != nil {
 		return nil, err
