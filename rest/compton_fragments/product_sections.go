@@ -52,8 +52,6 @@ func ProductSections(id string, rdx redux.Readable, keyValues map[string]kevlar.
 		hasSections = append(hasSections, compton_data.NewsSection)
 	}
 
-	hasSections = append(hasSections, compton_data.NewsSection)
-
 	if sdc, ok := rdx.GetLastVal(vangogh_integration.SteamDeckAppCompatibilityCategoryProperty, id); ok && sdc != "Unknown" {
 		hasSections = append(hasSections, compton_data.CompatibilitySection)
 	} else if pt, sure := rdx.GetLastVal(vangogh_integration.ProtonDBTierProperty, id); sure && pt != "" {
