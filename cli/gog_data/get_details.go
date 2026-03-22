@@ -140,6 +140,10 @@ func reduceDetailsProductProperties(id string, det *gog_integration.Details, piv
 
 func reduceDetailsKeyValues(id string, det *gog_integration.Details, detailsKeyValues map[string]kevlar.KeyValues, force bool) error {
 
+	if det == nil {
+		return nil
+	}
+
 	var err error
 	var reader io.Reader
 
