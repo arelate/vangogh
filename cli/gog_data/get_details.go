@@ -2,8 +2,10 @@ package gog_data
 
 import (
 	"errors"
+	"io"
 	"maps"
 	"net/http"
+	"strings"
 
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
@@ -66,7 +68,11 @@ func ReduceDetails(kvDetails kevlar.KeyValues, since int64) error {
 		return err
 	}
 
-	detailReductions := shared_data.InitReductions(vangogh_integration.GOGDetailsProperties()...)
+	detailsReductions := shared_data.InitReductions(vangogh_integration.GOGDetailsProperties()...)
+	detailsKeyValues, err := shared_data.InitKeyValues(vangogh_integration.GOGDetailsKeyValues()...)
+	if err != nil {
+		return err
+	}
 
 	updatedDetails := kvDetails.Since(since, kevlar.Create, kevlar.Update)
 
@@ -76,24 +82,29 @@ func ReduceDetails(kvDetails kevlar.KeyValues, since int64) error {
 			continue
 		}
 
-		if err = reduceDetailsProduct(id, kvDetails, detailReductions); err != nil {
+		var det *gog_integration.Details
+		if det, err = vangogh_integration.UnmarshalDetails(id, kvDetails); err != nil {
+			return err
+		}
+
+		if err = reduceDetailsProductProperties(id, det, detailsReductions); err != nil {
+			return err
+		}
+		if err = reduceDetailsKeyValues(id, det, detailsKeyValues); err != nil {
 			return err
 		}
 	}
 
-	return shared_data.WriteReductions(rdx, detailReductions)
+	return shared_data.WriteReductions(rdx, detailsReductions)
 }
 
-func reduceDetailsProduct(id string, kvDetails kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
-
-	det, err := vangogh_integration.UnmarshalDetails(id, kvDetails)
-	if err != nil {
-		return err
-	}
+func reduceDetailsProductProperties(id string, det *gog_integration.Details, piv shared_data.PropertyIdValues) error {
 
 	if det == nil {
 		return nil
 	}
+
+	var err error
 
 	for property := range piv {
 
@@ -110,8 +121,6 @@ func reduceDetailsProduct(id string, kvDetails kevlar.KeyValues, piv shared_data
 			values = []string{det.GetGOGRelease()}
 		case vangogh_integration.ForumUrlProperty:
 			values = []string{det.GetForumUrl()}
-		case vangogh_integration.ChangelogProperty:
-			values = []string{det.GetChangelog()}
 		case vangogh_integration.OperatingSystemsProperty:
 			values, err = det.GetOperatingSystems()
 			if err != nil {
@@ -123,6 +132,30 @@ func reduceDetailsProduct(id string, kvDetails kevlar.KeyValues, piv shared_data
 
 		if shared_data.IsNotEmpty(values...) {
 			piv[property][id] = values
+		}
+	}
+
+	return nil
+}
+
+func reduceDetailsKeyValues(id string, det *gog_integration.Details, detailsKeyValues map[string]kevlar.KeyValues) error {
+
+	var err error
+	var reader io.Reader
+
+	for kv := range detailsKeyValues {
+
+		reader = nil
+
+		switch kv {
+		case vangogh_integration.ChangelogKeyValues:
+			reader = strings.NewReader(det.GetChangelog())
+		}
+
+		if reader != nil {
+			if err = detailsKeyValues[kv].Set(id, reader); err != nil {
+				return err
+			}
 		}
 	}
 

@@ -3,8 +3,10 @@ package gog_data
 import (
 	"encoding/json/v2"
 	"errors"
+	"io"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
@@ -53,6 +55,10 @@ func ReduceCatalogPages(kvCatalogPages kevlar.KeyValues, since int64) error {
 	}
 
 	catalogPagesReductions := shared_data.InitReductions(vangogh_integration.GOGCatalogPageProperties()...)
+	catalogPagesKeyValues, err := shared_data.InitKeyValues(vangogh_integration.GOGCatalogPageKeyValues()...)
+	if err != nil {
+		return err
+	}
 
 	updatedCatalogPages := kvCatalogPages.Since(since, kevlar.Create, kevlar.Update)
 
@@ -62,7 +68,15 @@ func ReduceCatalogPages(kvCatalogPages kevlar.KeyValues, since int64) error {
 			continue
 		}
 
-		if err = reduceCatalogPage(page, kvCatalogPages, catalogPagesReductions, rdx); err != nil {
+		var catalogPage *gog_integration.CatalogPage
+		if catalogPage, err = unmarshalCatalogPage(page, kvCatalogPages); err != nil {
+			return err
+		}
+
+		if err = reduceCatalogPageProperties(page, catalogPage, catalogPagesReductions, rdx); err != nil {
+			return err
+		}
+		if err = reduceCatalogPageKeyValues(catalogPage, catalogPagesKeyValues); err != nil {
 			return err
 		}
 	}
@@ -70,18 +84,22 @@ func ReduceCatalogPages(kvCatalogPages kevlar.KeyValues, since int64) error {
 	return shared_data.WriteReductions(rdx, catalogPagesReductions)
 }
 
-func reduceCatalogPage(page string, kvCatalogPages kevlar.KeyValues, piv shared_data.PropertyIdValues, rdx redux.Readable) error {
-
+func unmarshalCatalogPage(page string, kvCatalogPages kevlar.KeyValues) (*gog_integration.CatalogPage, error) {
 	rcCatalogPage, err := kvCatalogPages.Get(page)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer rcCatalogPage.Close()
 
 	var catalogPage gog_integration.CatalogPage
 	if err = json.UnmarshalRead(rcCatalogPage, &catalogPage); err != nil {
-		return err
+		return nil, err
 	}
+
+	return &catalogPage, nil
+}
+
+func reduceCatalogPageProperties(page string, catalogPage *gog_integration.CatalogPage, piv shared_data.PropertyIdValues, rdx redux.Readable) error {
 
 	for _, cp := range catalogPage.Products {
 
@@ -99,8 +117,6 @@ func reduceCatalogPage(page string, kvCatalogPages kevlar.KeyValues, piv shared_
 				values = []string{gog_integration.ImageId(cp.GetImage())}
 			case vangogh_integration.VerticalImageProperty:
 				values = []string{gog_integration.ImageId(cp.GetVerticalImage())}
-			case vangogh_integration.ScreenshotsProperty:
-				values = gog_integration.ImageIds(cp.GetScreenshots()...)
 			case vangogh_integration.FeaturesProperty:
 				values = cp.GetFeatures()
 			case vangogh_integration.RatingProperty:
@@ -155,6 +171,33 @@ func reduceCatalogPage(page string, kvCatalogPages kevlar.KeyValues, piv shared_
 
 			if shared_data.IsNotEmpty(values...) {
 				piv[property][cp.Id] = values
+			}
+		}
+	}
+
+	return nil
+}
+
+func reduceCatalogPageKeyValues(catalogPage *gog_integration.CatalogPage, catalogPageKeyValues map[string]kevlar.KeyValues) error {
+
+	var err error
+	var reader io.Reader
+
+	for _, cp := range catalogPage.Products {
+		for kv := range catalogPageKeyValues {
+
+			reader = nil
+
+			switch kv {
+			case vangogh_integration.ScreenshotsKeyValues:
+				screenshotImageIds := gog_integration.ImageIds(cp.GetScreenshots()...)
+				reader = strings.NewReader(strings.Join(screenshotImageIds, ","))
+			}
+
+			if reader != nil {
+				if err = catalogPageKeyValues[kv].Set(cp.Id, reader); err != nil {
+					return err
+				}
 			}
 		}
 	}

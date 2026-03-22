@@ -1,9 +1,12 @@
 package rest
 
 import (
+	"path/filepath"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/perm"
 	"github.com/boggydigital/author"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/redux"
 )
 
@@ -20,7 +23,8 @@ var (
 
 	downloadsLayout vangogh_integration.DownloadsLayout
 
-	rdx redux.Readable
+	rdx       redux.Readable
+	keyValues map[string]kevlar.KeyValues
 )
 
 func SetDefaultDownloadsFilters(
@@ -40,6 +44,17 @@ func Init(layout vangogh_integration.DownloadsLayout) error {
 	rdx, err = redux.NewReader(vangogh_integration.AbsReduxDir(), vangogh_integration.ReduxProperties()...)
 	if err != nil {
 		return err
+	}
+
+	metadataDir := vangogh_integration.Pwd.AbsDirPath(vangogh_integration.Metadata)
+	keyValues = make(map[string]kevlar.KeyValues)
+	for _, kv := range vangogh_integration.DataKeyValues() {
+		if _, ok := keyValues[kv]; !ok {
+			kvDir := filepath.Join(metadataDir, kv)
+			if keyValues[kv], err = kevlar.New(kvDir, kevlar.TxtExt); err != nil {
+				return err
+			}
+		}
 	}
 
 	authorDir := vangogh_integration.Pwd.AbsRelDirPath(vangogh_integration.Author, vangogh_integration.Metadata)

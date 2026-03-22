@@ -1,7 +1,6 @@
 package compton_pages
 
 import (
-	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/arelate/vangogh/rest/compton_styles"
 	"github.com/boggydigital/compton"
@@ -9,16 +8,9 @@ import (
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/size"
-	"github.com/boggydigital/redux"
 )
 
-func Changelog(id string, rdx redux.Readable) compton.PageElement {
-
-	//s := compton_fragments.ProductSection(compton_data.ChangelogSection)
-	var pageTitle string
-	if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
-		pageTitle = title
-	}
+func Changelog(pageTitle string, changelog string) compton.PageElement {
 
 	p := compton.Page(pageTitle)
 
@@ -34,7 +26,6 @@ func Changelog(id string, rdx redux.Readable) compton.PageElement {
 
 	heading := compton.Heading(2)
 	heading.Append(compton.Fspan(p, pageTitle).TextAlign(align.Center))
-	//heading.SetAttribute("style", "view-transition-name:product-title-"+id)
 	headingRow.Append(heading)
 
 	subHeading := compton.Heading(3)
@@ -45,24 +36,15 @@ func Changelog(id string, rdx redux.Readable) compton.PageElement {
 
 	pageStack.Append(compton.FICenter(p, headingRow))
 
-	if changelog, ok := rdx.GetAllValues(vangogh_integration.ChangelogProperty, id); !ok || len(changelog) == 0 {
-		fs := compton.Fspan(p, "Changelog is not available for this product").
-			ForegroundColor(color.Gray).
-			TextAlign(align.Center)
-		pageStack.Append(compton.FICenter(p, fs))
-	} else {
-		changelogStack := compton.FlexItems(p, direction.Column).
-			AlignItems(align.Start).
-			RowGap(size.Normal).
-			MaxWidth(size.MaxWidth)
-		changelogStack.AddClass("changelog-content")
+	changelogStack := compton.FlexItems(p, direction.Column).
+		AlignItems(align.Start).
+		RowGap(size.Normal).
+		MaxWidth(size.MaxWidth)
+	changelogStack.AddClass("changelog-content")
 
-		pageStack.Append(changelogStack)
+	pageStack.Append(changelogStack)
 
-		for _, log := range changelog {
-			changelogStack.Append(compton.Text(log))
-		}
-	}
+	changelogStack.Append(compton.Text(changelog))
 
 	pageStack.Append(compton.Br(), compton.FICenter(p, compton_fragments.GitHubLink(p), compton_fragments.LogoutLink(p)))
 

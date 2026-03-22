@@ -13,15 +13,15 @@ import (
 	"golang.org/x/net/html/atom"
 )
 
-const (
-	pageTitle          = "Restricted area"
-	pageSubTitle       = "Authorized personnel only"
-	usernameLabelTitle = "Username"
-	passwordLabelTitle = "Password"
-	submitButtonTitle  = "Login"
-)
-
 func Login(authPath string) compton.PageElement {
+
+	const (
+		pageTitle          = "Restricted area"
+		pageSubTitle       = "Authorized personnel only"
+		usernameLabelTitle = "Username"
+		passwordLabelTitle = "Password"
+		submitButtonTitle  = "Login"
+	)
 
 	p := compton.Page(pageTitle)
 	pageStack := compton.FlexItems(p, direction.Column).RowGap(size.Large)

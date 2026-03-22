@@ -2,7 +2,6 @@ package compton_pages
 
 import (
 	"github.com/arelate/southern_light/steam_integration"
-	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/boggydigital/compton"
@@ -13,14 +12,14 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-func News(gogId string, rdx redux.Readable, san *steam_integration.AppNews, all bool) compton.PageElement {
+func News(gogId string, rdx redux.Readable, san *steam_integration.AppNews, hasChangelog bool, all bool) compton.PageElement {
 
 	s := compton_fragments.ProductSection(compton_data.NewsSection, gogId, rdx)
 
 	pageStack := compton.FlexItems(s, direction.Column)
 	s.Append(pageStack)
 
-	if rdx.HasKey(vangogh_integration.ChangelogProperty, gogId) {
+	if hasChangelog {
 		changelogLink := compton.A("/changelog?id=" + gogId)
 		changelogLink.Append(compton.Fspan(s, "View GOG.com Changelog").
 			FontSize(size.Small).

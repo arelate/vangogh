@@ -7,10 +7,11 @@ import (
 	"github.com/arelate/vangogh/perm"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/boggydigital/author"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/redux"
 )
 
-func ProductSections(id string, rdx redux.Readable, permissions ...author.Permission) []string {
+func ProductSections(id string, rdx redux.Readable, keyValues map[string]kevlar.KeyValues, permissions ...author.Permission) ([]string, error) {
 
 	hasSections := make([]string, 0)
 
@@ -31,15 +32,27 @@ func ProductSections(id string, rdx redux.Readable, permissions ...author.Permis
 		hasSections = append(hasSections, compton_data.OfferingsSection)
 	}
 
-	if rdx.HasKey(vangogh_integration.ScreenshotsProperty, id) ||
+	hasScreenshots, err := compton_data.HasKeyValuesBytes(id, vangogh_integration.ScreenshotsKeyValues, keyValues)
+	if err != nil {
+		return nil, err
+	}
+
+	if hasScreenshots ||
 		rdx.HasKey(vangogh_integration.VideoIdProperty, id) {
 		hasSections = append(hasSections, compton_data.MediaSection)
 	}
 
-	if rdx.HasValue(vangogh_integration.TypesProperty, id, vangogh_integration.SteamAppNews.String()) ||
-		rdx.HasKey(vangogh_integration.ChangelogProperty, id) {
+	hasChangelog, err := compton_data.HasKeyValuesBytes(id, vangogh_integration.ChangelogKeyValues, keyValues)
+	if err != nil {
+		return nil, err
+	}
+
+	if hasChangelog ||
+		rdx.HasValue(vangogh_integration.TypesProperty, id, vangogh_integration.SteamAppNews.String()) {
 		hasSections = append(hasSections, compton_data.NewsSection)
 	}
+
+	hasSections = append(hasSections, compton_data.NewsSection)
 
 	if sdc, ok := rdx.GetLastVal(vangogh_integration.SteamDeckAppCompatibilityCategoryProperty, id); ok && sdc != "Unknown" {
 		hasSections = append(hasSections, compton_data.CompatibilitySection)
@@ -60,5 +73,5 @@ func ProductSections(id string, rdx redux.Readable, permissions ...author.Permis
 		}
 	}
 
-	return hasSections
+	return hasSections, nil
 }

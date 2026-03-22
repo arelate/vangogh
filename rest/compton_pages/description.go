@@ -16,21 +16,11 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-func Description(id string, rdx redux.Readable) compton.PageElement {
-
-	var pageTitle string
-	if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
-		pageTitle = title
-	}
+func Description(id string, pageTitle string, descOverview, descFeatures string, rdx redux.Readable) compton.PageElement {
 
 	p := compton.Page(pageTitle)
 
 	p.RegisterStyles(compton_styles.Styles, "description.css")
-
-	var desc string
-	if dop, ok := rdx.GetLastVal(vangogh_integration.DescriptionOverviewProperty, id); ok {
-		desc = dop
-	}
 
 	pageStack := compton.FlexItems(p, direction.Column).
 		RowGap(size.Normal)
@@ -63,26 +53,26 @@ func Description(id string, rdx redux.Readable) compton.PageElement {
 	descriptionDiv.AddClass("description")
 	descriptionStack.Append(descriptionDiv)
 
-	if desc == "" {
+	if descOverview == "" {
 		fs := compton.Fspan(p, "Description is not available for this product").
 			ForegroundColor(color.Gray).
 			TextAlign(align.Center)
 		descriptionDiv.Append(compton.FICenter(p, fs))
 	} else {
-		desc = rewriteDescriptionImagesLinks(desc)
-		desc = rewriteGameLinks(desc)
-		desc = rewriteLinksAsTargetTop(desc)
-		desc = fixQuotes(desc)
-		desc = replaceDataFallbackUrls(desc)
-		desc = rewriteVideoAsInline(desc)
+		descOverview = rewriteDescriptionImagesLinks(descOverview)
+		descOverview = rewriteGameLinks(descOverview)
+		descOverview = rewriteLinksAsTargetTop(descOverview)
+		descOverview = fixQuotes(descOverview)
+		descOverview = replaceDataFallbackUrls(descOverview)
+		descOverview = rewriteVideoAsInline(descOverview)
 
-		descriptionDiv.Append(compton.Text(desc))
+		descriptionDiv.Append(compton.Text(descOverview))
 	}
 
 	featuresDiv := compton.Div()
 	featuresDiv.AddClass("description__features")
-	if dfp, ok := rdx.GetLastVal(vangogh_integration.DescriptionFeaturesProperty, id); ok {
-		featuresDiv.Append(compton.Text(implicitToExplicitList(dfp)))
+	if descFeatures != "" {
+		featuresDiv.Append(compton.Text(implicitToExplicitList(descFeatures)))
 	}
 
 	descriptionDiv.Append(featuresDiv)

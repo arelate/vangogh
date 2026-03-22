@@ -251,18 +251,14 @@ func Debug(gogId string, rdx redux.Readable) (compton.PageElement, error) {
 	reduxDs.Append(compton.FICenter(p, reduxStack))
 
 	closedProperties := []string{
-		vangogh_integration.DescriptionOverviewProperty,
-		vangogh_integration.DescriptionFeaturesProperty,
 		vangogh_integration.AdditionalRequirementsProperty,
 		vangogh_integration.CopyrightsProperty,
 		vangogh_integration.StoreTagsProperty,
-		vangogh_integration.ScreenshotsProperty,
 		vangogh_integration.TypesProperty,
 		vangogh_integration.HltbPlatformsProperty,
 		vangogh_integration.ShortDescriptionProperty,
 		vangogh_integration.SteamCategoriesProperty,
 		vangogh_integration.ThemesProperty,
-		vangogh_integration.ChangelogProperty,
 	}
 
 	propertySources := make(map[string][]string)

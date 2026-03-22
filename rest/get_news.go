@@ -6,6 +6,7 @@ import (
 
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_pages"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
@@ -29,7 +30,13 @@ func GetNews(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	p := compton_pages.News(gogId, rdx, appNews, all)
+	hasChangelog, err := compton_data.HasKeyValuesBytes(gogId, vangogh_integration.ChangelogKeyValues, keyValues)
+	if err != nil {
+		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+		return
+	}
+
+	p := compton_pages.News(gogId, rdx, appNews, hasChangelog, all)
 	if err = p.WriteResponse(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return

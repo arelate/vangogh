@@ -24,8 +24,8 @@ func GetInfo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if p := compton_pages.Info(id, rdx, permissions...); p != nil {
-		if err := p.WriteResponse(w); err != nil {
+	if p := compton_pages.Info(id, rdx, keyValues, permissions...); p != nil {
+		if err = p.WriteResponse(w); err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		}
 	}

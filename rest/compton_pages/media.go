@@ -15,7 +15,7 @@ import (
 
 const eagerLoadingScreenshots = 3
 
-func Media(id string, rdx redux.Readable) compton.PageElement {
+func Media(id string, screenshots []string, rdx redux.Readable) compton.PageElement {
 
 	s := compton_fragments.ProductSection(compton_data.MediaSection, id, rdx)
 
@@ -57,11 +57,6 @@ func Media(id string, rdx redux.Readable) compton.PageElement {
 		if ii != len(videoIds)-1 {
 			pageStack.Append(compton.Hr())
 		}
-	}
-
-	var screenshots []string
-	if sp, ok := rdx.GetAllValues(vangogh_integration.ScreenshotsProperty, id); ok {
-		screenshots = sp
 	}
 
 	if len(videoIds) > 0 && len(screenshots) > 0 {

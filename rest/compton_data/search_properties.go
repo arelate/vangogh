@@ -5,7 +5,6 @@ import "github.com/arelate/southern_light/vangogh_integration"
 var SearchProperties = []string{
 
 	vangogh_integration.TitleProperty,
-	vangogh_integration.DescriptionOverviewProperty,
 	vangogh_integration.OperatingSystemsProperty,
 	vangogh_integration.DevelopersProperty,
 	vangogh_integration.PublishersProperty,

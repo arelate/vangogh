@@ -3,9 +3,11 @@ package gog_data
 import (
 	"encoding/json/v2"
 	"errors"
+	"io"
 	"maps"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
@@ -64,7 +66,7 @@ func ReduceApiProducts(kvApiProducts kevlar.KeyValues, since int64) error {
 
 	dataType := vangogh_integration.ApiProducts
 
-	rapa := nod.Begin(" reducing %s...", dataType)
+	rapa := nod.NewProgress(" reducing %s...", dataType)
 	defer rapa.Done()
 
 	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
@@ -74,6 +76,10 @@ func ReduceApiProducts(kvApiProducts kevlar.KeyValues, since int64) error {
 	}
 
 	apiProductReductions := shared_data.InitReductions(vangogh_integration.GOGApiProductProperties()...)
+	apiProductKeyValues, err := shared_data.InitKeyValues(vangogh_integration.GOGApiProductsKeyValues()...)
+	if err != nil {
+		return err
+	}
 
 	updatedApiProducts := kvApiProducts.Since(since, kevlar.Create, kevlar.Update)
 
@@ -83,7 +89,15 @@ func ReduceApiProducts(kvApiProducts kevlar.KeyValues, since int64) error {
 			continue
 		}
 
-		if err = reduceApiProduct(id, kvApiProducts, apiProductReductions); err != nil {
+		var ap *gog_integration.ApiProduct
+		if ap, err = unmarshallApiProduct(id, kvApiProducts); err != nil {
+
+		}
+
+		if err = reduceApiProductProperties(id, ap, apiProductReductions); err != nil {
+			return err
+		}
+		if err = reduceApiProductKeyValues(id, ap, apiProductKeyValues); err != nil {
 			return err
 		}
 	}
@@ -91,18 +105,22 @@ func ReduceApiProducts(kvApiProducts kevlar.KeyValues, since int64) error {
 	return shared_data.WriteReductions(rdx, apiProductReductions)
 }
 
-func reduceApiProduct(id string, kvApiProduct kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
-
+func unmarshallApiProduct(id string, kvApiProduct kevlar.KeyValues) (*gog_integration.ApiProduct, error) {
 	rcApiProduct, err := kvApiProduct.Get(id)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer rcApiProduct.Close()
 
 	var ap gog_integration.ApiProduct
 	if err = json.UnmarshalRead(rcApiProduct, &ap); err != nil {
-		return err
+		return nil, err
 	}
+
+	return &ap, nil
+}
+
+func reduceApiProductProperties(id string, ap *gog_integration.ApiProduct, piv shared_data.PropertyIdValues) error {
 
 	for property := range piv {
 
@@ -129,8 +147,6 @@ func reduceApiProduct(id string, kvApiProduct kevlar.KeyValues, piv shared_data.
 			values = []string{gog_integration.ImageId(ap.GetIconSquare())}
 		case vangogh_integration.BackgroundProperty:
 			values = []string{gog_integration.ImageId(ap.GetBackground())}
-		case vangogh_integration.ScreenshotsProperty:
-			values = gog_integration.ImageIds(ap.GetScreenshots()...)
 		case vangogh_integration.GenresProperty:
 			values = ap.GetGenres()
 		case vangogh_integration.FeaturesProperty:
@@ -173,10 +189,6 @@ func reduceApiProduct(id string, kvApiProduct kevlar.KeyValues, piv shared_data.
 			values = []string{ap.GetForumUrl()}
 		case vangogh_integration.SupportUrlProperty:
 			values = []string{ap.GetSupportUrl()}
-		case vangogh_integration.DescriptionOverviewProperty:
-			values = []string{ap.GetDescriptionOverview()}
-		case vangogh_integration.DescriptionFeaturesProperty:
-			values = []string{ap.GetDescriptionFeatures()}
 		case vangogh_integration.ProductTypeProperty:
 			values = []string{ap.GetProductType()}
 		case vangogh_integration.CopyrightsProperty:
@@ -195,6 +207,35 @@ func reduceApiProduct(id string, kvApiProduct kevlar.KeyValues, piv shared_data.
 			piv[property][id] = values
 		}
 
+	}
+
+	return nil
+}
+
+func reduceApiProductKeyValues(id string, ap *gog_integration.ApiProduct, apiProductKeyValues map[string]kevlar.KeyValues) error {
+
+	var err error
+	var reader io.Reader
+
+	for kv := range apiProductKeyValues {
+
+		reader = nil
+
+		switch kv {
+		case vangogh_integration.DescriptionOverviewKeyValues:
+			reader = strings.NewReader(ap.GetDescriptionOverview())
+		case vangogh_integration.DescriptionFeaturesKeyValues:
+			reader = strings.NewReader(ap.GetDescriptionFeatures())
+		case vangogh_integration.ScreenshotsKeyValues:
+			screenshotImageIds := gog_integration.ImageIds(ap.GetScreenshots()...)
+			reader = strings.NewReader(strings.Join(screenshotImageIds, ","))
+		}
+
+		if reader != nil {
+			if err = apiProductKeyValues[kv].Set(id, reader); err != nil {
+				return err
+			}
+		}
 	}
 
 	return nil

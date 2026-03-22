@@ -1,6 +1,10 @@
 package shared_data
 
 import (
+	"path/filepath"
+
+	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/redux"
 )
 
@@ -12,6 +16,18 @@ func InitReductions(properties ...string) PropertyIdValues {
 		piv[property] = make(map[string][]string)
 	}
 	return piv
+}
+
+func InitKeyValues(keyValues ...string) (map[string]kevlar.KeyValues, error) {
+	kvs := make(map[string]kevlar.KeyValues)
+	var err error
+	for _, kv := range keyValues {
+		kvDir := filepath.Join(vangogh_integration.Pwd.AbsDirPath(vangogh_integration.Metadata), kv)
+		if kvs[kv], err = kevlar.New(kvDir, kevlar.TxtExt); err != nil {
+			return nil, err
+		}
+	}
+	return kvs, nil
 }
 
 func WriteReductions(rdx redux.Writeable, piv PropertyIdValues) error {

@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"io"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -11,7 +12,6 @@ import (
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/pathways"
-	"github.com/boggydigital/redux"
 )
 
 func GetDescriptionImagesHandler(u *url.URL) error {
@@ -38,10 +38,16 @@ func GetDescriptionImages(ids []string, since int64, all, force bool) error {
 	gdia := nod.NewProgress("getting description images...")
 	defer gdia.Done()
 
-	rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(),
-		vangogh_integration.TitleProperty,
-		vangogh_integration.DescriptionOverviewProperty,
-		vangogh_integration.DescriptionFeaturesProperty)
+	metadataDir := vangogh_integration.Pwd.AbsDirPath(vangogh_integration.Metadata)
+
+	descOverviewDir := filepath.Join(metadataDir, vangogh_integration.DescriptionOverviewKeyValues)
+	kvDescOverview, err := kevlar.New(descOverviewDir, kevlar.TxtExt)
+	if err != nil {
+		return err
+	}
+
+	descFeaturesDir := filepath.Join(metadataDir, vangogh_integration.DescriptionFeaturesKeyValues)
+	kvDescFeatures, err := kevlar.New(descFeaturesDir, kevlar.TxtExt)
 	if err != nil {
 		return err
 	}
@@ -72,14 +78,24 @@ func GetDescriptionImages(ids []string, since int64, all, force bool) error {
 
 		var descriptionImages []string
 
-		descOverview, ok := rdx.GetLastVal(vangogh_integration.DescriptionOverviewProperty, id)
-		if ok {
-			descriptionImages = vangogh_integration.ExtractDescItems(descOverview)
+		var descOverviewBytes []byte
+		descOverviewBytes, err = getDescBytes(id, vangogh_integration.DescriptionOverviewKeyValues, kvDescOverview)
+		if err != nil {
+			return err
 		}
 
-		descFeatures, ok := rdx.GetLastVal(vangogh_integration.DescriptionFeaturesProperty, id)
-		if ok {
-			descriptionImages = append(descriptionImages, vangogh_integration.ExtractDescItems(descFeatures)...)
+		if len(descOverviewBytes) > 0 {
+			descriptionImages = vangogh_integration.ExtractDescItems(string(descOverviewBytes))
+		}
+
+		var descFeaturesBytes []byte
+		descFeaturesBytes, err = getDescBytes(id, vangogh_integration.DescriptionFeaturesKeyValues, kvDescFeatures)
+		if err != nil {
+			return err
+		}
+
+		if len(descFeaturesBytes) > 0 {
+			descriptionImages = append(descriptionImages, vangogh_integration.ExtractDescItems(string(descFeaturesBytes))...)
 		}
 
 		if len(descriptionImages) == 0 {
@@ -98,6 +114,17 @@ func GetDescriptionImages(ids []string, since int64, all, force bool) error {
 	}
 
 	return nil
+}
+
+func getDescBytes(id, property string, keyValues kevlar.KeyValues) ([]byte, error) {
+
+	rcValue, err := keyValues.Get(id)
+	if err != nil {
+		return nil, err
+	}
+	defer rcValue.Close()
+
+	return io.ReadAll(rcValue)
 }
 
 func getDescriptionImage(descriptionImageUrl string, force bool) error {
