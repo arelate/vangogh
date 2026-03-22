@@ -89,6 +89,7 @@ migrate-data
 
 reduce
     product-type={all-product-types}
+    force
 
 relayout-downloads
     os&$={operating-systems^}

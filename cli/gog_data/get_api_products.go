@@ -59,10 +59,10 @@ func GetApiProducts(ids []string, hc *http.Client, uat string, since int64, forc
 		return err
 	}
 
-	return ReduceApiProducts(kvApiProducts, since)
+	return ReduceApiProducts(kvApiProducts, since, force)
 }
 
-func ReduceApiProducts(kvApiProducts kevlar.KeyValues, since int64) error {
+func ReduceApiProducts(kvApiProducts kevlar.KeyValues, since int64, force bool) error {
 
 	dataType := vangogh_integration.ApiProducts
 
@@ -97,7 +97,7 @@ func ReduceApiProducts(kvApiProducts kevlar.KeyValues, since int64) error {
 		if err = reduceApiProductProperties(id, ap, apiProductReductions); err != nil {
 			return err
 		}
-		if err = reduceApiProductKeyValues(id, ap, apiProductKeyValues); err != nil {
+		if err = reduceApiProductKeyValues(id, ap, apiProductKeyValues, force); err != nil {
 			return err
 		}
 	}
@@ -212,12 +212,16 @@ func reduceApiProductProperties(id string, ap *gog_integration.ApiProduct, piv s
 	return nil
 }
 
-func reduceApiProductKeyValues(id string, ap *gog_integration.ApiProduct, apiProductKeyValues map[string]kevlar.KeyValues) error {
+func reduceApiProductKeyValues(id string, ap *gog_integration.ApiProduct, apiProductKeyValues map[string]kevlar.KeyValues, force bool) error {
 
 	var err error
 	var reader io.Reader
 
 	for kv := range apiProductKeyValues {
+
+		if apiProductKeyValues[kv].Has(id) && !force {
+			continue
+		}
 
 		reader = nil
 

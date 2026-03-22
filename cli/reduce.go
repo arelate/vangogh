@@ -21,11 +21,12 @@ import (
 func ReduceHandler(u *url.URL) error {
 
 	productTypes := vangogh_integration.ProductTypesFromUrl(u)
+	force := u.Query().Has("force")
 
-	return Reduce(productTypes)
+	return Reduce(productTypes, force)
 }
 
-func Reduce(productTypes []vangogh_integration.ProductType) error {
+func Reduce(productTypes []vangogh_integration.ProductType, force bool) error {
 
 	if len(productTypes) == 0 {
 		productTypes = slices.Collect(vangogh_integration.AllProductTypes())
@@ -35,7 +36,7 @@ func Reduce(productTypes []vangogh_integration.ProductType) error {
 		if pt == vangogh_integration.UnknownProductType {
 			continue
 		}
-		if err := reduceProductType(pt); err != nil {
+		if err := reduceProductType(pt, force); err != nil {
 			return err
 		}
 	}
@@ -43,7 +44,7 @@ func Reduce(productTypes []vangogh_integration.ProductType) error {
 	return shared_data.ReduceMisc()
 }
 
-func reduceProductType(pt vangogh_integration.ProductType) error {
+func reduceProductType(pt vangogh_integration.ProductType, force bool) error {
 
 	ptDir, err := vangogh_integration.AbsProductTypeDir(pt)
 	if err != nil {
@@ -105,15 +106,15 @@ func reduceProductType(pt vangogh_integration.ProductType) error {
 	case vangogh_integration.UserWishlist:
 		return gog_data.ReduceUserWishlist(kvPt)
 	case vangogh_integration.CatalogPage:
-		return gog_data.ReduceCatalogPages(kvPt, -1)
+		return gog_data.ReduceCatalogPages(kvPt, -1, force)
 	case vangogh_integration.OrderPage:
 		return gog_data.ReduceOrderPages(kvPt, -1)
 	case vangogh_integration.AccountPage:
 		return gog_data.ReduceAccountPages(kvPt, -1)
 	case vangogh_integration.ApiProducts:
-		return gog_data.ReduceApiProducts(kvPt, -1)
+		return gog_data.ReduceApiProducts(kvPt, -1, force)
 	case vangogh_integration.Details:
-		return gog_data.ReduceDetails(kvPt, -1)
+		return gog_data.ReduceDetails(kvPt, -1, force)
 	case vangogh_integration.GamesDbGogProducts:
 		return gog_data.ReduceGamesDbGogProducts(kvPt, -1)
 	case vangogh_integration.SteamAppDetails:

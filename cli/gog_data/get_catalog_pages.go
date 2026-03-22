@@ -38,10 +38,10 @@ func GetCatalogPages(hc *http.Client, uat string, since int64, force bool) error
 		return err
 	}
 
-	return ReduceCatalogPages(kvCatalogPages, since)
+	return ReduceCatalogPages(kvCatalogPages, since, force)
 }
 
-func ReduceCatalogPages(kvCatalogPages kevlar.KeyValues, since int64) error {
+func ReduceCatalogPages(kvCatalogPages kevlar.KeyValues, since int64, force bool) error {
 
 	pageType := vangogh_integration.CatalogPage
 
@@ -76,7 +76,7 @@ func ReduceCatalogPages(kvCatalogPages kevlar.KeyValues, since int64) error {
 		if err = reduceCatalogPageProperties(page, catalogPage, catalogPagesReductions, rdx); err != nil {
 			return err
 		}
-		if err = reduceCatalogPageKeyValues(catalogPage, catalogPagesKeyValues); err != nil {
+		if err = reduceCatalogPageKeyValues(catalogPage, catalogPagesKeyValues, force); err != nil {
 			return err
 		}
 	}
@@ -178,13 +178,17 @@ func reduceCatalogPageProperties(page string, catalogPage *gog_integration.Catal
 	return nil
 }
 
-func reduceCatalogPageKeyValues(catalogPage *gog_integration.CatalogPage, catalogPageKeyValues map[string]kevlar.KeyValues) error {
+func reduceCatalogPageKeyValues(catalogPage *gog_integration.CatalogPage, catalogPageKeyValues map[string]kevlar.KeyValues, force bool) error {
 
 	var err error
 	var reader io.Reader
 
 	for _, cp := range catalogPage.Products {
 		for kv := range catalogPageKeyValues {
+
+			if catalogPageKeyValues[kv].Has(cp.Id) && !force {
+				continue
+			}
 
 			reader = nil
 

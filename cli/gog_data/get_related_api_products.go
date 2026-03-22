@@ -62,7 +62,7 @@ func GetRelatedApiProducts(hc *http.Client, uat string, since int64, force bool)
 		return err
 	}
 
-	return ReduceApiProducts(kvApiProducts, since)
+	return ReduceApiProducts(kvApiProducts, since, force)
 }
 
 func relatedProducts(id string, rdx redux.Readable, property string) iter.Seq[string] {

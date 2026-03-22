@@ -52,10 +52,10 @@ func GetDetails(ids []string, hc *http.Client, uat string, since int64, force bo
 		return err
 	}
 
-	return ReduceDetails(kvDetails, since)
+	return ReduceDetails(kvDetails, since, force)
 }
 
-func ReduceDetails(kvDetails kevlar.KeyValues, since int64) error {
+func ReduceDetails(kvDetails kevlar.KeyValues, since int64, force bool) error {
 
 	dataType := vangogh_integration.Details
 
@@ -90,7 +90,7 @@ func ReduceDetails(kvDetails kevlar.KeyValues, since int64) error {
 		if err = reduceDetailsProductProperties(id, det, detailsReductions); err != nil {
 			return err
 		}
-		if err = reduceDetailsKeyValues(id, det, detailsKeyValues); err != nil {
+		if err = reduceDetailsKeyValues(id, det, detailsKeyValues, force); err != nil {
 			return err
 		}
 	}
@@ -138,12 +138,16 @@ func reduceDetailsProductProperties(id string, det *gog_integration.Details, piv
 	return nil
 }
 
-func reduceDetailsKeyValues(id string, det *gog_integration.Details, detailsKeyValues map[string]kevlar.KeyValues) error {
+func reduceDetailsKeyValues(id string, det *gog_integration.Details, detailsKeyValues map[string]kevlar.KeyValues, force bool) error {
 
 	var err error
 	var reader io.Reader
 
 	for kv := range detailsKeyValues {
+
+		if detailsKeyValues[kv].Has(id) && !force {
+			continue
+		}
 
 		reader = nil
 

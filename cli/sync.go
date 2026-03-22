@@ -129,7 +129,7 @@ func Sync(
 		return setSyncInterrupted(err, syncEventsRdx)
 	}
 
-	if err = Reduce([]vangogh_integration.ProductType{vangogh_integration.UnknownProductType}); err != nil {
+	if err = Reduce([]vangogh_integration.ProductType{vangogh_integration.UnknownProductType}, force); err != nil {
 		return setSyncInterrupted(err, syncEventsRdx)
 	}
 
