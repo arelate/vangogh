@@ -27,7 +27,10 @@ func GetMedia(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	screenshots := strings.Split(string(screenshotBytes), ",")
+	var screenshots []string
+	if len(screenshotBytes) > 0 {
+		screenshots = strings.Split(string(screenshotBytes), ",")
+	}
 
 	p := compton_pages.Media(id, screenshots, rdx)
 	if err = p.WriteResponse(w); err != nil {
