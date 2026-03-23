@@ -21,7 +21,7 @@ func GetMedia(w http.ResponseWriter, r *http.Request) {
 
 	id := r.URL.Query().Get("id")
 
-	screenshotBytes, err := compton_data.GetKeyValuesBytes(id, vangogh_integration.ScreenshotsKeyValues, keyValues)
+	screenshotBytes, err := compton_data.GetKeyValuesBytes(id, vangogh_integration.ScreenshotsKeyValues)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return

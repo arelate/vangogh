@@ -30,7 +30,7 @@ func GetNews(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	hasChangelog, err := compton_data.HasKeyValuesBytes(gogId, vangogh_integration.ChangelogKeyValues, keyValues)
+	hasChangelog, err := compton_data.HasKeyValuesBytes(gogId, vangogh_integration.ChangelogKeyValues)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return

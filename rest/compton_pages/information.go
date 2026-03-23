@@ -30,13 +30,12 @@ import (
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/font_weight"
 	"github.com/boggydigital/compton/consts/size"
-	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/redux"
 )
 
 const linksValuesLimit = 3
 
-func Info(id string, rdx redux.Readable, keyValues map[string]kevlar.KeyValues, permissions ...author.Permission) compton.PageElement {
+func Info(id string, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
 
 	s := compton_fragments.ProductSection(compton_data.InfoSection, id, rdx)
 
@@ -59,7 +58,7 @@ func Info(id string, rdx redux.Readable, keyValues map[string]kevlar.KeyValues, 
 		shortDescSpan.AddClass("short-description")
 	}
 
-	hasDescOverview, err := compton_data.HasKeyValuesBytes(id, vangogh_integration.DescriptionOverviewKeyValues, keyValues)
+	hasDescOverview, err := compton_data.HasKeyValuesBytes(id, vangogh_integration.DescriptionOverviewKeyValues)
 	if err != nil {
 		return s.Error(err)
 	}

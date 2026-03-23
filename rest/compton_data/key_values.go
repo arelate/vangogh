@@ -1,19 +1,20 @@
 package compton_data
 
 import (
-	"errors"
 	"io"
+	"path/filepath"
 
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
 )
 
-func GetKeyValuesBytes(id, property string, keyValues map[string]kevlar.KeyValues) ([]byte, error) {
+func GetKeyValuesBytes(id, property string) ([]byte, error) {
 
-	var kv kevlar.KeyValues
-	var ok bool
+	kvDir := filepath.Join(vangogh_integration.Pwd.AbsDirPath(vangogh_integration.Metadata), property)
 
-	if kv, ok = keyValues[property]; !ok {
-		return nil, errors.New("keyValues not initialized for " + property)
+	kv, err := kevlar.New(kvDir, kevlar.TxtExt)
+	if err != nil {
+		return nil, err
 	}
 
 	if !kv.Has(id) {
@@ -29,13 +30,13 @@ func GetKeyValuesBytes(id, property string, keyValues map[string]kevlar.KeyValue
 	return io.ReadAll(rc)
 }
 
-func HasKeyValuesBytes(id, property string, keyValues map[string]kevlar.KeyValues) (bool, error) {
-	var kv kevlar.KeyValues
-	var ok bool
+func HasKeyValuesBytes(id, property string) (bool, error) {
 
-	if kv, ok = keyValues[property]; !ok {
-		return false, errors.New("keyValues not initialized for " + property)
+	kvDir := filepath.Join(vangogh_integration.Pwd.AbsDirPath(vangogh_integration.Metadata), property)
+
+	kv, err := kevlar.New(kvDir, kevlar.TxtExt)
+	if err != nil {
+		return false, err
 	}
-
 	return kv.Has(id), nil
 }

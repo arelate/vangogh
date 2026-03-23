@@ -7,11 +7,10 @@ import (
 	"github.com/arelate/vangogh/perm"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/boggydigital/author"
-	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/redux"
 )
 
-func ProductSections(id string, rdx redux.Readable, keyValues map[string]kevlar.KeyValues, permissions ...author.Permission) ([]string, error) {
+func ProductSections(id string, rdx redux.Readable, permissions ...author.Permission) ([]string, error) {
 
 	hasSections := make([]string, 0)
 
@@ -32,7 +31,7 @@ func ProductSections(id string, rdx redux.Readable, keyValues map[string]kevlar.
 		hasSections = append(hasSections, compton_data.OfferingsSection)
 	}
 
-	hasScreenshots, err := compton_data.HasKeyValuesBytes(id, vangogh_integration.ScreenshotsKeyValues, keyValues)
+	hasScreenshots, err := compton_data.HasKeyValuesBytes(id, vangogh_integration.ScreenshotsKeyValues)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +41,7 @@ func ProductSections(id string, rdx redux.Readable, keyValues map[string]kevlar.
 		hasSections = append(hasSections, compton_data.MediaSection)
 	}
 
-	hasChangelog, err := compton_data.HasKeyValuesBytes(id, vangogh_integration.ChangelogKeyValues, keyValues)
+	hasChangelog, err := compton_data.HasKeyValuesBytes(id, vangogh_integration.ChangelogKeyValues)
 	if err != nil {
 		return nil, err
 	}

@@ -18,7 +18,6 @@ import (
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/loading"
 	"github.com/boggydigital/compton/consts/size"
-	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/redux"
 )
@@ -34,7 +33,7 @@ var offeringsBadgesOrder = []compton.Symbol{
 	compton.PuzzlePiece,
 }
 
-func Product(id string, rdx redux.Readable, keyValues map[string]kevlar.KeyValues, permissions ...author.Permission) compton.PageElement {
+func Product(id string, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
 
 	title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
 	if !ok {
@@ -98,7 +97,7 @@ func Product(id string, rdx redux.Readable, keyValues map[string]kevlar.KeyValue
 
 	/* Product details sections */
 
-	hasSections, err := compton_fragments.ProductSections(id, rdx, keyValues, permissions...)
+	hasSections, err := compton_fragments.ProductSections(id, rdx, permissions...)
 	if err != nil {
 		return p.Error(err)
 	}
@@ -132,7 +131,8 @@ func Product(id string, rdx redux.Readable, keyValues map[string]kevlar.KeyValue
 				videos = len(vp)
 			}
 
-			screenshotsBytes, err := compton_data.GetKeyValuesBytes(id, vangogh_integration.ScreenshotsKeyValues, keyValues)
+			var screenshotsBytes []byte
+			screenshotsBytes, err = compton_data.GetKeyValuesBytes(id, vangogh_integration.ScreenshotsKeyValues)
 			if err != nil {
 				return p.Error(err)
 			}
