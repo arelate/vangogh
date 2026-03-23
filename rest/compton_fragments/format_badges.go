@@ -76,7 +76,7 @@ func formatBadge(id, property string, rdx redux.Readable) *compton.FormattedBadg
 				fmtBadge.Icon = vrSymbol
 
 				if pgc, sure := rdx.GetLastVal(vangogh_integration.ProductGeneratedChecksumProperty, id); sure && pgc == vangogh_integration.TrueValue {
-					if fmtBadge.Icon == compton.Hexagon {
+					if fmtBadge.Icon == compton.HexagonPacked {
 						fmtBadge.Icon = compton.HexagonNegativeDiagonalLine
 					}
 				}

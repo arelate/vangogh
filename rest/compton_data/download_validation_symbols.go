@@ -20,7 +20,7 @@ var ValidationStatusColors = map[vangogh_integration.ValidationStatus]color.Colo
 }
 
 var ValidationStatusSymbols = map[vangogh_integration.ValidationStatus]compton.Symbol{
-	vangogh_integration.ValidationStatusSuccess:             compton.Hexagon,
+	vangogh_integration.ValidationStatusSuccess:             compton.HexagonPacked,
 	vangogh_integration.ValidationStatusSelfValidated:       compton.HexagonNegativeDiagonalLine,
 	vangogh_integration.ValidationStatusUnknown:             compton.HexagonDiagonalLines,
 	vangogh_integration.ValidationStatusQueued:              compton.HexagonClockArrows,
