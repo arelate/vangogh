@@ -17,8 +17,6 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-const demoStoreTag = "Demo"
-
 func GetCatalogPages(hc *http.Client, uat string, since int64, force bool) error {
 
 	gcpa := nod.NewProgress("getting %s...", vangogh_integration.CatalogPage)
