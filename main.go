@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	_ "embed"
+	"io"
 	"log"
 	"net/url"
 	"os"
@@ -78,7 +79,8 @@ func main() {
 	}
 
 	if q := u.Query(); q.Has(debugParam) {
-		logger, err := nod.EnableFileLogger(u.Path, vangogh_integration.Pwd.AbsDirPath(vangogh_integration.Logs))
+		var logger io.Closer
+		logger, err = nod.EnableFileLogger(u.Path, vangogh_integration.Pwd.AbsDirPath(vangogh_integration.Logs))
 		if err != nil {
 			log.Fatalln(err)
 		}

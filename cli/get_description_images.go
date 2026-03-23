@@ -79,7 +79,7 @@ func GetDescriptionImages(ids []string, since int64, all, force bool) error {
 		var descriptionImages []string
 
 		var descOverviewBytes []byte
-		descOverviewBytes, err = getDescBytes(id, vangogh_integration.DescriptionOverviewKeyValues, kvDescOverview)
+		descOverviewBytes, err = getDescBytes(id, kvDescOverview)
 		if err != nil {
 			return err
 		}
@@ -89,7 +89,7 @@ func GetDescriptionImages(ids []string, since int64, all, force bool) error {
 		}
 
 		var descFeaturesBytes []byte
-		descFeaturesBytes, err = getDescBytes(id, vangogh_integration.DescriptionFeaturesKeyValues, kvDescFeatures)
+		descFeaturesBytes, err = getDescBytes(id, kvDescFeatures)
 		if err != nil {
 			return err
 		}
@@ -116,7 +116,11 @@ func GetDescriptionImages(ids []string, since int64, all, force bool) error {
 	return nil
 }
 
-func getDescBytes(id, property string, keyValues kevlar.KeyValues) ([]byte, error) {
+func getDescBytes(id string, keyValues kevlar.KeyValues) ([]byte, error) {
+
+	if !keyValues.Has(id) {
+		return nil, nil
+	}
 
 	rcValue, err := keyValues.Get(id)
 	if err != nil {
