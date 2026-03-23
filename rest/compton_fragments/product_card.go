@@ -50,11 +50,7 @@ func ProductCard(r compton.Registrar, id string, rdx redux.Readable, permissions
 		imageUrl = "/image?id=" + verticalImageId
 	}
 
-	poster := pc.AppendImage(imageUrl)
-	poster.AddClass("poster")
-	poster.SetAttribute("width", "85.5px")
-	poster.SetAttribute("height", "120.5px")
-	poster.SetAttribute("style", "width:85.5px;height:120.5px")
+	pc.AppendImage(imageUrl, 85.5, 120.5)
 
 	if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
 		pc.AppendTitle(title)
