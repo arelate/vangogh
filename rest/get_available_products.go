@@ -59,7 +59,7 @@ func getAvailableProducts() ([]vangogh_integration.AvailableProduct, error) {
 		for _, ap := range app {
 
 			avp := vangogh_integration.AvailableProduct{
-				Id:    ap.Id,
+				Id:    strconv.FormatInt(int64(ap.Id), 10),
 				Title: ap.Title,
 			}
 
