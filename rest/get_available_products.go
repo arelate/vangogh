@@ -11,12 +11,6 @@ import (
 	"github.com/boggydigital/nod"
 )
 
-type availableProduct struct {
-	Id    int                                   `json:"id"`
-	Title string                                `json:"title"`
-	Os    []vangogh_integration.OperatingSystem `json:"os"`
-}
-
 func GetAvailableProducts(w http.ResponseWriter, r *http.Request) {
 
 	// GET /api/available-products
@@ -40,7 +34,7 @@ func GetAvailableProducts(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func getAvailableProducts() ([]availableProduct, error) {
+func getAvailableProducts() ([]vangogh_integration.AvailableProduct, error) {
 
 	accountPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.AccountPage)
 	if err != nil {
@@ -51,7 +45,7 @@ func getAvailableProducts() ([]availableProduct, error) {
 		return nil, err
 	}
 
-	availableProducts := make([]availableProduct, 0, kvAccountPages.Len()*100)
+	availableProducts := make([]vangogh_integration.AvailableProduct, 0, kvAccountPages.Len()*100)
 
 	// enumerating by index ensures account products ordered by order date
 	for page := range kvAccountPages.Len() {
@@ -64,7 +58,7 @@ func getAvailableProducts() ([]availableProduct, error) {
 
 		for _, ap := range app {
 
-			avp := availableProduct{
+			avp := vangogh_integration.AvailableProduct{
 				Id:    ap.Id,
 				Title: ap.Title,
 			}
