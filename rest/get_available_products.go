@@ -64,15 +64,15 @@ func getAvailableProducts() ([]vangogh_integration.AvailableProduct, error) {
 			}
 
 			if ap.WorksOn.Windows {
-				avp.Os = append(avp.Os, vangogh_integration.Windows)
+				avp.OperatingSystems = append(avp.OperatingSystems, vangogh_integration.Windows)
 			}
 
 			if ap.WorksOn.Mac {
-				avp.Os = append(avp.Os, vangogh_integration.MacOS)
+				avp.OperatingSystems = append(avp.OperatingSystems, vangogh_integration.MacOS)
 			}
 
 			if ap.WorksOn.Linux {
-				avp.Os = append(avp.Os, vangogh_integration.Linux)
+				avp.OperatingSystems = append(avp.OperatingSystems, vangogh_integration.Linux)
 			}
 
 			availableProducts = append(availableProducts, avp)
