@@ -3,10 +3,8 @@ package gog_data
 import (
 	"encoding/json/v2"
 	"errors"
-	"io"
 	"net/http"
 	"strconv"
-	"strings"
 
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
@@ -17,7 +15,7 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-func GetCatalogPages(hc *http.Client, uat string, since int64, force bool) error {
+func GetCatalogPages(hc *http.Client, uat string, since int64) error {
 
 	gcpa := nod.NewProgress("getting %s...", vangogh_integration.CatalogPage)
 	defer gcpa.Done()
@@ -36,10 +34,10 @@ func GetCatalogPages(hc *http.Client, uat string, since int64, force bool) error
 		return err
 	}
 
-	return ReduceCatalogPages(kvCatalogPages, since, force)
+	return ReduceCatalogPages(kvCatalogPages, since)
 }
 
-func ReduceCatalogPages(kvCatalogPages kevlar.KeyValues, since int64, force bool) error {
+func ReduceCatalogPages(kvCatalogPages kevlar.KeyValues, since int64) error {
 
 	pageType := vangogh_integration.CatalogPage
 
@@ -53,10 +51,6 @@ func ReduceCatalogPages(kvCatalogPages kevlar.KeyValues, since int64, force bool
 	}
 
 	catalogPagesReductions := shared_data.InitReductions(vangogh_integration.GOGCatalogPageProperties()...)
-	catalogPagesKeyValues, err := shared_data.InitKeyValues(vangogh_integration.GOGCatalogPageKeyValues()...)
-	if err != nil {
-		return err
-	}
 
 	updatedCatalogPages := kvCatalogPages.Since(since, kevlar.Create, kevlar.Update)
 
@@ -72,9 +66,6 @@ func ReduceCatalogPages(kvCatalogPages kevlar.KeyValues, since int64, force bool
 		}
 
 		if err = reduceCatalogPageProperties(page, catalogPage, catalogPagesReductions, rdx); err != nil {
-			return err
-		}
-		if err = reduceCatalogPageKeyValues(catalogPage, catalogPagesKeyValues, force); err != nil {
 			return err
 		}
 	}
@@ -165,43 +156,12 @@ func reduceCatalogPageProperties(page string, catalogPage *gog_integration.Catal
 				if !rdx.HasValue(vangogh_integration.UserWishlistProperty, cp.Id, vangogh_integration.TrueValue) {
 					values = []string{vangogh_integration.FalseValue}
 				}
+			case vangogh_integration.ScreenshotsProperty:
+				values = gog_integration.ImageIds(cp.GetScreenshots()...)
 			}
 
 			if shared_data.IsNotEmpty(values...) {
 				piv[property][cp.Id] = values
-			}
-		}
-	}
-
-	return nil
-}
-
-func reduceCatalogPageKeyValues(catalogPage *gog_integration.CatalogPage, catalogPageKeyValues map[string]kevlar.KeyValues, force bool) error {
-
-	var err error
-	var reader io.Reader
-
-	for _, cp := range catalogPage.Products {
-		for kv := range catalogPageKeyValues {
-
-			if catalogPageKeyValues[kv].Has(cp.Id) && !force {
-				continue
-			}
-
-			reader = nil
-
-			switch kv {
-			case vangogh_integration.ScreenshotsKeyValues:
-				screenshotImageIds := gog_integration.ImageIds(cp.GetScreenshots()...)
-				if len(screenshotImageIds) > 0 {
-					reader = strings.NewReader(strings.Join(screenshotImageIds, ","))
-				}
-			}
-
-			if reader != nil {
-				if err = catalogPageKeyValues[kv].Set(cp.Id, reader); err != nil {
-					return err
-				}
 			}
 		}
 	}

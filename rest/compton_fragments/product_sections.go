@@ -31,12 +31,7 @@ func ProductSections(id string, rdx redux.Readable, permissions ...author.Permis
 		hasSections = append(hasSections, compton_data.OfferingsSection)
 	}
 
-	hasScreenshots, err := compton_data.HasKeyValuesBytes(id, vangogh_integration.ScreenshotsKeyValues)
-	if err != nil {
-		return nil, err
-	}
-
-	if hasScreenshots ||
+	if rdx.HasKey(vangogh_integration.ScreenshotsProperty, id) ||
 		rdx.HasKey(vangogh_integration.VideoIdProperty, id) {
 		hasSections = append(hasSections, compton_data.MediaSection)
 	}

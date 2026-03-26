@@ -254,6 +254,7 @@ func Debug(gogId string, rdx redux.Readable) (compton.PageElement, error) {
 		vangogh_integration.AdditionalRequirementsProperty,
 		vangogh_integration.CopyrightsProperty,
 		vangogh_integration.StoreTagsProperty,
+		vangogh_integration.ScreenshotsProperty,
 		vangogh_integration.TypesProperty,
 		vangogh_integration.HltbPlatformsProperty,
 		vangogh_integration.ShortDescriptionProperty,

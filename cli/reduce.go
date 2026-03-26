@@ -106,7 +106,7 @@ func reduceProductType(pt vangogh_integration.ProductType, force bool) error {
 	case vangogh_integration.UserWishlist:
 		return gog_data.ReduceUserWishlist(kvPt)
 	case vangogh_integration.CatalogPage:
-		return gog_data.ReduceCatalogPages(kvPt, -1, force)
+		return gog_data.ReduceCatalogPages(kvPt, -1)
 	case vangogh_integration.OrderPage:
 		return gog_data.ReduceOrderPages(kvPt, -1)
 	case vangogh_integration.AccountPage:

@@ -131,12 +131,9 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 				videos = len(vp)
 			}
 
-			var screenshotsBytes []byte
-			screenshotsBytes, err = compton_data.GetKeyValuesBytes(id, vangogh_integration.ScreenshotsKeyValues)
-			if err != nil {
-				return p.Error(err)
+			if sp, sure := rdx.GetAllValues(vangogh_integration.ScreenshotsProperty, id); sure {
+				images = len(sp)
 			}
-			images = len(strings.Split(string(screenshotsBytes), ","))
 
 			var fmtMediaBadges []*compton.FormattedBadge
 

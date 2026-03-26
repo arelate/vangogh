@@ -19,9 +19,9 @@ import (
 // 6. rename logs from year-month-date-hour-minute-second.log to sync-year-month-date-hour-minute-second.log // v1.1.9
 // 7. remove previously cascaded validations // v1.2.1
 // 8. fix incorrect dlc, extras sub-directories in downloads // 1.2.6
-// 9. internal version
+// 9. (internal bump)
 // 10. remove dehydrated-image, rep-color
-// 11. remove description-overview, description-features, changelog and screenshots properties // 1.2.7
+// 11. remove description-overview, description-features, changelog properties // 1.2.7
 
 const (
 	latestDataSchema = 12
@@ -65,7 +65,7 @@ func MigrateData(force bool) error {
 				return err
 			}
 		case 11:
-			if err = removeLargeProperties(); err != nil {
+			if err = removeLargeTextProperties(); err != nil {
 				return err
 			}
 		}
@@ -125,7 +125,7 @@ func removeDehydratedImageRepColor() error {
 	return nil
 }
 
-func removeLargeProperties() error {
+func removeLargeTextProperties() error {
 
 	reduxDir := vangogh_integration.AbsReduxDir()
 
@@ -141,9 +141,6 @@ func removeLargeProperties() error {
 		return err
 	}
 	if err = kvRedux.Cut(vangogh_integration.ChangelogKeyValues); err != nil {
-		return err
-	}
-	if err = kvRedux.Cut(vangogh_integration.ScreenshotsKeyValues); err != nil {
 		return err
 	}
 

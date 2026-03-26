@@ -142,7 +142,7 @@ func GetData(ids []string, productTypes []vangogh_integration.ProductType, since
 	}
 
 	if slices.Contains(productTypes, vangogh_integration.CatalogPage) {
-		if err = gog_data.GetCatalogPages(hc, uat, since, force); err != nil {
+		if err = gog_data.GetCatalogPages(hc, uat, since); err != nil {
 			return err
 		}
 	}

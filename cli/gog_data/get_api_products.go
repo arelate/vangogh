@@ -201,6 +201,8 @@ func reduceApiProductProperties(id string, ap *gog_integration.ApiProduct, piv s
 			values = []string{strconv.FormatBool(ap.GetInDevelopment())}
 		case vangogh_integration.PreOrderProperty:
 			values = []string{strconv.FormatBool(ap.GetPreOrder())}
+		case vangogh_integration.ScreenshotsProperty:
+			values = gog_integration.ImageIds(ap.GetScreenshots()...)
 		}
 
 		if shared_data.IsNotEmpty(values...) {
@@ -235,11 +237,6 @@ func reduceApiProductKeyValues(id string, ap *gog_integration.ApiProduct, apiPro
 			df := ap.GetDescriptionFeatures()
 			if df != "" {
 				reader = strings.NewReader(df)
-			}
-		case vangogh_integration.ScreenshotsKeyValues:
-			screenshotImageIds := gog_integration.ImageIds(ap.GetScreenshots()...)
-			if len(screenshotImageIds) > 0 {
-				reader = strings.NewReader(strings.Join(screenshotImageIds, ","))
 			}
 		}
 

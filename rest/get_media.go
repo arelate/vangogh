@@ -2,10 +2,7 @@ package rest
 
 import (
 	"net/http"
-	"strings"
 
-	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_pages"
 	"github.com/boggydigital/nod"
 )
@@ -21,19 +18,8 @@ func GetMedia(w http.ResponseWriter, r *http.Request) {
 
 	id := r.URL.Query().Get("id")
 
-	screenshotBytes, err := compton_data.GetKeyValuesBytes(id, vangogh_integration.ScreenshotsKeyValues)
-	if err != nil {
-		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-		return
-	}
-
-	var screenshots []string
-	if len(screenshotBytes) > 0 {
-		screenshots = strings.Split(string(screenshotBytes), ",")
-	}
-
-	p := compton_pages.Media(id, screenshots, rdx)
-	if err = p.WriteResponse(w); err != nil {
+	p := compton_pages.Media(id, rdx)
+	if err := p.WriteResponse(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}
 
