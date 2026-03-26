@@ -21,7 +21,11 @@ func refreshKeyValues(id, property string) (kevlar.KeyValues, error) {
 	if kv, ok := keyValues[property]; !ok {
 		refresh = true
 	} else {
-		if mt, sure := keyValuesModTimes[property]; !sure || mt < kv.LogModTime(id) {
+		fileModTime, err := kv.FileModTime(id)
+		if err != nil {
+			return nil, err
+		}
+		if mt, sure := keyValuesModTimes[property]; !sure || mt < fileModTime {
 			refresh = true
 		}
 	}
