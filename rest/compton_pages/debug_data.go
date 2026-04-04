@@ -95,7 +95,7 @@ func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageEleme
 	case vangogh_integration.Details:
 		urlFunc = gog_integration.DetailsUrl
 	case vangogh_integration.GamesDbGogProducts:
-		urlFunc = gog_integration.GamesDbGogExternalReleaseUrl
+		urlFunc = gog_integration.GamesDbGogUrl
 	case vangogh_integration.SteamAppDetails:
 		urlFunc = steam_integration.AppDetailsUrl
 	case vangogh_integration.SteamAppNews:

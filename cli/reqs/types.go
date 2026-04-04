@@ -140,7 +140,7 @@ func Details(authHttpClient *http.Client, authBearer string) *Params {
 func GamesDbGogProduct(authHttpClient *http.Client, authBearer string) *Params {
 	return &Params{
 		ProductType: vangogh_integration.GamesDbGogProducts,
-		UrlFunc:     gog_integration.GamesDbGogExternalReleaseUrl,
+		UrlFunc:     gog_integration.GamesDbGogUrl,
 		HttpClient:  authHttpClient,
 		HttpMethod:  http.MethodGet,
 		AuthBearer:  authBearer,
