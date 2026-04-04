@@ -52,7 +52,7 @@ func Search(query map[string][]string, ids []string, from, to int, rdx redux.Rea
 		filterSearchDetails.AppendBadges(compton.Badges(p, &compton.FormattedBadge{
 			Title: cf.Title(from, to, len(ids)),
 			Icon:  compton.NoSymbol,
-			Color: color.Foreground,
+			Color: color.Gray,
 		}))
 	}
 

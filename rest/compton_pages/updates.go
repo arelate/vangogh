@@ -156,7 +156,7 @@ func Updates(section string, rdx redux.Readable, showAll bool, permissions ...au
 	dsSection.AppendBadges(compton.Badges(p, &compton.FormattedBadge{
 		Title: cf.Title(0, len(ids), updateTotals[section]),
 		Icon:  compton.NoSymbol,
-		Color: color.Foreground,
+		Color: color.Gray,
 	}))
 
 	dsSection.SetId(section)

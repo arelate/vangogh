@@ -41,7 +41,7 @@ func DownloadsQueue(ids []string, rdx redux.Readable, permissions ...author.Perm
 		dqDetails.AppendBadges(compton.Badges(p, &compton.FormattedBadge{
 			Title: cf.Title(0, len(ids), len(ids)),
 			Icon:  compton.NoSymbol,
-			Color: color.DimmedForeground,
+			Color: color.Gray,
 		}))
 	}
 
