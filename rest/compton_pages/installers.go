@@ -43,6 +43,13 @@ func Installers(id string, messages []string, dls vangogh_integration.DownloadsL
 	pageStack := compton.FlexItems(s, direction.Column).RowGap(size.Normal)
 	s.Append(pageStack)
 
+	if len(messages) > 0 {
+		messagesSpan := compton.Fspan(s, strings.Join(messages, " ")).
+			FontSize(size.XSmall).
+			ForegroundColor(color.Gray)
+		pageStack.Append(compton.FICenter(s, messagesSpan))
+	}
+
 	var dvRow *compton.FrowElement
 
 	if downloadCompleted, ok, err := rdx.ParseLastValTime(vangogh_integration.DownloadCompletedProperty, id); ok && err == nil {
@@ -79,14 +86,6 @@ func Installers(id string, messages []string, dls vangogh_integration.DownloadsL
 		}
 
 		pageStack.Append(compton.FICenter(s, dvRow))
-	}
-
-	if len(messages) > 0 {
-		messagesSpan := compton.Fspan(s, strings.Join(messages, "\n")).
-			FontSize(size.XSmall).
-			TextAlign(align.Center).
-			ForegroundColor(color.Orange)
-		pageStack.Append(compton.FICenter(s, messagesSpan))
 	}
 
 	if owned, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && owned == vangogh_integration.FalseValue {
