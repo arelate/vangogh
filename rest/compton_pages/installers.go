@@ -48,6 +48,7 @@ func Installers(id string, messages []string, dls vangogh_integration.DownloadsL
 	if downloadCompleted, ok, err := rdx.ParseLastValTime(vangogh_integration.DownloadCompletedProperty, id); ok && err == nil {
 		dvRow = compton.Frow(s).FontSize(size.XSmall)
 		dvRow.PropVal("Downloaded", downloadCompleted.Local().Format(time.DateTime))
+
 	} else if !ok {
 		var downloadStarted time.Time
 		if downloadStarted, ok, err = rdx.ParseLastValTime(vangogh_integration.DownloadStartedProperty, id); ok && err == nil {
@@ -72,6 +73,11 @@ func Installers(id string, messages []string, dls vangogh_integration.DownloadsL
 	}
 
 	if dvRow != nil {
+
+		if totalBytes := dls.TotalBytesEstimate(); totalBytes > 0 {
+			dvRow.PropVal("Size", vangogh_integration.FormatBytes(totalBytes))
+		}
+
 		pageStack.Append(compton.FICenter(s, dvRow))
 	}
 
