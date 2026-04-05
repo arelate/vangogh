@@ -5,10 +5,6 @@
     }
 }
 
-hr.subtle {
-    border-color: var(--c-background)
-}
-
 .local-filename {
     word-break: break-word;
 }

@@ -47,7 +47,7 @@ func Installers(id string, messages []string, dls vangogh_integration.DownloadsL
 		messagesSpan := compton.Fspan(s, strings.Join(messages, " ")).
 			FontSize(size.XSmall).
 			ForegroundColor(color.Gray)
-		pageStack.Append(compton.FICenter(s, messagesSpan))
+		pageStack.Append(compton.FICenter(s, messagesSpan), compton.Hr())
 	}
 
 	var dvRow *compton.FrowElement
@@ -246,7 +246,6 @@ func downloadLinks(r compton.Registrar,
 		}
 		if ii != len(downloads)-1 {
 			downloadLinksHr := compton.Hr()
-			downloadLinksHr.AddClass("subtle")
 			downloadsColumn.Append(downloadLinksHr)
 		}
 	}
