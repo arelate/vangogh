@@ -3,7 +3,7 @@ body {
 }
 
 a {
-    color: var(--c-cyan);
+    color: var(--c-blue);
     font-weight: var(--fw-b);
 
     &.internal {

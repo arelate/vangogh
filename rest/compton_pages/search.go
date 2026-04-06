@@ -66,7 +66,7 @@ func Search(query map[string][]string, ids []string, from, to int, rdx redux.Rea
 			vals := fq[prop]
 			queryFrow.PropVal(compton_data.PropertyTitles[prop], vals...)
 		}
-		queryFrow.LinkColor("Clear", "/search", color.Blue)
+		queryFrow.LinkColor("Clear", "/search", color.Foreground)
 	}
 
 	filterSearchDetails.Append(compton_fragments.SearchForm(p, query, queryFrow, rdx, permissions...))

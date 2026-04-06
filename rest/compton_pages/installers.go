@@ -346,7 +346,7 @@ func downloadLink(r compton.Registrar,
 	bottomRow := compton.FlexItems(r, direction.Row).ColumnGap(size.Small).AlignItems(align.Center)
 
 	copyManualUrlToClipboard := compton.CopyToClipboard(r,
-		compton.Fspan(r, "Copy Manual URL").FontSize(size.XSmall).ForegroundColor(color.Blue).FontWeight(font_weight.Bolder),
+		compton.Fspan(r, "Copy Manual URL").FontSize(size.XSmall).ForegroundColor(color.Foreground).FontWeight(font_weight.Bolder),
 		compton.Fspan(r, "Copied!").FontSize(size.XSmall).ForegroundColor(color.Green),
 		compton.Fspan(r, "Error").FontSize(size.XSmall).ForegroundColor(color.Red),
 		dl.ManualUrl)

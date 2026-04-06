@@ -10,7 +10,7 @@ import (
 func LogoutLink(r compton.Registrar) compton.Element {
 
 	logoutLink := compton.A("/logout")
-	logoutLink.Append(compton.Fspan(r, "Logout").FontSize(size.XSmall).ForegroundColor(color.Blue).FontWeight(font_weight.Bolder))
+	logoutLink.Append(compton.Fspan(r, "Logout").FontSize(size.XSmall).ForegroundColor(color.Foreground).FontWeight(font_weight.Bolder))
 
 	return logoutLink
 }

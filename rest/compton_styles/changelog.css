@@ -8,7 +8,7 @@ body {
 
     & a {
         font-weight: var(--fw-b);
-        color: var(--c-cyan);
+        color: var(--c-blue);
     }
 }
 

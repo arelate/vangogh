@@ -43,7 +43,7 @@ func VideoOriginLink(r compton.Registrar, videoId, videoTitle, videoDuration str
 	linkText := compton.Fspan(r, videoTitle).
 		TextAlign(align.Center).
 		FontWeight(font_weight.Bolder).
-		ForegroundColor(color.Mint)
+		ForegroundColor(color.Blue)
 	linkColumn.Append(linkText)
 
 	if dur, err := strconv.ParseInt(videoDuration, 10, 64); err == nil {

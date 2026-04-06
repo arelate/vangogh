@@ -40,7 +40,7 @@ func SteamNewsItem(r compton.Registrar, item steam_integration.NewsItem, open bo
 		fr.PropVal("Feed", item.FeedLabel)
 	}
 
-	fr.LinkColor("Source", item.Url, color.Mint)
+	fr.LinkColor("Source", item.Url, color.Blue)
 
 	container.Append(fr)
 

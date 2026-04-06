@@ -12,6 +12,6 @@ func GitHubLink(r compton.Registrar) compton.Element {
 	gitHubLink.Append(compton.Fspan(r, "Bonjour d'Arles").
 		FontWeight(font_weight.Bolder).
 		FontSize(size.XSmall).
-		ForegroundColor(color.Mint))
+		ForegroundColor(color.Blue))
 	return gitHubLink
 }
