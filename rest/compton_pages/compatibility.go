@@ -4,6 +4,7 @@ import (
 	"encoding/json/v2"
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
@@ -134,7 +135,11 @@ func getDeckAppCompatibilityReport(gogId string, rdx redux.Readable) (*steam_int
 
 	var deckCompatibilityReport steam_integration.DeckAppCompatibilityReport
 	if err = json.UnmarshalRead(rcDeckAppCompatibilityReport, &deckCompatibilityReport); err != nil {
-		return nil, err
+		if strings.HasPrefix(err.Error(), "json: cannot unmarshal JSON array into Go steam_integration.DeckAppCompatibilityResults") {
+			return nil, nil
+		} else {
+			return nil, err
+		}
 	}
 
 	return &deckCompatibilityReport, nil
