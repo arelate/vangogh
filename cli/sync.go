@@ -18,6 +18,7 @@ import (
 
 const (
 	SyncOptionPurchases         = "purchases"
+	SyncOptionsExtraData        = "extra-data"
 	SyncOptionDescriptionImages = "description-images"
 	SyncOptionImages            = "images"
 	SyncOptionScreenshots       = "screenshots"
@@ -29,6 +30,7 @@ const (
 
 type syncOptions struct {
 	purchases         bool
+	extraData         bool
 	descriptionImages bool
 	images            bool
 	screenshots       bool
@@ -50,6 +52,7 @@ func initSyncOptions(u *url.URL) *syncOptions {
 
 	so := &syncOptions{
 		purchases:         q.Has(SyncOptionPurchases),
+		extraData:         q.Has(SyncOptionsExtraData),
 		descriptionImages: q.Has(SyncOptionDescriptionImages),
 		images:            q.Has(SyncOptionImages),
 		screenshots:       q.Has(SyncOptionScreenshots),
@@ -59,7 +62,8 @@ func initSyncOptions(u *url.URL) *syncOptions {
 	}
 
 	if q.Has("all") {
-		// not handling purchases here - doesn't make sense to negate it
+		so.purchases = !q.Has(NegOpt(SyncOptionPurchases))
+		so.extraData = !q.Has(NegOpt(SyncOptionsExtraData))
 		so.descriptionImages = !q.Has(NegOpt(SyncOptionDescriptionImages))
 		so.images = !q.Has(NegOpt(SyncOptionImages))
 		so.screenshots = !q.Has(NegOpt(SyncOptionScreenshots))
@@ -121,11 +125,13 @@ func Sync(
 		return setSyncInterrupted(err, syncEventsRdx)
 	}
 
-	if err = GetData(nil, nil, since, syncOpts.purchases, true, force); err != nil {
-		return setSyncInterrupted(err, syncEventsRdx)
+	if syncOpts.purchases {
+		if err = GetData(nil, nil, since, new(dataFilter{purchases: true}), force); err != nil {
+			return setSyncInterrupted(err, syncEventsRdx)
+		}
 	}
 
-	if err = setSyncEvent(vangogh_integration.SyncDataKey, syncEventsRdx); err != nil {
+	if err = setSyncEvent(vangogh_integration.SyncPurchasesDataKey, syncEventsRdx); err != nil {
 		return setSyncInterrupted(err, syncEventsRdx)
 	}
 
@@ -175,7 +181,8 @@ func Sync(
 	// get downloads updates
 	if syncOpts.downloadsUpdates {
 
-		updatedDetails, err := shared_data.GetDetailsUpdates(since)
+		var updatedDetails map[string]any
+		updatedDetails, err = shared_data.GetDetailsUpdates(since)
 		if err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
@@ -237,6 +244,17 @@ func Sync(
 		if err = setSyncEvent(vangogh_integration.SyncBinaries, syncEventsRdx); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
+	}
+
+	// getting extra data
+	if syncOpts.extraData {
+		if err = GetData(nil, nil, since, new(dataFilter{extraData: true, relatedApiProducts: true}), force); err != nil {
+			return setSyncInterrupted(err, syncEventsRdx)
+		}
+	}
+
+	if err = setSyncEvent(vangogh_integration.SyncExtraData, syncEventsRdx); err != nil {
+		return setSyncInterrupted(err, syncEventsRdx)
 	}
 
 	// backing up data

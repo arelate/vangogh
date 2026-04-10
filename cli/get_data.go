@@ -24,12 +24,10 @@ import (
 	"github.com/boggydigital/nod"
 )
 
-var purchasesTypes = []vangogh_integration.ProductType{
-	vangogh_integration.Licences,
-	vangogh_integration.UserWishlist,
-	vangogh_integration.AccountPage,
-	vangogh_integration.OrderPage,
-	vangogh_integration.Details,
+type dataFilter struct {
+	purchases          bool
+	extraData          bool
+	relatedApiProducts bool
 }
 
 var userAccessTokenTypes = []vangogh_integration.ProductType{
@@ -88,17 +86,26 @@ func GetDataHandler(u *url.URL) error {
 
 	q := u.Query()
 
-	purchases := q.Has("purchases")
-	relatedApiProducts := q.Has("related-api-products")
+	df := new(dataFilter{
+		purchases:          q.Has("purchases"),
+		extraData:          q.Has("extra"),
+		relatedApiProducts: q.Has("related-api-products"),
+	})
+
 	force := q.Has("force")
-	return GetData(ids, productTypes, since, purchases, relatedApiProducts, force)
+	return GetData(ids, productTypes, since, df, force)
 }
 
-func GetData(ids []string, productTypes []vangogh_integration.ProductType, since int64, purchases, relatedApiProducts, force bool) error {
+func GetData(ids []string, productTypes []vangogh_integration.ProductType, since int64, dataFilter *dataFilter, force bool) error {
 
-	if purchases {
-		productTypes = purchasesTypes
-	} else if len(productTypes) == 0 {
+	if dataFilter.purchases {
+		productTypes = append(productTypes, vangogh_integration.PurchaseProductTypes()...)
+	}
+	if dataFilter.extraData {
+		productTypes = append(productTypes, slices.Collect(vangogh_integration.ExtraProductTypes())...)
+	}
+
+	if len(productTypes) == 0 {
 		productTypes = slices.Collect(vangogh_integration.AllProductTypes())
 	}
 
@@ -157,7 +164,7 @@ func GetData(ids []string, productTypes []vangogh_integration.ProductType, since
 		if err = gog_data.GetApiProducts(ids, hc, uat, since, force); err != nil {
 			return err
 		}
-		if relatedApiProducts {
+		if dataFilter.relatedApiProducts {
 			if err = gog_data.GetRelatedApiProducts(hc, uat, since, force); err != nil {
 				return err
 			}

@@ -154,8 +154,7 @@ func GetDownloads(
 		if err = GetData(ids,
 			[]vangogh_integration.ProductType{vangogh_integration.Details},
 			-1,
-			false,
-			false,
+			new(dataFilter),
 			true); err != nil {
 			return err
 		}
