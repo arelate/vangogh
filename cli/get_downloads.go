@@ -467,7 +467,7 @@ func getQueuedDownloads(rdx redux.Readable) ([]string, error) {
 		gqda.EndWithResult("%d downloads in the queue", len(queuedDownloads))
 	}
 
-	return rdx.Sort(queuedDownloads, true, vangogh_integration.GOGOrderDateProperty)
+	return rdx.Sort(queuedDownloads, true, vangogh_integration.GOGOrderDateProperty, vangogh_integration.TitleProperty)
 }
 
 func errManualUrlDownloadInterrupted(manualUrl string, rdx redux.Writeable, sourceErr error) error {

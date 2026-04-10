@@ -111,8 +111,8 @@ func GetImages(ids []string, its []vangogh_integration.ImageType, missing, force
 
 		for _, it := range missingIts {
 
-			images, ok := rdx.GetAllValues(vangogh_integration.PropertyFromImageType(it), id)
-			if !ok || len(images) == 0 {
+			images, sure := rdx.GetAllValues(vangogh_integration.PropertyFromImageType(it), id)
+			if !sure || len(images) == 0 {
 				nod.Log("%s missing %s", id, it)
 				missingImageTypes[it] = true
 				continue
