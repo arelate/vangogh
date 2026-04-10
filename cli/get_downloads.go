@@ -96,6 +96,7 @@ func GetDownloads(
 	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
 		append(
 			vangogh_integration.DownloadsLifecycleProperties(),
+			vangogh_integration.TitleProperty,
 			vangogh_integration.SlugProperty,
 			vangogh_integration.ProductTypeProperty,
 			vangogh_integration.GOGOrderDateProperty,
@@ -452,7 +453,9 @@ func getQueuedDownloads(rdx redux.Readable) ([]string, error) {
 	gqda := nod.Begin("getting queued downloads...")
 	defer gqda.Done()
 
-	if err := rdx.MustHave(vangogh_integration.GOGOrderDateProperty, vangogh_integration.DownloadQueuedProperty); err != nil {
+	if err := rdx.MustHave(vangogh_integration.GOGOrderDateProperty,
+		vangogh_integration.DownloadQueuedProperty,
+		vangogh_integration.TitleProperty); err != nil {
 		return nil, err
 	}
 
