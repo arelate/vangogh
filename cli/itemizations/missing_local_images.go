@@ -29,6 +29,9 @@ func MissingLocalImages(
 	rdx redux.Readable,
 	localImageIds map[string]any) (map[string]any, error) {
 
+	mlia := nod.Begin(" itemizing local images (%s)...", it)
+	defer mlia.Done()
+
 	all := rdx.Keys(vangogh_integration.PropertyFromImageType(it))
 
 	if localImageIds == nil {
@@ -39,9 +42,6 @@ func MissingLocalImages(
 	}
 
 	ieg := NewImageReduxGetter(it, rdx)
-
-	mlia := nod.Begin(" itemizing local images (%s)...", it)
-	defer mlia.Done()
 
 	return missingLocalFiles(all, localImageIds, ieg.GetImageIds, nil)
 }

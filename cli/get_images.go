@@ -101,12 +101,6 @@ func GetImages(ids []string, its []vangogh_integration.ImageType, missing, force
 
 	for id, missingIts := range idMissingTypes {
 
-		title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
-		if !ok {
-			title = id
-		}
-
-		mita := nod.NewProgress("%s %s", id, title)
 		missingImageTypes := map[vangogh_integration.ImageType]bool{}
 
 		for _, it := range missingIts {
@@ -118,7 +112,8 @@ func GetImages(ids []string, its []vangogh_integration.ImageType, missing, force
 				continue
 			}
 
-			srcUrls, err := vangogh_integration.ImagePropertyUrls(images, it)
+			var srcUrls []*url.URL
+			srcUrls, err = vangogh_integration.ImagePropertyUrls(images, it)
 			if err != nil {
 				return err
 			}
@@ -130,16 +125,6 @@ func GetImages(ids []string, its []vangogh_integration.ImageType, missing, force
 			}
 		}
 
-		completionStatus := "done"
-		if len(missingImageTypes) > 0 {
-			itss := make([]string, 0, len(missingImageTypes))
-			for it := range missingImageTypes {
-				itss = append(itss, it.String())
-			}
-			completionStatus = "no " + strings.Join(itss, ", ")
-		}
-
-		mita.EndWithResult(completionStatus)
 		gia.Increment()
 	}
 
@@ -174,9 +159,6 @@ func imageTypesReduxAssets(otherProperties []string, its []vangogh_integration.I
 
 func getImage(imageUrl *url.URL, force bool) error {
 
-	gia := nod.NewProgress(" %s...", imageUrl.Path)
-	defer gia.Done()
-
 	dstImageDir, err := vangogh_integration.AbsImagesDirByImageId(imageUrl.Path)
 	if err != nil {
 		return err
@@ -190,5 +172,5 @@ func getImage(imageUrl *url.URL, force bool) error {
 
 	dc := reqs.GetDoloClient()
 
-	return dc.Download(imageUrl, force, gia, dstImageDir)
+	return dc.Download(imageUrl, force, nil, dstImageDir)
 }
