@@ -129,29 +129,22 @@ func Sync(
 		if err = GetData(nil, nil, since, new(dataFilter{purchases: true}), force); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
-	}
 
-	if err = setSyncEvent(vangogh_integration.SyncPurchasesDataKey, syncEventsRdx); err != nil {
-		return setSyncInterrupted(err, syncEventsRdx)
-	}
-
-	if err = Reduce([]vangogh_integration.ProductType{vangogh_integration.UnknownProductType}, force); err != nil {
-		return setSyncInterrupted(err, syncEventsRdx)
-	}
-
-	// summarize sync updates now, since other updates are digital artifacts
-	// and won't affect the summaries
-	if err = Summarize(syncStart); err != nil {
-		return setSyncInterrupted(err, syncEventsRdx)
-	}
-
-	// get description images
-	if syncOpts.descriptionImages {
-		if err = GetDescriptionImages(nil, since, false, force); err != nil {
+		if err = setSyncEvent(vangogh_integration.SyncPurchasesDataKey, syncEventsRdx); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
 
-		if err = setSyncEvent(vangogh_integration.SyncDescriptionImagesKey, syncEventsRdx); err != nil {
+		if err = shared_data.ReduceMisc(); err != nil {
+			return setSyncInterrupted(err, syncEventsRdx)
+		}
+
+		if err = setSyncEvent(vangogh_integration.SyncReducePurchasesDataKey, syncEventsRdx); err != nil {
+			return setSyncInterrupted(err, syncEventsRdx)
+		}
+
+		// summarize sync updates now, since other updates are digital artifacts
+		// and won't affect the summaries
+		if err = Summarize(syncStart); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
 	}
@@ -163,17 +156,7 @@ func Sync(
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
 
-		if err = setSyncEvent(vangogh_integration.SyncImagesKey, syncEventsRdx); err != nil {
-			return setSyncInterrupted(err, syncEventsRdx)
-		}
-	}
-
-	if syncOpts.videosMetadata {
-		if err = GetVideoMetadata(nil, true, false); err != nil {
-			return setSyncInterrupted(err, syncEventsRdx)
-		}
-
-		if err = setSyncEvent(vangogh_integration.SyncVideoMetadataKey, syncEventsRdx); err != nil {
+		if err = setSyncEvent(vangogh_integration.SyncPurchasesImagesKey, syncEventsRdx); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
 	}
@@ -236,6 +219,16 @@ func Sync(
 
 	}
 
+	if syncOpts.videosMetadata {
+		if err = GetVideoMetadata(nil, true, false); err != nil {
+			return setSyncInterrupted(err, syncEventsRdx)
+		}
+
+		if err = setSyncEvent(vangogh_integration.SyncVideoMetadataKey, syncEventsRdx); err != nil {
+			return setSyncInterrupted(err, syncEventsRdx)
+		}
+	}
+
 	if syncOpts.binaries {
 		if err = GetBinaries(operatingSystems, true, true, force); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
@@ -251,10 +244,47 @@ func Sync(
 		if err = GetData(nil, nil, since, new(dataFilter{extraData: true, relatedApiProducts: true}), force); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
+
+		if err = setSyncEvent(vangogh_integration.SyncExtraData, syncEventsRdx); err != nil {
+			return setSyncInterrupted(err, syncEventsRdx)
+		}
+
+		if err = shared_data.ReduceMisc(); err != nil {
+			return setSyncInterrupted(err, syncEventsRdx)
+		}
+
+		if err = setSyncEvent(vangogh_integration.SyncReduceExtraDataKey, syncEventsRdx); err != nil {
+			return setSyncInterrupted(err, syncEventsRdx)
+		}
+
+		// summarize extra data updates now, since other updates are digital artifacts
+		// and won't affect the summaries
+		if err = Summarize(syncStart); err != nil {
+			return setSyncInterrupted(err, syncEventsRdx)
+		}
 	}
 
-	if err = setSyncEvent(vangogh_integration.SyncExtraData, syncEventsRdx); err != nil {
-		return setSyncInterrupted(err, syncEventsRdx)
+	// get extra images
+	if syncOpts.images {
+
+		if err = GetImages(nil, vangogh_integration.AllImageTypes(), true, force); err != nil {
+			return setSyncInterrupted(err, syncEventsRdx)
+		}
+
+		if err = setSyncEvent(vangogh_integration.SyncExtraImagesKey, syncEventsRdx); err != nil {
+			return setSyncInterrupted(err, syncEventsRdx)
+		}
+	}
+
+	// get description images
+	if syncOpts.descriptionImages {
+		if err = GetDescriptionImages(nil, since, false, force); err != nil {
+			return setSyncInterrupted(err, syncEventsRdx)
+		}
+
+		if err = setSyncEvent(vangogh_integration.SyncDescriptionImagesKey, syncEventsRdx); err != nil {
+			return setSyncInterrupted(err, syncEventsRdx)
+		}
 	}
 
 	// backing up data
@@ -284,7 +314,7 @@ func setSyncEvent(eventKey string, rdx redux.Writeable) error {
 		return err
 	}
 
-	if !slices.Contains(vangogh_integration.SyncEventsKeys, eventKey) {
+	if !slices.Contains(vangogh_integration.SyncEventsSequence, eventKey) {
 		return errors.New("unknown sync event key: " + eventKey)
 	}
 

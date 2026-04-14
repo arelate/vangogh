@@ -19,7 +19,7 @@ func SyncStatus(r compton.Registrar, rdx redux.Readable, permissions ...author.P
 	var lastCompletedSyncEvent string
 	var syncEventTimestamp int64
 
-	for _, se := range vangogh_integration.SyncEventsKeys {
+	for _, se := range vangogh_integration.SyncEventsSequence {
 		if sss, ok := rdx.GetLastVal(vangogh_integration.SyncEventsProperty, se); ok {
 			if sci, err := strconv.ParseInt(sss, 10, 64); err == nil {
 				if sci >= syncEventTimestamp {
@@ -30,12 +30,7 @@ func SyncStatus(r compton.Registrar, rdx redux.Readable, permissions ...author.P
 		}
 	}
 
-	var currentSyncEvent string
-	if cse, ok := vangogh_integration.CurrentSyncEventForCompleted[lastCompletedSyncEvent]; ok {
-		currentSyncEvent = cse
-	} else {
-		currentSyncEvent = lastCompletedSyncEvent
-	}
+	nextSyncEvent := vangogh_integration.NextSyncEvent(lastCompletedSyncEvent)
 
 	syncEventDateText := "Never"
 	if syncEventTimestamp > 0 {
@@ -60,11 +55,11 @@ func SyncStatus(r compton.Registrar, rdx redux.Readable, permissions ...author.P
 
 	syncStatusFrow.IconColor(syncStatusSymbol, syncStatusColor)
 
-	switch currentSyncEvent {
+	switch nextSyncEvent {
 	case vangogh_integration.SyncDownloadsKey:
-		syncStatusFrow.LinkVal(vangogh_integration.CurrentSyncEventsTitles[currentSyncEvent], "/downloads-queue", syncEventDateText)
+		syncStatusFrow.LinkVal(vangogh_integration.SyncEventsTitles[nextSyncEvent], "/downloads-queue", syncEventDateText)
 	default:
-		syncStatusFrow.PropVal(vangogh_integration.CurrentSyncEventsTitles[currentSyncEvent], syncEventDateText)
+		syncStatusFrow.PropVal(vangogh_integration.SyncEventsTitles[nextSyncEvent], syncEventDateText)
 	}
 
 	if slices.Contains(permissions, perm.ReadLogs) {
