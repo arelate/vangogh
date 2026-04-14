@@ -5,7 +5,7 @@ go 1.26.2
 require (
 	github.com/arelate/southern_light v0.4.56
 	github.com/boggydigital/atomus v0.1.11
-	github.com/boggydigital/author v0.1.27
+	github.com/boggydigital/author v0.1.28
 	github.com/boggydigital/backups v0.1.7
 	github.com/boggydigital/clo v1.0.8
 	github.com/boggydigital/compton v0.4.73
