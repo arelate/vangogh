@@ -21,7 +21,7 @@ func GetUpdates(w http.ResponseWriter, r *http.Request) {
 	showAll := q.Has("all")
 	section := q.Get("section")
 
-	permissions, err := sb.GetPermissions(r)
+	permissions, err := sb.GetCookiePermissions(r)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
