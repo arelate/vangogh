@@ -134,6 +134,11 @@ func GetData(ids []string, productTypes []vangogh_integration.ProductType, since
 			}
 		}
 
+		if hc.Jar != nil {
+			if err = coost.Write(hc.Jar, gog_integration.HostUrl(), vangogh_integration.AbsCookiePath()); err != nil {
+				return err
+			}
+		}
 	}
 
 	if slices.Contains(productTypes, vangogh_integration.Licences) {

@@ -2,10 +2,11 @@ package fetch
 
 import (
 	"errors"
-	"github.com/arelate/vangogh/cli/reqs"
-	"github.com/boggydigital/kevlar"
 	"net/http"
 	"net/url"
+
+	"github.com/arelate/vangogh/cli/reqs"
+	"github.com/boggydigital/kevlar"
 )
 
 func RequestSetValue(id string, u *url.URL, itemReq *reqs.Params, kv kevlar.KeyValues) error {
