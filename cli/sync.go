@@ -111,14 +111,28 @@ func Sync(
 	sa := nod.Begin("syncing data...")
 	defer sa.Done()
 
-	syncStart := since
-	if syncStart == 0 {
-		syncStart = time.Now().Unix()
-	}
-
 	syncEventsRdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), vangogh_integration.SyncEventsProperty)
 	if err != nil {
 		return err
+	}
+
+	utcNow := time.Now().UTC().Unix()
+	// since-hours-ago specifies hours,
+	// so anything less than an hour in seconds would be default value
+	if utcNow-since < 60*60 {
+		if lscs, ok := syncEventsRdx.GetLastVal(vangogh_integration.SyncEventsProperty, vangogh_integration.SyncCompleteKey); ok && lscs != "" {
+			var lsci int64
+			if lsci, err = strconv.ParseInt(lscs, 10, 64); err == nil {
+				since = lsci
+			} else {
+				return setSyncInterrupted(err, syncEventsRdx)
+			}
+		}
+	}
+
+	syncStart := since
+	if syncStart == 0 {
+		syncStart = time.Now().Unix()
 	}
 
 	if err = setSyncEvent(vangogh_integration.SyncStartKey, syncEventsRdx); err != nil {
@@ -319,7 +333,7 @@ func setSyncEvent(eventKey string, rdx redux.Writeable) error {
 	}
 
 	syncEvents := make(map[string][]string)
-	syncEvents[eventKey] = []string{strconv.Itoa(int(time.Now().Unix()))}
+	syncEvents[eventKey] = []string{strconv.FormatInt(time.Now().UTC().Unix(), 10)}
 
 	return rdx.BatchReplaceValues(vangogh_integration.SyncEventsProperty, syncEvents)
 }
