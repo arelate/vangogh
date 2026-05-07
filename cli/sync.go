@@ -17,7 +17,7 @@ import (
 )
 
 const (
-	SyncOptionPurchases         = "purchases"
+	SyncOptionPurchases         = "purchases-data"
 	SyncOptionsExtraData        = "extra-data"
 	SyncOptionDescriptionImages = "description-images"
 	SyncOptionImages            = "images"
@@ -29,7 +29,7 @@ const (
 )
 
 type syncOptions struct {
-	purchases         bool
+	purchasesData     bool
 	extraData         bool
 	descriptionImages bool
 	images            bool
@@ -51,7 +51,7 @@ func initSyncOptions(u *url.URL) *syncOptions {
 	q := u.Query()
 
 	so := &syncOptions{
-		purchases:         q.Has(SyncOptionPurchases),
+		purchasesData:     q.Has(SyncOptionPurchases),
 		extraData:         q.Has(SyncOptionsExtraData),
 		descriptionImages: q.Has(SyncOptionDescriptionImages),
 		images:            q.Has(SyncOptionImages),
@@ -62,7 +62,7 @@ func initSyncOptions(u *url.URL) *syncOptions {
 	}
 
 	if q.Has("all") {
-		so.purchases = !q.Has(NegOpt(SyncOptionPurchases))
+		so.purchasesData = !q.Has(NegOpt(SyncOptionPurchases))
 		so.extraData = !q.Has(NegOpt(SyncOptionsExtraData))
 		so.descriptionImages = !q.Has(NegOpt(SyncOptionDescriptionImages))
 		so.images = !q.Has(NegOpt(SyncOptionImages))
@@ -139,7 +139,7 @@ func Sync(
 		return setSyncInterrupted(err, syncEventsRdx)
 	}
 
-	if syncOpts.purchases {
+	if syncOpts.purchasesData {
 		if err = GetData(nil, nil, since, new(dataFilter{purchases: true}), force); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
