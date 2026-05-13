@@ -23,6 +23,11 @@ import (
 	"github.com/boggydigital/redux"
 )
 
+const (
+	manualUrlDownloadRetries = 2
+	totalDownloadErrorsLimit = 10
+)
+
 type getDownloadOptions struct {
 	updateDetails bool
 	validate      bool
@@ -117,7 +122,8 @@ func GetDownloads(
 	}
 
 	if options.missing {
-		missingIds, err := itemizations.MissingLocalDownloads(
+		var missingIds []string
+		missingIds, err = itemizations.MissingLocalDownloads(
 			rdx,
 			operatingSystems,
 			downloadTypes,
@@ -138,12 +144,14 @@ func GetDownloads(
 	}
 
 	if options.all {
-		detailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.Details)
+		var detailsDir string
+		detailsDir, err = vangogh_integration.AbsProductTypeDir(vangogh_integration.Details)
 		if err != nil {
 			return err
 		}
 
-		kvDetails, err := kevlar.New(detailsDir, kevlar.JsonExt)
+		var kvDetails kevlar.KeyValues
+		kvDetails, err = kevlar.New(detailsDir, kevlar.JsonExt)
 		if err != nil {
 			return err
 		}
@@ -198,12 +206,13 @@ func GetDownloads(
 }
 
 type getDownloadsDelegate struct {
-	rdx              redux.Writeable
-	forceUpdate      bool
-	downloadsLayout  vangogh_integration.DownloadsLayout
-	checksumsOnly    bool
-	manualUrlFilter  []string
-	validateDelegate *validateDelegate
+	rdx                 redux.Writeable
+	forceUpdate         bool
+	downloadsLayout     vangogh_integration.DownloadsLayout
+	checksumsOnly       bool
+	manualUrlFilter     []string
+	validateDelegate    *validateDelegate
+	totalDownloadErrors int
 }
 
 func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integration.DownloadsList) error {
@@ -418,13 +427,24 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 			dca := nod.NewProgress(" - %s", checksumFilename)
 			originalPath := resolvedUrl.Path
 			resolvedUrl.Path = remoteChecksumPath
-			if err = dlClient.Download(resolvedUrl, gdd.forceUpdate, dca, absChecksumPath); err != nil {
-				//don't interrupt normal download due to checksum download error,
-				//so don't return this error, just log it
-				dca.Error(err)
-			} else {
-				dca.EndWithResult("downloaded")
+
+			for range manualUrlDownloadRetries {
+
+				if err = dlClient.Download(resolvedUrl, gdd.forceUpdate, dca, absChecksumPath); err == nil {
+					dca.EndWithResult("downloaded")
+					break
+				} else {
+					//don't interrupt normal download due to checksum download error,
+					//so don't return this error, just log it
+					dca.Error(err)
+					gdd.totalDownloadErrors++
+					if gdd.totalDownloadErrors >= totalDownloadErrorsLimit {
+						return errors.New("too many download errors")
+					}
+				}
+
 			}
+
 			resolvedUrl.Path = originalPath
 		}
 	}
