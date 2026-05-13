@@ -43,6 +43,9 @@ func DownloadsQueue(ids []string, rdx redux.Readable, permissions ...author.Perm
 			Icon:  compton.NoSymbol,
 			Color: color.Gray,
 		}))
+	} else {
+		pageStack.Append(compton.Br(), compton.FICenter(p,
+			compton.Fspan(p, "No active downloads.").ForegroundColor(color.Foreground)))
 	}
 
 	dqDetails.Append(compton_fragments.ProductsList(p, ids, 0, len(ids), rdx, false, permissions...))
