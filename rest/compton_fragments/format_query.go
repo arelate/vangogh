@@ -4,6 +4,8 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/boggydigital/redux"
+	"golang.org/x/net/html"
+
 	"slices"
 )
 
@@ -13,6 +15,7 @@ func FormatQuery(q map[string][]string, rdx redux.Readable) map[string][]string 
 
 	for p, vals := range q {
 		for _, val := range vals {
+			val = html.EscapeString(val)
 			if pv, ok := compton_data.PropertyTitles[val]; ok {
 				fq[p] = append(fq[p], pv)
 			} else if slices.Contains(compton_data.BinaryDigestProperties, p) {
