@@ -3,6 +3,7 @@ package compton_fragments
 import (
 	"fmt"
 	"maps"
+	"net/http"
 	"slices"
 	"strings"
 
@@ -19,7 +20,7 @@ import (
 
 func SearchForm(r compton.Registrar, query map[string][]string, searchQuery *compton.FrowElement, rdx redux.Readable, permissions ...author.Permission) compton.Element {
 
-	form := compton.Form("/search", "GET")
+	form := compton.Form("/search", http.MethodGet)
 	formStack := compton.FlexItems(r, direction.Column)
 	form.Append(formStack)
 

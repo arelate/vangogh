@@ -135,7 +135,7 @@ func GetData(ids []string, productTypes []vangogh_integration.ProductType, since
 		}
 
 		if hc.Jar != nil {
-			if err = coost.Write(hc.Jar, gog_integration.HostUrl(), vangogh_integration.AbsCookiePath()); err != nil {
+			if err = coost.Write(hc.Jar, gog_integration.HostUrl(), vangogh_integration.AbsCookiesPath()); err != nil {
 				return err
 			}
 		}
@@ -418,7 +418,7 @@ func requiresUserAccessToken(productTypes ...vangogh_integration.ProductType) bo
 }
 
 func gogAuthHttpClient() (*http.Client, error) {
-	acp := vangogh_integration.AbsCookiePath()
+	acp := vangogh_integration.AbsCookiesPath()
 
 	jar, err := coost.Read(gog_integration.HostUrl(), acp)
 	if os.IsNotExist(err) {

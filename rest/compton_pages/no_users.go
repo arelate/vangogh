@@ -11,9 +11,7 @@ import (
 
 func NoUsers() compton.PageElement {
 
-	const (
-		pageTitle = "No users found"
-	)
+	const pageTitle = "No users found"
 
 	p := compton.Page(pageTitle)
 	pageStack := compton.FlexItems(p, direction.Column).RowGap(size.Large)

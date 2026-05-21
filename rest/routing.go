@@ -71,6 +71,9 @@ func HandleFuncs() {
 		"GET /debug-data":      AuthCookie(sb, Log(http.HandlerFunc(GetDebugData)), perm.ReadDebug),
 		"GET /logs":            AuthCookie(sb, Log(http.HandlerFunc(GetLogs)), perm.ReadLogs),
 		"GET /downloads-queue": AuthCookie(sb, Log(http.HandlerFunc(GetDownloadsQueue)), perm.ReadDebug),
+		// cookies import
+		"GET /import-cookies":  AuthCookie(sb, Log(http.HandlerFunc(GetImportCookies)), perm.WriteCookies),
+		"POST /import-cookies": AuthCookie(sb, Log(http.HandlerFunc(PostImportCookies)), perm.WriteCookies),
 		// start at the updates
 		"GET /": Redirect("/updates", http.StatusPermanentRedirect),
 	}

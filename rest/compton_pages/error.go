@@ -9,9 +9,7 @@ import (
 
 func Error(err error) compton.PageElement {
 
-	const (
-		pageTitle = "Error"
-	)
+	const pageTitle = "Error"
 
 	p := compton.Page(pageTitle)
 	pageStack := compton.FlexItems(p, direction.Column).RowGap(size.Large)

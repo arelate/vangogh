@@ -15,7 +15,7 @@ func GetWishlistAdd(w http.ResponseWriter, r *http.Request) {
 
 	id := r.URL.Query().Get(vangogh_integration.IdProperty)
 
-	acp := vangogh_integration.AbsCookiePath()
+	acp := vangogh_integration.AbsCookiesPath()
 
 	jar, err := coost.Read(gog_integration.HostUrl(), acp)
 	if err != nil {

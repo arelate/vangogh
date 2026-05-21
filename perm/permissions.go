@@ -24,12 +24,13 @@ const (
 	ReadApi
 	ReadDebug
 	ReadLogs
+	WriteCookies
 )
 
 var (
 	browsePermissions  = []author.Permission{ReadUpdates, ReadSearch, ReadProductData, ReadImages}
 	ownedPermissions   = []author.Permission{ReadOwned, ReadFiles, ReadApi}
-	accountPermissions = []author.Permission{ReadWishlist, WriteWishlist, ReadTagId, WriteTagId, ReadLocalTags, WriteLocalTags}
+	accountPermissions = []author.Permission{ReadWishlist, WriteWishlist, ReadTagId, WriteTagId, ReadLocalTags, WriteLocalTags, WriteCookies}
 	debugPermissions   = []author.Permission{ReadLogs, ReadDebug}
 )
 
