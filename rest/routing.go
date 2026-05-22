@@ -56,16 +56,19 @@ func HandleFuncs() {
 		"GET /local-tags/edit":  AuthCookie(sb, Log(http.HandlerFunc(GetLocalTagsEdit)), perm.WriteLocalTags),
 		"GET /local-tags/apply": AuthCookie(sb, Log(http.HandlerFunc(GetLocalTagsApply)), perm.WriteLocalTags),
 		// auth files endpoints
-		"GET /files": AuthCookie(sb, Log(http.HandlerFunc(GetFiles)), perm.ReadFiles),
+		"GET /file": AuthCookie(sb, Log(http.HandlerFunc(GetFile)), perm.ReadFiles),
 		// products redirects
 		"GET /products": Redirect("/search", http.StatusPermanentRedirect),
 		// API
 		"POST /api/auth-user":             Log(http.HandlerFunc(sb.AuthApiUsernamePassword)),
 		"POST /api/auth-session":          Log(http.HandlerFunc(sb.AuthApiSession)),
-		"GET /api/available-products":     AuthBearer(sb, Log(http.HandlerFunc(GetAvailableProducts)), perm.ReadApi),
-		"GET /api/product-details":        AuthBearer(sb, Log(http.HandlerFunc(GetProductDetails)), perm.ReadApi),
-		"GET /api/manual-url-checksums":   AuthBearer(sb, Log(http.HandlerFunc(GetManualUrlChecksums)), perm.ReadApi),
-		"GET /api/wine-binaries-versions": AuthBearer(sb, Log(http.HandlerFunc(GetWineBinariesVersions)), perm.ReadApi),
+		"GET /api/available-products":     AuthBearer(sb, Log(http.HandlerFunc(GetAvailableProducts)), perm.ReadApi, perm.ReadProductData),
+		"GET /api/product-details":        AuthBearer(sb, Log(http.HandlerFunc(GetProductDetails)), perm.ReadApi, perm.ReadProductData),
+		"GET /api/manual-url-checksums":   AuthBearer(sb, Log(http.HandlerFunc(GetManualUrlChecksums)), perm.ReadApi, perm.ReadProductData),
+		"GET /api/wine-binaries-versions": AuthBearer(sb, Log(http.HandlerFunc(GetWineBinariesVersions)), perm.ReadApi, perm.ReadProductData),
+		"GET /api/wine-binary-file":       AuthBearer(sb, Log(http.HandlerFunc(GetWineBinaryFile)), perm.ReadApi, perm.ReadFiles),
+		"GET /api/steamcmd-binary-file":   AuthBearer(sb, Log(http.HandlerFunc(GetSteamCmdBinaryFile)), perm.ReadApi, perm.ReadFiles),
+		"GET /api/file":                   AuthBearer(sb, Log(http.HandlerFunc(GetFile)), perm.ReadApi, perm.ReadFiles),
 		// debug endpoints
 		"GET /debug":           AuthCookie(sb, Log(http.HandlerFunc(GetDebug)), perm.ReadDebug),
 		"GET /debug-data":      AuthCookie(sb, Log(http.HandlerFunc(GetDebugData)), perm.ReadDebug),

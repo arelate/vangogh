@@ -1,14 +1,15 @@
 package rest
 
 import (
-	"github.com/arelate/southern_light/vangogh_integration"
-	"github.com/boggydigital/nod"
 	"net/http"
 	"os"
 	"path/filepath"
+
+	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/nod"
 )
 
-func GetFiles(w http.ResponseWriter, r *http.Request) {
+func GetFile(w http.ResponseWriter, r *http.Request) {
 
 	// GET /files?id&download-type&manual-url
 
