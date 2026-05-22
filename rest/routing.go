@@ -69,6 +69,7 @@ func HandleFuncs() {
 		"GET /api/wine-binary-file":       AuthBearer(sb, Log(http.HandlerFunc(GetWineBinaryFile)), perm.ReadApi, perm.ReadFiles),
 		"GET /api/steamcmd-binary-file":   AuthBearer(sb, Log(http.HandlerFunc(GetSteamCmdBinaryFile)), perm.ReadApi, perm.ReadFiles),
 		"GET /api/file":                   AuthBearer(sb, Log(http.HandlerFunc(GetFile)), perm.ReadApi, perm.ReadFiles),
+		"GET /api/image":                  AuthBearer(sb, Log(http.HandlerFunc(GetImage)), perm.ReadApi, perm.ReadImages),
 		// debug endpoints
 		"GET /debug":           AuthCookie(sb, Log(http.HandlerFunc(GetDebug)), perm.ReadDebug),
 		"GET /debug-data":      AuthCookie(sb, Log(http.HandlerFunc(GetDebugData)), perm.ReadDebug),
