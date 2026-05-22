@@ -270,12 +270,12 @@ func downloadLink(r compton.Registrar,
 	switch dl.DownloadType {
 	case vangogh_integration.Extra:
 		if dl.Info > 0 && dl.EstimatedBytes > 0 {
-			link = compton.A("/files?" + q.Encode())
+			link = compton.A("/file?" + q.Encode())
 		} else {
 			link = compton.Content()
 		}
 	default:
-		link = compton.A("/files?" + q.Encode())
+		link = compton.A("/file?" + q.Encode())
 	}
 
 	link.AddClass("download", dl.DownloadType.String())

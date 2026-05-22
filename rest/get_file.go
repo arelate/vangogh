@@ -11,7 +11,7 @@ import (
 
 func GetFile(w http.ResponseWriter, r *http.Request) {
 
-	// GET /files?id&download-type&manual-url
+	// GET /file?id&download-type&manual-url
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
