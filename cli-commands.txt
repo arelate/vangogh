@@ -106,6 +106,7 @@ serve
     lang-code$
     no-patches$
     downloads-layout$={downloads-layouts^}
+    insecure-cookies$
 
 size
     id^&

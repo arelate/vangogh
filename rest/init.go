@@ -32,7 +32,7 @@ func SetDefaultDownloadsFilters(
 	noPatches = np
 }
 
-func Init(layout vangogh_integration.DownloadsLayout) error {
+func Init(layout vangogh_integration.DownloadsLayout, insecureCookies bool) error {
 
 	downloadsLayout = layout
 
@@ -44,7 +44,7 @@ func Init(layout vangogh_integration.DownloadsLayout) error {
 
 	authorDir := vangogh_integration.Pwd.AbsRelDirPath(vangogh_integration.Author, vangogh_integration.Metadata)
 
-	sb, err = author.NewSessionBouncer(authorDir, perm.GetRolesPermissions(), "/login")
+	sb, err = author.NewSessionBouncer(authorDir, perm.GetRolesPermissions(), "/login", insecureCookies)
 	if err != nil {
 		return err
 	}

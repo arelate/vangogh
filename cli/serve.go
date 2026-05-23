@@ -32,11 +32,14 @@ func ServeHandler(u *url.URL) error {
 
 	rest.SetDefaultDownloadsFilters(oses, langCodes, q.Has("no-patches"))
 
-	return Serve(port, layout, q.Has("stderr"))
+	insecureCookies := q.Has("insecure-cookies")
+	stderr := q.Has("stderr")
+
+	return Serve(port, layout, insecureCookies, stderr)
 }
 
 // Serve starts a web server, listening to the specified port with optional logging
-func Serve(port int, layout vangogh_integration.DownloadsLayout, stderr bool) error {
+func Serve(port int, layout vangogh_integration.DownloadsLayout, insecureCookies bool, stderr bool) error {
 
 	if stderr {
 		nod.EnableStdErrLogger()
@@ -49,7 +52,7 @@ func Serve(port int, layout vangogh_integration.DownloadsLayout, stderr bool) er
 	}
 
 	ia := nod.Begin("initializing server...")
-	if err := rest.Init(layout); err != nil {
+	if err := rest.Init(layout, insecureCookies); err != nil {
 		return err
 	}
 	ia.Done()
