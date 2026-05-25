@@ -102,17 +102,19 @@ func Validate(
 	}
 
 	if vo.all {
-		detailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.Details)
+		var gogDetailsDir string
+		gogDetailsDir, err = vangogh_integration.AbsProductTypeDir(vangogh_integration.GogDetails)
 		if err != nil {
 			return err
 		}
 
-		kvDetails, err := kevlar.New(detailsDir, kevlar.JsonExt)
+		var kvGogDetails kevlar.KeyValues
+		kvGogDetails, err = kevlar.New(gogDetailsDir, kevlar.JsonExt)
 		if err != nil {
 			return err
 		}
 
-		ids = slices.Collect(kvDetails.Keys())
+		ids = slices.Collect(kvGogDetails.Keys())
 	}
 
 	vd := &validateDelegate{
@@ -152,20 +154,20 @@ func validationStatusIds(rdx redux.Readable, validationStatuses ...vangogh_integ
 	avia := nod.NewProgress("itemizing all not valid products...")
 	defer avia.Done()
 
-	detailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.Details)
+	gogDetailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogDetails)
 	if err != nil {
 		return nil, err
 	}
 
-	kvDetails, err := kevlar.New(detailsDir, kevlar.JsonExt)
+	kvGogDetails, err := kevlar.New(gogDetailsDir, kevlar.JsonExt)
 	if err != nil {
 		return nil, err
 	}
 
-	ids := make([]string, 0, kvDetails.Len())
-	avia.TotalInt(kvDetails.Len())
+	ids := make([]string, 0, kvGogDetails.Len())
+	avia.TotalInt(kvGogDetails.Len())
 
-	for id := range kvDetails.Keys() {
+	for id := range kvGogDetails.Keys() {
 
 		if pvss, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
 			if pvs := vangogh_integration.ParseValidationStatus(pvss); slices.Contains(validationStatuses, pvs) {

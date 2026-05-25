@@ -122,9 +122,9 @@ func Debug(gogId string, rdx redux.Readable) (compton.PageElement, error) {
 	}
 
 	propertyProductType := map[string]vangogh_integration.ProductType{
-		vangogh_integration.CatalogPageProductsProperty: vangogh_integration.CatalogPage,
-		vangogh_integration.AccountPageProductsProperty: vangogh_integration.AccountPage,
-		vangogh_integration.OrderPageProductsProperty:   vangogh_integration.OrderPage,
+		vangogh_integration.CatalogPageProductsProperty: vangogh_integration.GogCatalogPage,
+		vangogh_integration.AccountPageProductsProperty: vangogh_integration.GogAccountPage,
+		vangogh_integration.OrderPageProductsProperty:   vangogh_integration.GogOrderPage,
 	}
 
 	sortedProperties := slices.Sorted(maps.Keys(propertyProductType))
@@ -139,8 +139,8 @@ func Debug(gogId string, rdx redux.Readable) (compton.PageElement, error) {
 	}
 
 	gogProductTypes := []vangogh_integration.ProductType{
-		vangogh_integration.ApiProducts,
-		vangogh_integration.Details,
+		vangogh_integration.GogApiProducts,
+		vangogh_integration.GogDetails,
 		vangogh_integration.GamesDbGogProducts,
 		vangogh_integration.PcgwGogPageId,
 	}

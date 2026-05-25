@@ -41,7 +41,7 @@ func GetInstallers(w http.ResponseWriter, r *http.Request) {
 	case vangogh_integration.GameProductType:
 		fallthrough
 	default:
-		det, err := getDetails(id)
+		det, err := getGogDetails(id)
 		if err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 			return
@@ -61,24 +61,24 @@ func GetInstallers(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func getDetails(id string) (*gog_integration.Details, error) {
-	detailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.Details)
+func getGogDetails(id string) (*gog_integration.Details, error) {
+	gogDetailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogDetails)
 	if err != nil {
 		return nil, err
 	}
 
-	kvDetails, err := kevlar.New(detailsDir, kevlar.JsonExt)
+	kvGogDetails, err := kevlar.New(gogDetailsDir, kevlar.JsonExt)
 	if err != nil {
 		return nil, err
 	}
 
-	if !kvDetails.Has(id) {
+	if !kvGogDetails.Has(id) {
 		return nil, vangogh_integration.DetailsNotFoundErr(id)
 	}
 
 	// at this point we know that we should have product details in storage (see above)
 	// so if we don't - that should be an error worth investigating
-	det, err := vangogh_integration.UnmarshalDetails(id, kvDetails)
+	det, err := vangogh_integration.UnmarshalDetails(id, kvGogDetails)
 	if err != nil {
 		return nil, err
 	}

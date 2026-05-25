@@ -52,6 +52,8 @@ github.com/arelate/southern_light v0.4.70 h1:DCAg+7peUsLfHn8ydJmsm20kaikc2LJ+8W4
 github.com/arelate/southern_light v0.4.70/go.mod h1:wl6AP5S9+NEhmLWiQa8PWZyU9Z1MeiCaYlBPEfgsiMo=
 github.com/arelate/southern_light v0.4.71 h1:CtlZaKSrQBTOVFzMYkliMjYQQwWfH/cUNFHWu2gzMZQ=
 github.com/arelate/southern_light v0.4.71/go.mod h1:wl6AP5S9+NEhmLWiQa8PWZyU9Z1MeiCaYlBPEfgsiMo=
+github.com/arelate/southern_light v0.4.72 h1:IFt//fP48xsEeIN9uP6KAO5Bf5BjGdSVPEInGOReZbM=
+github.com/arelate/southern_light v0.4.72/go.mod h1:wl6AP5S9+NEhmLWiQa8PWZyU9Z1MeiCaYlBPEfgsiMo=
 github.com/boggydigital/atomus v0.1.11 h1:n9XRgPqF3OgnK8UK7yJ3aG5sQkwacBjtqzzOxCXz33A=
 github.com/boggydigital/atomus v0.1.11/go.mod h1:/ga4zus10Z3FiNDU4JmRw5fdm0IW78qoezV/Ni44V5s=
 github.com/boggydigital/author v0.1.27 h1:Y3JE+GpkBNa3/op/DspsBmn5T+EZKOn+tGsZwk7LnrQ=
@@ -128,6 +130,8 @@ github.com/boggydigital/yet_urls v0.1.58 h1:z5X5aZHCXNo7f/Z499x/e2yige+BRmv1SOHv
 github.com/boggydigital/yet_urls v0.1.58/go.mod h1:U5iLBGC3bOPy4DCVcDxfGeIt0uRlp3WBkaFlVL9LDfA=
 github.com/boggydigital/yet_urls v0.1.59 h1:4J6FEKRE0pWuuOuOCgCylNriel8r9n5bLFSGRUDvJhQ=
 github.com/boggydigital/yet_urls v0.1.59/go.mod h1:U5iLBGC3bOPy4DCVcDxfGeIt0uRlp3WBkaFlVL9LDfA=
+github.com/boggydigital/yet_urls v0.1.60 h1:Vyo6RltTJOfK9Tnbw2LSX1mj3VvX7gti4CEnb/Ye0qU=
+github.com/boggydigital/yet_urls v0.1.60/go.mod h1:U5iLBGC3bOPy4DCVcDxfGeIt0uRlp3WBkaFlVL9LDfA=
 golang.org/x/crypto v0.49.0 h1:+Ng2ULVvLHnJ/ZFEq4KdcDd/cfjrrjjNSXNzxg0Y4U4=
 golang.org/x/crypto v0.49.0/go.mod h1:ErX4dUh2UM+CFYiXZRTcMpEcN8b/1gxEuv3nODoYtCA=
 golang.org/x/crypto v0.50.0 h1:zO47/JPrL6vsNkINmLoo/PH1gcxpls50DNogFvB5ZGI=

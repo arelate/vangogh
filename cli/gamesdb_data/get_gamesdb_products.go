@@ -1,4 +1,4 @@
-package gog_data
+package gamesdb_data
 
 import (
 	"encoding/json/v2"
@@ -37,7 +37,7 @@ func GetGamesDbGogProducts(ids []string, hc *http.Client, uat string, since int6
 	if len(ids) > 0 {
 		catalogPagesProducts = ids
 	} else {
-		catalogPagesProducts, err = shared_data.GetCatalogPagesProducts(since)
+		catalogPagesProducts, err = shared_data.GetGogCatalogPagesProducts(since)
 		if err != nil {
 			return err
 		}

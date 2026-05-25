@@ -46,18 +46,18 @@ func RelayoutDownloads(
 		return errors.New("from and to downloads layouts must be valid and different")
 	}
 
-	detailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.Details)
+	gogDetailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogDetails)
 	if err != nil {
 		return err
 	}
 
-	kvDetails, err := kevlar.New(detailsDir, kevlar.JsonExt)
+	kvGogDetails, err := kevlar.New(gogDetailsDir, kevlar.JsonExt)
 	if err != nil {
 		return err
 	}
 
 	var ids []string
-	for id := range kvDetails.Keys() {
+	for id := range kvGogDetails.Keys() {
 		ids = append(ids, id)
 	}
 

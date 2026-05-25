@@ -13,19 +13,19 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-func GetUserAccessToken(hc *http.Client) error {
+func GetGogUserAccessToken(hc *http.Client) error {
 
-	productType := vangogh_integration.UserAccessToken
+	productType := vangogh_integration.GogUserAccessToken
 
 	guata := nod.Begin("getting %s...", productType)
 	defer guata.Done()
 
-	userAccessTokenDir, err := vangogh_integration.AbsProductTypeDir(productType)
+	gogUserAccessTokenDir, err := vangogh_integration.AbsProductTypeDir(productType)
 	if err != nil {
 		return err
 	}
 
-	kvUserAccessToken, err := kevlar.New(userAccessTokenDir, kevlar.JsonExt)
+	kvGogUserAccessToken, err := kevlar.New(gogUserAccessTokenDir, kevlar.JsonExt)
 	if err != nil {
 		return err
 	}
@@ -39,12 +39,9 @@ func GetUserAccessToken(hc *http.Client) error {
 		return err
 	}
 
-	ptId, err := vangogh_integration.ProductTypeId(productType, uatId)
-	if err != nil {
-		return err
-	}
+	ptId := vangogh_integration.ProductTypeId(productType, uatId)
 
-	if err = fetch.RequestSetValue(uatId, uatUrl, reqs.UserAccessToken(hc), kvUserAccessToken); err != nil {
+	if err = fetch.RequestSetValue(uatId, uatUrl, reqs.GogUserAccessToken(hc), kvGogUserAccessToken); err != nil {
 
 		if err = rdx.ReplaceValues(vangogh_integration.GetDataErrorMessageProperty, ptId, err.Error()); err != nil {
 			return err

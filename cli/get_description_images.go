@@ -52,12 +52,12 @@ func GetDescriptionImages(ids []string, since int64, all, force bool) error {
 		return err
 	}
 
-	apiProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.ApiProducts)
+	gogApiProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogApiProducts)
 	if err != nil {
 		return err
 	}
 
-	kvApiProducts, err := kevlar.New(apiProductsDir, kevlar.JsonExt)
+	kvGogApiProducts, err := kevlar.New(gogApiProductsDir, kevlar.JsonExt)
 	if err != nil {
 		return err
 	}
@@ -66,7 +66,7 @@ func GetDescriptionImages(ids []string, since int64, all, force bool) error {
 		if all {
 			since = -1
 		}
-		newApiProducts := kvApiProducts.Since(since, kevlar.Create, kevlar.Update)
+		newApiProducts := kvGogApiProducts.Since(since, kevlar.Create, kevlar.Update)
 		for id := range newApiProducts {
 			ids = append(ids, id)
 		}

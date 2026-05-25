@@ -56,25 +56,25 @@ func getExternalIdGogIds(gogIds iter.Seq[string], externalIdProperty string) (ma
 	return externalIdGogIds, nil
 }
 
-func GetCatalogAccountProducts(since int64) (map[string]any, error) {
-	catalogAccountProductIds := make(map[string]any)
+func GetGogCatalogAccountProducts(since int64) (map[string]any, error) {
+	gogCatalogAccountProductIds := make(map[string]any)
 
-	catalogProductIds, err := GetCatalogPagesProducts(since)
+	gogCatalogProductIds, err := GetGogCatalogPagesProducts(since)
 	if err != nil {
 		return nil, err
 	}
 
-	for _, cpId := range catalogProductIds {
-		catalogAccountProductIds[cpId] = nil
+	for _, cpId := range gogCatalogProductIds {
+		gogCatalogAccountProductIds[cpId] = nil
 	}
 
-	accountProductIds, err := GetAccountPagesProducts(since)
+	gogAccountProductIds, err := GetGogAccountPagesProducts(since)
 	if err != nil {
 		return nil, err
 	}
 
-	for _, apId := range accountProductIds {
-		catalogAccountProductIds[apId] = nil
+	for _, apId := range gogAccountProductIds {
+		gogCatalogAccountProductIds[apId] = nil
 	}
 
 	rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(),
@@ -84,20 +84,20 @@ func GetCatalogAccountProducts(since int64) (map[string]any, error) {
 		return nil, err
 	}
 
-	for id := range catalogAccountProductIds {
+	for id := range gogCatalogAccountProductIds {
 		if rootEditionIds, ok := rdx.GetAllValues(vangogh_integration.RootEditionsProperty, id); ok {
 			for _, reId := range rootEditionIds {
-				catalogAccountProductIds[reId] = nil
+				gogCatalogAccountProductIds[reId] = nil
 			}
 		}
 		if includesGamesIds, ok := rdx.GetAllValues(vangogh_integration.IncludesGamesProperty, id); ok {
 			for _, igId := range includesGamesIds {
-				catalogAccountProductIds[igId] = nil
+				gogCatalogAccountProductIds[igId] = nil
 			}
 		}
 	}
 
-	return catalogAccountProductIds, nil
+	return gogCatalogAccountProductIds, nil
 }
 
 func GetGameGogIds(gogIds map[string]any) (map[string]any, error) {
@@ -124,16 +124,16 @@ func GetGameGogIds(gogIds map[string]any) (map[string]any, error) {
 	return gameGogIds, nil
 }
 
-func AppendEditions(products map[string]any) (map[string]any, error) {
+func AppendGogEditions(gogProducts map[string]any) (map[string]any, error) {
 
 	rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(), vangogh_integration.EditionsProperty)
 	if err != nil {
 		return nil, err
 	}
 
-	productsEditions := maps.Clone(products)
+	productsEditions := maps.Clone(gogProducts)
 
-	for id := range products {
+	for id := range gogProducts {
 		if editions, ok := rdx.GetAllValues(vangogh_integration.EditionsProperty, id); ok {
 			for _, eId := range editions {
 				productsEditions[eId] = nil
@@ -144,45 +144,45 @@ func AppendEditions(products map[string]any) (map[string]any, error) {
 	return productsEditions, nil
 }
 
-func GetCatalogPagesProducts(since int64) ([]string, error) {
+func GetGogCatalogPagesProducts(since int64) ([]string, error) {
 
-	gcppa := nod.NewProgress(" enumerating %s...", vangogh_integration.CatalogPage)
+	gcppa := nod.NewProgress(" enumerating %s...", vangogh_integration.GogCatalogPage)
 	defer gcppa.Done()
 
-	catalogPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.CatalogPage)
+	gogCatalogPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogCatalogPage)
 	if err != nil {
 		return nil, err
 	}
-	kvCatalogPages, err := kevlar.New(catalogPagesDir, kevlar.JsonExt)
+	kvGogCatalogPages, err := kevlar.New(gogCatalogPagesDir, kevlar.JsonExt)
 	if err != nil {
 		return nil, err
 	}
 
 	updatedPages := make([]string, 0)
-	for page := range kvCatalogPages.Since(since, kevlar.Create, kevlar.Update) {
+	for page := range kvGogCatalogPages.Since(since, kevlar.Create, kevlar.Update) {
 		updatedPages = append(updatedPages, page)
 	}
 
 	gcppa.TotalInt(len(updatedPages))
 
-	catalogProductIds := make([]string, 0)
+	gogCatalogProductIds := make([]string, 0)
 
 	for _, page := range updatedPages {
 		var ids []string
-		ids, err = getCatalogPageProducts(page, kvCatalogPages)
+		ids, err = getGogCatalogPageProducts(page, kvGogCatalogPages)
 		if err != nil {
 			return nil, err
 		}
-		catalogProductIds = append(catalogProductIds, ids...)
+		gogCatalogProductIds = append(gogCatalogProductIds, ids...)
 
 		gcppa.Increment()
 	}
 
-	return catalogProductIds, nil
+	return gogCatalogProductIds, nil
 }
 
-func getCatalogPageProducts(page string, kvCatalogPages kevlar.KeyValues) ([]string, error) {
-	rcCatalogPage, err := kvCatalogPages.Get(page)
+func getGogCatalogPageProducts(page string, kvGogCatalogPages kevlar.KeyValues) ([]string, error) {
+	rcCatalogPage, err := kvGogCatalogPages.Get(page)
 	if err != nil {
 		return nil, err
 	}
@@ -202,22 +202,22 @@ func getCatalogPageProducts(page string, kvCatalogPages kevlar.KeyValues) ([]str
 	return ids, nil
 }
 
-func GetAccountPagesProducts(since int64) ([]string, error) {
+func GetGogAccountPagesProducts(since int64) ([]string, error) {
 
-	gappa := nod.NewProgress(" enumerating %s...", vangogh_integration.AccountPage)
+	gappa := nod.NewProgress(" enumerating %s...", vangogh_integration.GogAccountPage)
 	defer gappa.Done()
 
-	accountPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.AccountPage)
+	gogAccountPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogAccountPage)
 	if err != nil {
 		return nil, err
 	}
-	kvAccountPages, err := kevlar.New(accountPagesDir, kevlar.JsonExt)
+	kvGogAccountPages, err := kevlar.New(gogAccountPagesDir, kevlar.JsonExt)
 	if err != nil {
 		return nil, err
 	}
 
 	updatedPages := make([]string, 0)
-	for page := range kvAccountPages.Since(since, kevlar.Create, kevlar.Update) {
+	for page := range kvGogAccountPages.Since(since, kevlar.Create, kevlar.Update) {
 		updatedPages = append(updatedPages, page)
 	}
 
@@ -227,7 +227,7 @@ func GetAccountPagesProducts(since int64) ([]string, error) {
 
 	for _, page := range updatedPages {
 		var ids []string
-		ids, err = getAccountPageProducts(page, kvAccountPages)
+		ids, err = getGogAccountPageProducts(page, kvGogAccountPages)
 		if err != nil {
 			return nil, err
 		}
@@ -239,15 +239,15 @@ func GetAccountPagesProducts(since int64) ([]string, error) {
 	return accountProductIds, nil
 }
 
-func getAccountPageProducts(page string, kvAccountPages kevlar.KeyValues) ([]string, error) {
-	rcAccountPage, err := kvAccountPages.Get(page)
+func getGogAccountPageProducts(page string, kvGogAccountPages kevlar.KeyValues) ([]string, error) {
+	rcGogAccountPage, err := kvGogAccountPages.Get(page)
 	if err != nil {
 		return nil, err
 	}
-	defer rcAccountPage.Close()
+	defer rcGogAccountPage.Close()
 
 	var accountPage gog_integration.AccountPage
-	if err = json.UnmarshalRead(rcAccountPage, &accountPage); err != nil {
+	if err = json.UnmarshalRead(rcGogAccountPage, &accountPage); err != nil {
 		return nil, err
 	}
 
@@ -260,21 +260,21 @@ func getAccountPageProducts(page string, kvAccountPages kevlar.KeyValues) ([]str
 	return ids, nil
 }
 
-func GetDetailsUpdates(since int64) (map[string]any, error) {
+func GetGogDetailsUpdates(since int64) (map[string]any, error) {
 
-	detailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.Details)
+	gogDetailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogDetails)
 	if err != nil {
 		return nil, err
 	}
 
-	kvDetails, err := kevlar.New(detailsDir, kevlar.JsonExt)
+	kvGogDetails, err := kevlar.New(gogDetailsDir, kevlar.JsonExt)
 	if err != nil {
 		return nil, err
 	}
 
 	newUpdatedDetails := make(map[string]any)
 
-	newUpdatedOrderPagesProducts, err := getNewUpdatedOrderPagesProducts(since)
+	newUpdatedOrderPagesProducts, err := getNewUpdatedGogOrderPagesProducts(since)
 	if err != nil {
 		return nil, err
 	}
@@ -283,7 +283,7 @@ func GetDetailsUpdates(since int64) (map[string]any, error) {
 		newUpdatedDetails[id] = nil
 	}
 
-	newUpdatedAccountProducts, err := getNewUpdatedAccountPages(kvDetails)
+	newUpdatedAccountProducts, err := getNewUpdatedGogAccountPages(kvGogDetails)
 	if err != nil {
 		return nil, err
 	}
@@ -292,24 +292,24 @@ func GetDetailsUpdates(since int64) (map[string]any, error) {
 		newUpdatedDetails[id] = nil
 	}
 
-	for id := range kvDetails.Since(since, kevlar.Create, kevlar.Update) {
+	for id := range kvGogDetails.Since(since, kevlar.Create, kevlar.Update) {
 		newUpdatedDetails[id] = nil
 	}
 
 	return newUpdatedDetails, nil
 }
 
-func getNewUpdatedOrderPagesProducts(since int64) (iter.Seq[string], error) {
+func getNewUpdatedGogOrderPagesProducts(since int64) (iter.Seq[string], error) {
 
-	gopa := nod.NewProgress(" enumerating %s new, updated products...", vangogh_integration.OrderPage)
+	gopa := nod.NewProgress(" enumerating %s new, updated products...", vangogh_integration.GogOrderPage)
 	defer gopa.Done()
 
-	orderPageDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.OrderPage)
+	gogOrderPageDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogOrderPage)
 	if err != nil {
 		return nil, err
 	}
 
-	kvOrderPages, err := kevlar.New(orderPageDir, kevlar.JsonExt)
+	kvGogOrderPages, err := kevlar.New(gogOrderPageDir, kevlar.JsonExt)
 	if err != nil {
 		return nil, err
 	}
@@ -321,16 +321,16 @@ func getNewUpdatedOrderPagesProducts(since int64) (iter.Seq[string], error) {
 
 	orderPagesProducts := make(map[string]any)
 
-	for opId := range kvOrderPages.Since(since, kevlar.Create, kevlar.Update) {
+	for opId := range kvGogOrderPages.Since(since, kevlar.Create, kevlar.Update) {
 
 		var orderPageProductsIds iter.Seq[string]
-		orderPageProductsIds, err = getOrderPageProducts(opId, since, kvOrderPages)
+		orderPageProductsIds, err = getGogOrderPageProducts(opId, since, kvGogOrderPages)
 		if err != nil {
 			return nil, err
 		}
 
 		var orderPageIncludesRequires map[string]any
-		orderPageIncludesRequires, err = getOrderProductsIncludesRequires(orderPageProductsIds, rdx)
+		orderPageIncludesRequires, err = getGogOrderProductsIncludesRequires(orderPageProductsIds, rdx)
 		if err != nil {
 			return nil, err
 		}
@@ -344,17 +344,17 @@ func getNewUpdatedOrderPagesProducts(since int64) (iter.Seq[string], error) {
 	return maps.Keys(orderPagesProducts), nil
 }
 
-func getOrderPageProducts(id string, since int64, kvOrderPage kevlar.KeyValues) (iter.Seq[string], error) {
-	rcOrderPage, err := kvOrderPage.Get(id)
+func getGogOrderPageProducts(id string, since int64, kvGogOrderPage kevlar.KeyValues) (iter.Seq[string], error) {
+	rcGogOrderPage, err := kvGogOrderPage.Get(id)
 	if err != nil {
 		return nil, err
 	}
 
-	defer rcOrderPage.Close()
+	defer rcGogOrderPage.Close()
 
 	var orderPage gog_integration.OrderPage
 
-	if err = json.UnmarshalRead(rcOrderPage, &orderPage); err != nil {
+	if err = json.UnmarshalRead(rcGogOrderPage, &orderPage); err != nil {
 		return nil, err
 	}
 
@@ -373,7 +373,7 @@ func getOrderPageProducts(id string, since int64, kvOrderPage kevlar.KeyValues) 
 
 }
 
-func getOrderProductsIncludesRequires(orderPageProductsIds iter.Seq[string], rdx redux.Readable) (map[string]any, error) {
+func getGogOrderProductsIncludesRequires(gogOrderPageProductsIds iter.Seq[string], rdx redux.Readable) (map[string]any, error) {
 
 	if err := rdx.MustHave(vangogh_integration.IncludesGamesProperty, vangogh_integration.RequiresGamesProperty); err != nil {
 		return nil, err
@@ -381,7 +381,7 @@ func getOrderProductsIncludesRequires(orderPageProductsIds iter.Seq[string], rdx
 
 	orderedGames := make(map[string]any)
 
-	for productId := range orderPageProductsIds {
+	for productId := range gogOrderPageProductsIds {
 
 		if productType, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, productId); ok {
 
@@ -409,27 +409,27 @@ func getOrderProductsIncludesRequires(orderPageProductsIds iter.Seq[string], rdx
 	return orderedGames, nil
 }
 
-func getNewUpdatedAccountPages(kvDetails kevlar.KeyValues) (iter.Seq[string], error) {
+func getNewUpdatedGogAccountPages(kvDetails kevlar.KeyValues) (iter.Seq[string], error) {
 
-	gnuapa := nod.NewProgress(" enumerating %s updates...", vangogh_integration.AccountPage)
+	gnuapa := nod.NewProgress(" enumerating %s updates...", vangogh_integration.GogAccountPage)
 	defer gnuapa.Done()
 
-	accountPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.AccountPage)
+	gogAccountPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogAccountPage)
 	if err != nil {
 		return nil, err
 	}
 
-	kvAccountPages, err := kevlar.New(accountPagesDir, kevlar.JsonExt)
+	kvGogAccountPages, err := kevlar.New(gogAccountPagesDir, kevlar.JsonExt)
 	if err != nil {
 		return nil, err
 	}
 
 	newUpdatedAccountProducts := make(map[string]any)
 
-	gnuapa.TotalInt(kvAccountPages.Len())
+	gnuapa.TotalInt(kvGogAccountPages.Len())
 
-	for page := range kvAccountPages.Keys() {
-		pageNewUpdatedAccountProducts, err := getPageNewUpdatedAccountProducts(page, kvAccountPages, kvDetails)
+	for page := range kvGogAccountPages.Keys() {
+		pageNewUpdatedAccountProducts, err := getPageNewUpdatedGogAccountProducts(page, kvGogAccountPages, kvDetails)
 		if err != nil {
 			return nil, err
 		}
@@ -448,22 +448,22 @@ func getNewUpdatedAccountPages(kvDetails kevlar.KeyValues) (iter.Seq[string], er
 	return maps.Keys(newUpdatedAccountProducts), nil
 }
 
-func getPageNewUpdatedAccountProducts(page string, kvAccountPages, kvDetails kevlar.KeyValues) (iter.Seq[string], error) {
-	rcAccountPage, err := kvAccountPages.Get(page)
+func getPageNewUpdatedGogAccountProducts(page string, kvGogAccountPages, kvGogDetails kevlar.KeyValues) (iter.Seq[string], error) {
+	rcGogAccountPage, err := kvGogAccountPages.Get(page)
 	if err != nil {
 		return nil, err
 	}
-	defer rcAccountPage.Close()
+	defer rcGogAccountPage.Close()
 
 	var accountPage gog_integration.AccountPage
-	if err = json.UnmarshalRead(rcAccountPage, &accountPage); err != nil {
+	if err = json.UnmarshalRead(rcGogAccountPage, &accountPage); err != nil {
 		return nil, err
 	}
 
 	return func(yield func(string) bool) {
 		for _, accountProduct := range accountPage.Products {
 			id := strconv.Itoa(accountProduct.Id)
-			if !kvDetails.Has(id) {
+			if !kvGogDetails.Has(id) {
 				if !yield(id) {
 					return
 				}

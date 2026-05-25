@@ -53,18 +53,18 @@ func GetDoloClient() *dolo.Client {
 	})
 }
 
-func UserAccessToken(authHttpClient *http.Client) *Params {
+func GogUserAccessToken(authHttpClient *http.Client) *Params {
 	return &Params{
-		ProductType: vangogh_integration.UserAccessToken,
+		ProductType: vangogh_integration.GogUserAccessToken,
 		HttpClient:  authHttpClient,
 		HttpMethod:  http.MethodPost,
 		UserAgent:   GetDefaultUserAgent(),
 	}
 }
 
-func Licenses(authHttpClient *http.Client, authBearer string) *Params {
+func GogLicenses(authHttpClient *http.Client, authBearer string) *Params {
 	return &Params{
-		ProductType: vangogh_integration.Licences,
+		ProductType: vangogh_integration.GogLicences,
 		HttpClient:  authHttpClient,
 		HttpMethod:  http.MethodGet,
 		AuthBearer:  authBearer,
@@ -72,9 +72,9 @@ func Licenses(authHttpClient *http.Client, authBearer string) *Params {
 	}
 }
 
-func UserWishlist(authHttpClient *http.Client, authBearer string) *Params {
+func GogUserWishlist(authHttpClient *http.Client, authBearer string) *Params {
 	return &Params{
-		ProductType: vangogh_integration.UserWishlist,
+		ProductType: vangogh_integration.GogUserWishlist,
 		HttpClient:  authHttpClient,
 		HttpMethod:  http.MethodGet,
 		AuthBearer:  authBearer,
@@ -82,9 +82,9 @@ func UserWishlist(authHttpClient *http.Client, authBearer string) *Params {
 	}
 }
 
-func AccountPage(authHttpClient *http.Client, authBearer string) *Params {
+func GogAccountPage(authHttpClient *http.Client, authBearer string) *Params {
 	return &Params{
-		ProductType: vangogh_integration.AccountPage,
+		ProductType: vangogh_integration.GogAccountPage,
 		UrlFunc:     gog_integration.AccountPageUrl,
 		HttpClient:  authHttpClient,
 		HttpMethod:  http.MethodGet,
@@ -93,9 +93,9 @@ func AccountPage(authHttpClient *http.Client, authBearer string) *Params {
 	}
 }
 
-func CatalogPage(authHttpClient *http.Client, authBearer string) *Params {
+func GogCatalogPage(authHttpClient *http.Client, authBearer string) *Params {
 	return &Params{
-		ProductType: vangogh_integration.CatalogPage,
+		ProductType: vangogh_integration.GogCatalogPage,
 		UrlFunc:     gog_integration.CatalogPageUrl,
 		HttpClient:  authHttpClient,
 		HttpMethod:  http.MethodGet,
@@ -104,9 +104,9 @@ func CatalogPage(authHttpClient *http.Client, authBearer string) *Params {
 	}
 }
 
-func OrderPage(authHttpClient *http.Client, authBearer string) *Params {
+func GogOrderPage(authHttpClient *http.Client, authBearer string) *Params {
 	return &Params{
-		ProductType: vangogh_integration.OrderPage,
+		ProductType: vangogh_integration.GogOrderPage,
 		UrlFunc:     gog_integration.OrdersPageUrl,
 		HttpClient:  authHttpClient,
 		HttpMethod:  http.MethodGet,
@@ -115,9 +115,9 @@ func OrderPage(authHttpClient *http.Client, authBearer string) *Params {
 	}
 }
 
-func ApiProducts(authHttpClient *http.Client, authBearer string) *Params {
+func GogApiProducts(authHttpClient *http.Client, authBearer string) *Params {
 	return &Params{
-		ProductType: vangogh_integration.ApiProducts,
+		ProductType: vangogh_integration.GogApiProducts,
 		UrlFunc:     gog_integration.ApiProductUrl,
 		HttpClient:  authHttpClient,
 		HttpMethod:  http.MethodGet,
@@ -126,9 +126,9 @@ func ApiProducts(authHttpClient *http.Client, authBearer string) *Params {
 	}
 }
 
-func Details(authHttpClient *http.Client, authBearer string) *Params {
+func GogDetails(authHttpClient *http.Client, authBearer string) *Params {
 	return &Params{
-		ProductType: vangogh_integration.Details,
+		ProductType: vangogh_integration.GogDetails,
 		UrlFunc:     gog_integration.DetailsUrl,
 		HttpClient:  authHttpClient,
 		HttpMethod:  http.MethodGet,

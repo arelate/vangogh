@@ -2,7 +2,10 @@ package cli
 
 import (
 	"net/url"
+	"os"
+	"path/filepath"
 	"strconv"
+	"strings"
 
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
@@ -22,9 +25,10 @@ import (
 // 9. (internal bump)
 // 10. remove dehydrated-image, rep-color
 // 11. remove description-overview, description-features, changelog properties // 1.2.7
+// 12. rename GOG.com product type directories
 
 const (
-	latestDataSchema = 12
+	latestDataSchema = 13
 )
 
 func MigrateDataHandler(u *url.URL) error {
@@ -66,6 +70,10 @@ func MigrateData(force bool) error {
 			}
 		case 11:
 			if err = removeLargeTextProperties(); err != nil {
+				return err
+			}
+		case 12:
+			if err = renameGogProductTypeDirectories(); err != nil {
 				return err
 			}
 		}
@@ -142,6 +150,36 @@ func removeLargeTextProperties() error {
 	}
 	if err = kvRedux.Cut(vangogh_integration.ChangelogKeyValues); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func renameGogProductTypeDirectories() error {
+
+	gogProductTypes := []vangogh_integration.ProductType{
+		vangogh_integration.GogCatalogPage,
+		vangogh_integration.GogAccountPage,
+		vangogh_integration.GogUserWishlist,
+		vangogh_integration.GogDetails,
+		vangogh_integration.GogApiProducts,
+		vangogh_integration.GogLicences,
+		vangogh_integration.GogOrderPage,
+		vangogh_integration.GogUserAccessToken,
+	}
+
+	for _, gpt := range gogProductTypes {
+		newPtDir, err := vangogh_integration.AbsProductTypeDir(gpt)
+		if err != nil {
+			return err
+		}
+
+		existingPtDir := strings.TrimSuffix(newPtDir, gpt.String())
+		existingPtDir = filepath.Join(existingPtDir, strings.TrimPrefix(gpt.String(), "gog-"))
+
+		if err = os.Rename(existingPtDir, newPtDir); err != nil {
+			return err
+		}
 	}
 
 	return nil

@@ -30,11 +30,7 @@ func Items(ids iter.Seq[string], itemReq *reqs.Params, kv kevlar.KeyValues, tpw 
 
 	for id := range ids {
 
-		var ptId string
-		ptId, err = vangogh_integration.ProductTypeId(itemReq.ProductType, id)
-		if err != nil {
-			return err
-		}
+		ptId := vangogh_integration.ProductTypeId(itemReq.ProductType, id)
 
 		itemsErrMessages[ptId] = nil
 		itemsErrDates[ptId] = make([]string, 0)

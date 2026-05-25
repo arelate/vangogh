@@ -7,6 +7,7 @@ import (
 	"slices"
 
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/cli/gamesdb_data"
 	"github.com/arelate/vangogh/cli/gog_data"
 	"github.com/arelate/vangogh/cli/hltb_data"
 	"github.com/arelate/vangogh/cli/opencritic_data"
@@ -66,7 +67,7 @@ func reduceProductType(pt vangogh_integration.ProductType, force bool) error {
 		return err
 	}
 
-	catalogAccountProducts, err := shared_data.GetCatalogAccountProducts(-1)
+	catalogAccountProducts, err := shared_data.GetGogCatalogAccountProducts(-1)
 	if err != nil {
 		return err
 	}
@@ -99,24 +100,24 @@ func reduceProductType(pt vangogh_integration.ProductType, force bool) error {
 	}
 
 	switch pt {
-	case vangogh_integration.UserAccessToken:
+	case vangogh_integration.GogUserAccessToken:
 		// do nothing
-	case vangogh_integration.Licences:
-		return gog_data.ReduceLicences(kvPt)
-	case vangogh_integration.UserWishlist:
-		return gog_data.ReduceUserWishlist(kvPt)
-	case vangogh_integration.CatalogPage:
-		return gog_data.ReduceCatalogPages(kvPt, -1)
-	case vangogh_integration.OrderPage:
-		return gog_data.ReduceOrderPages(kvPt, -1)
-	case vangogh_integration.AccountPage:
-		return gog_data.ReduceAccountPages(kvPt, -1)
-	case vangogh_integration.ApiProducts:
-		return gog_data.ReduceApiProducts(kvPt, -1, force)
-	case vangogh_integration.Details:
-		return gog_data.ReduceDetails(kvPt, -1, force)
+	case vangogh_integration.GogLicences:
+		return gog_data.ReduceGogLicences(kvPt)
+	case vangogh_integration.GogUserWishlist:
+		return gog_data.ReduceGogUserWishlist(kvPt)
+	case vangogh_integration.GogCatalogPage:
+		return gog_data.ReduceGogCatalogPages(kvPt, -1)
+	case vangogh_integration.GogOrderPage:
+		return gog_data.ReduceGogOrderPages(kvPt, -1)
+	case vangogh_integration.GogAccountPage:
+		return gog_data.ReduceGogAccountPages(kvPt, -1)
+	case vangogh_integration.GogApiProducts:
+		return gog_data.ReduceGogApiProducts(kvPt, -1, force)
+	case vangogh_integration.GogDetails:
+		return gog_data.ReduceGogDetails(kvPt, -1, force)
 	case vangogh_integration.GamesDbGogProducts:
-		return gog_data.ReduceGamesDbGogProducts(kvPt, -1)
+		return gamesdb_data.ReduceGamesDbGogProducts(kvPt, -1)
 	case vangogh_integration.SteamAppDetails:
 		return steam_data.ReduceAppDetails(steamGogIds, kvPt)
 	case vangogh_integration.SteamAppNews:

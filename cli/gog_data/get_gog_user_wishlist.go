@@ -16,19 +16,19 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-func GetUserWishlist(hc *http.Client, uat string) error {
+func GetGogUserWishlist(hc *http.Client, uat string) error {
 
-	productType := vangogh_integration.UserWishlist
+	productType := vangogh_integration.GogUserWishlist
 
 	guwa := nod.Begin("getting %s...", productType)
 	defer guwa.Done()
 
-	userWishlistDir, err := vangogh_integration.AbsProductTypeDir(productType)
+	gogUserWishlistDir, err := vangogh_integration.AbsProductTypeDir(productType)
 	if err != nil {
 		return err
 	}
 
-	kvUserWishlist, err := kevlar.New(userWishlistDir, kevlar.JsonExt)
+	kvGogUserWishlist, err := kevlar.New(gogUserWishlistDir, kevlar.JsonExt)
 	if err != nil {
 		return err
 	}
@@ -41,12 +41,9 @@ func GetUserWishlist(hc *http.Client, uat string) error {
 		return err
 	}
 
-	ptId, err := vangogh_integration.ProductTypeId(productType, userWishlistId)
-	if err != nil {
-		return err
-	}
+	ptId := vangogh_integration.ProductTypeId(productType, userWishlistId)
 
-	if err = fetch.RequestSetValue(userWishlistId, userWishlistUrl, reqs.UserWishlist(hc, uat), kvUserWishlist); err != nil {
+	if err = fetch.RequestSetValue(userWishlistId, userWishlistUrl, reqs.GogUserWishlist(hc, uat), kvGogUserWishlist); err != nil {
 
 		if err = rdx.ReplaceValues(vangogh_integration.GetDataErrorMessageProperty, ptId, err.Error()); err != nil {
 			return err
@@ -61,12 +58,12 @@ func GetUserWishlist(hc *http.Client, uat string) error {
 
 	}
 
-	return ReduceUserWishlist(kvUserWishlist)
+	return ReduceGogUserWishlist(kvGogUserWishlist)
 }
 
-func ReduceUserWishlist(kvUserWishlist kevlar.KeyValues) error {
+func ReduceGogUserWishlist(kvGogUserWishlist kevlar.KeyValues) error {
 
-	ruwa := nod.Begin(" reducing %s...", vangogh_integration.UserWishlist)
+	ruwa := nod.Begin(" reducing %s...", vangogh_integration.GogUserWishlist)
 	defer ruwa.Done()
 
 	key := vangogh_integration.UserWishlistProperty
@@ -76,7 +73,7 @@ func ReduceUserWishlist(kvUserWishlist kevlar.KeyValues) error {
 		return err
 	}
 
-	rcUserWishlist, err := kvUserWishlist.Get(vangogh_integration.UserWishlist.String())
+	rcUserWishlist, err := kvGogUserWishlist.Get(vangogh_integration.GogUserWishlist.String())
 	if err != nil {
 		return err
 	}

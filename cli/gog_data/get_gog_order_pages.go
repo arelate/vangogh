@@ -15,30 +15,30 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-func GetOrderPages(hc *http.Client, uat string, since int64, force bool) error {
-	gopa := nod.NewProgress("getting %s...", vangogh_integration.OrderPage)
+func GetGogOrderPages(hc *http.Client, uat string, since int64, force bool) error {
+	gopa := nod.NewProgress("getting %s...", vangogh_integration.GogOrderPage)
 	defer gopa.Done()
 
-	orderPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.OrderPage)
+	gogOrderPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogOrderPage)
 	if err != nil {
 		return err
 	}
 
-	kvOrderPages, err := kevlar.New(orderPagesDir, kevlar.JsonExt)
+	kvGogOrderPages, err := kevlar.New(gogOrderPagesDir, kevlar.JsonExt)
 	if err != nil {
 		return err
 	}
 
-	if err = fetchGogPages(reqs.OrderPage(hc, uat), kvOrderPages, gopa, force); err != nil {
+	if err = fetchGogPages(reqs.GogOrderPage(hc, uat), kvGogOrderPages, gopa, force); err != nil {
 		return err
 	}
 
-	return ReduceOrderPages(kvOrderPages, since)
+	return ReduceGogOrderPages(kvGogOrderPages, since)
 }
 
-func ReduceOrderPages(kvOrderPages kevlar.KeyValues, since int64) error {
+func ReduceGogOrderPages(kvGogOrderPages kevlar.KeyValues, since int64) error {
 
-	pageType := vangogh_integration.OrderPage
+	pageType := vangogh_integration.GogOrderPage
 
 	ropa := nod.Begin(" reducing %s...", pageType)
 	defer ropa.Done()
@@ -53,15 +53,15 @@ func ReduceOrderPages(kvOrderPages kevlar.KeyValues, since int64) error {
 
 	orderPagesReductions := shared_data.InitReductions(vangogh_integration.GOGOrderPageProperties()...)
 
-	updatedOrderPages := kvOrderPages.Since(since, kevlar.Create, kevlar.Update)
+	updatedGogOrderPages := kvGogOrderPages.Since(since, kevlar.Create, kevlar.Update)
 
-	for page := range updatedOrderPages {
-		if !kvOrderPages.Has(page) {
+	for page := range updatedGogOrderPages {
+		if !kvGogOrderPages.Has(page) {
 			nod.LogError(errors.New("missing: " + pageType.String() + ", " + page))
 			continue
 		}
 
-		if err = reduceOrderPage(page, kvOrderPages, orderPagesReductions, rdx); err != nil {
+		if err = reduceGogOrderPage(page, kvGogOrderPages, orderPagesReductions, rdx); err != nil {
 			return err
 		}
 	}
@@ -69,16 +69,16 @@ func ReduceOrderPages(kvOrderPages kevlar.KeyValues, since int64) error {
 	return shared_data.WriteReductions(rdx, orderPagesReductions)
 }
 
-func reduceOrderPage(page string, kvOrderPages kevlar.KeyValues, piv shared_data.PropertyIdValues, rdx redux.Readable) error {
+func reduceGogOrderPage(page string, kvGogOrderPages kevlar.KeyValues, piv shared_data.PropertyIdValues, rdx redux.Readable) error {
 
-	rcOrderPage, err := kvOrderPages.Get(page)
+	rcGogOrderPage, err := kvGogOrderPages.Get(page)
 	if err != nil {
 		return err
 	}
-	defer rcOrderPage.Close()
+	defer rcGogOrderPage.Close()
 
 	var orderPage gog_integration.OrderPage
-	if err = json.UnmarshalRead(rcOrderPage, &orderPage); err != nil {
+	if err = json.UnmarshalRead(rcGogOrderPage, &orderPage); err != nil {
 		return err
 	}
 

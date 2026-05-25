@@ -1,10 +1,11 @@
 package shared_data
 
 import (
+	"time"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/redux"
-	"time"
 )
 
 const (
@@ -13,21 +14,21 @@ const (
 )
 
 var errorsDelayDays = map[vangogh_integration.ProductType]int{
-	vangogh_integration.CatalogPage: 0, // this type errors are exceptional and most likely indicate transport or origin issue
-	vangogh_integration.OrderPage:   0, // same as above
-	vangogh_integration.AccountPage: 0, // same as above
-	vangogh_integration.Details:     0, // same as above
+	vangogh_integration.GogCatalogPage: 0, // this type errors are exceptional and most likely indicate transport or origin issue
+	vangogh_integration.GogOrderPage:   0, // same as above
+	vangogh_integration.GogAccountPage: 0, // same as above
+	vangogh_integration.GogDetails:     0, // same as above
 }
 
 var updatesDelayDays = map[vangogh_integration.ProductType]int{
-	vangogh_integration.UserAccessToken: 0, // this is foundational "source of truth" data and should always be updated
-	vangogh_integration.CatalogPage:     0, // same as above
-	vangogh_integration.OrderPage:       0, // same as above
-	vangogh_integration.AccountPage:     0, // same as above
-	vangogh_integration.Details:         0, // same as above
-	vangogh_integration.Licences:        0, // same as above
-	vangogh_integration.UserWishlist:    0, // same as above
-	vangogh_integration.SteamAppNews:    0,
+	vangogh_integration.GogUserAccessToken: 0, // this is foundational "source of truth" data and should always be updated
+	vangogh_integration.GogCatalogPage:     0, // same as above
+	vangogh_integration.GogOrderPage:       0, // same as above
+	vangogh_integration.GogAccountPage:     0, // same as above
+	vangogh_integration.GogDetails:         0, // same as above
+	vangogh_integration.GogLicences:        0, // same as above
+	vangogh_integration.GogUserWishlist:    0, // same as above
+	vangogh_integration.SteamAppNews:       0,
 }
 
 func ShouldUpdate(id string, pt vangogh_integration.ProductType, rdx redux.Readable) (bool, error) {
@@ -36,10 +37,7 @@ func ShouldUpdate(id string, pt vangogh_integration.ProductType, rdx redux.Reada
 		return false, err
 	}
 
-	ptId, err := vangogh_integration.ProductTypeId(pt, id)
-	if err != nil {
-		return false, err
-	}
+	ptId := vangogh_integration.ProductTypeId(pt, id)
 
 	if !rdx.HasKey(vangogh_integration.GetDataLastUpdatedProperty, ptId) {
 		return true, nil
@@ -75,10 +73,7 @@ func ShouldSkip(id string, pt vangogh_integration.ProductType, rdx redux.Writeab
 		return false, err
 	}
 
-	ptId, err := vangogh_integration.ProductTypeId(pt, id)
-	if err != nil {
-		return false, err
-	}
+	ptId := vangogh_integration.ProductTypeId(pt, id)
 
 	if !rdx.HasKey(vangogh_integration.GetDataErrorDateProperty, ptId) {
 		return false, nil

@@ -15,31 +15,31 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-func GetCatalogPages(hc *http.Client, uat string, since int64) error {
+func GetGogCatalogPages(hc *http.Client, uat string, since int64) error {
 
-	gcpa := nod.NewProgress("getting %s...", vangogh_integration.CatalogPage)
+	gcpa := nod.NewProgress("getting %s...", vangogh_integration.GogCatalogPage)
 	defer gcpa.Done()
 
-	catalogPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.CatalogPage)
+	gogCatalogPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogCatalogPage)
 	if err != nil {
 		return err
 	}
 
-	kvCatalogPages, err := kevlar.New(catalogPagesDir, kevlar.JsonExt)
+	kvGogCatalogPages, err := kevlar.New(gogCatalogPagesDir, kevlar.JsonExt)
 	if err != nil {
 		return err
 	}
 
-	if err = fetchCatalogPages(reqs.CatalogPage(hc, uat), kvCatalogPages, gcpa); err != nil {
+	if err = fetchGogCatalogPages(reqs.GogCatalogPage(hc, uat), kvGogCatalogPages, gcpa); err != nil {
 		return err
 	}
 
-	return ReduceCatalogPages(kvCatalogPages, since)
+	return ReduceGogCatalogPages(kvGogCatalogPages, since)
 }
 
-func ReduceCatalogPages(kvCatalogPages kevlar.KeyValues, since int64) error {
+func ReduceGogCatalogPages(kvGogCatalogPages kevlar.KeyValues, since int64) error {
 
-	pageType := vangogh_integration.CatalogPage
+	pageType := vangogh_integration.GogCatalogPage
 
 	rcpa := nod.Begin(" reducing %s...", pageType)
 	defer rcpa.Done()
@@ -52,20 +52,20 @@ func ReduceCatalogPages(kvCatalogPages kevlar.KeyValues, since int64) error {
 
 	catalogPagesReductions := shared_data.InitReductions(vangogh_integration.GOGCatalogPageProperties()...)
 
-	updatedCatalogPages := kvCatalogPages.Since(since, kevlar.Create, kevlar.Update)
+	updatedCatalogPages := kvGogCatalogPages.Since(since, kevlar.Create, kevlar.Update)
 
 	for page := range updatedCatalogPages {
-		if !kvCatalogPages.Has(page) {
+		if !kvGogCatalogPages.Has(page) {
 			nod.LogError(errors.New("missing: " + pageType.String() + ", " + page))
 			continue
 		}
 
 		var catalogPage *gog_integration.CatalogPage
-		if catalogPage, err = unmarshalCatalogPage(page, kvCatalogPages); err != nil {
+		if catalogPage, err = unmarshalGogCatalogPage(page, kvGogCatalogPages); err != nil {
 			return err
 		}
 
-		if err = reduceCatalogPageProperties(page, catalogPage, catalogPagesReductions, rdx); err != nil {
+		if err = reduceGogCatalogPageProperties(page, catalogPage, catalogPagesReductions, rdx); err != nil {
 			return err
 		}
 	}
@@ -73,22 +73,22 @@ func ReduceCatalogPages(kvCatalogPages kevlar.KeyValues, since int64) error {
 	return shared_data.WriteReductions(rdx, catalogPagesReductions)
 }
 
-func unmarshalCatalogPage(page string, kvCatalogPages kevlar.KeyValues) (*gog_integration.CatalogPage, error) {
-	rcCatalogPage, err := kvCatalogPages.Get(page)
+func unmarshalGogCatalogPage(page string, kvGogCatalogPages kevlar.KeyValues) (*gog_integration.CatalogPage, error) {
+	rcGogCatalogPage, err := kvGogCatalogPages.Get(page)
 	if err != nil {
 		return nil, err
 	}
-	defer rcCatalogPage.Close()
+	defer rcGogCatalogPage.Close()
 
 	var catalogPage gog_integration.CatalogPage
-	if err = json.UnmarshalRead(rcCatalogPage, &catalogPage); err != nil {
+	if err = json.UnmarshalRead(rcGogCatalogPage, &catalogPage); err != nil {
 		return nil, err
 	}
 
 	return &catalogPage, nil
 }
 
-func reduceCatalogPageProperties(page string, catalogPage *gog_integration.CatalogPage, piv shared_data.PropertyIdValues, rdx redux.Readable) error {
+func reduceGogCatalogPageProperties(page string, catalogPage *gog_integration.CatalogPage, piv shared_data.PropertyIdValues, rdx redux.Readable) error {
 
 	for _, cp := range catalogPage.Products {
 

@@ -51,7 +51,7 @@ func SearchScopes() map[string]string {
 	queries[SearchWishlist] = q.Encode()
 
 	q = make(url.Values)
-	q.Set(vangogh_integration.TypesProperty, vangogh_integration.ApiProducts.String())
+	q.Set(vangogh_integration.TypesProperty, vangogh_integration.GogApiProducts.String())
 	q.Set(vangogh_integration.OwnedProperty, vangogh_integration.FalseValue)
 	q.Set(vangogh_integration.IsDiscountedProperty, vangogh_integration.TrueValue)
 	q.Set(vangogh_integration.SortProperty, vangogh_integration.DiscountPercentageProperty)

@@ -17,17 +17,17 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-func GetDetails(ids []string, hc *http.Client, uat string, since int64, force bool) error {
+func GetGogDetails(ids []string, hc *http.Client, uat string, since int64, force bool) error {
 
-	gda := nod.NewProgress("getting new or updated %s...", vangogh_integration.Details)
+	gda := nod.NewProgress("getting new or updated %s...", vangogh_integration.GogDetails)
 	defer gda.Done()
 
-	detailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.Details)
+	gogDetailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogDetails)
 	if err != nil {
 		return err
 	}
 
-	kvDetails, err := kevlar.New(detailsDir, kevlar.JsonExt)
+	kvGogDetails, err := kevlar.New(gogDetailsDir, kevlar.JsonExt)
 	if err != nil {
 		return err
 	}
@@ -40,7 +40,7 @@ func GetDetails(ids []string, hc *http.Client, uat string, since int64, force bo
 			newUpdatedDetails[id] = nil
 		}
 	} else {
-		newUpdatedDetails, err = shared_data.GetDetailsUpdates(since)
+		newUpdatedDetails, err = shared_data.GetGogDetailsUpdates(since)
 		if err != nil {
 			return err
 		}
@@ -48,16 +48,16 @@ func GetDetails(ids []string, hc *http.Client, uat string, since int64, force bo
 
 	gda.TotalInt(len(newUpdatedDetails))
 
-	if err = fetch.Items(maps.Keys(newUpdatedDetails), reqs.Details(hc, uat), kvDetails, gda, force); err != nil {
+	if err = fetch.Items(maps.Keys(newUpdatedDetails), reqs.GogDetails(hc, uat), kvGogDetails, gda, force); err != nil {
 		return err
 	}
 
-	return ReduceDetails(kvDetails, since, force)
+	return ReduceGogDetails(kvGogDetails, since, force)
 }
 
-func ReduceDetails(kvDetails kevlar.KeyValues, since int64, force bool) error {
+func ReduceGogDetails(kvGogDetails kevlar.KeyValues, since int64, force bool) error {
 
-	dataType := vangogh_integration.Details
+	dataType := vangogh_integration.GogDetails
 
 	rda := nod.Begin(" reducing %s...", dataType)
 	defer rda.Done()
@@ -74,23 +74,23 @@ func ReduceDetails(kvDetails kevlar.KeyValues, since int64, force bool) error {
 		return err
 	}
 
-	updatedDetails := kvDetails.Since(since, kevlar.Create, kevlar.Update)
+	updatedGogDetails := kvGogDetails.Since(since, kevlar.Create, kevlar.Update)
 
-	for id := range updatedDetails {
-		if !kvDetails.Has(id) {
+	for id := range updatedGogDetails {
+		if !kvGogDetails.Has(id) {
 			nod.LogError(errors.New("missing: " + dataType.String() + ", " + id))
 			continue
 		}
 
 		var det *gog_integration.Details
-		if det, err = vangogh_integration.UnmarshalDetails(id, kvDetails); err != nil {
+		if det, err = vangogh_integration.UnmarshalDetails(id, kvGogDetails); err != nil {
 			return err
 		}
 
-		if err = reduceDetailsProductProperties(id, det, detailsReductions); err != nil {
+		if err = reduceGogDetailsProductProperties(id, det, detailsReductions); err != nil {
 			return err
 		}
-		if err = reduceDetailsKeyValues(id, det, detailsKeyValues, force); err != nil {
+		if err = reduceGogDetailsKeyValues(id, det, detailsKeyValues, force); err != nil {
 			return err
 		}
 	}
@@ -98,7 +98,7 @@ func ReduceDetails(kvDetails kevlar.KeyValues, since int64, force bool) error {
 	return shared_data.WriteReductions(rdx, detailsReductions)
 }
 
-func reduceDetailsProductProperties(id string, det *gog_integration.Details, piv shared_data.PropertyIdValues) error {
+func reduceGogDetailsProductProperties(id string, det *gog_integration.Details, piv shared_data.PropertyIdValues) error {
 
 	if det == nil {
 		return nil
@@ -138,7 +138,7 @@ func reduceDetailsProductProperties(id string, det *gog_integration.Details, piv
 	return nil
 }
 
-func reduceDetailsKeyValues(id string, det *gog_integration.Details, detailsKeyValues map[string]kevlar.KeyValues, force bool) error {
+func reduceGogDetailsKeyValues(id string, det *gog_integration.Details, detailsKeyValues map[string]kevlar.KeyValues, force bool) error {
 
 	if det == nil {
 		return nil

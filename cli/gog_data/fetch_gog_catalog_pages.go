@@ -14,7 +14,7 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-func fetchCatalogPages(catalogPageReq *reqs.Params, kvCatalogPages kevlar.KeyValues, tpw nod.TotalProgressWriter) error {
+func fetchGogCatalogPages(catalogPageReq *reqs.Params, kvCatalogPages kevlar.KeyValues, tpw nod.TotalProgressWriter) error {
 
 	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
 		vangogh_integration.GetDataProperties()...)
@@ -27,11 +27,11 @@ func fetchCatalogPages(catalogPageReq *reqs.Params, kvCatalogPages kevlar.KeyVal
 	productCount, totalPages := 0, 0
 
 	for {
-		if err = fetchCatalogPage(currentCatalogPage, lastExternalProductId, catalogPageReq, kvCatalogPages, rdx); err != nil {
+		if err = fetchGogCatalogPage(currentCatalogPage, lastExternalProductId, catalogPageReq, kvCatalogPages, rdx); err != nil {
 			return err
 		}
 
-		productCount, lastExternalProductId, err = getProductCountLastId(currentCatalogPage, kvCatalogPages)
+		productCount, lastExternalProductId, err = getGogProductCountLastId(currentCatalogPage, kvCatalogPages)
 		if err != nil {
 			return err
 		}
@@ -62,17 +62,14 @@ func fetchCatalogPages(catalogPageReq *reqs.Params, kvCatalogPages kevlar.KeyVal
 	return nil
 }
 
-func fetchCatalogPage(currentPage int, searchAfter string, pageReq *reqs.Params, kvCatalogPages kevlar.KeyValues, rdx redux.Writeable) error {
+func fetchGogCatalogPage(currentPage int, searchAfter string, pageReq *reqs.Params, kvCatalogPages kevlar.KeyValues, rdx redux.Writeable) error {
 	catalogPageUrl := pageReq.UrlFunc(searchAfter)
 
-	ptId, err := vangogh_integration.ProductTypeId(pageReq.ProductType, strconv.Itoa(currentPage))
-	if err != nil {
-		return err
-	}
+	ptId := vangogh_integration.ProductTypeId(pageReq.ProductType, strconv.Itoa(currentPage))
 
 	formattedNow := time.Now().UTC().Format(time.RFC3339)
 
-	if err = fetch.RequestSetValue(strconv.Itoa(currentPage), catalogPageUrl, pageReq, kvCatalogPages); err != nil {
+	if err := fetch.RequestSetValue(strconv.Itoa(currentPage), catalogPageUrl, pageReq, kvCatalogPages); err != nil {
 
 		if err = rdx.ReplaceValues(vangogh_integration.GetDataErrorMessageProperty, ptId, err.Error()); err != nil {
 			return err
@@ -90,16 +87,16 @@ func fetchCatalogPage(currentPage int, searchAfter string, pageReq *reqs.Params,
 	return rdx.ReplaceValues(vangogh_integration.GetDataLastUpdatedProperty, ptId, formattedNow)
 }
 
-func getProductCountLastId(currentPage int, kvCatalogPage kevlar.KeyValues) (int, string, error) {
+func getGogProductCountLastId(currentPage int, kvGogCatalogPage kevlar.KeyValues) (int, string, error) {
 
-	rcCatalogPage, err := kvCatalogPage.Get(strconv.Itoa(currentPage))
+	rcGogCatalogPage, err := kvGogCatalogPage.Get(strconv.Itoa(currentPage))
 	if err != nil {
 		return -1, "", err
 	}
-	defer rcCatalogPage.Close()
+	defer rcGogCatalogPage.Close()
 
 	var catalogPage gog_integration.CatalogPage
-	if err = json.UnmarshalRead(rcCatalogPage, &catalogPage); err != nil {
+	if err = json.UnmarshalRead(rcGogCatalogPage, &catalogPage); err != nil {
 		return -1, "", err
 	}
 

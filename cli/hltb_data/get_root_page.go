@@ -38,10 +38,7 @@ func GetRootPage() error {
 		return err
 	}
 
-	ptId, err := vangogh_integration.ProductTypeId(productType, rootPageId)
-	if err != nil {
-		return err
-	}
+	ptId := vangogh_integration.ProductTypeId(productType, rootPageId)
 
 	if err = fetch.RequestSetValue(rootPageId, rootPageUrl, reqs.HltbRootPage(), kvRootPage); err != nil {
 

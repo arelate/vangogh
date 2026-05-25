@@ -21,7 +21,7 @@ func GetAvailableProducts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	availableProducts, err := getAvailableProducts(rdx)
+	availableProducts, err := getGogAvailableProducts(rdx)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
@@ -35,24 +35,24 @@ func GetAvailableProducts(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func getAvailableProducts(rdx redux.Readable) ([]vangogh_integration.AvailableProduct, error) {
+func getGogAvailableProducts(rdx redux.Readable) ([]vangogh_integration.AvailableProduct, error) {
 
-	accountPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.AccountPage)
+	gogAccountPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogAccountPage)
 	if err != nil {
 		return nil, err
 	}
-	kvAccountPages, err := kevlar.New(accountPagesDir, kevlar.JsonExt)
+	kvGogAccountPages, err := kevlar.New(gogAccountPagesDir, kevlar.JsonExt)
 	if err != nil {
 		return nil, err
 	}
 
-	availableProducts := make([]vangogh_integration.AvailableProduct, 0, kvAccountPages.Len()*100)
+	availableProducts := make([]vangogh_integration.AvailableProduct, 0, kvGogAccountPages.Len()*100)
 
 	// enumerating by index ensures account products ordered by order date
-	for page := range kvAccountPages.Len() {
+	for page := range kvGogAccountPages.Len() {
 
 		var app []gog_integration.AccountProduct
-		app, err = getAccountPageProducts(strconv.Itoa(page+1), kvAccountPages)
+		app, err = getAccountPageProducts(strconv.Itoa(page+1), kvGogAccountPages)
 		if err != nil {
 			return nil, err
 		}

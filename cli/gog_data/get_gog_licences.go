@@ -15,19 +15,19 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-func GetLicences(hc *http.Client, userAccessToken string) error {
+func GetGogLicences(hc *http.Client, userAccessToken string) error {
 
-	productType := vangogh_integration.Licences
+	productType := vangogh_integration.GogLicences
 
 	gla := nod.Begin("getting %s...", productType)
 	defer gla.Done()
 
-	licencesDir, err := vangogh_integration.AbsProductTypeDir(productType)
+	gogLicencesDir, err := vangogh_integration.AbsProductTypeDir(productType)
 	if err != nil {
 		return err
 	}
 
-	kvLicences, err := kevlar.New(licencesDir, kevlar.JsonExt)
+	kvGogLicences, err := kevlar.New(gogLicencesDir, kevlar.JsonExt)
 	if err != nil {
 		return err
 	}
@@ -41,12 +41,9 @@ func GetLicences(hc *http.Client, userAccessToken string) error {
 		return err
 	}
 
-	ptId, err := vangogh_integration.ProductTypeId(productType, licencesId)
-	if err != nil {
-		return err
-	}
+	ptId := vangogh_integration.ProductTypeId(productType, licencesId)
 
-	if err = fetch.RequestSetValue(licencesId, licencesUrl, reqs.Licenses(hc, userAccessToken), kvLicences); err != nil {
+	if err = fetch.RequestSetValue(licencesId, licencesUrl, reqs.GogLicenses(hc, userAccessToken), kvGogLicences); err != nil {
 
 		if err = rdx.ReplaceValues(vangogh_integration.GetDataErrorMessageProperty, ptId, err.Error()); err != nil {
 			return err
@@ -60,12 +57,12 @@ func GetLicences(hc *http.Client, userAccessToken string) error {
 		return nil
 	}
 
-	return ReduceLicences(kvLicences)
+	return ReduceGogLicences(kvGogLicences)
 }
 
-func ReduceLicences(kvLicences kevlar.KeyValues) error {
+func ReduceGogLicences(kvGogLicences kevlar.KeyValues) error {
 
-	rla := nod.Begin(" reducing %s...", vangogh_integration.Licences)
+	rla := nod.Begin(" reducing %s...", vangogh_integration.GogLicences)
 	defer rla.Done()
 
 	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
@@ -79,14 +76,14 @@ func ReduceLicences(kvLicences kevlar.KeyValues) error {
 		return err
 	}
 
-	rcLicences, err := kvLicences.Get(vangogh_integration.Licences.String())
+	rcGogLicences, err := kvGogLicences.Get(vangogh_integration.GogLicences.String())
 	if err != nil {
 		return err
 	}
-	defer rcLicences.Close()
+	defer rcGogLicences.Close()
 
 	var licences []string
-	if err = json.UnmarshalRead(rcLicences, &licences); err != nil {
+	if err = json.UnmarshalRead(rcGogLicences, &licences); err != nil {
 		return err
 	}
 

@@ -25,7 +25,7 @@ func GetManualUrlChecksums(w http.ResponseWriter, r *http.Request) {
 
 	id := q.Get("id")
 
-	det, err := getDetails(id)
+	det, err := getGogDetails(id)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return

@@ -37,19 +37,19 @@ func MissingLocalDownloads(
 		return nil, err
 	}
 
-	detailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.Details)
+	gogDetailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogDetails)
 	if err != nil {
 		return nil, err
 	}
 
-	kvDetails, err := kevlar.New(detailsDir, kevlar.JsonExt)
+	kvGogDetails, err := kevlar.New(gogDetailsDir, kevlar.JsonExt)
 	if err != nil {
 		return nil, err
 	}
 
 	//1
 	var allIds []string
-	for id := range kvDetails.Keys() {
+	for id := range kvGogDetails.Keys() {
 		allIds = append(allIds, id)
 	}
 

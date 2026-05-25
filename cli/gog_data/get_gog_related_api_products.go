@@ -13,16 +13,17 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-func GetRelatedApiProducts(hc *http.Client, uat string, since int64, force bool) error {
+func GetRelatedGogApiProducts(hc *http.Client, uat string, since int64, force bool) error {
 
-	grapva := nod.NewProgress("getting related %s...", vangogh_integration.ApiProducts)
+	grapva := nod.NewProgress("getting related %s...", vangogh_integration.GogApiProducts)
 	defer grapva.Done()
 
-	apiProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.ApiProducts)
+	gogApiProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogApiProducts)
 	if err != nil {
 		return err
 	}
-	kvApiProducts, err := kevlar.New(apiProductsDir, kevlar.JsonExt)
+
+	kvGogApiProducts, err := kevlar.New(gogApiProductsDir, kevlar.JsonExt)
 	if err != nil {
 		return err
 	}
@@ -41,7 +42,7 @@ func GetRelatedApiProducts(hc *http.Client, uat string, since int64, force bool)
 
 	nrIds := make(map[string]any)
 
-	for id := range kvApiProducts.Since(since, kevlar.Create, kevlar.Update) {
+	for id := range kvGogApiProducts.Since(since, kevlar.Create, kevlar.Update) {
 		for nid := range relatedProducts(id, rdx, vangogh_integration.RequiresGamesProperty) {
 			nrIds[nid] = nil
 		}
@@ -58,11 +59,11 @@ func GetRelatedApiProducts(hc *http.Client, uat string, since int64, force bool)
 
 	grapva.TotalInt(len(nrIds))
 
-	if err = fetch.Items(maps.Keys(nrIds), reqs.ApiProducts(hc, uat), kvApiProducts, grapva, force); err != nil {
+	if err = fetch.Items(maps.Keys(nrIds), reqs.GogApiProducts(hc, uat), kvGogApiProducts, grapva, force); err != nil {
 		return err
 	}
 
-	return ReduceApiProducts(kvApiProducts, since, force)
+	return ReduceGogApiProducts(kvGogApiProducts, since, force)
 }
 
 func relatedProducts(id string, rdx redux.Readable, property string) iter.Seq[string] {

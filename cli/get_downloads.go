@@ -144,19 +144,19 @@ func GetDownloads(
 	}
 
 	if options.all {
-		var detailsDir string
-		detailsDir, err = vangogh_integration.AbsProductTypeDir(vangogh_integration.Details)
+		var gogDetailsDir string
+		gogDetailsDir, err = vangogh_integration.AbsProductTypeDir(vangogh_integration.GogDetails)
 		if err != nil {
 			return err
 		}
 
-		var kvDetails kevlar.KeyValues
-		kvDetails, err = kevlar.New(detailsDir, kevlar.JsonExt)
+		var kvGogDetails kevlar.KeyValues
+		kvGogDetails, err = kevlar.New(gogDetailsDir, kevlar.JsonExt)
 		if err != nil {
 			return err
 		}
 
-		ids = slices.Collect(kvDetails.Keys())
+		ids = slices.Collect(kvGogDetails.Keys())
 	}
 
 	if len(ids) == 0 {
@@ -166,7 +166,7 @@ func GetDownloads(
 
 	if options.updateDetails {
 		if err = GetData(ids,
-			[]vangogh_integration.ProductType{vangogh_integration.Details},
+			[]vangogh_integration.ProductType{vangogh_integration.GogDetails},
 			-1,
 			new(dataFilter),
 			true); err != nil {

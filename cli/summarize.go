@@ -48,17 +48,17 @@ func Summarize(since int64) error {
 
 	// new products
 
-	apiProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.ApiProducts)
+	gogApiProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogApiProducts)
 	if err != nil {
 		return err
 	}
 
-	kvApiProducts, err := kevlar.New(apiProductsDir, kevlar.JsonExt)
+	kvGogApiProducts, err := kevlar.New(gogApiProductsDir, kevlar.JsonExt)
 	if err != nil {
 		return err
 	}
 
-	newApiProducts := kvApiProducts.Since(since, kevlar.Create)
+	newApiProducts := kvGogApiProducts.Since(since, kevlar.Create)
 
 	for id := range newApiProducts {
 		summary[vangogh_integration.UpdatesNewProducts] = append(summary[vangogh_integration.UpdatesNewProducts], id)
@@ -101,7 +101,7 @@ func Summarize(since int64) error {
 
 	// updated installers
 
-	updatedDetails, err := shared_data.GetDetailsUpdates(since)
+	updatedDetails, err := shared_data.GetGogDetailsUpdates(since)
 	if err != nil {
 		return err
 	}

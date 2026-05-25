@@ -59,17 +59,19 @@ func Cleanup(
 
 	if all {
 
-		detailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.Details)
+		var gogDetailsDir string
+		gogDetailsDir, err = vangogh_integration.AbsProductTypeDir(vangogh_integration.GogDetails)
 		if err != nil {
 			return err
 		}
 
-		kvDetails, err := kevlar.New(detailsDir, kevlar.JsonExt)
+		var kvGogDetails kevlar.KeyValues
+		kvGogDetails, err = kevlar.New(gogDetailsDir, kevlar.JsonExt)
 		if err != nil {
 			return err
 		}
 
-		for id := range kvDetails.Keys() {
+		for id := range kvGogDetails.Keys() {
 			ids = append(ids, id)
 		}
 	}

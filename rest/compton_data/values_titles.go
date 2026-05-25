@@ -8,15 +8,15 @@ var BinaryTitles = map[string]string{
 }
 
 var TypesTitles = map[string]string{
-	vangogh_integration.Licences.String():                     "Licences",
-	vangogh_integration.UserWishlist.String():                 "User Wishlist",
-	vangogh_integration.AccountPage.String():                  "Account Page",
-	vangogh_integration.ApiProducts.String():                  "API Products",
-	vangogh_integration.CatalogPage.String():                  "Catalog Page",
-	vangogh_integration.Details.String():                      "Details",
+	vangogh_integration.GogLicences.String():                  "GOG Licences",
+	vangogh_integration.GogUserWishlist.String():              "GOG User Wishlist",
+	vangogh_integration.GogAccountPage.String():               "GOG Account Page",
+	vangogh_integration.GogApiProducts.String():               "GOG API Products",
+	vangogh_integration.GogCatalogPage.String():               "GOG Catalog Page",
+	vangogh_integration.GogDetails.String():                   "GOG Details",
+	vangogh_integration.GogOrderPage.String():                 "GOG Order Page",
 	vangogh_integration.HltbData.String():                     "HowLongToBeat Data",
 	vangogh_integration.HltbRootPage.String():                 "HowLongToBeat Root Page",
-	vangogh_integration.OrderPage.String():                    "Order Page",
 	vangogh_integration.PcgwSteamPageId.String():              "PCGamingWiki Steam PageId",
 	vangogh_integration.PcgwGogPageId.String():                "PCGamingWiki GOG PageId",
 	vangogh_integration.PcgwRaw.String():                      "PCGamingWiki Raw",

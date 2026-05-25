@@ -179,7 +179,7 @@ func Sync(
 	if syncOpts.downloadsUpdates {
 
 		var updatedDetails map[string]any
-		updatedDetails, err = shared_data.GetDetailsUpdates(since)
+		updatedDetails, err = shared_data.GetGogDetailsUpdates(since)
 		if err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		}

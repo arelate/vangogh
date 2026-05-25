@@ -19,52 +19,52 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-func GetApiProducts(ids []string, hc *http.Client, uat string, since int64, force bool) error {
+func GetGogApiProducts(ids []string, hc *http.Client, uat string, since int64, force bool) error {
 
-	gapva := nod.NewProgress("getting %s...", vangogh_integration.ApiProducts)
+	gapva := nod.NewProgress("getting %s...", vangogh_integration.GogApiProducts)
 	defer gapva.Done()
 
-	var catalogAccountProductIds map[string]any
+	var gogCatalogAccountProductIds map[string]any
 	var err error
 
 	if len(ids) > 0 {
-		catalogAccountProductIds = make(map[string]any)
+		gogCatalogAccountProductIds = make(map[string]any)
 		for _, id := range ids {
-			catalogAccountProductIds[id] = nil
+			gogCatalogAccountProductIds[id] = nil
 		}
 	} else {
-		catalogAccountProductIds, err = shared_data.GetCatalogAccountProducts(since)
+		gogCatalogAccountProductIds, err = shared_data.GetGogCatalogAccountProducts(since)
 		if err != nil {
 			return err
 		}
-		catalogAccountProductIds, err = shared_data.AppendEditions(catalogAccountProductIds)
+		gogCatalogAccountProductIds, err = shared_data.AppendGogEditions(gogCatalogAccountProductIds)
 		if err != nil {
 			return err
 		}
 	}
 
-	apiProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.ApiProducts)
+	gogApiProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogApiProducts)
 	if err != nil {
 		return err
 	}
 
-	kvApiProducts, err := kevlar.New(apiProductsDir, kevlar.JsonExt)
+	kvGogApiProducts, err := kevlar.New(gogApiProductsDir, kevlar.JsonExt)
 	if err != nil {
 		return err
 	}
 
-	gapva.TotalInt(len(catalogAccountProductIds))
+	gapva.TotalInt(len(gogCatalogAccountProductIds))
 
-	if err = fetch.Items(maps.Keys(catalogAccountProductIds), reqs.ApiProducts(hc, uat), kvApiProducts, gapva, force); err != nil {
+	if err = fetch.Items(maps.Keys(gogCatalogAccountProductIds), reqs.GogApiProducts(hc, uat), kvGogApiProducts, gapva, force); err != nil {
 		return err
 	}
 
-	return ReduceApiProducts(kvApiProducts, since, force)
+	return ReduceGogApiProducts(kvGogApiProducts, since, force)
 }
 
-func ReduceApiProducts(kvApiProducts kevlar.KeyValues, since int64, force bool) error {
+func ReduceGogApiProducts(kvGogApiProducts kevlar.KeyValues, since int64, force bool) error {
 
-	dataType := vangogh_integration.ApiProducts
+	dataType := vangogh_integration.GogApiProducts
 
 	rapa := nod.NewProgress(" reducing %s...", dataType)
 	defer rapa.Done()
@@ -81,20 +81,20 @@ func ReduceApiProducts(kvApiProducts kevlar.KeyValues, since int64, force bool) 
 		return err
 	}
 
-	updatedApiProducts := kvApiProducts.Since(since, kevlar.Create, kevlar.Update)
+	updatedGogApiProducts := kvGogApiProducts.Since(since, kevlar.Create, kevlar.Update)
 
-	for id := range updatedApiProducts {
-		if !kvApiProducts.Has(id) {
+	for id := range updatedGogApiProducts {
+		if !kvGogApiProducts.Has(id) {
 			nod.LogError(errors.New("missing: " + dataType.String() + ", " + id))
 			continue
 		}
 
 		var ap *gog_integration.ApiProduct
-		if ap, err = unmarshallApiProduct(id, kvApiProducts); err != nil {
+		if ap, err = unmarshallGogApiProduct(id, kvGogApiProducts); err != nil {
 
 		}
 
-		if err = reduceApiProductProperties(id, ap, apiProductReductions); err != nil {
+		if err = reduceGogApiProductProperties(id, ap, apiProductReductions); err != nil {
 			return err
 		}
 		if err = reduceApiProductKeyValues(id, ap, apiProductKeyValues, force); err != nil {
@@ -105,22 +105,22 @@ func ReduceApiProducts(kvApiProducts kevlar.KeyValues, since int64, force bool) 
 	return shared_data.WriteReductions(rdx, apiProductReductions)
 }
 
-func unmarshallApiProduct(id string, kvApiProduct kevlar.KeyValues) (*gog_integration.ApiProduct, error) {
-	rcApiProduct, err := kvApiProduct.Get(id)
+func unmarshallGogApiProduct(id string, kvGogApiProduct kevlar.KeyValues) (*gog_integration.ApiProduct, error) {
+	rcGogApiProduct, err := kvGogApiProduct.Get(id)
 	if err != nil {
 		return nil, err
 	}
-	defer rcApiProduct.Close()
+	defer rcGogApiProduct.Close()
 
 	var ap gog_integration.ApiProduct
-	if err = json.UnmarshalRead(rcApiProduct, &ap); err != nil {
+	if err = json.UnmarshalRead(rcGogApiProduct, &ap); err != nil {
 		return nil, err
 	}
 
 	return &ap, nil
 }
 
-func reduceApiProductProperties(id string, ap *gog_integration.ApiProduct, piv shared_data.PropertyIdValues) error {
+func reduceGogApiProductProperties(id string, ap *gog_integration.ApiProduct, piv shared_data.PropertyIdValues) error {
 
 	for property := range piv {
 

@@ -47,7 +47,7 @@ func UpdateDownloads(
 
 	if ids == nil {
 
-		updatedDetails, err := shared_data.GetDetailsUpdates(since)
+		updatedDetails, err := shared_data.GetGogDetailsUpdates(since)
 		if err != nil {
 			return err
 		}

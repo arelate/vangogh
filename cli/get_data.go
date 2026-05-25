@@ -11,6 +11,7 @@ import (
 
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/cli/gamesdb_data"
 	"github.com/arelate/vangogh/cli/gog_data"
 	"github.com/arelate/vangogh/cli/hltb_data"
 	"github.com/arelate/vangogh/cli/opencritic_data"
@@ -30,18 +31,18 @@ type dataFilter struct {
 	relatedApiProducts bool
 }
 
-var userAccessTokenTypes = []vangogh_integration.ProductType{
-	vangogh_integration.Licences,
-	vangogh_integration.UserWishlist,
-	vangogh_integration.CatalogPage,
-	vangogh_integration.AccountPage,
-	vangogh_integration.ApiProducts,
-	vangogh_integration.OrderPage,
-	vangogh_integration.Details,
+var gogUserAccessTokenTypes = []vangogh_integration.ProductType{
+	vangogh_integration.GogLicences,
+	vangogh_integration.GogUserWishlist,
+	vangogh_integration.GogCatalogPage,
+	vangogh_integration.GogAccountPage,
+	vangogh_integration.GogApiProducts,
+	vangogh_integration.GogOrderPage,
+	vangogh_integration.GogDetails,
 	vangogh_integration.GamesDbGogProducts,
 }
 
-var catalogAccountGogIdsProductTypes = []vangogh_integration.ProductType{
+var gogCatalogAccountGogIdsProductTypes = []vangogh_integration.ProductType{
 	vangogh_integration.PcgwGogPageId,
 }
 
@@ -99,7 +100,7 @@ func GetDataHandler(u *url.URL) error {
 func GetData(ids []string, productTypes []vangogh_integration.ProductType, since int64, dataFilter *dataFilter, force bool) error {
 
 	if dataFilter.purchases {
-		productTypes = append(productTypes, vangogh_integration.PurchaseProductTypes()...)
+		productTypes = append(productTypes, vangogh_integration.GogPurchaseProductTypes()...)
 	}
 	if dataFilter.extraData {
 		productTypes = append(productTypes, slices.Collect(vangogh_integration.ExtraProductTypes())...)
@@ -125,10 +126,10 @@ func GetData(ids []string, productTypes []vangogh_integration.ProductType, since
 	var uat string
 	if requiresUserAccessToken(productTypes...) {
 
-		if err = gog_data.GetUserAccessToken(hc); err != nil {
+		if err = gog_data.GetGogUserAccessToken(hc); err != nil {
 			nod.LogError(err)
 		} else {
-			uat, err = readUserAccessToken()
+			uat, err = readGogUserAccessToken()
 			if err != nil {
 				return err
 			}
@@ -141,55 +142,55 @@ func GetData(ids []string, productTypes []vangogh_integration.ProductType, since
 		}
 	}
 
-	if slices.Contains(productTypes, vangogh_integration.Licences) {
-		if err = gog_data.GetLicences(hc, uat); err != nil {
+	if slices.Contains(productTypes, vangogh_integration.GogLicences) {
+		if err = gog_data.GetGogLicences(hc, uat); err != nil {
 			return err
 		}
 	}
 
-	if slices.Contains(productTypes, vangogh_integration.UserWishlist) {
-		if err = gog_data.GetUserWishlist(hc, uat); err != nil {
+	if slices.Contains(productTypes, vangogh_integration.GogUserWishlist) {
+		if err = gog_data.GetGogUserWishlist(hc, uat); err != nil {
 			return err
 		}
 	}
 
-	if slices.Contains(productTypes, vangogh_integration.CatalogPage) {
-		if err = gog_data.GetCatalogPages(hc, uat, since); err != nil {
+	if slices.Contains(productTypes, vangogh_integration.GogCatalogPage) {
+		if err = gog_data.GetGogCatalogPages(hc, uat, since); err != nil {
 			return err
 		}
 	}
 
-	if slices.Contains(productTypes, vangogh_integration.AccountPage) {
-		if err = gog_data.GetAccountPages(hc, uat, since, force); err != nil {
+	if slices.Contains(productTypes, vangogh_integration.GogAccountPage) {
+		if err = gog_data.GetGogAccountPages(hc, uat, since, force); err != nil {
 			return err
 		}
 	}
 
-	if slices.Contains(productTypes, vangogh_integration.ApiProducts) {
-		if err = gog_data.GetApiProducts(ids, hc, uat, since, force); err != nil {
+	if slices.Contains(productTypes, vangogh_integration.GogApiProducts) {
+		if err = gog_data.GetGogApiProducts(ids, hc, uat, since, force); err != nil {
 			return err
 		}
 		if dataFilter.relatedApiProducts {
-			if err = gog_data.GetRelatedApiProducts(hc, uat, since, force); err != nil {
+			if err = gog_data.GetRelatedGogApiProducts(hc, uat, since, force); err != nil {
 				return err
 			}
 		}
 	}
 
-	if slices.Contains(productTypes, vangogh_integration.OrderPage) {
-		if err = gog_data.GetOrderPages(hc, uat, since, force); err != nil {
+	if slices.Contains(productTypes, vangogh_integration.GogOrderPage) {
+		if err = gog_data.GetGogOrderPages(hc, uat, since, force); err != nil {
 			return err
 		}
 	}
 
-	if slices.Contains(productTypes, vangogh_integration.Details) {
-		if err = gog_data.GetDetails(ids, hc, uat, since, force); err != nil {
+	if slices.Contains(productTypes, vangogh_integration.GogDetails) {
+		if err = gog_data.GetGogDetails(ids, hc, uat, since, force); err != nil {
 			return err
 		}
 	}
 
 	if slices.Contains(productTypes, vangogh_integration.GamesDbGogProducts) {
-		if err = gog_data.GetGamesDbGogProducts(ids, hc, uat, since, force); err != nil {
+		if err = gamesdb_data.GetGamesDbGogProducts(ids, hc, uat, since, force); err != nil {
 			return err
 		}
 	}
@@ -207,7 +208,7 @@ func GetData(ids []string, productTypes []vangogh_integration.ProductType, since
 		// we shouldn't limit catalog-products and account-products only to
 		// the recently updated, instead passing all of them and let
 		// last updated check figure what needs to be updated
-		catalogAccountProducts, err = shared_data.GetCatalogAccountProducts(-1)
+		catalogAccountProducts, err = shared_data.GetGogCatalogAccountProducts(-1)
 		if err != nil {
 			return err
 		}
@@ -400,7 +401,7 @@ func requiresCatalogAccountGogIds(productTypes ...vangogh_integration.ProductTyp
 	if requiresOpenCriticIds(productTypes...) {
 		return true
 	}
-	for _, cagpt := range catalogAccountGogIdsProductTypes {
+	for _, cagpt := range gogCatalogAccountGogIdsProductTypes {
 		if slices.Contains(productTypes, cagpt) {
 			return true
 		}
@@ -409,7 +410,7 @@ func requiresCatalogAccountGogIds(productTypes ...vangogh_integration.ProductTyp
 }
 
 func requiresUserAccessToken(productTypes ...vangogh_integration.ProductType) bool {
-	for _, uatt := range userAccessTokenTypes {
+	for _, uatt := range gogUserAccessTokenTypes {
 		if slices.Contains(productTypes, uatt) {
 			return true
 		}
@@ -437,26 +438,26 @@ func gogAuthHttpClient() (*http.Client, error) {
 	return hc, nil
 }
 
-func readUserAccessToken() (string, error) {
-	userAccessTokenDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.UserAccessToken)
+func readGogUserAccessToken() (string, error) {
+	gogUatDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogUserAccessToken)
 	if err != nil {
 		return "", err
 	}
 
-	kvUserAccessToken, err := kevlar.New(userAccessTokenDir, kevlar.JsonExt)
+	kvGogUat, err := kevlar.New(gogUatDir, kevlar.JsonExt)
 	if err != nil {
 		return "", err
 	}
 
-	rcUserAccessToken, err := kvUserAccessToken.Get(vangogh_integration.UserAccessToken.String())
+	rcGogUat, err := kvGogUat.Get(vangogh_integration.GogUserAccessToken.String())
 	if err != nil {
 		return "", err
 	}
-	defer rcUserAccessToken.Close()
+	defer rcGogUat.Close()
 
 	var uat gog_integration.UserAccessToken
 
-	if err = json.UnmarshalRead(rcUserAccessToken, &uat); err != nil {
+	if err = json.UnmarshalRead(rcGogUat, &uat); err != nil {
 		return "", err
 	}
 

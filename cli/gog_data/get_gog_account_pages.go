@@ -15,30 +15,30 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-func GetAccountPages(hc *http.Client, uat string, since int64, force bool) error {
-	gapa := nod.NewProgress("getting %s...", vangogh_integration.AccountPage)
+func GetGogAccountPages(hc *http.Client, uat string, since int64, force bool) error {
+	gapa := nod.NewProgress("getting %s...", vangogh_integration.GogAccountPage)
 	defer gapa.Done()
 
-	accountPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.AccountPage)
+	gogAccountPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogAccountPage)
 	if err != nil {
 		return err
 	}
 
-	kvAccountPages, err := kevlar.New(accountPagesDir, kevlar.JsonExt)
+	kvGogAccountPages, err := kevlar.New(gogAccountPagesDir, kevlar.JsonExt)
 	if err != nil {
 		return err
 	}
 
-	if err = fetchGogPages(reqs.AccountPage(hc, uat), kvAccountPages, gapa, true); err != nil {
+	if err = fetchGogPages(reqs.GogAccountPage(hc, uat), kvGogAccountPages, gapa, true); err != nil {
 		return err
 	}
 
-	return ReduceAccountPages(kvAccountPages, since)
+	return ReduceGogAccountPages(kvGogAccountPages, since)
 }
 
-func ReduceAccountPages(kvAccountPages kevlar.KeyValues, since int64) error {
+func ReduceGogAccountPages(kvGogAccountPages kevlar.KeyValues, since int64) error {
 
-	pageType := vangogh_integration.AccountPage
+	pageType := vangogh_integration.GogAccountPage
 
 	rapa := nod.Begin(" reducing %s...", pageType)
 	defer rapa.Done()
@@ -51,16 +51,16 @@ func ReduceAccountPages(kvAccountPages kevlar.KeyValues, since int64) error {
 
 	accountPagesReductions := shared_data.InitReductions(vangogh_integration.GOGAccountPageProperties()...)
 
-	updatedAccountPages := kvAccountPages.Since(since, kevlar.Create, kevlar.Update)
+	updatedAccountPages := kvGogAccountPages.Since(since, kevlar.Create, kevlar.Update)
 
 	for page := range updatedAccountPages {
 
-		if !kvAccountPages.Has(page) {
+		if !kvGogAccountPages.Has(page) {
 			nod.LogError(errors.New("missing: " + pageType.String() + ", " + page))
 			continue
 		}
 
-		if err = reduceAccountPage(page, kvAccountPages, accountPagesReductions); err != nil {
+		if err = reduceGogAccountPage(page, kvGogAccountPages, accountPagesReductions); err != nil {
 			return err
 		}
 	}
@@ -68,16 +68,16 @@ func ReduceAccountPages(kvAccountPages kevlar.KeyValues, since int64) error {
 	return shared_data.WriteReductions(rdx, accountPagesReductions)
 }
 
-func reduceAccountPage(page string, kvAccountPages kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
+func reduceGogAccountPage(page string, kvGogAccountPages kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
 
-	rcAccountPage, err := kvAccountPages.Get(page)
+	rcGogAccountPage, err := kvGogAccountPages.Get(page)
 	if err != nil {
 		return err
 	}
-	defer rcAccountPage.Close()
+	defer rcGogAccountPage.Close()
 
 	var accountPage gog_integration.AccountPage
-	if err = json.UnmarshalRead(rcAccountPage, &accountPage); err != nil {
+	if err = json.UnmarshalRead(rcGogAccountPage, &accountPage); err != nil {
 		return err
 	}
 

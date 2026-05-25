@@ -35,11 +35,11 @@ func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageEleme
 	var pageProperty string
 
 	switch pt {
-	case vangogh_integration.OrderPage:
+	case vangogh_integration.GogOrderPage:
 		pageProperty = vangogh_integration.OrderPageProductsProperty
-	case vangogh_integration.AccountPage:
+	case vangogh_integration.GogAccountPage:
 		pageProperty = vangogh_integration.AccountPageProductsProperty
-	case vangogh_integration.CatalogPage:
+	case vangogh_integration.GogCatalogPage:
 		pageProperty = vangogh_integration.CatalogPageProductsProperty
 	default:
 		// do nothing
@@ -52,10 +52,7 @@ func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageEleme
 		}
 	}
 
-	ptId, err := vangogh_integration.ProductTypeId(pt, productOrPageId)
-	if err != nil {
-		return nil, err
-	}
+	ptId := vangogh_integration.ProductTypeId(pt, productOrPageId)
 
 	absPtDir, err := vangogh_integration.AbsProductTypeDir(pt)
 	if err != nil {
@@ -84,15 +81,15 @@ func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageEleme
 	var urlFunc func(id string) *url.URL
 
 	switch pt {
-	case vangogh_integration.CatalogPage:
+	case vangogh_integration.GogCatalogPage:
 		urlFunc = gog_integration.CatalogPageUrl
-	case vangogh_integration.AccountPage:
+	case vangogh_integration.GogAccountPage:
 		urlFunc = gog_integration.AccountPageUrl
-	case vangogh_integration.ApiProducts:
+	case vangogh_integration.GogApiProducts:
 		urlFunc = gog_integration.ApiProductUrl
-	case vangogh_integration.OrderPage:
+	case vangogh_integration.GogOrderPage:
 		urlFunc = gog_integration.OrdersPageUrl
-	case vangogh_integration.Details:
+	case vangogh_integration.GogDetails:
 		urlFunc = gog_integration.DetailsUrl
 	case vangogh_integration.GamesDbGogProducts:
 		urlFunc = gog_integration.GamesDbGogUrl

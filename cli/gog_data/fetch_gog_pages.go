@@ -21,10 +21,7 @@ func fetchGogPages(pageReq *reqs.Params, kv kevlar.KeyValues, tpw nod.TotalProgr
 
 	firstPageUrl := pageReq.UrlFunc(firstPageId)
 
-	ptId, err := vangogh_integration.ProductTypeId(pageReq.ProductType, firstPageId)
-	if err != nil {
-		return err
-	}
+	ptId := vangogh_integration.ProductTypeId(pageReq.ProductType, firstPageId)
 
 	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
 		vangogh_integration.GetDataProperties()...)
