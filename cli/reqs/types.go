@@ -104,13 +104,12 @@ func GogCatalogPage(authHttpClient *http.Client, authBearer string) *Params {
 	}
 }
 
-func GogOrderPage(authHttpClient *http.Client, authBearer string) *Params {
+func GogOrderPage(authHttpClient *http.Client) *Params {
 	return &Params{
 		ProductType: vangogh_integration.GogOrderPage,
 		UrlFunc:     gog_integration.OrdersPageUrl,
 		HttpClient:  authHttpClient,
 		HttpMethod:  http.MethodGet,
-		AuthBearer:  authBearer,
 		UserAgent:   GetDefaultUserAgent(),
 	}
 }

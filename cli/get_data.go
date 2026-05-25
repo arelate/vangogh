@@ -37,7 +37,6 @@ var gogUserAccessTokenTypes = []vangogh_integration.ProductType{
 	vangogh_integration.GogCatalogPage,
 	vangogh_integration.GogAccountPage,
 	vangogh_integration.GogApiProducts,
-	vangogh_integration.GogOrderPage,
 	vangogh_integration.GogDetails,
 	vangogh_integration.GamesDbGogProducts,
 }
@@ -124,7 +123,7 @@ func GetData(ids []string, productTypes []vangogh_integration.ProductType, since
 	}
 
 	var uat string
-	if requiresUserAccessToken(productTypes...) {
+	if requiresGogUserAccessToken(productTypes...) {
 
 		if err = gog_data.GetGogUserAccessToken(hc); err != nil {
 			nod.LogError(err)
@@ -409,7 +408,7 @@ func requiresCatalogAccountGogIds(productTypes ...vangogh_integration.ProductTyp
 	return false
 }
 
-func requiresUserAccessToken(productTypes ...vangogh_integration.ProductType) bool {
+func requiresGogUserAccessToken(productTypes ...vangogh_integration.ProductType) bool {
 	for _, uatt := range gogUserAccessTokenTypes {
 		if slices.Contains(productTypes, uatt) {
 			return true

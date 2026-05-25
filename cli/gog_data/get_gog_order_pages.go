@@ -29,7 +29,7 @@ func GetGogOrderPages(hc *http.Client, uat string, since int64, force bool) erro
 		return err
 	}
 
-	if err = fetchGogPages(reqs.GogOrderPage(hc, uat), kvGogOrderPages, gopa, force); err != nil {
+	if err = fetchGogPages(reqs.GogOrderPage(hc), kvGogOrderPages, gopa, force); err != nil {
 		return err
 	}
 
