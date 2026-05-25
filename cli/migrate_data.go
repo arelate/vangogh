@@ -4,6 +4,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -26,9 +27,10 @@ import (
 // 10. remove dehydrated-image, rep-color
 // 11. remove description-overview, description-features, changelog properties // 1.2.7
 // 12. rename GOG.com product type directories
+// 13. reset GetDataErrorDateProperty, GetDataErrorMessageProperty, GetDataLastUpdatedProperty since the format of the key has changed
 
 const (
-	latestDataSchema = 13
+	latestDataSchema = 14
 )
 
 func MigrateDataHandler(u *url.URL) error {
@@ -74,6 +76,10 @@ func MigrateData(force bool) error {
 			}
 		case 12:
 			if err = renameGogProductTypeDirectories(); err != nil {
+				return err
+			}
+		case 13:
+			if err = resetGetDataProperties(); err != nil {
 				return err
 			}
 		}
@@ -178,6 +184,32 @@ func renameGogProductTypeDirectories() error {
 		existingPtDir = filepath.Join(existingPtDir, strings.TrimPrefix(gpt.String(), "gog-"))
 
 		if err = os.Rename(existingPtDir, newPtDir); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func resetGetDataProperties() error {
+
+	properties := []string{
+		vangogh_integration.GetDataErrorDateProperty,
+		vangogh_integration.GetDataErrorMessageProperty,
+		vangogh_integration.GetDataLastUpdatedProperty,
+	}
+
+	reduxDir := vangogh_integration.AbsReduxDir()
+	rdx, err := redux.NewWriter(reduxDir, properties...)
+	if err != nil {
+		return err
+	}
+
+	for _, p := range properties {
+
+		allKeys := slices.Collect(rdx.Keys(p))
+
+		if err = rdx.CutKeys(p, allKeys...); err != nil {
 			return err
 		}
 	}
