@@ -28,9 +28,10 @@ import (
 // 11. remove description-overview, description-features, changelog properties // 1.2.7
 // 12. rename GOG.com product type directories
 // 13. reset GetDataErrorDateProperty, GetDataErrorMessageProperty, GetDataLastUpdatedProperty since the format of the key has changed
+// 14. remove user-access-token value from gog-user-access-token KeyValues
 
 const (
-	latestDataSchema = 14
+	latestDataSchema = 15
 )
 
 func MigrateDataHandler(u *url.URL) error {
@@ -80,6 +81,10 @@ func MigrateData(force bool) error {
 			}
 		case 13:
 			if err = resetGetDataProperties(); err != nil {
+				return err
+			}
+		case 14:
+			if err = removeUserAccessTokenValue(); err != nil {
 				return err
 			}
 		}
@@ -183,9 +188,32 @@ func renameGogProductTypeDirectories() error {
 		existingPtDir := strings.TrimSuffix(newPtDir, gpt.String())
 		existingPtDir = filepath.Join(existingPtDir, strings.TrimPrefix(gpt.String(), "gog-"))
 
+		if _, err = os.Stat(existingPtDir); os.IsNotExist(err) {
+			continue
+		}
+
 		if err = os.Rename(existingPtDir, newPtDir); err != nil {
 			return err
 		}
+	}
+
+	return nil
+}
+
+func removeUserAccessTokenValue() error {
+
+	gogUatDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogUserAccessToken)
+	if err != nil {
+		return err
+	}
+
+	kvGogUat, err := kevlar.New(gogUatDir, kevlar.JsonExt)
+	if err != nil {
+		return err
+	}
+
+	if kvGogUat.Has("user-access-token") {
+		return kvGogUat.Cut("user-access-token")
 	}
 
 	return nil
