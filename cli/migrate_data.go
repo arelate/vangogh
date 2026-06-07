@@ -1,7 +1,7 @@
 package cli
 
 import (
-	"maps"
+	"io"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -50,6 +50,11 @@ func MigrateData(force bool) error {
 		return err
 	}
 
+	// debug helper - uncomment to re-run latest migration
+	//if err = rdx.ReplaceValues(vangogh_integration.DataSchemeVersionProperty, vangogh_integration.DataSchemeVersionProperty, strconv.Itoa(latestDataSchema-1)); err != nil {
+	//	return err
+	//}
+
 	var currentDataSchema int
 	if !force {
 		currentDataSchema, err = getCurrentDataSchema(rdx)
@@ -96,6 +101,12 @@ func MigrateData(force bool) error {
 		}
 
 		mda.Increment()
+	}
+
+	rdx, err = redux.NewWriter(vangogh_integration.AbsReduxDir(),
+		vangogh_integration.DataSchemeVersionProperty)
+	if err != nil {
+		return err
 	}
 
 	return setLatestDataSchema(rdx)
@@ -262,6 +273,7 @@ func renameGogProperties() error {
 		vangogh_integration.GogCatalogPageProductsProperty,
 		vangogh_integration.GogOrderPageProductsProperty,
 		vangogh_integration.GogTitleProperty,
+		vangogh_integration.GogOwnedProperty,
 		vangogh_integration.GogDevelopersProperty,
 		vangogh_integration.GogPublishersProperty,
 		vangogh_integration.GogImageProperty,
@@ -292,7 +304,6 @@ func renameGogProperties() error {
 		vangogh_integration.GogTagNameProperty,
 		vangogh_integration.GogSlugProperty,
 		vangogh_integration.GogGlobalReleaseDateProperty,
-		vangogh_integration.GogLocalManualUrlProperty,
 		vangogh_integration.GogManualUrlFilenameProperty,
 		vangogh_integration.GogManualUrlStatusProperty,
 		vangogh_integration.GogManualUrlValidationResultProperty,
@@ -339,16 +350,6 @@ func renameGogProperties() error {
 
 func migrateFromToProperties(fromTo map[string]string) error {
 
-	fromRdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(), slices.Collect(maps.Keys(fromTo))...)
-	if err != nil {
-		return nil
-	}
-
-	toRdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), slices.Collect(maps.Values(fromTo))...)
-	if err != nil {
-		return err
-	}
-
 	rdxKv, err := kevlar.New(vangogh_integration.AbsReduxDir(), kevlar.GobExt)
 	if err != nil {
 		return err
@@ -356,26 +357,28 @@ func migrateFromToProperties(fromTo map[string]string) error {
 
 	for fromProperty, toProperty := range fromTo {
 
-		fromValues := make(map[string][]string)
-		for id := range fromRdx.Keys(fromProperty) {
-			if values, ok := fromRdx.GetAllValues(fromProperty, id); ok {
-				fromValues[id] = values
-			}
+		if !rdxKv.Has(fromProperty) {
+			continue
 		}
 
-		if len(fromValues) > 0 {
-			if err = toRdx.BatchReplaceValues(toProperty, fromValues); err != nil {
-				return err
-			}
+		var rcFromProperty io.ReadCloser
+		rcFromProperty, err = rdxKv.Get(fromProperty)
+		if err != nil {
+			return err
 		}
 
-		if rdxKv.Has(fromProperty) {
-			if err = rdxKv.Cut(fromProperty); err != nil {
-				return err
-			}
+		if err = rdxKv.Set(toProperty, rcFromProperty); err != nil {
+			return err
+		}
+
+		if err = rcFromProperty.Close(); err != nil {
+			return err
+		}
+
+		if err = rdxKv.Cut(fromProperty); err != nil {
+			return err
 		}
 	}
 
 	return nil
-
 }
