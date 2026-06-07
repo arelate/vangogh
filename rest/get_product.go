@@ -20,7 +20,7 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 
 	q := r.URL.Query()
 
-	redirectProperties := []string{vangogh_integration.SlugProperty, vangogh_integration.SteamAppIdProperty}
+	redirectProperties := []string{vangogh_integration.GogSlugProperty, vangogh_integration.GogSteamAppIdProperty}
 
 	for _, rp := range redirectProperties {
 		if q.Has(rp) {
@@ -44,7 +44,7 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if productPage := compton_pages.Product(id, rdx, sessionPermissions...); productPage != nil {
+	if productPage := compton_pages.GogProduct(id, rdx, sessionPermissions...); productPage != nil {
 		if err = productPage.WriteResponse(w); err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		}

@@ -141,7 +141,7 @@ func reduceDataProduct(gogIds []string, hltbId string, kvData kevlar.KeyValues, 
 				values = data.GetGenres()
 			case vangogh_integration.HltbPlatformsProperty:
 				values = data.GetPlatforms()
-			case vangogh_integration.IGNWikiSlugProperty:
+			case vangogh_integration.GogIgnWikiSlugProperty:
 				values = []string{data.GetIgnWikiSlug()}
 			}
 

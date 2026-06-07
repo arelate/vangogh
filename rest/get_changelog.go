@@ -21,7 +21,7 @@ func GetChangelog(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 
 	var pageTitle string
-	if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
+	if title, ok := rdx.GetLastVal(vangogh_integration.GogTitleProperty, id); ok {
 		pageTitle = title
 	}
 

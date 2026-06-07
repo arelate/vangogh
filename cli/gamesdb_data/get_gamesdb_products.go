@@ -60,12 +60,12 @@ func ReduceGamesDbGogProducts(kvGamesDbGogProducts kevlar.KeyValues, since int64
 	defer rgdgpa.Done()
 
 	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
-		vangogh_integration.GOGGamesDbProperties()...)
+		vangogh_integration.GogGamesDbProperties()...)
 	if err != nil {
 		return err
 	}
 
-	gamesDbGogProductsReductions := shared_data.InitReductions(vangogh_integration.GOGGamesDbProperties()...)
+	gamesDbGogProductsReductions := shared_data.InitReductions(vangogh_integration.GogGamesDbProperties()...)
 
 	updatedGamesDbGogProducts := kvGamesDbGogProducts.Since(since, kevlar.Create, kevlar.Update)
 
@@ -101,7 +101,7 @@ func reduceGamesDbGogProduct(id string, kvGamesDbGogProducts kevlar.KeyValues, p
 		var values []string
 
 		switch property {
-		case vangogh_integration.SteamAppIdProperty:
+		case vangogh_integration.GogSteamAppIdProperty:
 			steamAppIds := gdgp.GetSteamAppIds()
 			slices.Reverse(steamAppIds)
 			for _, steamAppId := range steamAppIds {
@@ -109,9 +109,9 @@ func reduceGamesDbGogProduct(id string, kvGamesDbGogProducts kevlar.KeyValues, p
 			}
 		case vangogh_integration.VideoIdProperty:
 			values = gdgp.GetVideoIds()
-		case vangogh_integration.ThemesProperty:
+		case vangogh_integration.GogThemesProperty:
 			values = gdgp.GetThemes()
-		case vangogh_integration.GameModesProperty:
+		case vangogh_integration.GogGameModesProperty:
 			values = gdgp.GetGameModes()
 		}
 

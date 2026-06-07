@@ -93,9 +93,9 @@ func reduceSummaryProduct(gogIds []string, steamAppId string, kvSummary kevlar.K
 			var values []string
 
 			switch property {
-			case vangogh_integration.ProtonDBTierProperty:
+			case vangogh_integration.ProtonDbTierProperty:
 				values = []string{sum.String()}
-			case vangogh_integration.ProtonDBConfidenceProperty:
+			case vangogh_integration.ProtonDbConfidenceProperty:
 				values = []string{sum.GetConfidence()}
 			}
 

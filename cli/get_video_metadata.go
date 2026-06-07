@@ -32,7 +32,7 @@ func GetVideoMetadata(ids []string, missing, force bool) error {
 	defer gvma.Done()
 
 	properties := vangogh_integration.VideoProperties()
-	properties = append(properties, vangogh_integration.TitleProperty)
+	properties = append(properties, vangogh_integration.GogTitleProperty)
 
 	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), properties...)
 

@@ -70,7 +70,7 @@ func Installers(id string, messages []string, dls vangogh_integration.DownloadsL
 		}
 	}
 
-	if validationDate, ok := rdx.GetLastVal(vangogh_integration.ProductValidationDateProperty, id); ok && validationDate != "" {
+	if validationDate, ok := rdx.GetLastVal(vangogh_integration.GogProductValidationDateProperty, id); ok && validationDate != "" {
 		if vdt, err := time.Parse(nod.TimeFormat, validationDate); err == nil {
 			if dvRow == nil {
 				dvRow = compton.Frow(s).FontSize(size.XSmall)
@@ -88,7 +88,7 @@ func Installers(id string, messages []string, dls vangogh_integration.DownloadsL
 		pageStack.Append(compton.FICenter(s, dvRow))
 	}
 
-	if owned, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && owned == vangogh_integration.FalseValue {
+	if owned, ok := rdx.GetLastVal(vangogh_integration.GogOwnedProperty, id); ok && owned == vangogh_integration.FalseValue {
 		ownershipRequiredNotice := compton.Fspan(s, "Installers are available for owned products only").
 			ForegroundColor(color.Gray)
 		pageStack.Append(ownershipRequiredNotice)
@@ -297,7 +297,7 @@ func downloadLink(r compton.Registrar,
 
 	localFilenameRow := compton.FlexItems(r, direction.Row)
 
-	if localFilename, ok := rdx.GetLastVal(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl); ok {
+	if localFilename, ok := rdx.GetLastVal(vangogh_integration.GogManualUrlFilenameProperty, dl.ManualUrl); ok {
 		localFilenameSpan := compton.Fspan(r, localFilename).FontSize(size.XXSmall).ForegroundColor(color.Gray)
 		localFilenameSpan.AddClass("local-filename")
 		localFilenameRow.Append(localFilenameSpan)
@@ -426,7 +426,7 @@ func getDownloadVariants(os vangogh_integration.OperatingSystem, title string, d
 			langCode:            dl.LanguageCode,
 			totalEstimatedBytes: dl.EstimatedBytes,
 			validationStatus:    dvs.ValidationStatus(),
-			generatedChecksum:   rdx.HasKey(vangogh_integration.ManualUrlGeneratedChecksumProperty, dl.ManualUrl),
+			generatedChecksum:   rdx.HasKey(vangogh_integration.GogManualUrlGeneratedChecksumProperty, dl.ManualUrl),
 			downloadStatus:      dvs.DownloadStatus(),
 		}
 
@@ -451,7 +451,7 @@ func getDownloadVariants(os vangogh_integration.OperatingSystem, title string, d
 				edv.downloadStatus = dvs.DownloadStatus()
 			}
 
-			edv.generatedChecksum = edv.generatedChecksum || rdx.HasKey(vangogh_integration.ManualUrlGeneratedChecksumProperty, dl.ManualUrl)
+			edv.generatedChecksum = edv.generatedChecksum || rdx.HasKey(vangogh_integration.GogManualUrlGeneratedChecksumProperty, dl.ManualUrl)
 
 			if edv.downloadStatus == vangogh_integration.DownloadStatusDownloaded {
 				edv.downloadedEstimatedBytes += dl.EstimatedBytes

@@ -49,7 +49,7 @@ func ReduceAppReviews(steamGogIds map[string][]string, kvAppReviews kevlar.KeyVa
 
 	// need to append SteamAppId property to allow mapping to GOG ids
 	properties := append(vangogh_integration.SteamAppReviewsProperties(),
-		vangogh_integration.SteamAppIdProperty)
+		vangogh_integration.GogSteamAppIdProperty)
 
 	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), properties...)
 	if err != nil {

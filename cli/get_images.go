@@ -139,7 +139,7 @@ func imageTypesReduxAssets(otherProperties []string, its []vangogh_integration.I
 	}
 
 	propSet := make(map[string]bool)
-	propSet[vangogh_integration.TitleProperty] = true
+	propSet[vangogh_integration.GogTitleProperty] = true
 
 	for _, it := range its {
 		propSet[vangogh_integration.PropertyFromImageType(it)] = true

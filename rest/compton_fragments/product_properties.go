@@ -66,15 +66,15 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 	}
 
 	owned := false
-	if lp, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok {
+	if lp, ok := rdx.GetLastVal(vangogh_integration.GogOwnedProperty, id); ok {
 		owned = lp == vangogh_integration.TrueValue
 	}
 	isFree := false
-	if ifp, ok := rdx.GetLastVal(vangogh_integration.IsFreeProperty, id); ok {
+	if ifp, ok := rdx.GetLastVal(vangogh_integration.GogIsFreeProperty, id); ok {
 		isFree = ifp == vangogh_integration.TrueValue
 	}
 	isDiscounted := false
-	if idp, ok := rdx.GetLastVal(vangogh_integration.IsDiscountedProperty, id); ok {
+	if idp, ok := rdx.GetLastVal(vangogh_integration.GogIsDiscountedProperty, id); ok {
 		isDiscounted = idp == vangogh_integration.TrueValue
 	}
 
@@ -89,7 +89,7 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 	}
 
 	switch property {
-	case vangogh_integration.UserWishlistProperty:
+	case vangogh_integration.GogUserWishlistProperty:
 		if owned && firstValue != vangogh_integration.TrueValue {
 			break
 		}
@@ -98,7 +98,7 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 			title = "Yes"
 		}
 		fmtProperty.values[title] = searchHref(property, firstValue)
-	case vangogh_integration.GOGOrderDateProperty:
+	case vangogh_integration.GogOrderDateProperty:
 		for _, value := range values {
 			jtd := formatDate(value)
 			if d, _, ok := strings.Cut(value, "T"); ok {
@@ -111,23 +111,23 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 		for _, value := range values {
 			fmtProperty.values[compton_data.FormatLanguage(value)] = searchHref(property, value)
 		}
-	case vangogh_integration.RatingProperty:
+	case vangogh_integration.GogRatingProperty:
 		for _, value := range values {
 			fmtProperty.values[fmtGOGRating(value)] = noHref()
 		}
-	case vangogh_integration.TagIdProperty:
+	case vangogh_integration.GogTagIdProperty:
 		for _, value := range values {
 			tagName := value
-			if tnp, ok := rdx.GetLastVal(vangogh_integration.TagNameProperty, value); ok {
+			if tnp, ok := rdx.GetLastVal(vangogh_integration.GogTagNameProperty, value); ok {
 				tagName = tnp
 			}
 			fmtProperty.values[tagName] = searchHref(property, value)
 		}
-	case vangogh_integration.PriceProperty:
+	case vangogh_integration.GogPriceProperty:
 		for _, value := range values {
 			if !isFree {
 				if isDiscounted && !owned {
-					if bpp, ok := rdx.GetLastVal(vangogh_integration.BasePriceProperty, id); ok {
+					if bpp, ok := rdx.GetLastVal(vangogh_integration.GogBasePriceProperty, id); ok {
 						fmtProperty.values["Base: "+bpp] = noHref()
 					}
 					fmtProperty.values["Sale: "+value] = noHref()
@@ -149,13 +149,13 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 		if !isNotPositiveRating(firstValue) {
 			fmtProperty.values[fmtHltbRating(firstValue)] = noHref()
 		}
-	case vangogh_integration.DiscountPercentageProperty:
+	case vangogh_integration.GogDiscountPercentageProperty:
 		for _, value := range values {
 			fmtProperty.values[value] = noHref()
 		}
-	case vangogh_integration.PublishersProperty:
+	case vangogh_integration.GogPublishersProperty:
 		fallthrough
-	case vangogh_integration.DevelopersProperty:
+	case vangogh_integration.GogDevelopersProperty:
 		for _, value := range values {
 			fmtProperty.values[value] = grdSortedSearchHref(property, value)
 		}
@@ -211,11 +211,11 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 
 	// format actions, class
 	switch property {
-	case vangogh_integration.OwnedProperty:
-		if res, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
+	case vangogh_integration.GogOwnedProperty:
+		if res, ok := rdx.GetLastVal(vangogh_integration.GogProductValidationResultProperty, id); ok {
 			fmtProperty.class = res
 		}
-	case vangogh_integration.UserWishlistProperty:
+	case vangogh_integration.GogUserWishlistProperty:
 		if !owned || firstValue == vangogh_integration.TrueValue {
 			switch firstValue {
 			case vangogh_integration.TrueValue:
@@ -226,7 +226,7 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 				fmtProperty.actions["Add"] = "/wishlist/add?id=" + id
 			}
 		}
-	case vangogh_integration.TagIdProperty:
+	case vangogh_integration.GogTagIdProperty:
 		if owned {
 			fmtProperty.actions["Edit"] = "/tags/edit?id=" + id
 		}
@@ -234,7 +234,7 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 		fmtProperty.actions["Edit"] = "/local-tags/edit?id=" + id
 	case vangogh_integration.SteamReviewScoreDescProperty:
 		fmtProperty.class = ReviewClass(firstValue)
-	case vangogh_integration.RatingProperty:
+	case vangogh_integration.GogRatingProperty:
 		fmtProperty.class = ReviewClass(fmtGOGRating(firstValue))
 	case vangogh_integration.HltbReviewScoreProperty:
 		fmtProperty.class = ReviewClass(fmtHltbRating(firstValue))
@@ -252,9 +252,9 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 		fallthrough
 	case vangogh_integration.SteamDeckAppCompatibilityCategoryProperty:
 		fmtProperty.class = firstValue
-	case vangogh_integration.ProtonDBTierProperty:
+	case vangogh_integration.ProtonDbTierProperty:
 		fmtProperty.class = firstValue
-	case vangogh_integration.ProtonDBConfidenceProperty:
+	case vangogh_integration.ProtonDbConfidenceProperty:
 		fmtProperty.class = firstValue
 	}
 

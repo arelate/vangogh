@@ -82,7 +82,7 @@ func Description(id string, pageTitle string, descOverview, descFeatures string,
 	descriptionDiv.Append(copyrightsDiv)
 
 	copyright := ""
-	if cp, ok := rdx.GetLastVal(vangogh_integration.CopyrightsProperty, id); ok {
+	if cp, ok := rdx.GetLastVal(vangogh_integration.GogCopyrightsProperty, id); ok {
 		copyright = cp
 	}
 	if copyright != "" {
@@ -91,7 +91,7 @@ func Description(id string, pageTitle string, descOverview, descFeatures string,
 	}
 
 	addtReqs := ""
-	if arp, ok := rdx.GetLastVal(vangogh_integration.AdditionalRequirementsProperty, id); ok {
+	if arp, ok := rdx.GetLastVal(vangogh_integration.GogAdditionalRequirementsProperty, id); ok {
 		addtReqs = arp
 	}
 	if addtReqs != "" {

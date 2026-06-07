@@ -44,12 +44,12 @@ func ReduceGogAccountPages(kvGogAccountPages kevlar.KeyValues, since int64) erro
 	defer rapa.Done()
 
 	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
-		vangogh_integration.GOGAccountPageProperties()...)
+		vangogh_integration.GogAccountPageProperties()...)
 	if err != nil {
 		return err
 	}
 
-	accountPagesReductions := shared_data.InitReductions(vangogh_integration.GOGAccountPageProperties()...)
+	accountPagesReductions := shared_data.InitReductions(vangogh_integration.GogAccountPageProperties()...)
 
 	updatedAccountPages := kvGogAccountPages.Since(since, kevlar.Create, kevlar.Update)
 
@@ -83,9 +83,9 @@ func reduceGogAccountPage(page string, kvGogAccountPages kevlar.KeyValues, piv s
 
 	// reduce tag names that are provided by account page, not product
 	// and use any page to do that (any page would work equally well)
-	piv[vangogh_integration.TagNameProperty] = make(map[string][]string)
+	piv[vangogh_integration.GogTagNameProperty] = make(map[string][]string)
 	for _, tag := range accountPage.Tags {
-		piv[vangogh_integration.TagNameProperty][tag.Id] = []string{tag.Name}
+		piv[vangogh_integration.GogTagNameProperty][tag.Id] = []string{tag.Name}
 	}
 
 	for _, ap := range accountPage.Products {
@@ -94,16 +94,16 @@ func reduceGogAccountPage(page string, kvGogAccountPages kevlar.KeyValues, piv s
 			var values []string
 
 			switch property {
-			case vangogh_integration.TagIdProperty:
+			case vangogh_integration.GogTagIdProperty:
 				values = ap.GetTagIds()
-			case vangogh_integration.TagNameProperty:
+			case vangogh_integration.GogTagNameProperty:
 				// tag names are reduced at the page level, avoid resetting it here by skipping this property
 				continue
-			case vangogh_integration.SlugProperty:
+			case vangogh_integration.GogSlugProperty:
 				values = []string{ap.Slug}
-			case vangogh_integration.AccountPageProductsProperty:
+			case vangogh_integration.GogAccountPageProductsProperty:
 				values = []string{page}
-			case vangogh_integration.ImageProperty:
+			case vangogh_integration.GogImageProperty:
 				values = []string{gog_integration.ImageId(ap.GetImage())}
 
 			}

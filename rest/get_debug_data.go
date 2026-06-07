@@ -18,7 +18,7 @@ func GetDebugData(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := r.URL.Query().Get(vangogh_integration.IdProperty)
-	pts := r.URL.Query().Get(vangogh_integration.ProductTypeProperty)
+	pts := r.URL.Query().Get(vangogh_integration.GogProductTypeProperty)
 
 	pt := vangogh_integration.ParseProductType(pts)
 

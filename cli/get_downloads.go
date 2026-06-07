@@ -101,15 +101,15 @@ func GetDownloads(
 	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
 		append(
 			vangogh_integration.DownloadsLifecycleProperties(),
-			vangogh_integration.TitleProperty,
-			vangogh_integration.SlugProperty,
-			vangogh_integration.ProductTypeProperty,
-			vangogh_integration.GOGOrderDateProperty,
+			vangogh_integration.GogTitleProperty,
+			vangogh_integration.GogSlugProperty,
+			vangogh_integration.GogProductTypeProperty,
+			vangogh_integration.GogOrderDateProperty,
 			// for optional validations
-			vangogh_integration.ManualUrlFilenameProperty,
-			vangogh_integration.ManualUrlStatusProperty,
-			vangogh_integration.ManualUrlValidationResultProperty,
-			vangogh_integration.ProductValidationResultProperty)...)
+			vangogh_integration.GogManualUrlFilenameProperty,
+			vangogh_integration.GogManualUrlStatusProperty,
+			vangogh_integration.GogManualUrlValidationResultProperty,
+			vangogh_integration.GogProductValidationResultProperty)...)
 	if err != nil {
 		return err
 	}
@@ -237,7 +237,7 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 	// to avoid using stale manualUrls if something goes wrong - we either get all updated values
 	// or some values stay unresolved - indicating problem with the last download operation
 	if gdd.forceUpdate {
-		if err := gdd.rdx.CutKeys(vangogh_integration.ManualUrlFilenameProperty, manualUrls...); err != nil {
+		if err := gdd.rdx.CutKeys(vangogh_integration.GogManualUrlFilenameProperty, manualUrls...); err != nil {
 			return err
 		}
 	}
@@ -252,28 +252,28 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 		manualUrlVsu[manualUrl] = []string{vangogh_integration.ValidationStatusUnknown.String()}
 	}
 
-	if err := gdd.rdx.BatchReplaceValues(vangogh_integration.ManualUrlStatusProperty, manualUrlDq); err != nil {
+	if err := gdd.rdx.BatchReplaceValues(vangogh_integration.GogManualUrlStatusProperty, manualUrlDq); err != nil {
 		return err
 	}
 
-	if err := gdd.rdx.BatchReplaceValues(vangogh_integration.ManualUrlValidationResultProperty, manualUrlVsu); err != nil {
+	if err := gdd.rdx.BatchReplaceValues(vangogh_integration.GogManualUrlValidationResultProperty, manualUrlVsu); err != nil {
 		return err
 	}
 
-	if err := gdd.rdx.CutKeys(vangogh_integration.ManualUrlGeneratedChecksumProperty, manualUrls...); err != nil {
+	if err := gdd.rdx.CutKeys(vangogh_integration.GogManualUrlGeneratedChecksumProperty, manualUrls...); err != nil {
 		return err
 	}
 
 	// (re-)set product validation result prior to downloading
 	// (re-)set product generated checksum prior to downloading
 	if err := gdd.rdx.ReplaceValues(
-		vangogh_integration.ProductValidationResultProperty,
+		vangogh_integration.GogProductValidationResultProperty,
 		id,
 		vangogh_integration.ValidationStatusUnknown.String()); err != nil {
 		return err
 	}
 
-	if err := gdd.rdx.CutKeys(vangogh_integration.ProductGeneratedChecksumProperty, id); err != nil {
+	if err := gdd.rdx.CutKeys(vangogh_integration.GogProductGeneratedChecksumProperty, id); err != nil {
 		return err
 	}
 
@@ -338,14 +338,14 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	//7 - set the manual-url status to downloaded
 
 	// 0
-	if err := gdd.rdx.ReplaceValues(vangogh_integration.ManualUrlStatusProperty,
+	if err := gdd.rdx.ReplaceValues(vangogh_integration.GogManualUrlStatusProperty,
 		dl.ManualUrl, vangogh_integration.DownloadStatusDownloading.String()); err != nil {
 		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 	}
 
 	// 1
 	if !gdd.forceUpdate {
-		if filename, ok := gdd.rdx.GetLastVal(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl); ok && filename != "" {
+		if filename, ok := gdd.rdx.GetLastVal(vangogh_integration.GogManualUrlFilenameProperty, dl.ManualUrl); ok && filename != "" {
 			absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.DownloadType, gdd.downloadsLayout)
 			if err != nil {
 				return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
@@ -356,7 +356,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 			if _, err = os.Stat(absDownloadPath); err == nil {
 
 				// set the file as Downloaded, to avoid keeping it as Downloading
-				if err = gdd.rdx.ReplaceValues(vangogh_integration.ManualUrlStatusProperty,
+				if err = gdd.rdx.ReplaceValues(vangogh_integration.GogManualUrlStatusProperty,
 					dl.ManualUrl, vangogh_integration.DownloadStatusDownloaded.String()); err != nil {
 					return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 				}
@@ -392,7 +392,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 
 	// 3
 	_, resolvedFilename := path.Split(resolvedUrl.Path)
-	if err = gdd.rdx.ReplaceValues(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl, resolvedFilename); err != nil {
+	if err = gdd.rdx.ReplaceValues(vangogh_integration.GogManualUrlFilenameProperty, dl.ManualUrl, resolvedFilename); err != nil {
 		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 	}
 
@@ -463,7 +463,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	}
 
 	// 7
-	if err = gdd.rdx.ReplaceValues(vangogh_integration.ManualUrlStatusProperty,
+	if err = gdd.rdx.ReplaceValues(vangogh_integration.GogManualUrlStatusProperty,
 		dl.ManualUrl, vangogh_integration.DownloadStatusDownloaded.String()); err != nil {
 		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 	}
@@ -478,9 +478,9 @@ func getQueuedDownloads(rdx redux.Readable) ([]string, error) {
 	gqda := nod.Begin("getting queued downloads...")
 	defer gqda.Done()
 
-	if err := rdx.MustHave(vangogh_integration.GOGOrderDateProperty,
+	if err := rdx.MustHave(vangogh_integration.GogOrderDateProperty,
 		vangogh_integration.DownloadQueuedProperty,
-		vangogh_integration.TitleProperty); err != nil {
+		vangogh_integration.GogTitleProperty); err != nil {
 		return nil, err
 	}
 
@@ -495,12 +495,12 @@ func getQueuedDownloads(rdx redux.Readable) ([]string, error) {
 		gqda.EndWithResult("%d downloads in the queue", len(queuedDownloads))
 	}
 
-	return rdx.Sort(queuedDownloads, true, vangogh_integration.GOGOrderDateProperty, vangogh_integration.TitleProperty)
+	return rdx.Sort(queuedDownloads, true, vangogh_integration.GogOrderDateProperty, vangogh_integration.GogTitleProperty)
 }
 
 func errManualUrlDownloadInterrupted(manualUrl string, rdx redux.Writeable, sourceErr error) error {
 
-	if err := rdx.ReplaceValues(vangogh_integration.ManualUrlStatusProperty,
+	if err := rdx.ReplaceValues(vangogh_integration.GogManualUrlStatusProperty,
 		manualUrl, vangogh_integration.DownloadStatusInterrupted.String()); err != nil {
 		return errors.Join(err, sourceErr)
 	}

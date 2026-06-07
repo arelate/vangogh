@@ -5,11 +5,11 @@ import (
 )
 
 var ProductProperties = []string{
-	vangogh_integration.PriceProperty,
+	vangogh_integration.GogPriceProperty,
 
-	vangogh_integration.TagIdProperty,
+	vangogh_integration.GogTagIdProperty,
 	vangogh_integration.LocalTagsProperty,
-	vangogh_integration.UserWishlistProperty,
+	vangogh_integration.GogUserWishlistProperty,
 
 	vangogh_integration.CreatorsProperty,
 	vangogh_integration.DirectorsProperty,
@@ -22,14 +22,14 @@ var ProductProperties = []string{
 
 	vangogh_integration.LanguageCodeProperty,
 
-	vangogh_integration.SeriesProperty,
-	vangogh_integration.GenresProperty,
-	vangogh_integration.ThemesProperty,
+	vangogh_integration.GogSeriesProperty,
+	vangogh_integration.GogGenresProperty,
+	vangogh_integration.GogThemesProperty,
 	vangogh_integration.HltbGenresProperty,
-	vangogh_integration.StoreTagsProperty,
-	vangogh_integration.FeaturesProperty,
+	vangogh_integration.GogStoreTagsProperty,
+	vangogh_integration.GogFeaturesProperty,
 	vangogh_integration.SteamCategoriesProperty,
-	vangogh_integration.GameModesProperty,
+	vangogh_integration.GogGameModesProperty,
 
 	vangogh_integration.EnginesProperty,
 	vangogh_integration.EnginesBuildsProperty,
@@ -39,9 +39,9 @@ var ProductProperties = []string{
 	vangogh_integration.HltbHoursToCompletePlusProperty,
 	vangogh_integration.HltbHoursToComplete100Property,
 
-	vangogh_integration.GlobalReleaseDateProperty,
-	vangogh_integration.GOGReleaseDateProperty,
-	vangogh_integration.GOGOrderDateProperty,
+	vangogh_integration.GogGlobalReleaseDateProperty,
+	vangogh_integration.GogReleaseDateProperty,
+	vangogh_integration.GogOrderDateProperty,
 }
 
 var ProductExternalLinksProperties = []string{

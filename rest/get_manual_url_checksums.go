@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/redux"
@@ -35,7 +36,7 @@ func GetManualUrlChecksums(w http.ResponseWriter, r *http.Request) {
 	if err != nil && vangogh_integration.IsDetailsNotFound(err) {
 		// details not found is only a fatal error for GAME products,
 		// details don't exist for PACK and DLC products
-		if productType, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); ok && productType == vangogh_integration.GameProductType {
+		if productType, ok := rdx.GetLastVal(vangogh_integration.GogProductTypeProperty, id); ok && productType == gog_integration.ProductTypeGame {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 			return
 		}
@@ -61,7 +62,7 @@ func GetManualUrlChecksums(w http.ResponseWriter, r *http.Request) {
 func getManualUrlChecksums(id string, dls vangogh_integration.DownloadsList, rdx redux.Readable) (map[string]string, error) {
 
 	var slug string
-	if sp, ok := rdx.GetLastVal(vangogh_integration.SlugProperty, id); ok {
+	if sp, ok := rdx.GetLastVal(vangogh_integration.GogSlugProperty, id); ok {
 		slug = sp
 	}
 
@@ -78,7 +79,7 @@ func getManualUrlChecksums(id string, dls vangogh_integration.DownloadsList, rdx
 			return nil, err
 		}
 
-		if filename, ok := rdx.GetLastVal(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl); ok {
+		if filename, ok := rdx.GetLastVal(vangogh_integration.GogManualUrlFilenameProperty, dl.ManualUrl); ok {
 			absDownloadPath := filepath.Join(absSlugDownloadDir, filename)
 
 			if md5, err := getMd5Checksum(absDownloadPath); err == nil {

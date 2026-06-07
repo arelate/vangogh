@@ -14,23 +14,23 @@ import (
 )
 
 func GetSteamGogIds(gogIds iter.Seq[string]) (map[string][]string, error) {
-	return getExternalIdGogIds(gogIds, vangogh_integration.SteamAppIdProperty)
+	return getExternalIdGogIds(gogIds, vangogh_integration.GogSteamAppIdProperty)
 }
 
 func GetPcgwGogIds(gogIds iter.Seq[string]) (map[string][]string, error) {
-	return getExternalIdGogIds(gogIds, vangogh_integration.PcgwPageIdProperty)
+	return getExternalIdGogIds(gogIds, vangogh_integration.GogPcgwPageIdProperty)
 }
 
 func GetWikipediaIds(gogIds iter.Seq[string]) (map[string][]string, error) {
-	return getExternalIdGogIds(gogIds, vangogh_integration.WikipediaIdProperty)
+	return getExternalIdGogIds(gogIds, vangogh_integration.GogWikipediaIdProperty)
 }
 
 func GetOpenCriticGogIds(gogIds iter.Seq[string]) (map[string][]string, error) {
-	return getExternalIdGogIds(gogIds, vangogh_integration.OpenCriticIdProperty)
+	return getExternalIdGogIds(gogIds, vangogh_integration.GogOpenCriticIdProperty)
 }
 
 func GetHltbIds(gogIds iter.Seq[string]) (map[string][]string, error) {
-	return getExternalIdGogIds(gogIds, vangogh_integration.HltbIdProperty)
+	return getExternalIdGogIds(gogIds, vangogh_integration.GogHltbIdProperty)
 }
 
 func getExternalIdGogIds(gogIds iter.Seq[string], externalIdProperty string) (map[string][]string, error) {
@@ -78,19 +78,19 @@ func GetGogCatalogAccountProducts(since int64) (map[string]any, error) {
 	}
 
 	rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(),
-		vangogh_integration.RootEditionsProperty,
-		vangogh_integration.IncludesGamesProperty)
+		vangogh_integration.GogRootEditionsProperty,
+		vangogh_integration.GogIncludesGamesProperty)
 	if err != nil {
 		return nil, err
 	}
 
 	for id := range gogCatalogAccountProductIds {
-		if rootEditionIds, ok := rdx.GetAllValues(vangogh_integration.RootEditionsProperty, id); ok {
+		if rootEditionIds, ok := rdx.GetAllValues(vangogh_integration.GogRootEditionsProperty, id); ok {
 			for _, reId := range rootEditionIds {
 				gogCatalogAccountProductIds[reId] = nil
 			}
 		}
-		if includesGamesIds, ok := rdx.GetAllValues(vangogh_integration.IncludesGamesProperty, id); ok {
+		if includesGamesIds, ok := rdx.GetAllValues(vangogh_integration.GogIncludesGamesProperty, id); ok {
 			for _, igId := range includesGamesIds {
 				gogCatalogAccountProductIds[igId] = nil
 			}
@@ -103,8 +103,8 @@ func GetGogCatalogAccountProducts(since int64) (map[string]any, error) {
 func GetGameGogIds(gogIds map[string]any) (map[string]any, error) {
 
 	rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(),
-		vangogh_integration.ProductTypeProperty,
-		vangogh_integration.IsDemoProperty)
+		vangogh_integration.GogProductTypeProperty,
+		vangogh_integration.GogIsDemoProperty)
 	if err != nil {
 		return nil, err
 	}
@@ -112,10 +112,10 @@ func GetGameGogIds(gogIds map[string]any) (map[string]any, error) {
 	gameGogIds := make(map[string]any)
 
 	for gogId := range gogIds {
-		if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, gogId); ok && pt != vangogh_integration.GameProductType {
+		if pt, ok := rdx.GetLastVal(vangogh_integration.GogProductTypeProperty, gogId); ok && pt != gog_integration.ProductTypeGame {
 			continue
 		}
-		if demo, ok := rdx.GetLastVal(vangogh_integration.IsDemoProperty, gogId); ok && demo == vangogh_integration.TrueValue {
+		if demo, ok := rdx.GetLastVal(vangogh_integration.GogIsDemoProperty, gogId); ok && demo == vangogh_integration.TrueValue {
 			continue
 		}
 		gameGogIds[gogId] = nil
@@ -126,7 +126,7 @@ func GetGameGogIds(gogIds map[string]any) (map[string]any, error) {
 
 func AppendGogEditions(gogProducts map[string]any) (map[string]any, error) {
 
-	rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(), vangogh_integration.EditionsProperty)
+	rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(), vangogh_integration.GogEditionsProperty)
 	if err != nil {
 		return nil, err
 	}
@@ -134,7 +134,7 @@ func AppendGogEditions(gogProducts map[string]any) (map[string]any, error) {
 	productsEditions := maps.Clone(gogProducts)
 
 	for id := range gogProducts {
-		if editions, ok := rdx.GetAllValues(vangogh_integration.EditionsProperty, id); ok {
+		if editions, ok := rdx.GetAllValues(vangogh_integration.GogEditionsProperty, id); ok {
 			for _, eId := range editions {
 				productsEditions[eId] = nil
 			}
@@ -315,9 +315,9 @@ func getNewUpdatedGogOrderPagesProducts(since int64) (iter.Seq[string], error) {
 	}
 
 	rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(),
-		vangogh_integration.ProductTypeProperty,
-		vangogh_integration.RequiresGamesProperty,
-		vangogh_integration.IncludesGamesProperty)
+		vangogh_integration.GogProductTypeProperty,
+		vangogh_integration.GogRequiresGamesProperty,
+		vangogh_integration.GogIncludesGamesProperty)
 
 	orderPagesProducts := make(map[string]any)
 
@@ -375,7 +375,7 @@ func getGogOrderPageProducts(id string, since int64, kvGogOrderPage kevlar.KeyVa
 
 func getGogOrderProductsIncludesRequires(gogOrderPageProductsIds iter.Seq[string], rdx redux.Readable) (map[string]any, error) {
 
-	if err := rdx.MustHave(vangogh_integration.IncludesGamesProperty, vangogh_integration.RequiresGamesProperty); err != nil {
+	if err := rdx.MustHave(vangogh_integration.GogIncludesGamesProperty, vangogh_integration.GogRequiresGamesProperty); err != nil {
 		return nil, err
 	}
 
@@ -383,21 +383,21 @@ func getGogOrderProductsIncludesRequires(gogOrderPageProductsIds iter.Seq[string
 
 	for productId := range gogOrderPageProductsIds {
 
-		if productType, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, productId); ok {
+		if productType, ok := rdx.GetLastVal(vangogh_integration.GogProductTypeProperty, productId); ok {
 
 			switch productType {
-			case vangogh_integration.GameProductType:
+			case gog_integration.ProductTypeGame:
 				orderedGames[productId] = nil
-			case vangogh_integration.PackProductType:
-				if includesIds, sure := rdx.GetAllValues(vangogh_integration.IncludesGamesProperty, productId); sure {
+			case gog_integration.ProductTypePack:
+				if includesIds, sure := rdx.GetAllValues(vangogh_integration.GogIncludesGamesProperty, productId); sure {
 					for _, id := range includesIds {
-						if pt, yeah := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); yeah && pt == vangogh_integration.GameProductType {
+						if pt, yeah := rdx.GetLastVal(vangogh_integration.GogProductTypeProperty, id); yeah && pt == gog_integration.ProductTypeGame {
 							orderedGames[id] = nil
 						}
 					}
 				}
-			case vangogh_integration.DlcProductType:
-				if requiresIds, sure := rdx.GetAllValues(vangogh_integration.RequiresGamesProperty, productId); sure {
+			case gog_integration.ProductTypeDlc:
+				if requiresIds, sure := rdx.GetAllValues(vangogh_integration.GogRequiresGamesProperty, productId); sure {
 					for _, id := range requiresIds {
 						orderedGames[id] = nil
 					}

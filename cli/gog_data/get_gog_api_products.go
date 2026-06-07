@@ -70,13 +70,13 @@ func ReduceGogApiProducts(kvGogApiProducts kevlar.KeyValues, since int64, force 
 	defer rapa.Done()
 
 	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
-		vangogh_integration.GOGApiProductProperties()...)
+		vangogh_integration.GogApiProductProperties()...)
 	if err != nil {
 		return err
 	}
 
-	apiProductReductions := shared_data.InitReductions(vangogh_integration.GOGApiProductProperties()...)
-	apiProductKeyValues, err := shared_data.InitKeyValues(vangogh_integration.GOGApiProductsKeyValues()...)
+	apiProductReductions := shared_data.InitReductions(vangogh_integration.GogApiProductProperties()...)
+	apiProductKeyValues, err := shared_data.InitKeyValues(vangogh_integration.GogApiProductsKeyValues()...)
 	if err != nil {
 		return err
 	}
@@ -127,49 +127,49 @@ func reduceGogApiProductProperties(id string, ap *gog_integration.ApiProduct, pi
 		var values []string
 
 		switch property {
-		case vangogh_integration.TitleProperty:
+		case vangogh_integration.GogTitleProperty:
 			values = []string{ap.GetTitle()}
-		case vangogh_integration.DevelopersProperty:
+		case vangogh_integration.GogDevelopersProperty:
 			values = ap.GetDevelopers()
-		case vangogh_integration.PublishersProperty:
+		case vangogh_integration.GogPublishersProperty:
 			values = ap.GetPublishers()
-		case vangogh_integration.ImageProperty:
+		case vangogh_integration.GogImageProperty:
 			values = []string{gog_integration.ImageId(ap.GetImage())}
-		case vangogh_integration.VerticalImageProperty:
+		case vangogh_integration.GogVerticalImageProperty:
 			values = []string{gog_integration.ImageId(ap.GetVerticalImage())}
-		case vangogh_integration.HeroProperty:
+		case vangogh_integration.GogHeroProperty:
 			values = []string{gog_integration.ImageId(ap.GetHero())}
-		case vangogh_integration.LogoProperty:
+		case vangogh_integration.GogLogoProperty:
 			values = []string{gog_integration.ImageId(ap.GetLogo())}
-		case vangogh_integration.IconProperty:
+		case vangogh_integration.GogIconProperty:
 			values = []string{gog_integration.ImageId(ap.GetIcon())}
-		case vangogh_integration.IconSquareProperty:
+		case vangogh_integration.GogIconSquareProperty:
 			values = []string{gog_integration.ImageId(ap.GetIconSquare())}
-		case vangogh_integration.BackgroundProperty:
+		case vangogh_integration.GogBackgroundProperty:
 			values = []string{gog_integration.ImageId(ap.GetBackground())}
-		case vangogh_integration.GenresProperty:
+		case vangogh_integration.GogGenresProperty:
 			values = ap.GetGenres()
-		case vangogh_integration.FeaturesProperty:
+		case vangogh_integration.GogFeaturesProperty:
 			values = ap.GetFeatures()
-		case vangogh_integration.SeriesProperty:
+		case vangogh_integration.GogSeriesProperty:
 			values = []string{ap.GetSeries()}
 		case vangogh_integration.VideoIdProperty:
 			values = ap.GetVideoIds()
 		case vangogh_integration.OperatingSystemsProperty:
 			values = ap.GetOperatingSystems()
-		case vangogh_integration.IncludesGamesProperty:
+		case vangogh_integration.GogIncludesGamesProperty:
 			values = ap.GetIncludesGames()
-		case vangogh_integration.IsIncludedByGamesProperty:
+		case vangogh_integration.GogIsIncludedByGamesProperty:
 			values = ap.GetIsIncludedInGames()
-		case vangogh_integration.RequiresGamesProperty:
+		case vangogh_integration.GogRequiresGamesProperty:
 			values = ap.GetRequiresGames()
-		case vangogh_integration.IsRequiredByGamesProperty:
+		case vangogh_integration.GogIsRequiredByGamesProperty:
 			values = ap.GetIsRequiredByGames()
-		case vangogh_integration.ModifiesGamesProperty:
+		case vangogh_integration.GogModifiesGamesProperty:
 			values = ap.GetModifiesGames()
-		case vangogh_integration.IsModifiedByGamesProperty:
+		case vangogh_integration.GogIsModifiedByGamesProperty:
 			values = ap.GetIsModifiedByGames()
-		case vangogh_integration.IsModProperty:
+		case vangogh_integration.GogIsModProperty:
 			isMod := vangogh_integration.FalseValue
 			for _, app := range ap.Embedded.Properties {
 				if app.Name == "Mod" {
@@ -179,29 +179,29 @@ func reduceGogApiProductProperties(id string, ap *gog_integration.ApiProduct, pi
 			values = []string{isMod}
 		case vangogh_integration.LanguageCodeProperty:
 			values = ap.GetLanguageCodes()
-		case vangogh_integration.GlobalReleaseDateProperty:
+		case vangogh_integration.GogGlobalReleaseDateProperty:
 			values = []string{ap.GetGlobalRelease()}
-		case vangogh_integration.GOGReleaseDateProperty:
+		case vangogh_integration.GogReleaseDateProperty:
 			values = []string{ap.GetGOGRelease()}
-		case vangogh_integration.StoreUrlProperty:
+		case vangogh_integration.GogStoreUrlProperty:
 			values = []string{ap.GetStoreUrl()}
-		case vangogh_integration.ForumUrlProperty:
+		case vangogh_integration.GogForumUrlProperty:
 			values = []string{ap.GetForumUrl()}
-		case vangogh_integration.SupportUrlProperty:
+		case vangogh_integration.GogSupportUrlProperty:
 			values = []string{ap.GetSupportUrl()}
-		case vangogh_integration.ProductTypeProperty:
+		case vangogh_integration.GogProductTypeProperty:
 			values = []string{ap.GetProductType()}
-		case vangogh_integration.CopyrightsProperty:
+		case vangogh_integration.GogCopyrightsProperty:
 			values = []string{ap.GetCopyrights()}
-		case vangogh_integration.AdditionalRequirementsProperty:
+		case vangogh_integration.GogAdditionalRequirementsProperty:
 			values = []string{ap.GetAdditionalRequirements()}
-		case vangogh_integration.StoreTagsProperty:
+		case vangogh_integration.GogStoreTagsProperty:
 			values = ap.GetStoreTags()
-		case vangogh_integration.InDevelopmentProperty:
+		case vangogh_integration.GogInDevelopmentProperty:
 			values = []string{strconv.FormatBool(ap.GetInDevelopment())}
-		case vangogh_integration.PreOrderProperty:
+		case vangogh_integration.GogPreOrderProperty:
 			values = []string{strconv.FormatBool(ap.GetPreOrder())}
-		case vangogh_integration.ScreenshotsProperty:
+		case vangogh_integration.GogScreenshotsProperty:
 			values = gog_integration.ImageIds(ap.GetScreenshots()...)
 		}
 

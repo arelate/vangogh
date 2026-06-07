@@ -45,12 +45,12 @@ func ReduceGogCatalogPages(kvGogCatalogPages kevlar.KeyValues, since int64) erro
 	defer rcpa.Done()
 
 	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
-		vangogh_integration.GOGCatalogPageProperties()...)
+		vangogh_integration.GogCatalogPageProperties()...)
 	if err != nil {
 		return err
 	}
 
-	catalogPagesReductions := shared_data.InitReductions(vangogh_integration.GOGCatalogPageProperties()...)
+	catalogPagesReductions := shared_data.InitReductions(vangogh_integration.GogCatalogPageProperties()...)
 
 	updatedCatalogPages := kvGogCatalogPages.Since(since, kevlar.Create, kevlar.Update)
 
@@ -96,39 +96,39 @@ func reduceGogCatalogPageProperties(page string, catalogPage *gog_integration.Ca
 			var values []string
 
 			switch property {
-			case vangogh_integration.TitleProperty:
+			case vangogh_integration.GogTitleProperty:
 				values = []string{cp.GetTitle()}
-			case vangogh_integration.DevelopersProperty:
+			case vangogh_integration.GogDevelopersProperty:
 				values = cp.GetDevelopers()
-			case vangogh_integration.PublishersProperty:
+			case vangogh_integration.GogPublishersProperty:
 				values = cp.GetPublishers()
-			case vangogh_integration.ImageProperty:
+			case vangogh_integration.GogImageProperty:
 				values = []string{gog_integration.ImageId(cp.GetImage())}
-			case vangogh_integration.VerticalImageProperty:
+			case vangogh_integration.GogVerticalImageProperty:
 				values = []string{gog_integration.ImageId(cp.GetVerticalImage())}
-			case vangogh_integration.FeaturesProperty:
+			case vangogh_integration.GogFeaturesProperty:
 				values = cp.GetFeatures()
-			case vangogh_integration.RatingProperty:
+			case vangogh_integration.GogRatingProperty:
 				values = []string{cp.GetRating()}
-			case vangogh_integration.GenresProperty:
+			case vangogh_integration.GogGenresProperty:
 				values = cp.GetGenres()
 			case vangogh_integration.OperatingSystemsProperty:
 				values = cp.GetOperatingSystems()
-			case vangogh_integration.SlugProperty:
+			case vangogh_integration.GogSlugProperty:
 				values = []string{cp.GetSlug()}
-			case vangogh_integration.GlobalReleaseDateProperty:
+			case vangogh_integration.GogGlobalReleaseDateProperty:
 				values = []string{cp.GetGlobalRelease()}
-			case vangogh_integration.ProductTypeProperty:
+			case vangogh_integration.GogProductTypeProperty:
 				values = []string{cp.GetProductType()}
-			case vangogh_integration.StoreTagsProperty:
+			case vangogh_integration.GogStoreTagsProperty:
 				values = cp.GetStoreTags()
-			case vangogh_integration.BasePriceProperty:
+			case vangogh_integration.GogBasePriceProperty:
 				values = []string{cp.GetBasePrice()}
-			case vangogh_integration.PriceProperty:
+			case vangogh_integration.GogPriceProperty:
 				values = []string{cp.GetPrice()}
-			case vangogh_integration.IsFreeProperty:
+			case vangogh_integration.GogIsFreeProperty:
 				values = []string{strconv.FormatBool(cp.IsFree())}
-			case vangogh_integration.IsModProperty:
+			case vangogh_integration.GogIsModProperty:
 				isMod := vangogh_integration.FalseValue
 				for _, tag := range cp.Tags {
 					if tag.Name == "Mod" {
@@ -136,27 +136,27 @@ func reduceGogCatalogPageProperties(page string, catalogPage *gog_integration.Ca
 					}
 				}
 				values = []string{isMod}
-			case vangogh_integration.IsDiscountedProperty:
+			case vangogh_integration.GogIsDiscountedProperty:
 				values = []string{strconv.FormatBool(cp.IsDiscounted())}
-			case vangogh_integration.DiscountPercentageProperty:
+			case vangogh_integration.GogDiscountPercentageProperty:
 				values = []string{strconv.Itoa(cp.GetDiscountPercentage())}
-			case vangogh_integration.ComingSoonProperty:
+			case vangogh_integration.GogComingSoonProperty:
 				values = []string{strconv.FormatBool(cp.GetComingSoon())}
-			case vangogh_integration.PreOrderProperty:
+			case vangogh_integration.GogPreOrderProperty:
 				values = []string{strconv.FormatBool(cp.GetPreOrder())}
-			case vangogh_integration.InDevelopmentProperty:
+			case vangogh_integration.GogInDevelopmentProperty:
 				values = []string{strconv.FormatBool(cp.GetInDevelopment())}
-			case vangogh_integration.EditionsProperty:
+			case vangogh_integration.GogEditionsProperty:
 				values = cp.GetEditions()
-			case vangogh_integration.RootEditionsProperty:
+			case vangogh_integration.GogRootEditionsProperty:
 				values = cp.GetRootEditions()
-			case vangogh_integration.CatalogPageProductsProperty:
+			case vangogh_integration.GogCatalogPageProductsProperty:
 				values = []string{page}
-			case vangogh_integration.UserWishlistProperty:
-				if !rdx.HasValue(vangogh_integration.UserWishlistProperty, cp.Id, vangogh_integration.TrueValue) {
+			case vangogh_integration.GogUserWishlistProperty:
+				if !rdx.HasValue(vangogh_integration.GogUserWishlistProperty, cp.Id, vangogh_integration.TrueValue) {
 					values = []string{vangogh_integration.FalseValue}
 				}
-			case vangogh_integration.ScreenshotsProperty:
+			case vangogh_integration.GogScreenshotsProperty:
 				values = gog_integration.ImageIds(cp.GetScreenshots()...)
 			}
 

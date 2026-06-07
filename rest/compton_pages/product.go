@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/perm"
 	"github.com/arelate/vangogh/rest/compton_data"
@@ -33,9 +34,9 @@ var offeringsBadgesOrder = []compton.Symbol{
 	compton.PuzzlePiece,
 }
 
-func Product(id string, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
+func GogProduct(id string, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
 
-	title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
+	title, ok := rdx.GetLastVal(vangogh_integration.GogTitleProperty, id)
 	if !ok {
 		return nil
 	}
@@ -53,7 +54,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 
 	/* Product poster */
 
-	if poster := compton_fragments.ProductPoster(id, rdx); poster != nil {
+	if poster := compton_fragments.GogProductPoster(id, rdx); poster != nil {
 		pageStack.Append(compton.FICenter(p, poster))
 	}
 
@@ -131,7 +132,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 				videos = len(vp)
 			}
 
-			if sp, sure := rdx.GetAllValues(vangogh_integration.ScreenshotsProperty, id); sure {
+			if sp, sure := rdx.GetAllValues(vangogh_integration.GogScreenshotsProperty, id); sure {
 				images = len(sp)
 			}
 
@@ -174,7 +175,7 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 			}
 
 			if dcText == "" || dcText == "Unknown" {
-				if pt, ok := rdx.GetLastVal(vangogh_integration.ProtonDBTierProperty, id); ok {
+				if pt, ok := rdx.GetLastVal(vangogh_integration.ProtonDbTierProperty, id); ok {
 					dcText = pt
 					if dcs, sure := compton_data.CompatibilitySymbols[pt]; sure {
 						dcSymbol = dcs
@@ -235,12 +236,12 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 			detailsSummary.AppendBadges(compton.Badges(p, fmtReceptionBadges...))
 		case compton_data.OfferingsSection:
 			ops := []string{
-				vangogh_integration.IsIncludedByGamesProperty,
-				vangogh_integration.IsRequiredByGamesProperty,
-				vangogh_integration.IsModifiedByGamesProperty,
-				vangogh_integration.IncludesGamesProperty,
-				vangogh_integration.RequiresGamesProperty,
-				vangogh_integration.ModifiesGamesProperty}
+				vangogh_integration.GogIsIncludedByGamesProperty,
+				vangogh_integration.GogIsRequiredByGamesProperty,
+				vangogh_integration.GogIsModifiedByGamesProperty,
+				vangogh_integration.GogIncludesGamesProperty,
+				vangogh_integration.GogRequiresGamesProperty,
+				vangogh_integration.GogModifiesGamesProperty}
 
 			offeringsSymbols := make(map[compton.Symbol]int)
 
@@ -332,24 +333,24 @@ func Product(id string, rdx redux.Readable, permissions ...author.Permission) co
 
 	}
 
-	if owned, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok && owned == vangogh_integration.TrueValue {
+	if owned, ok := rdx.GetLastVal(vangogh_integration.GogOwnedProperty, id); ok && owned == vangogh_integration.TrueValue {
 
 		var hintSentences []string
 
-		if preorder, sure := rdx.GetLastVal(vangogh_integration.PreOrderProperty, id); sure && preorder == vangogh_integration.TrueValue {
+		if preorder, sure := rdx.GetLastVal(vangogh_integration.GogPreOrderProperty, id); sure && preorder == vangogh_integration.TrueValue {
 			hintSentences = append(hintSentences, "Installers are not available for pre-orders.")
 		}
 
-		if productType, sure := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); sure && productType != vangogh_integration.GameProductType {
+		if productType, sure := rdx.GetLastVal(vangogh_integration.GogProductTypeProperty, id); sure && productType != gog_integration.ProductTypeGame {
 
 			if len(hintSentences) == 0 {
 				hintSentences = append(hintSentences, "No installers here.")
 			}
 
 			switch productType {
-			case vangogh_integration.DlcProductType:
+			case gog_integration.ProductTypeDlc:
 				hintSentences = append(hintSentences, "Visit the <b>Offerings</b> section for the required product download links - including this DLC.")
-			case vangogh_integration.PackProductType:
+			case gog_integration.ProductTypePack:
 				hintSentences = append(hintSentences, "See the <b>Offerings</b> section for included products with downloads.")
 			}
 

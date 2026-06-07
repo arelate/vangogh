@@ -47,10 +47,10 @@ func Cleanup(
 	defer ca.Done()
 
 	rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(),
-		vangogh_integration.SlugProperty,
-		vangogh_integration.ProductTypeProperty,
-		vangogh_integration.ManualUrlFilenameProperty,
-		vangogh_integration.ProductValidationResultProperty)
+		vangogh_integration.GogSlugProperty,
+		vangogh_integration.GogProductTypeProperty,
+		vangogh_integration.GogManualUrlFilenameProperty,
+		vangogh_integration.GogProductValidationResultProperty)
 	if err != nil {
 		return err
 	}
@@ -118,8 +118,8 @@ type cleanupDelegate struct {
 func (cd *cleanupDelegate) Process(id string, slug string, list vangogh_integration.DownloadsList) error {
 
 	if err := cd.rdx.MustHave(
-		vangogh_integration.ManualUrlFilenameProperty,
-		vangogh_integration.ProductValidationResultProperty); err != nil {
+		vangogh_integration.GogManualUrlFilenameProperty,
+		vangogh_integration.GogProductValidationResultProperty); err != nil {
 		return err
 	}
 
@@ -129,7 +129,7 @@ func (cd *cleanupDelegate) Process(id string, slug string, list vangogh_integrat
 	//2. enumerate all files present for a slug (files present in a `downloads/slug` folder)
 	//3. delete (present files).Except(expected files) and corresponding xml files
 
-	if pvss, ok := cd.rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
+	if pvss, ok := cd.rdx.GetLastVal(vangogh_integration.GogProductValidationResultProperty, id); ok {
 		pvs := vangogh_integration.ParseValidationStatus(pvss)
 		if pvs != vangogh_integration.ValidationStatusSuccess && pvs != vangogh_integration.ValidationStatusMissingChecksum {
 			// don't cleanup the product unless it's been validated, meaning we've got the latest version downloaded
@@ -148,7 +148,7 @@ func (cd *cleanupDelegate) Process(id string, slug string, list vangogh_integrat
 			return err
 		}
 
-		if filename, ok := cd.rdx.GetLastVal(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl); ok {
+		if filename, ok := cd.rdx.GetLastVal(vangogh_integration.GogManualUrlFilenameProperty, dl.ManualUrl); ok {
 			absDownloadPath := filepath.Join(absSlugDownloadDir, filename)
 			absExpectedSet[absDownloadPath] = nil
 		}

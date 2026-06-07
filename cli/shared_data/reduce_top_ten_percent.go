@@ -1,11 +1,13 @@
 package shared_data
 
 import (
+	"slices"
+	"strconv"
+
+	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/redux"
-	"slices"
-	"strconv"
 )
 
 func reduceTopPercent(rdx redux.Writeable) error {
@@ -17,8 +19,8 @@ func reduceTopPercent(rdx redux.Writeable) error {
 
 	for id := range rdx.Keys(vangogh_integration.OpenCriticPercentileProperty) {
 
-		if pt, sure := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); sure && pt == vangogh_integration.GameProductType {
-			if demo, yeah := rdx.GetLastVal(vangogh_integration.IsDemoProperty, id); yeah && demo != vangogh_integration.TrueValue {
+		if pt, sure := rdx.GetLastVal(vangogh_integration.GogProductTypeProperty, id); sure && pt == gog_integration.ProductTypeGame {
+			if demo, yeah := rdx.GetLastVal(vangogh_integration.GogIsDemoProperty, id); yeah && demo != vangogh_integration.TrueValue {
 
 				if pcts, ok := rdx.GetLastVal(vangogh_integration.OpenCriticPercentileProperty, id); ok {
 					if pcti, err := strconv.ParseInt(pcts, 10, 32); err == nil {

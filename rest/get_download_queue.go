@@ -23,7 +23,7 @@ func GetDownloadsQueue(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var err error
-	queuedIds, err = rdx.Sort(queuedIds, true, vangogh_integration.GOGOrderDateProperty, vangogh_integration.TitleProperty)
+	queuedIds, err = rdx.Sort(queuedIds, true, vangogh_integration.GogOrderDateProperty, vangogh_integration.GogTitleProperty)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return

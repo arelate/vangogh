@@ -21,7 +21,7 @@ func GetInstallers(w http.ResponseWriter, r *http.Request) {
 
 	id := r.URL.Query().Get("id")
 
-	if owned, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); !ok || owned != vangogh_integration.TrueValue {
+	if owned, ok := rdx.GetLastVal(vangogh_integration.GogOwnedProperty, id); !ok || owned != vangogh_integration.TrueValue {
 		w.WriteHeader(http.StatusNoContent)
 		if _, err := w.Write([]byte("not owned")); err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
@@ -31,14 +31,14 @@ func GetInstallers(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// do not check existance in case of products that are Owned (see above) but don't have a product type
-	pt, _ := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id)
+	pt, _ := rdx.GetLastVal(vangogh_integration.GogProductTypeProperty, id)
 
 	switch pt {
-	case vangogh_integration.PackProductType:
+	case gog_integration.ProductTypePack:
 		// do nothing
-	case vangogh_integration.DlcProductType:
+	case gog_integration.ProductTypeDlc:
 		// do nothing
-	case vangogh_integration.GameProductType:
+	case gog_integration.ProductTypeGame:
 		fallthrough
 	default:
 		det, err := getGogDetails(id)

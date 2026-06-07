@@ -66,7 +66,7 @@ func ReduceGogUserWishlist(kvGogUserWishlist kevlar.KeyValues) error {
 	ruwa := nod.Begin(" reducing %s...", vangogh_integration.GogUserWishlist)
 	defer ruwa.Done()
 
-	key := vangogh_integration.UserWishlistProperty
+	key := vangogh_integration.GogUserWishlistProperty
 
 	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), key)
 	if err != nil {

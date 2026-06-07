@@ -35,7 +35,7 @@ func TagsEditor(
 	p.RegisterStyles(compton_styles.Styles, "tag-editors.css")
 
 	var title string
-	if tp, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
+	if tp, ok := rdx.GetLastVal(vangogh_integration.GogTitleProperty, id); ok {
 		title = tp
 	}
 
@@ -46,7 +46,7 @@ func TagsEditor(
 
 	/* Product poster */
 
-	if poster := compton_fragments.ProductPoster(id, rdx); poster != nil {
+	if poster := compton_fragments.GogProductPoster(id, rdx); poster != nil {
 		pageStack.Append(compton.FICenter(p, poster))
 	}
 
@@ -80,7 +80,7 @@ func TagsEditor(
 	switch tagsProperty {
 	case vangogh_integration.LocalTagsProperty:
 		action = "/local-tags/apply"
-	case vangogh_integration.TagIdProperty:
+	case vangogh_integration.GogTagIdProperty:
 		action = "/tags/apply"
 	default:
 		panic("unknown tags property editor")

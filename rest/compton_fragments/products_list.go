@@ -10,7 +10,7 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-func ProductsList(r compton.Registrar, ids []string, from, to int, rdx redux.Readable, topTarget bool, permissions ...author.Permission) compton.Element {
+func GogProductsList(r compton.Registrar, ids []string, from, to int, rdx redux.Readable, topTarget bool, permissions ...author.Permission) compton.Element {
 
 	r.RegisterStyles(compton_styles.Styles, "products-list.css")
 
@@ -24,7 +24,7 @@ func ProductsList(r compton.Registrar, ids []string, from, to int, rdx redux.Rea
 			productLink.SetAttribute("target", "_top")
 		}
 
-		if productCard := ProductCard(r, id, rdx, permissions...); productCard != nil {
+		if productCard := GogProductCard(r, id, rdx, permissions...); productCard != nil {
 			productLink.Append(productCard)
 			productCards.Append(productLink)
 		}

@@ -61,7 +61,7 @@ var displayTypeSymbols = map[string]compton.Symbol{
 }
 
 func Compatibility(id string, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
-	title, _ := rdx.GetLastVal(vangogh_integration.TitleProperty, id)
+	title, _ := rdx.GetLastVal(vangogh_integration.GogTitleProperty, id)
 
 	s := compton_fragments.ProductSection(compton_data.CompatibilitySection, id, rdx)
 
@@ -99,13 +99,13 @@ func Compatibility(id string, rdx redux.Readable, permissions ...author.Permissi
 func getDeckAppCompatibilityReport(gogId string, rdx redux.Readable) (*steam_integration.DeckAppCompatibilityReport, error) {
 
 	var steamAppId string
-	if sai, ok := rdx.GetLastVal(vangogh_integration.SteamAppIdProperty, gogId); ok && sai != "" {
+	if sai, ok := rdx.GetLastVal(vangogh_integration.GogSteamAppIdProperty, gogId); ok && sai != "" {
 		steamAppId = sai
 	} else {
 
-		if rootEditionId, sure := rdx.GetLastVal(vangogh_integration.RootEditionsProperty, gogId); sure && rootEditionId != "" {
+		if rootEditionId, sure := rdx.GetLastVal(vangogh_integration.GogRootEditionsProperty, gogId); sure && rootEditionId != "" {
 
-			if reSai, yeah := rdx.GetLastVal(vangogh_integration.SteamAppIdProperty, rootEditionId); yeah && reSai != "" {
+			if reSai, yeah := rdx.GetLastVal(vangogh_integration.GogSteamAppIdProperty, rootEditionId); yeah && reSai != "" {
 				steamAppId = reSai
 			} else {
 				return nil, errors.New("no steam app id for root edition id " + gogId)

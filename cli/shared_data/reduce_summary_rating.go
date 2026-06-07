@@ -17,12 +17,12 @@ func reduceSummaryRatings(rdx redux.Writeable) error {
 	avgSummaryRatings := make(map[string][]string)
 	avgSummaryReviews := make(map[string][]string)
 
-	for id := range rdx.Keys(vangogh_integration.TitleProperty) {
+	for id := range rdx.Keys(vangogh_integration.GogTitleProperty) {
 
 		summaryRating := 0
 		summaryRatingsCount := 0
 
-		if grs, ok := rdx.GetLastVal(vangogh_integration.RatingProperty, id); ok && grs != "" && grs != "0" {
+		if grs, ok := rdx.GetLastVal(vangogh_integration.GogRatingProperty, id); ok && grs != "" && grs != "0" {
 			if grf, err := strconv.ParseFloat(grs, 32); err == nil {
 				summaryRating += int(grf * 2)
 				summaryRatingsCount++

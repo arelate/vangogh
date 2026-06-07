@@ -36,11 +36,11 @@ func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageEleme
 
 	switch pt {
 	case vangogh_integration.GogOrderPage:
-		pageProperty = vangogh_integration.OrderPageProductsProperty
+		pageProperty = vangogh_integration.GogOrderPageProductsProperty
 	case vangogh_integration.GogAccountPage:
-		pageProperty = vangogh_integration.AccountPageProductsProperty
+		pageProperty = vangogh_integration.GogAccountPageProductsProperty
 	case vangogh_integration.GogCatalogPage:
-		pageProperty = vangogh_integration.CatalogPageProductsProperty
+		pageProperty = vangogh_integration.GogCatalogPageProductsProperty
 	default:
 		// do nothing
 	}

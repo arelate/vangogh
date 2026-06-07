@@ -104,23 +104,23 @@ func reduceTypes(rdx redux.Writeable) error {
 }
 
 func GetSteamAppIdGogIds(rdx redux.Readable) map[string][]string {
-	return externalIdsGogIds(vangogh_integration.SteamAppIdProperty, rdx)
+	return externalIdsGogIds(vangogh_integration.GogSteamAppIdProperty, rdx)
 }
 
 func GetPcgwPageIdGogIds(rdx redux.Readable) map[string][]string {
-	return externalIdsGogIds(vangogh_integration.PcgwPageIdProperty, rdx)
+	return externalIdsGogIds(vangogh_integration.GogPcgwPageIdProperty, rdx)
 }
 
 func GetWikipediaIdGogIds(rdx redux.Readable) map[string][]string {
-	return externalIdsGogIds(vangogh_integration.WikipediaIdProperty, rdx)
+	return externalIdsGogIds(vangogh_integration.GogWikipediaIdProperty, rdx)
 }
 
 func GetHltbIdGogIds(rdx redux.Readable) map[string][]string {
-	return externalIdsGogIds(vangogh_integration.HltbIdProperty, rdx)
+	return externalIdsGogIds(vangogh_integration.GogHltbIdProperty, rdx)
 }
 
 func GetOpenCriticIdGogIds(rdx redux.Readable) map[string][]string {
-	return externalIdsGogIds(vangogh_integration.OpenCriticIdProperty, rdx)
+	return externalIdsGogIds(vangogh_integration.GogOpenCriticIdProperty, rdx)
 }
 
 func externalIdsGogIds(externalIdProperty string, rdx redux.Readable) map[string][]string {

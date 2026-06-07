@@ -14,8 +14,8 @@ import (
 func SummarizeProductProperties(id string, rdx redux.Readable) ([]string, map[string][]string) {
 	properties := []string{
 		vangogh_integration.OperatingSystemsProperty,
-		vangogh_integration.DevelopersProperty,
-		vangogh_integration.PublishersProperty,
+		vangogh_integration.GogDevelopersProperty,
+		vangogh_integration.GogPublishersProperty,
 	}
 	values := make(map[string][]string)
 
@@ -26,33 +26,33 @@ func SummarizeProductProperties(id string, rdx redux.Readable) ([]string, map[st
 	values[vangogh_integration.OperatingSystemsProperty] = oses
 
 	var developers []string
-	if dp, ok := rdx.GetAllValues(vangogh_integration.DevelopersProperty, id); ok {
+	if dp, ok := rdx.GetAllValues(vangogh_integration.GogDevelopersProperty, id); ok {
 		developers = dp
 	}
-	values[vangogh_integration.DevelopersProperty] = developers
+	values[vangogh_integration.GogDevelopersProperty] = developers
 
 	var publishers []string
-	if pp, ok := rdx.GetAllValues(vangogh_integration.PublishersProperty, id); ok {
+	if pp, ok := rdx.GetAllValues(vangogh_integration.GogPublishersProperty, id); ok {
 		publishers = pp
 	}
-	values[vangogh_integration.PublishersProperty] = publishers
+	values[vangogh_integration.GogPublishersProperty] = publishers
 
 	return properties, values
 }
 
-func ProductCard(r compton.Registrar, id string, rdx redux.Readable, permissions ...author.Permission) compton.Element {
+func GogProductCard(r compton.Registrar, id string, rdx redux.Readable, permissions ...author.Permission) compton.Element {
 
 	pc := compton.Card(r, id)
 
 	var imageUrl string
 
-	if verticalImageId, ok := rdx.GetLastVal(vangogh_integration.VerticalImageProperty, id); ok && verticalImageId != "" {
+	if verticalImageId, ok := rdx.GetLastVal(vangogh_integration.GogVerticalImageProperty, id); ok && verticalImageId != "" {
 		imageUrl = "/image?id=" + verticalImageId
 	}
 
 	pc.AppendImage(imageUrl, 85.5, 120.5)
 
-	if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
+	if title, ok := rdx.GetLastVal(vangogh_integration.GogTitleProperty, id); ok {
 		pc.AppendTitle(title)
 	} else {
 		return nil

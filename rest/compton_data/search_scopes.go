@@ -4,6 +4,7 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/compton"
 )
@@ -38,33 +39,25 @@ func SearchScopes() map[string]string {
 	queries[SearchNew] = ""
 
 	q := make(url.Values)
-	q.Set(vangogh_integration.OwnedProperty, vangogh_integration.TrueValue)
-	q.Set(vangogh_integration.ProductTypeProperty, vangogh_integration.GameProductType)
-	q.Set(vangogh_integration.SortProperty, vangogh_integration.GOGOrderDateProperty)
+	q.Set(vangogh_integration.GogOwnedProperty, vangogh_integration.TrueValue)
+	q.Set(vangogh_integration.GogProductTypeProperty, gog_integration.ProductTypeGame)
+	q.Set(vangogh_integration.SortProperty, vangogh_integration.GogOrderDateProperty)
 	q.Set(vangogh_integration.DescendingProperty, vangogh_integration.TrueValue)
 	queries[SearchGog] = q.Encode()
 
 	q = make(url.Values)
-	q.Set(vangogh_integration.UserWishlistProperty, vangogh_integration.TrueValue)
-	q.Set(vangogh_integration.SortProperty, vangogh_integration.GOGReleaseDateProperty)
+	q.Set(vangogh_integration.GogUserWishlistProperty, vangogh_integration.TrueValue)
+	q.Set(vangogh_integration.SortProperty, vangogh_integration.GogReleaseDateProperty)
 	q.Set(vangogh_integration.DescendingProperty, vangogh_integration.TrueValue)
 	queries[SearchWishlist] = q.Encode()
 
 	q = make(url.Values)
 	q.Set(vangogh_integration.TypesProperty, vangogh_integration.GogApiProducts.String())
-	q.Set(vangogh_integration.OwnedProperty, vangogh_integration.FalseValue)
-	q.Set(vangogh_integration.IsDiscountedProperty, vangogh_integration.TrueValue)
-	q.Set(vangogh_integration.SortProperty, vangogh_integration.DiscountPercentageProperty)
+	q.Set(vangogh_integration.GogOwnedProperty, vangogh_integration.FalseValue)
+	q.Set(vangogh_integration.GogIsDiscountedProperty, vangogh_integration.TrueValue)
+	q.Set(vangogh_integration.SortProperty, vangogh_integration.GogDiscountPercentageProperty)
 	q.Set(vangogh_integration.DescendingProperty, vangogh_integration.TrueValue)
 	queries[SearchSale] = q.Encode()
-
-	//q = make(url.Values)
-	//q.Set(vangogh_integration.IsModProperty, vangogh_integration.TrueValue)
-	//queries[SearchMods] = q.Encode()
-	//
-	//q = make(url.Values)
-	//q.Set(vangogh_integration.StoreTagsProperty, GogPreservationProgramTag)
-	//queries[SearchGogPreservationProgram] = q.Encode()
 
 	return queries
 }

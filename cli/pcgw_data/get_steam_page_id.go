@@ -5,6 +5,7 @@ import (
 	"errors"
 	"maps"
 
+	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/pcgw_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
@@ -47,7 +48,7 @@ func GetSteamPageId(steamGogIds map[string][]string, force bool) error {
 func GetGameSteamGogIds(steamGogIds map[string][]string) (map[string][]string, error) {
 
 	rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(),
-		vangogh_integration.ProductTypeProperty)
+		vangogh_integration.GogProductTypeProperty)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +57,7 @@ func GetGameSteamGogIds(steamGogIds map[string][]string) (map[string][]string, e
 
 	for steamAppId, gogIds := range steamGogIds {
 		for _, gogId := range gogIds {
-			if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, gogId); ok && pt == vangogh_integration.GameProductType {
+			if pt, ok := rdx.GetLastVal(vangogh_integration.GogProductTypeProperty, gogId); ok && pt == gog_integration.ProductTypeGame {
 				gameSteamGogIds[steamAppId] = append(gameSteamGogIds[steamAppId], gogId)
 			}
 		}
@@ -111,7 +112,7 @@ func reduceSteamPageIdProduct(gogIds []string, steamAppId string, kvPageId kevla
 		var values []string
 
 		switch property {
-		case vangogh_integration.PcgwPageIdProperty:
+		case vangogh_integration.GogPcgwPageIdProperty:
 			values = []string{pageId.GetPageId()}
 		}
 

@@ -70,8 +70,8 @@ func Validate(
 	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
 
 	properties := append(vangogh_integration.DownloadsLifecycleProperties(),
-		vangogh_integration.SlugProperty,
-		vangogh_integration.ProductTypeProperty)
+		vangogh_integration.GogSlugProperty,
+		vangogh_integration.GogProductTypeProperty)
 
 	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), properties...)
 	if err != nil {
@@ -169,7 +169,7 @@ func validationStatusIds(rdx redux.Readable, validationStatuses ...vangogh_integ
 
 	for id := range kvGogDetails.Keys() {
 
-		if pvss, ok := rdx.GetLastVal(vangogh_integration.ProductValidationResultProperty, id); ok {
+		if pvss, ok := rdx.GetLastVal(vangogh_integration.GogProductValidationResultProperty, id); ok {
 			if pvs := vangogh_integration.ParseValidationStatus(pvss); slices.Contains(validationStatuses, pvs) {
 				ids = append(ids, id)
 			}
@@ -237,7 +237,7 @@ func validateManualUrl(
 	mua := nod.NewProgress(" %s:", dl.String())
 	defer mua.Done()
 
-	filename, ok := rdx.GetLastVal(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl)
+	filename, ok := rdx.GetLastVal(vangogh_integration.GogManualUrlFilenameProperty, dl.ManualUrl)
 	if !ok || filename == "" {
 		vs := vangogh_integration.ValidationStatusUnresolvedManualUrl
 		mua.EndWithResult(vs.String())
@@ -266,7 +266,7 @@ func validateManualUrl(
 
 	chkData, err := readMd5(absChecksumFile)
 	if os.IsNotExist(err) {
-		if genChk, sure := rdx.GetLastVal(vangogh_integration.ManualUrlGeneratedChecksumProperty, dl.ManualUrl); sure && genChk != "" {
+		if genChk, sure := rdx.GetLastVal(vangogh_integration.GogManualUrlGeneratedChecksumProperty, dl.ManualUrl); sure && genChk != "" {
 			targetMd5 = genChk
 		}
 	} else if err != nil {
@@ -325,13 +325,13 @@ func (vd *validateDelegate) Process(id, slug string, list vangogh_integration.Do
 	sva := nod.Begin("validating %s...", slug)
 	defer sva.Done()
 
-	if err := vd.rdx.ReplaceValues(vangogh_integration.ProductValidationResultProperty,
+	if err := vd.rdx.ReplaceValues(vangogh_integration.GogProductValidationResultProperty,
 		id,
 		vangogh_integration.ValidationStatusValidating.String()); err != nil {
 		return err
 	}
 
-	if err := vd.rdx.CutKeys(vangogh_integration.ProductValidationDateProperty, id); err != nil {
+	if err := vd.rdx.CutKeys(vangogh_integration.GogProductValidationDateProperty, id); err != nil {
 		return err
 	}
 
@@ -344,7 +344,7 @@ func (vd *validateDelegate) Process(id, slug string, list vangogh_integration.Do
 		validationQueued[dl.ManualUrl] = []string{vangogh_integration.ValidationStatusQueued.String()}
 	}
 
-	if err := vd.rdx.BatchReplaceValues(vangogh_integration.ManualUrlValidationResultProperty, validationQueued); err != nil {
+	if err := vd.rdx.BatchReplaceValues(vangogh_integration.GogManualUrlValidationResultProperty, validationQueued); err != nil {
 		return err
 	}
 
@@ -355,7 +355,7 @@ func (vd *validateDelegate) Process(id, slug string, list vangogh_integration.Do
 		}
 
 		if err := vd.rdx.ReplaceValues(
-			vangogh_integration.ManualUrlValidationResultProperty,
+			vangogh_integration.GogManualUrlValidationResultProperty,
 			dl.ManualUrl,
 			vangogh_integration.ValidationStatusValidating.String()); err != nil {
 			return err
@@ -374,12 +374,12 @@ func (vd *validateDelegate) Process(id, slug string, list vangogh_integration.Do
 		manualUrlsValidationResults[dl.ManualUrl] = []string{vr.String()}
 		vd.statuses[vr] = vd.statuses[vr] + 1
 
-		if err = vd.rdx.BatchReplaceValues(vangogh_integration.ManualUrlValidationResultProperty, manualUrlsValidationResults); err != nil {
+		if err = vd.rdx.BatchReplaceValues(vangogh_integration.GogManualUrlValidationResultProperty, manualUrlsValidationResults); err != nil {
 			return err
 		}
 
 		if err = vd.rdx.ReplaceValues(
-			vangogh_integration.ManualUrlStatusProperty,
+			vangogh_integration.GogManualUrlStatusProperty,
 			dl.ManualUrl,
 			vangogh_integration.DownloadStatusValidated.String()); err != nil {
 			return err
@@ -394,11 +394,11 @@ func (vd *validateDelegate) Process(id, slug string, list vangogh_integration.Do
 		productValidationResult = vangogh_integration.WorstValidationStatus(productVrs...)
 	}
 
-	if err := vd.rdx.ReplaceValues(vangogh_integration.ProductValidationResultProperty, id, productValidationResult.String()); err != nil {
+	if err := vd.rdx.ReplaceValues(vangogh_integration.GogProductValidationResultProperty, id, productValidationResult.String()); err != nil {
 		return err
 	}
 
-	if err := vd.rdx.ReplaceValues(vangogh_integration.ProductValidationDateProperty, id, time.Now().UTC().Format(nod.TimeFormat)); err != nil {
+	if err := vd.rdx.ReplaceValues(vangogh_integration.GogProductValidationDateProperty, id, time.Now().UTC().Format(nod.TimeFormat)); err != nil {
 		return err
 	}
 

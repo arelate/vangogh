@@ -67,10 +67,10 @@ func Summarize(since int64) error {
 	// released today
 
 	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
-		vangogh_integration.TitleProperty,
-		vangogh_integration.SteamAppIdProperty,
-		vangogh_integration.GOGReleaseDateProperty,
-		vangogh_integration.GlobalReleaseDateProperty,
+		vangogh_integration.GogTitleProperty,
+		vangogh_integration.GogSteamAppIdProperty,
+		vangogh_integration.GogReleaseDateProperty,
+		vangogh_integration.GogGlobalReleaseDateProperty,
 		vangogh_integration.LastSyncUpdatesProperty)
 	if err != nil {
 		return err
@@ -124,7 +124,7 @@ func Summarize(since int64) error {
 
 	updatedAppNews := kvAppNews.Since(since, kevlar.Update)
 	for steamAppId := range updatedAppNews {
-		gogIds := rdx.Match(map[string][]string{vangogh_integration.SteamAppIdProperty: {steamAppId}}, redux.FullMatch)
+		gogIds := rdx.Match(map[string][]string{vangogh_integration.GogSteamAppIdProperty: {steamAppId}}, redux.FullMatch)
 		for gogId := range gogIds {
 			summary[vangogh_integration.UpdatesSteamNews] = append(summary[vangogh_integration.UpdatesSteamNews], gogId)
 		}
@@ -151,7 +151,7 @@ func Summarize(since int64) error {
 
 func releasedToday(rdx redux.Readable) (iter.Seq[string], error) {
 
-	releaseProperties := []string{vangogh_integration.GOGReleaseDateProperty, vangogh_integration.GlobalReleaseDateProperty}
+	releaseProperties := []string{vangogh_integration.GogReleaseDateProperty, vangogh_integration.GogGlobalReleaseDateProperty}
 
 	if err := rdx.MustHave(releaseProperties...); err != nil {
 		return nil, err
@@ -212,7 +212,7 @@ func NewAtomFeedContent(rdx redux.Readable, summary map[string][]string) string 
 		sb.WriteString("<ul>")
 		for _, id := range summary[section] {
 			var title string
-			if title, ok = rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
+			if title, ok = rdx.GetLastVal(vangogh_integration.GogTitleProperty, id); ok {
 				sb.WriteString("<li>" + title + " (" + id + ")</li>")
 			} else {
 				sb.WriteString("<li>" + id + "</li>")

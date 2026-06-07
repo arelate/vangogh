@@ -32,7 +32,7 @@ func Offerings(id string, rdx redux.Readable, permissions ...author.Permission) 
 			propertyTitleRow := compton.SectionDivider(s, fmtPtBadge)
 
 			stack.Append(compton.FICenter(s, propertyTitleRow))
-			stack.Append(compton_fragments.ProductsList(s, rps, 0, len(rps), rdx, true, permissions...))
+			stack.Append(compton_fragments.GogProductsList(s, rps, 0, len(rps), rdx, true, permissions...))
 		}
 	}
 

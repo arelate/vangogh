@@ -44,7 +44,7 @@ func GetReception(w http.ResponseWriter, r *http.Request) {
 func getSteamReviews(gogId string) (*steam_integration.AppReviews, error) {
 
 	var steamAppId string
-	if sai, ok := rdx.GetLastVal(vangogh_integration.SteamAppIdProperty, gogId); ok && sai != "" {
+	if sai, ok := rdx.GetLastVal(vangogh_integration.GogSteamAppIdProperty, gogId); ok && sai != "" {
 		steamAppId = sai
 	} else {
 		return nil, errors.New("no steam app id for gog id " + gogId)

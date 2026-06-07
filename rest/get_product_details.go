@@ -4,6 +4,7 @@ import (
 	"encoding/json/v2"
 	"net/http"
 
+	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/redux"
@@ -34,7 +35,7 @@ func GetProductDetails(w http.ResponseWriter, r *http.Request) {
 	if err != nil && vangogh_integration.IsDetailsNotFound(err) {
 		// details not found is only a fatal error for GAME products,
 		// details don't exist for PACK and DLC products
-		if productType, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); ok && productType == vangogh_integration.GameProductType {
+		if productType, ok := rdx.GetLastVal(vangogh_integration.GogProductTypeProperty, id); ok && productType == gog_integration.ProductTypeGame {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 			return
 		}
@@ -61,48 +62,48 @@ func getProductDetails(id string, dls vangogh_integration.DownloadsList, rdx red
 
 	productDetails := &vangogh_integration.ProductDetails{Id: id}
 
-	if slug, ok := rdx.GetLastVal(vangogh_integration.SlugProperty, id); ok {
+	if slug, ok := rdx.GetLastVal(vangogh_integration.GogSlugProperty, id); ok {
 		productDetails.Slug = slug
 	}
-	if steamAppId, ok := rdx.GetLastVal(vangogh_integration.SteamAppIdProperty, id); ok {
+	if steamAppId, ok := rdx.GetLastVal(vangogh_integration.GogSteamAppIdProperty, id); ok {
 		productDetails.SteamAppId = steamAppId
 	}
-	if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
+	if title, ok := rdx.GetLastVal(vangogh_integration.GogTitleProperty, id); ok {
 		productDetails.Title = title
 	}
-	if productType, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); ok {
+	if productType, ok := rdx.GetLastVal(vangogh_integration.GogProductTypeProperty, id); ok {
 		productDetails.ProductType = productType
 	}
 	if oss, ok := rdx.GetAllValues(vangogh_integration.OperatingSystemsProperty, id); ok {
 		oses := vangogh_integration.ParseManyOperatingSystems(oss)
 		productDetails.OperatingSystems = oses
 	}
-	if developers, ok := rdx.GetAllValues(vangogh_integration.DevelopersProperty, id); ok {
+	if developers, ok := rdx.GetAllValues(vangogh_integration.GogDevelopersProperty, id); ok {
 		productDetails.Developers = developers
 	}
-	if publishers, ok := rdx.GetAllValues(vangogh_integration.PublishersProperty, id); ok {
+	if publishers, ok := rdx.GetAllValues(vangogh_integration.GogPublishersProperty, id); ok {
 		productDetails.Publishers = publishers
 	}
 
-	if image, ok := rdx.GetLastVal(vangogh_integration.ImageProperty, id); ok {
+	if image, ok := rdx.GetLastVal(vangogh_integration.GogImageProperty, id); ok {
 		productDetails.Images.Image = image
 	}
-	if verticalImage, ok := rdx.GetLastVal(vangogh_integration.VerticalImageProperty, id); ok {
+	if verticalImage, ok := rdx.GetLastVal(vangogh_integration.GogVerticalImageProperty, id); ok {
 		productDetails.Images.VerticalImage = verticalImage
 	}
-	if hero, ok := rdx.GetLastVal(vangogh_integration.HeroProperty, id); ok {
+	if hero, ok := rdx.GetLastVal(vangogh_integration.GogHeroProperty, id); ok {
 		productDetails.Images.Hero = hero
 	}
-	if logo, ok := rdx.GetLastVal(vangogh_integration.LogoProperty, id); ok {
+	if logo, ok := rdx.GetLastVal(vangogh_integration.GogLogoProperty, id); ok {
 		productDetails.Images.Logo = logo
 	}
-	if icon, ok := rdx.GetLastVal(vangogh_integration.IconProperty, id); ok {
+	if icon, ok := rdx.GetLastVal(vangogh_integration.GogIconProperty, id); ok {
 		productDetails.Images.Icon = icon
 	}
-	if iconSquare, ok := rdx.GetLastVal(vangogh_integration.IconSquareProperty, id); ok {
+	if iconSquare, ok := rdx.GetLastVal(vangogh_integration.GogIconSquareProperty, id); ok {
 		productDetails.Images.IconSquare = iconSquare
 	}
-	if background, ok := rdx.GetLastVal(vangogh_integration.BackgroundProperty, id); ok {
+	if background, ok := rdx.GetLastVal(vangogh_integration.GogBackgroundProperty, id); ok {
 		productDetails.Images.Background = background
 	}
 
@@ -126,7 +127,7 @@ func getProductDetails(id string, dls vangogh_integration.DownloadsList, rdx red
 			link.Name = dl.ProductTitle
 		}
 
-		if filename, ok := rdx.GetLastVal(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl); ok {
+		if filename, ok := rdx.GetLastVal(vangogh_integration.GogManualUrlFilenameProperty, dl.ManualUrl); ok {
 			link.LocalFilename = filename
 		}
 
@@ -134,15 +135,15 @@ func getProductDetails(id string, dls vangogh_integration.DownloadsList, rdx red
 	}
 
 	switch productDetails.ProductType {
-	case vangogh_integration.PackProductType:
-		if includesGames, ok := rdx.GetAllValues(vangogh_integration.IncludesGamesProperty, id); ok {
+	case gog_integration.ProductTypePack:
+		if includesGames, ok := rdx.GetAllValues(vangogh_integration.GogIncludesGamesProperty, id); ok {
 			productDetails.IncludesGames = includesGames
 		}
-	case vangogh_integration.DlcProductType:
-		if requiresGames, ok := rdx.GetAllValues(vangogh_integration.RequiresGamesProperty, id); ok {
+	case gog_integration.ProductTypeDlc:
+		if requiresGames, ok := rdx.GetAllValues(vangogh_integration.GogRequiresGamesProperty, id); ok {
 			productDetails.RequiresGames = requiresGames
 		}
-	case vangogh_integration.GameProductType:
+	case gog_integration.ProductTypeGame:
 		fallthrough
 	default:
 		// do nothing

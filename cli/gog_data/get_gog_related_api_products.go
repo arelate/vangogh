@@ -29,10 +29,10 @@ func GetRelatedGogApiProducts(hc *http.Client, uat string, since int64, force bo
 	}
 
 	relatedApiProductProperties := []string{
-		vangogh_integration.RequiresGamesProperty,
-		vangogh_integration.IsRequiredByGamesProperty,
-		vangogh_integration.IncludesGamesProperty,
-		vangogh_integration.IsIncludedByGamesProperty,
+		vangogh_integration.GogRequiresGamesProperty,
+		vangogh_integration.GogIsRequiredByGamesProperty,
+		vangogh_integration.GogIncludesGamesProperty,
+		vangogh_integration.GogIsIncludedByGamesProperty,
 	}
 
 	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), relatedApiProductProperties...)
@@ -43,16 +43,16 @@ func GetRelatedGogApiProducts(hc *http.Client, uat string, since int64, force bo
 	nrIds := make(map[string]any)
 
 	for id := range kvGogApiProducts.Since(since, kevlar.Create, kevlar.Update) {
-		for nid := range relatedProducts(id, rdx, vangogh_integration.RequiresGamesProperty) {
+		for nid := range relatedProducts(id, rdx, vangogh_integration.GogRequiresGamesProperty) {
 			nrIds[nid] = nil
 		}
-		for nid := range relatedProducts(id, rdx, vangogh_integration.IsRequiredByGamesProperty) {
+		for nid := range relatedProducts(id, rdx, vangogh_integration.GogIsRequiredByGamesProperty) {
 			nrIds[nid] = nil
 		}
-		for nid := range relatedProducts(id, rdx, vangogh_integration.IncludesGamesProperty) {
+		for nid := range relatedProducts(id, rdx, vangogh_integration.GogIncludesGamesProperty) {
 			nrIds[nid] = nil
 		}
-		for nid := range relatedProducts(id, rdx, vangogh_integration.IsIncludedByGamesProperty) {
+		for nid := range relatedProducts(id, rdx, vangogh_integration.GogIsIncludedByGamesProperty) {
 			nrIds[nid] = nil
 		}
 	}

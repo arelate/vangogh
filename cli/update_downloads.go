@@ -63,7 +63,7 @@ func UpdateDownloads(
 	//filter updAccountProductIds to products that have already been downloaded
 	//note that this would exclude, for example, pre-order products automatic downloads
 	if updatesOnly {
-		rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(), vangogh_integration.SlugProperty)
+		rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(), vangogh_integration.GogSlugProperty)
 		if err != nil {
 			return err
 		}
@@ -72,7 +72,7 @@ func UpdateDownloads(
 
 		for _, id := range ids {
 
-			if slug, ok := rdx.GetLastVal(vangogh_integration.SlugProperty, id); ok {
+			if slug, ok := rdx.GetLastVal(vangogh_integration.GogSlugProperty, id); ok {
 				absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, vangogh_integration.Installer, downloadsLayout)
 				if err != nil {
 					return err

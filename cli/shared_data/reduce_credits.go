@@ -1,11 +1,12 @@
 package shared_data
 
 import (
+	"maps"
+	"slices"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/redux"
-	"maps"
-	"slices"
 )
 
 func reduceCredits(rdx redux.Writeable) error {
@@ -21,7 +22,7 @@ func reduceCredits(rdx redux.Writeable) error {
 
 	authorIds := make(map[string][]string)
 
-	for id := range rdx.Keys(vangogh_integration.TitleProperty) {
+	for id := range rdx.Keys(vangogh_integration.GogTitleProperty) {
 		credits := make(map[string]any)
 
 		for _, property := range vangogh_integration.CreditsProperties() {

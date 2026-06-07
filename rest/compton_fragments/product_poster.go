@@ -8,8 +8,8 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-func ProductPoster(id string, rdx redux.Readable) compton.Element {
-	if imgSrc, ok := rdx.GetLastVal(vangogh_integration.ImageProperty, id); ok && imgSrc != "" {
+func GogProductPoster(id string, rdx redux.Readable) compton.Element {
+	if imgSrc, ok := rdx.GetLastVal(vangogh_integration.GogImageProperty, id); ok && imgSrc != "" {
 		relImgSrc := "/image?id=" + imgSrc
 
 		imgEager := compton.ImageEager(relImgSrc)

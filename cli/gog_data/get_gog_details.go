@@ -63,13 +63,13 @@ func ReduceGogDetails(kvGogDetails kevlar.KeyValues, since int64, force bool) er
 	defer rda.Done()
 
 	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
-		vangogh_integration.GOGDetailsProperties()...)
+		vangogh_integration.GogDetailsProperties()...)
 	if err != nil {
 		return err
 	}
 
-	detailsReductions := shared_data.InitReductions(vangogh_integration.GOGDetailsProperties()...)
-	detailsKeyValues, err := shared_data.InitKeyValues(vangogh_integration.GOGDetailsKeyValues()...)
+	detailsReductions := shared_data.InitReductions(vangogh_integration.GogDetailsProperties()...)
+	detailsKeyValues, err := shared_data.InitKeyValues(vangogh_integration.GogDetailsKeyValues()...)
 	if err != nil {
 		return err
 	}
@@ -111,22 +111,22 @@ func reduceGogDetailsProductProperties(id string, det *gog_integration.Details, 
 		var values []string
 
 		switch property {
-		case vangogh_integration.TitleProperty:
+		case vangogh_integration.GogTitleProperty:
 			values = []string{det.GetTitle()}
-		case vangogh_integration.FeaturesProperty:
+		case vangogh_integration.GogFeaturesProperty:
 			values = det.GetFeatures()
-		case vangogh_integration.TagIdProperty:
+		case vangogh_integration.GogTagIdProperty:
 			values = det.GetTagIds()
-		case vangogh_integration.GOGReleaseDateProperty:
+		case vangogh_integration.GogReleaseDateProperty:
 			values = []string{det.GetGOGRelease()}
-		case vangogh_integration.ForumUrlProperty:
+		case vangogh_integration.GogForumUrlProperty:
 			values = []string{det.GetForumUrl()}
 		case vangogh_integration.OperatingSystemsProperty:
 			values, err = det.GetOperatingSystems()
 			if err != nil {
 				return err
 			}
-		case vangogh_integration.BackgroundProperty:
+		case vangogh_integration.GogBackgroundProperty:
 			values = []string{gog_integration.ImageId(det.GetBackground())}
 		}
 

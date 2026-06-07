@@ -26,8 +26,8 @@ func FormatQuery(q map[string][]string, rdx redux.Readable) map[string][]string 
 					fq[p] = append(fq[p], compton_data.TypesTitles[val])
 				case vangogh_integration.OperatingSystemsProperty:
 					fq[p] = append(fq[p], compton_data.OperatingSystemTitles[val])
-				case vangogh_integration.TagIdProperty:
-					if tn, sure := rdx.GetLastVal(vangogh_integration.TagNameProperty, val); sure {
+				case vangogh_integration.GogTagIdProperty:
+					if tn, sure := rdx.GetLastVal(vangogh_integration.GogTagNameProperty, val); sure {
 						fq[p] = append(fq[p], tn)
 					} else {
 						fq[p] = append(fq[p], val)

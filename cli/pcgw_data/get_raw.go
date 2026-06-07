@@ -123,20 +123,20 @@ var ignoredPrefixes = []string{
 }
 
 var prefixedProperties = map[string]string{
-	"|steam appid":   vangogh_integration.SteamAppIdProperty,
-	"|hltb":          vangogh_integration.HltbIdProperty,
-	"|igdb":          vangogh_integration.IgdbIdProperty,
-	"|strategywiki":  vangogh_integration.StrategyWikiIdProperty,
-	"|mobygames":     vangogh_integration.MobyGamesIdProperty,
-	"|wikipedia":     vangogh_integration.WikipediaIdProperty,
-	"|winehq":        vangogh_integration.WineHQIdProperty,
+	"|steam appid":   vangogh_integration.GogSteamAppIdProperty,
+	"|hltb":          vangogh_integration.GogHltbIdProperty,
+	"|igdb":          vangogh_integration.GogIgdbIdProperty,
+	"|strategywiki":  vangogh_integration.GogStrategyWikiIdProperty,
+	"|mobygames":     vangogh_integration.GogMobyGamesIdProperty,
+	"|wikipedia":     vangogh_integration.GogWikipediaIdProperty,
+	"|winehq":        vangogh_integration.GogWineHqIdProperty,
 	"|official site": vangogh_integration.WebsiteProperty,
 
-	"{{mm}} [https://vndb.org/": vangogh_integration.VndbIdProperty,
+	"{{mm}} [https://vndb.org/": vangogh_integration.GogVndbIdProperty,
 
 	infoboxGameRowReceptionPfx + "|Metacritic": vangogh_integration.MetacriticIdProperty,
-	infoboxGameRowReceptionPfx + "|OpenCritic": vangogh_integration.OpenCriticIdProperty,
-	infoboxGameRowReceptionPfx + "|IGDB":       vangogh_integration.IgdbIdProperty,
+	infoboxGameRowReceptionPfx + "|OpenCritic": vangogh_integration.GogOpenCriticIdProperty,
+	infoboxGameRowReceptionPfx + "|IGDB":       vangogh_integration.GogIgdbIdProperty,
 
 	"{{Infobox game/row/engine": vangogh_integration.EnginesProperty,
 }
@@ -178,21 +178,21 @@ func parsePropertyValues(propertyLines map[string][]string) map[string][]string 
 	for property, lines := range propertyLines {
 		var parsedLines []string
 		switch property {
-		case vangogh_integration.SteamAppIdProperty:
+		case vangogh_integration.GogSteamAppIdProperty:
 			fallthrough
-		case vangogh_integration.HltbIdProperty:
+		case vangogh_integration.GogHltbIdProperty:
 			fallthrough
-		case vangogh_integration.StrategyWikiIdProperty:
+		case vangogh_integration.GogStrategyWikiIdProperty:
 			fallthrough
-		case vangogh_integration.MobyGamesIdProperty:
+		case vangogh_integration.GogMobyGamesIdProperty:
 			fallthrough
-		case vangogh_integration.WikipediaIdProperty:
+		case vangogh_integration.GogWikipediaIdProperty:
 			fallthrough
-		case vangogh_integration.WineHQIdProperty:
+		case vangogh_integration.GogWineHqIdProperty:
 			fallthrough
 		case vangogh_integration.WebsiteProperty:
 			parsedLines = parseInfoboxPropertyLines(lines)
-		case vangogh_integration.VndbIdProperty:
+		case vangogh_integration.GogVndbIdProperty:
 			parsedLines = parseVndbLines(lines)
 		case vangogh_integration.EnginesProperty:
 			for _, line := range lines {
@@ -206,18 +206,18 @@ func parsePropertyValues(propertyLines map[string][]string) map[string][]string 
 						append(propertyValues[vangogh_integration.EnginesBuildsProperty], build)
 				}
 			}
-		case vangogh_integration.IgdbIdProperty:
+		case vangogh_integration.GogIgdbIdProperty:
 			if infoboxParsedLines := parseInfoboxPropertyLines(lines); len(infoboxParsedLines) > 0 {
-				propertyValues[vangogh_integration.IgdbIdProperty] = infoboxParsedLines
+				propertyValues[vangogh_integration.GogIgdbIdProperty] = infoboxParsedLines
 			}
 
 			for _, line := range lines {
 				if id, _ := parseReceptionLines(line); id != "" {
-					if slices.Contains(propertyValues[vangogh_integration.IgdbIdProperty], id) {
+					if slices.Contains(propertyValues[vangogh_integration.GogIgdbIdProperty], id) {
 						continue
 					}
-					propertyValues[vangogh_integration.IgdbIdProperty] =
-						append(propertyValues[vangogh_integration.IgdbIdProperty], id)
+					propertyValues[vangogh_integration.GogIgdbIdProperty] =
+						append(propertyValues[vangogh_integration.GogIgdbIdProperty], id)
 				}
 			}
 		case vangogh_integration.MetacriticIdProperty:
@@ -232,13 +232,13 @@ func parsePropertyValues(propertyLines map[string][]string) map[string][]string 
 						append(propertyValues[vangogh_integration.MetacriticScoreProperty], score)
 				}
 			}
-		case vangogh_integration.OpenCriticIdProperty:
+		case vangogh_integration.GogOpenCriticIdProperty:
 			for _, line := range lines {
 				idSlug, score := parseReceptionLines(line)
 				if idSlug != "" {
 					if id, slug, ok := strings.Cut(idSlug, "/"); ok {
-						propertyValues[vangogh_integration.OpenCriticIdProperty] = []string{id}
-						propertyValues[vangogh_integration.OpenCriticSlugProperty] = []string{slug}
+						propertyValues[vangogh_integration.GogOpenCriticIdProperty] = []string{id}
+						propertyValues[vangogh_integration.GogOpenCriticSlugProperty] = []string{slug}
 
 					}
 				}

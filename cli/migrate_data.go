@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"maps"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -29,9 +30,10 @@ import (
 // 12. rename GOG.com product type directories
 // 13. reset GetDataErrorDateProperty, GetDataErrorMessageProperty, GetDataLastUpdatedProperty since the format of the key has changed
 // 14. remove user-access-token value from gog-user-access-token KeyValues
+// 15. rename properties to gog-properties
 
 const (
-	latestDataSchema = 15
+	latestDataSchema = 16
 )
 
 func MigrateDataHandler(u *url.URL) error {
@@ -85,6 +87,10 @@ func MigrateData(force bool) error {
 			}
 		case 14:
 			if err = removeUserAccessTokenValue(); err != nil {
+				return err
+			}
+		case 15:
+			if err = renameGogProperties(); err != nil {
 				return err
 			}
 		}
@@ -243,4 +249,133 @@ func resetGetDataProperties() error {
 	}
 
 	return nil
+}
+
+func renameGogProperties() error {
+
+	fromTo := make(map[string]string)
+
+	toGogProperties := []string{
+		vangogh_integration.GogLicencesProperty,
+		vangogh_integration.GogUserWishlistProperty,
+		vangogh_integration.GogAccountPageProductsProperty,
+		vangogh_integration.GogCatalogPageProductsProperty,
+		vangogh_integration.GogOrderPageProductsProperty,
+		vangogh_integration.GogTitleProperty,
+		vangogh_integration.GogDevelopersProperty,
+		vangogh_integration.GogPublishersProperty,
+		vangogh_integration.GogImageProperty,
+		vangogh_integration.GogVerticalImageProperty,
+		vangogh_integration.GogScreenshotsProperty,
+		vangogh_integration.GogHeroProperty,
+		vangogh_integration.GogLogoProperty,
+		vangogh_integration.GogIconProperty,
+		vangogh_integration.GogIconSquareProperty,
+		vangogh_integration.GogBackgroundProperty,
+		vangogh_integration.GogRatingProperty,
+		vangogh_integration.GogProductTypeProperty,
+		vangogh_integration.GogIncludesGamesProperty,
+		vangogh_integration.GogIsIncludedByGamesProperty,
+		vangogh_integration.GogRequiresGamesProperty,
+		vangogh_integration.GogIsRequiredByGamesProperty,
+		vangogh_integration.GogModifiesGamesProperty,
+		vangogh_integration.GogIsModifiedByGamesProperty,
+		vangogh_integration.GogEditionsProperty,
+		vangogh_integration.GogRootEditionsProperty,
+		vangogh_integration.GogStoreTagsProperty,
+		vangogh_integration.GogGenresProperty,
+		vangogh_integration.GogFeaturesProperty,
+		vangogh_integration.GogSeriesProperty,
+		vangogh_integration.GogThemesProperty,
+		vangogh_integration.GogGameModesProperty,
+		vangogh_integration.GogTagIdProperty,
+		vangogh_integration.GogTagNameProperty,
+		vangogh_integration.GogSlugProperty,
+		vangogh_integration.GogGlobalReleaseDateProperty,
+		vangogh_integration.GogLocalManualUrlProperty,
+		vangogh_integration.GogManualUrlFilenameProperty,
+		vangogh_integration.GogManualUrlStatusProperty,
+		vangogh_integration.GogManualUrlValidationResultProperty,
+		vangogh_integration.GogManualUrlGeneratedChecksumProperty,
+		vangogh_integration.GogProductValidationResultProperty,
+		vangogh_integration.GogProductGeneratedChecksumProperty,
+		vangogh_integration.GogProductValidationDateProperty,
+		vangogh_integration.GogStoreUrlProperty,
+		vangogh_integration.GogForumUrlProperty,
+		vangogh_integration.GogSupportUrlProperty,
+		vangogh_integration.GogAdditionalRequirementsProperty,
+		vangogh_integration.GogCopyrightsProperty,
+		vangogh_integration.GogInDevelopmentProperty,
+		vangogh_integration.GogPreOrderProperty,
+		vangogh_integration.GogComingSoonProperty,
+		vangogh_integration.GogBasePriceProperty,
+		vangogh_integration.GogPriceProperty,
+		vangogh_integration.GogIsFreeProperty,
+		vangogh_integration.GogIsDemoProperty,
+		vangogh_integration.GogIsModProperty,
+		vangogh_integration.GogIsDiscountedProperty,
+		vangogh_integration.GogDiscountPercentageProperty,
+		vangogh_integration.GogSteamAppIdProperty,
+		vangogh_integration.GogPcgwPageIdProperty,
+		vangogh_integration.GogHltbIdProperty,
+		vangogh_integration.GogIgdbIdProperty,
+		vangogh_integration.GogStrategyWikiIdProperty,
+		vangogh_integration.GogMobyGamesIdProperty,
+		vangogh_integration.GogWikipediaIdProperty,
+		vangogh_integration.GogWineHqIdProperty,
+		vangogh_integration.GogVndbIdProperty,
+		vangogh_integration.GogIgnWikiSlugProperty,
+		vangogh_integration.GogOpenCriticIdProperty,
+		vangogh_integration.GogOpenCriticSlugProperty,
+	}
+
+	for _, toProperty := range toGogProperties {
+		fromProperty := strings.TrimPrefix(toProperty, "gog-")
+		fromTo[fromProperty] = toProperty
+	}
+
+	return migrateFromToProperties(fromTo)
+}
+
+func migrateFromToProperties(fromTo map[string]string) error {
+
+	fromRdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(), slices.Collect(maps.Keys(fromTo))...)
+	if err != nil {
+		return nil
+	}
+
+	toRdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), slices.Collect(maps.Values(fromTo))...)
+	if err != nil {
+		return err
+	}
+
+	rdxKv, err := kevlar.New(vangogh_integration.AbsReduxDir(), kevlar.GobExt)
+	if err != nil {
+		return err
+	}
+
+	for fromProperty, toProperty := range fromTo {
+
+		fromValues := make(map[string][]string)
+		for id := range fromRdx.Keys(fromProperty) {
+			if values, ok := fromRdx.GetAllValues(fromProperty, id); ok {
+				fromValues[id] = values
+			}
+		}
+
+		if len(fromValues) > 0 {
+			if err = toRdx.BatchReplaceValues(toProperty, fromValues); err != nil {
+				return err
+			}
+		}
+
+		if rdxKv.Has(fromProperty) {
+			if err = rdxKv.Cut(fromProperty); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+
 }

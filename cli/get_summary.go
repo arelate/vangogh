@@ -19,7 +19,7 @@ func GetSummary() error {
 
 	rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(),
 		vangogh_integration.LastSyncUpdatesProperty,
-		vangogh_integration.TitleProperty)
+		vangogh_integration.GogTitleProperty)
 	if err != nil {
 		return err
 	}
@@ -29,7 +29,7 @@ func GetSummary() error {
 	for section := range rdx.Keys(vangogh_integration.LastSyncUpdatesProperty) {
 		ids, _ := rdx.GetAllValues(vangogh_integration.LastSyncUpdatesProperty, section)
 		for _, id := range ids {
-			if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, id); ok {
+			if title, ok := rdx.GetLastVal(vangogh_integration.GogTitleProperty, id); ok {
 				summary[section] = append(summary[section], id+" "+title)
 			}
 		}

@@ -3,6 +3,7 @@ package compton_fragments
 import (
 	"strings"
 
+	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/boggydigital/author"
@@ -37,20 +38,20 @@ func formatBadge(id, property string, rdx redux.Readable) *compton.FormattedBadg
 	productValidationStatus := productDvs.ValidationStatus()
 
 	owned := false
-	if lp, ok := rdx.GetLastVal(vangogh_integration.OwnedProperty, id); ok {
+	if lp, ok := rdx.GetLastVal(vangogh_integration.GogOwnedProperty, id); ok {
 		owned = lp == vangogh_integration.TrueValue
 	}
 
 	var productType string
-	if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); ok {
+	if pt, ok := rdx.GetLastVal(vangogh_integration.GogProductTypeProperty, id); ok {
 		productType = pt
 	}
 
 	switch property {
-	case vangogh_integration.OwnedProperty:
+	case vangogh_integration.GogOwnedProperty:
 		if owned {
 			switch productType {
-			case vangogh_integration.GameProductType:
+			case gog_integration.ProductTypeGame:
 				if productDownloadStatus == vangogh_integration.DownloadStatusUnknown &&
 					productValidationStatus == vangogh_integration.ValidationStatusUnknown {
 					fmtBadge.Icon = compton.CircleDashed
@@ -70,12 +71,12 @@ func formatBadge(id, property string, rdx redux.Readable) *compton.FormattedBadg
 		if productDownloadStatus == vangogh_integration.DownloadStatusDownloading {
 			fmtBadge.Icon = compton.CircleDownwardArrow
 		}
-	case vangogh_integration.ProductValidationResultProperty:
-		if owned && productType != vangogh_integration.DlcProductType && productType != vangogh_integration.PackProductType {
+	case vangogh_integration.GogProductValidationResultProperty:
+		if owned && productType != gog_integration.ProductTypeDlc && productType != gog_integration.ProductTypePack {
 			if vrSymbol, ok := compton_data.ValidationStatusSymbols[productValidationStatus]; ok {
 				fmtBadge.Icon = vrSymbol
 
-				if pgc, sure := rdx.GetLastVal(vangogh_integration.ProductGeneratedChecksumProperty, id); sure && pgc == vangogh_integration.TrueValue {
+				if pgc, sure := rdx.GetLastVal(vangogh_integration.GogProductGeneratedChecksumProperty, id); sure && pgc == vangogh_integration.TrueValue {
 					if fmtBadge.Icon == compton.HexagonPacked {
 						fmtBadge.Icon = compton.HexagonNegativeDiagonalLine
 					}
@@ -86,60 +87,60 @@ func formatBadge(id, property string, rdx redux.Readable) *compton.FormattedBadg
 		if rdx.HasKey(vangogh_integration.TopPercentProperty, id) {
 			fmtBadge.Icon = compton.Trophy
 		}
-	case vangogh_integration.UserWishlistProperty:
-		if wish, ok := rdx.GetLastVal(vangogh_integration.UserWishlistProperty, id); ok && wish == vangogh_integration.TrueValue {
+	case vangogh_integration.GogUserWishlistProperty:
+		if wish, ok := rdx.GetLastVal(vangogh_integration.GogUserWishlistProperty, id); ok && wish == vangogh_integration.TrueValue {
 			fmtBadge.Icon = compton.Heart
 		}
-	case vangogh_integration.PreOrderProperty:
-		if po, ok := rdx.GetLastVal(vangogh_integration.PreOrderProperty, id); ok && po == vangogh_integration.TrueValue {
+	case vangogh_integration.GogPreOrderProperty:
+		if po, ok := rdx.GetLastVal(vangogh_integration.GogPreOrderProperty, id); ok && po == vangogh_integration.TrueValue {
 			fmtBadge.Title = "PO"
 		}
-	case vangogh_integration.InDevelopmentProperty:
-		if inDev, ok := rdx.GetLastVal(vangogh_integration.InDevelopmentProperty, id); ok && inDev == vangogh_integration.TrueValue {
+	case vangogh_integration.GogInDevelopmentProperty:
+		if inDev, ok := rdx.GetLastVal(vangogh_integration.GogInDevelopmentProperty, id); ok && inDev == vangogh_integration.TrueValue {
 			fmtBadge.Title = "IN DEV"
 		}
-	case vangogh_integration.IsDemoProperty:
-		if demo, ok := rdx.GetLastVal(vangogh_integration.IsDemoProperty, id); ok && demo == vangogh_integration.TrueValue {
+	case vangogh_integration.GogIsDemoProperty:
+		if demo, ok := rdx.GetLastVal(vangogh_integration.GogIsDemoProperty, id); ok && demo == vangogh_integration.TrueValue {
 			fmtBadge.Title = "DEMO"
 		}
-	case vangogh_integration.IsModProperty:
-		if mod, ok := rdx.GetLastVal(vangogh_integration.IsModProperty, id); ok && mod == vangogh_integration.TrueValue {
+	case vangogh_integration.GogIsModProperty:
+		if mod, ok := rdx.GetLastVal(vangogh_integration.GogIsModProperty, id); ok && mod == vangogh_integration.TrueValue {
 			fmtBadge.Icon = compton.PuzzlePiece
 		}
-	case vangogh_integration.IsFreeProperty:
-		if demo, ok := rdx.GetLastVal(vangogh_integration.IsDemoProperty, id); ok && demo == vangogh_integration.TrueValue {
+	case vangogh_integration.GogIsFreeProperty:
+		if demo, ok := rdx.GetLastVal(vangogh_integration.GogIsDemoProperty, id); ok && demo == vangogh_integration.TrueValue {
 			fmtBadge.Title = ""
-		} else if mod, ok := rdx.GetLastVal(vangogh_integration.IsModProperty, id); ok && mod == vangogh_integration.TrueValue {
+		} else if mod, ok := rdx.GetLastVal(vangogh_integration.GogIsModProperty, id); ok && mod == vangogh_integration.TrueValue {
 			fmtBadge.Title = ""
-		} else if free, ok := rdx.GetLastVal(vangogh_integration.IsFreeProperty, id); ok && free == vangogh_integration.TrueValue {
+		} else if free, ok := rdx.GetLastVal(vangogh_integration.GogIsFreeProperty, id); ok && free == vangogh_integration.TrueValue {
 			fmtBadge.Title = "FREE"
 		}
-	case vangogh_integration.ComingSoonProperty:
+	case vangogh_integration.GogComingSoonProperty:
 		if owned {
 			fmtBadge.Title = ""
-		} else if soon, ok := rdx.GetLastVal(vangogh_integration.ComingSoonProperty, id); ok && soon == vangogh_integration.TrueValue {
+		} else if soon, ok := rdx.GetLastVal(vangogh_integration.GogComingSoonProperty, id); ok && soon == vangogh_integration.TrueValue {
 			fmtBadge.Title = "SOON"
 		}
-	case vangogh_integration.ProductTypeProperty:
-		if pt, ok := rdx.GetLastVal(vangogh_integration.ProductTypeProperty, id); ok && pt != vangogh_integration.GameProductType {
+	case vangogh_integration.GogProductTypeProperty:
+		if pt, ok := rdx.GetLastVal(vangogh_integration.GogProductTypeProperty, id); ok && pt != gog_integration.ProductTypeGame {
 			switch pt {
-			case vangogh_integration.PackProductType:
+			case gog_integration.ProductTypePack:
 				fmtBadge.Icon = compton.ItemsPack
-			case vangogh_integration.DlcProductType:
+			case gog_integration.ProductTypeDlc:
 				fmtBadge.Icon = compton.ItemPlus
 			}
 		}
-	case vangogh_integration.DiscountPercentageProperty:
+	case vangogh_integration.GogDiscountPercentageProperty:
 		if owned {
 			fmtBadge.Title = ""
-		} else if dp, ok := rdx.GetLastVal(vangogh_integration.DiscountPercentageProperty, id); ok && dp != "0" {
+		} else if dp, ok := rdx.GetLastVal(vangogh_integration.GogDiscountPercentageProperty, id); ok && dp != "0" {
 			fmtBadge.Title = "-" + dp + "%"
 		} else {
 			fmtBadge.Title = ""
 		}
-	case vangogh_integration.TagIdProperty:
-		if tagId, ok := rdx.GetLastVal(vangogh_integration.TagIdProperty, id); ok {
-			if tagName, sure := rdx.GetLastVal(vangogh_integration.TagNameProperty, tagId); sure {
+	case vangogh_integration.GogTagIdProperty:
+		if tagId, ok := rdx.GetLastVal(vangogh_integration.GogTagIdProperty, id); ok {
+			if tagName, sure := rdx.GetLastVal(vangogh_integration.GogTagNameProperty, tagId); sure {
 				fmtBadge.Title = tagName
 			}
 		}
@@ -147,8 +148,8 @@ func formatBadge(id, property string, rdx redux.Readable) *compton.FormattedBadg
 		if localTags, ok := rdx.GetAllValues(vangogh_integration.LocalTagsProperty, id); ok {
 			fmtBadge.Title = strings.Join(localTags, ", ")
 		}
-	case vangogh_integration.StoreTagsProperty:
-		if rdx.HasValue(vangogh_integration.StoreTagsProperty, id, compton_data.GogPreservationProgramTag) {
+	case vangogh_integration.GogStoreTagsProperty:
+		if rdx.HasValue(vangogh_integration.GogStoreTagsProperty, id, compton_data.GogPreservationProgramTag) {
 			fmtBadge.Icon = compton.Gemstone
 		} else {
 			fmtBadge.Title = ""

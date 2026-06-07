@@ -46,7 +46,7 @@ func GetNews(w http.ResponseWriter, r *http.Request) {
 func getAppNews(gogId string) (*steam_integration.AppNews, error) {
 
 	var steamAppId string
-	if sai, ok := rdx.GetLastVal(vangogh_integration.SteamAppIdProperty, gogId); ok && sai != "" {
+	if sai, ok := rdx.GetLastVal(vangogh_integration.GogSteamAppIdProperty, gogId); ok && sai != "" {
 		steamAppId = sai
 	} else {
 		return nil, nil

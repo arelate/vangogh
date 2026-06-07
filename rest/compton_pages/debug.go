@@ -28,7 +28,7 @@ func Debug(gogId string, rdx redux.Readable) (compton.PageElement, error) {
 	reduxProperties := slices.Sorted(maps.Keys(rpm))
 
 	var productTitle string
-	if title, ok := rdx.GetLastVal(vangogh_integration.TitleProperty, gogId); ok && title != "" {
+	if title, ok := rdx.GetLastVal(vangogh_integration.GogTitleProperty, gogId); ok && title != "" {
 		productTitle = title
 	} else {
 		productTitle = "Title Unknown, Id=" + gogId
@@ -73,19 +73,19 @@ func Debug(gogId string, rdx redux.Readable) (compton.PageElement, error) {
 	idsFrow.PropVal("GOG", gogId)
 
 	var steamAppId string
-	if sai, ok := rdx.GetLastVal(vangogh_integration.SteamAppIdProperty, gogId); ok {
+	if sai, ok := rdx.GetLastVal(vangogh_integration.GogSteamAppIdProperty, gogId); ok {
 		steamAppId = sai
 		idsFrow.PropVal("Steam", steamAppId)
 	}
 
 	var pcgwPageId string
-	if pid, ok := rdx.GetLastVal(vangogh_integration.PcgwPageIdProperty, gogId); ok {
+	if pid, ok := rdx.GetLastVal(vangogh_integration.GogPcgwPageIdProperty, gogId); ok {
 		pcgwPageId = pid
 		idsFrow.PropVal("PCGW", pcgwPageId)
 	}
 
 	var hltbId string
-	if hid, ok := rdx.GetLastVal(vangogh_integration.HltbIdProperty, gogId); ok {
+	if hid, ok := rdx.GetLastVal(vangogh_integration.GogHltbIdProperty, gogId); ok {
 		hltbId = hid
 		idsFrow.PropVal("HLTB", hltbId)
 	}
@@ -97,34 +97,34 @@ func Debug(gogId string, rdx redux.Readable) (compton.PageElement, error) {
 	}
 
 	var openCriticId string
-	if ocid, ok := rdx.GetLastVal(vangogh_integration.OpenCriticIdProperty, gogId); ok && ocid != "" {
+	if ocid, ok := rdx.GetLastVal(vangogh_integration.GogOpenCriticIdProperty, gogId); ok && ocid != "" {
 		openCriticId = ocid
 		idsFrow.PropVal("OpenCritic", openCriticId)
 	}
 
 	// various other platform ids
-	if igdbId, ok := rdx.GetLastVal(vangogh_integration.IgdbIdProperty, gogId); ok && igdbId != "" {
+	if igdbId, ok := rdx.GetLastVal(vangogh_integration.GogIgdbIdProperty, gogId); ok && igdbId != "" {
 		idsFrow.PropVal("IGDB", igdbId)
 	}
-	if mobyGamesId, ok := rdx.GetLastVal(vangogh_integration.MobyGamesIdProperty, gogId); ok && mobyGamesId != "" {
+	if mobyGamesId, ok := rdx.GetLastVal(vangogh_integration.GogMobyGamesIdProperty, gogId); ok && mobyGamesId != "" {
 		idsFrow.PropVal("MobyGames", mobyGamesId)
 	}
-	if vndbId, ok := rdx.GetLastVal(vangogh_integration.VndbIdProperty, gogId); ok && vndbId != "" {
+	if vndbId, ok := rdx.GetLastVal(vangogh_integration.GogVndbIdProperty, gogId); ok && vndbId != "" {
 		idsFrow.PropVal("VNDB", vndbId)
 	}
 	var wikipediaId string
-	if wid, ok := rdx.GetLastVal(vangogh_integration.WikipediaIdProperty, gogId); ok && wid != "" {
+	if wid, ok := rdx.GetLastVal(vangogh_integration.GogWikipediaIdProperty, gogId); ok && wid != "" {
 		wikipediaId = wid
 		idsFrow.PropVal("Wikipedia", wikipediaId)
 	}
-	if strategyWikiId, ok := rdx.GetLastVal(vangogh_integration.StrategyWikiIdProperty, gogId); ok && strategyWikiId != "" {
+	if strategyWikiId, ok := rdx.GetLastVal(vangogh_integration.GogStrategyWikiIdProperty, gogId); ok && strategyWikiId != "" {
 		idsFrow.PropVal("StrategyWiki", strategyWikiId)
 	}
 
 	propertyProductType := map[string]vangogh_integration.ProductType{
-		vangogh_integration.CatalogPageProductsProperty: vangogh_integration.GogCatalogPage,
-		vangogh_integration.AccountPageProductsProperty: vangogh_integration.GogAccountPage,
-		vangogh_integration.OrderPageProductsProperty:   vangogh_integration.GogOrderPage,
+		vangogh_integration.GogCatalogPageProductsProperty: vangogh_integration.GogCatalogPage,
+		vangogh_integration.GogAccountPageProductsProperty: vangogh_integration.GogAccountPage,
+		vangogh_integration.GogOrderPageProductsProperty:   vangogh_integration.GogOrderPage,
 	}
 
 	sortedProperties := slices.Sorted(maps.Keys(propertyProductType))
@@ -251,15 +251,15 @@ func Debug(gogId string, rdx redux.Readable) (compton.PageElement, error) {
 	reduxDs.Append(compton.FICenter(p, reduxStack))
 
 	closedProperties := []string{
-		vangogh_integration.AdditionalRequirementsProperty,
-		vangogh_integration.CopyrightsProperty,
-		vangogh_integration.StoreTagsProperty,
-		vangogh_integration.ScreenshotsProperty,
+		vangogh_integration.GogAdditionalRequirementsProperty,
+		vangogh_integration.GogCopyrightsProperty,
+		vangogh_integration.GogStoreTagsProperty,
+		vangogh_integration.GogScreenshotsProperty,
 		vangogh_integration.TypesProperty,
 		vangogh_integration.HltbPlatformsProperty,
 		vangogh_integration.ShortDescriptionProperty,
 		vangogh_integration.SteamCategoriesProperty,
-		vangogh_integration.ThemesProperty,
+		vangogh_integration.GogThemesProperty,
 	}
 
 	propertySources := make(map[string][]string)

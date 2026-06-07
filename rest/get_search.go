@@ -61,20 +61,20 @@ func GetSearch(w http.ResponseWriter, r *http.Request) {
 
 		sort := q.Get(vangogh_integration.SortProperty)
 		if sort == "" {
-			sort = vangogh_integration.TitleProperty
+			sort = vangogh_integration.GogTitleProperty
 		}
 		desc := q.Get(vangogh_integration.DescendingProperty) == "true"
 
 		var found []string
 
 		if isSortDescOnly(query) {
-			found = slices.Collect(rdx.Keys(vangogh_integration.TitleProperty))
+			found = slices.Collect(rdx.Keys(vangogh_integration.GogTitleProperty))
 		} else {
 			found = slices.Collect(rdx.Match(q))
 		}
 
 		var err error
-		ids, err = rdx.Sort(found, desc, sort, vangogh_integration.TitleProperty, vangogh_integration.ProductTypeProperty)
+		ids, err = rdx.Sort(found, desc, sort, vangogh_integration.GogTitleProperty, vangogh_integration.GogProductTypeProperty)
 		if err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 			return

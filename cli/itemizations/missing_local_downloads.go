@@ -32,7 +32,7 @@ func MissingLocalDownloads(
 	defer mlda.Done()
 
 	if err := rdx.MustHave(
-		vangogh_integration.ManualUrlFilenameProperty,
+		vangogh_integration.GogManualUrlFilenameProperty,
 		vangogh_integration.DownloadStatusErrorProperty); err != nil {
 		return nil, err
 	}
@@ -106,7 +106,7 @@ func (mdd *missingDownloadsDelegate) Process(id, slug string, list vangogh_integ
 			continue
 		}
 
-		filename, ok := mdd.rdx.GetLastVal(vangogh_integration.ManualUrlFilenameProperty, dl.ManualUrl)
+		filename, ok := mdd.rdx.GetLastVal(vangogh_integration.GogManualUrlFilenameProperty, dl.ManualUrl)
 		if mdd.debug {
 			mufa := nod.Begin("manual-url %s...", dl.ManualUrl)
 			filenameMsg := filename

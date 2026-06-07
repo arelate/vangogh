@@ -48,7 +48,7 @@ func ReduceDeckCompatibilityReports(steamGogIds map[string][]string, kvDeckCompa
 	defer rdcra.Done()
 
 	// need to append SteamAppId property to allow mapping to GOG ids
-	properties := append(vangogh_integration.SteamDeckCompatibilityReportProperties(), vangogh_integration.SteamAppIdProperty)
+	properties := append(vangogh_integration.SteamDeckCompatibilityReportProperties(), vangogh_integration.GogSteamAppIdProperty)
 
 	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), properties...)
 	if err != nil {

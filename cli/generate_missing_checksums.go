@@ -38,8 +38,8 @@ func GenerateMissingChecksums(operatingSystems []vangogh_integration.OperatingSy
 
 	properties := append(
 		vangogh_integration.DownloadsLifecycleProperties(),
-		vangogh_integration.ProductTypeProperty,
-		vangogh_integration.SlugProperty)
+		vangogh_integration.GogProductTypeProperty,
+		vangogh_integration.GogSlugProperty)
 
 	rdx, err := redux.NewWriter(reduxDir, properties...)
 	if err != nil {
@@ -47,7 +47,7 @@ func GenerateMissingChecksums(operatingSystems []vangogh_integration.OperatingSy
 	}
 
 	productsMissingChecksumsQuery := map[string][]string{
-		vangogh_integration.ProductValidationResultProperty: {vangogh_integration.ValidationStatusMissingChecksum.String()},
+		vangogh_integration.GogProductValidationResultProperty: {vangogh_integration.ValidationStatusMissingChecksum.String()},
 	}
 
 	ids := slices.Collect(rdx.Match(productsMissingChecksumsQuery, redux.FullMatch))
@@ -85,7 +85,7 @@ func (mcp *missingChecksumProcessor) Process(id string, slug string, downloadsLi
 
 	for _, dl := range downloadsList {
 
-		if vrs, ok := mcp.rdx.GetLastVal(vangogh_integration.ManualUrlValidationResultProperty, dl.ManualUrl); ok && vrs != "" {
+		if vrs, ok := mcp.rdx.GetLastVal(vangogh_integration.GogManualUrlValidationResultProperty, dl.ManualUrl); ok && vrs != "" {
 			if vr := vangogh_integration.ParseValidationStatus(vrs); vr == vangogh_integration.ValidationStatusMissingChecksum {
 				if err := mcp.generateManualUrlMissingChecksum(slug, dl.ManualUrl, dl.DownloadType); err != nil {
 					return err
@@ -94,11 +94,11 @@ func (mcp *missingChecksumProcessor) Process(id string, slug string, downloadsLi
 		}
 	}
 
-	if err := mcp.rdx.ReplaceValues(vangogh_integration.ProductGeneratedChecksumProperty, id, vangogh_integration.TrueValue); err != nil {
+	if err := mcp.rdx.ReplaceValues(vangogh_integration.GogProductGeneratedChecksumProperty, id, vangogh_integration.TrueValue); err != nil {
 		return err
 	}
 
-	if err := mcp.rdx.ReplaceValues(vangogh_integration.ProductValidationResultProperty, id, vangogh_integration.ValidationStatusSuccess.String()); err != nil {
+	if err := mcp.rdx.ReplaceValues(vangogh_integration.GogProductValidationResultProperty, id, vangogh_integration.ValidationStatusSuccess.String()); err != nil {
 		return err
 	}
 
@@ -113,7 +113,7 @@ func (mcp *missingChecksumProcessor) generateManualUrlMissingChecksum(slug, manu
 	}
 
 	var relFilename string
-	if fn, ok := mcp.rdx.GetLastVal(vangogh_integration.ManualUrlFilenameProperty, manualUrl); ok && fn != "" {
+	if fn, ok := mcp.rdx.GetLastVal(vangogh_integration.GogManualUrlFilenameProperty, manualUrl); ok && fn != "" {
 		relFilename = fn
 	}
 
@@ -139,11 +139,11 @@ func (mcp *missingChecksumProcessor) generateManualUrlMissingChecksum(slug, manu
 
 	gcfa.EndWithResult(downloadMd5)
 
-	if err = mcp.rdx.ReplaceValues(vangogh_integration.ManualUrlGeneratedChecksumProperty, manualUrl, downloadMd5); err != nil {
+	if err = mcp.rdx.ReplaceValues(vangogh_integration.GogManualUrlGeneratedChecksumProperty, manualUrl, downloadMd5); err != nil {
 		return err
 	}
 
-	if err = mcp.rdx.ReplaceValues(vangogh_integration.ManualUrlValidationResultProperty, manualUrl, vangogh_integration.ValidationStatusSuccess.String()); err != nil {
+	if err = mcp.rdx.ReplaceValues(vangogh_integration.GogManualUrlValidationResultProperty, manualUrl, vangogh_integration.ValidationStatusSuccess.String()); err != nil {
 		return err
 	}
 

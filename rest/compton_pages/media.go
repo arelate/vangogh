@@ -60,7 +60,7 @@ func Media(id string, rdx redux.Readable) compton.PageElement {
 	}
 
 	var screenshots []string
-	if sp, ok := rdx.GetAllValues(vangogh_integration.ScreenshotsProperty, id); ok {
+	if sp, ok := rdx.GetAllValues(vangogh_integration.GogScreenshotsProperty, id); ok {
 		screenshots = sp
 	}
 

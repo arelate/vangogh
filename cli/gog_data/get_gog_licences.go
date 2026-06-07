@@ -66,12 +66,12 @@ func ReduceGogLicences(kvGogLicences kevlar.KeyValues) error {
 	defer rla.Done()
 
 	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
-		vangogh_integration.LicencesProperty)
+		vangogh_integration.GogLicencesProperty)
 	if err != nil {
 		return err
 	}
 
-	key := vangogh_integration.LicencesProperty
+	key := vangogh_integration.GogLicencesProperty
 	if err = rdx.MustHave(key); err != nil {
 		return err
 	}

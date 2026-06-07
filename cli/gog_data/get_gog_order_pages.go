@@ -43,15 +43,15 @@ func ReduceGogOrderPages(kvGogOrderPages kevlar.KeyValues, since int64) error {
 	ropa := nod.Begin(" reducing %s...", pageType)
 	defer ropa.Done()
 
-	properties := vangogh_integration.GOGOrderPageProperties()
-	properties = append(properties, vangogh_integration.IncludesGamesProperty)
+	properties := vangogh_integration.GogOrderPageProperties()
+	properties = append(properties, vangogh_integration.GogIncludesGamesProperty)
 
 	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), properties...)
 	if err != nil {
 		return err
 	}
 
-	orderPagesReductions := shared_data.InitReductions(vangogh_integration.GOGOrderPageProperties()...)
+	orderPagesReductions := shared_data.InitReductions(vangogh_integration.GogOrderPageProperties()...)
 
 	updatedGogOrderPages := kvGogOrderPages.Since(since, kevlar.Create, kevlar.Update)
 
@@ -95,18 +95,18 @@ func reduceGogOrderPage(page string, kvGogOrderPages kevlar.KeyValues, piv share
 				id := orderProduct.Id
 
 				switch property {
-				case vangogh_integration.GOGOrderDateProperty:
+				case vangogh_integration.GogOrderDateProperty:
 					piv[property][id] = gogOrderDate
-					if includesGames, ok := rdx.GetAllValues(vangogh_integration.IncludesGamesProperty, id); ok {
+					if includesGames, ok := rdx.GetAllValues(vangogh_integration.GogIncludesGamesProperty, id); ok {
 						for _, igId := range includesGames {
 							piv[property][igId] = gogOrderDate
 						}
 					}
-				case vangogh_integration.OrderPageProductsProperty:
+				case vangogh_integration.GogOrderPageProductsProperty:
 					piv[property][id] = []string{page}
-				case vangogh_integration.ImageProperty:
+				case vangogh_integration.GogImageProperty:
 					// order image should be used only when not sourced from primary type (e.g. catalog)
-					if !rdx.HasKey(vangogh_integration.ImageProperty, id) {
+					if !rdx.HasKey(vangogh_integration.GogImageProperty, id) {
 						piv[property][id] = []string{gog_integration.ImageId(orderProduct.GetImage())}
 					}
 				}

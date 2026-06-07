@@ -47,9 +47,9 @@ func Size(
 	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
 
 	rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(),
-		vangogh_integration.SlugProperty,
-		vangogh_integration.ProductTypeProperty,
-		vangogh_integration.ManualUrlFilenameProperty,
+		vangogh_integration.GogSlugProperty,
+		vangogh_integration.GogProductTypeProperty,
+		vangogh_integration.GogManualUrlFilenameProperty,
 		vangogh_integration.DownloadStatusErrorProperty)
 	if err != nil {
 		return err

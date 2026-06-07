@@ -7,6 +7,7 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/boggydigital/author"
@@ -72,13 +73,13 @@ func operatingSystemsDatalist() map[string]string {
 }
 
 var sortProperties = []string{
-	vangogh_integration.GlobalReleaseDateProperty,
-	vangogh_integration.GOGReleaseDateProperty,
-	vangogh_integration.GOGOrderDateProperty,
+	vangogh_integration.GogGlobalReleaseDateProperty,
+	vangogh_integration.GogReleaseDateProperty,
+	vangogh_integration.GogOrderDateProperty,
 	vangogh_integration.SummaryRatingProperty,
-	vangogh_integration.TitleProperty,
-	vangogh_integration.RatingProperty,
-	vangogh_integration.DiscountPercentageProperty,
+	vangogh_integration.GogTitleProperty,
+	vangogh_integration.GogRatingProperty,
+	vangogh_integration.GogDiscountPercentageProperty,
 	vangogh_integration.HltbHoursToCompleteMainProperty,
 	vangogh_integration.HltbHoursToCompletePlusProperty,
 	vangogh_integration.HltbHoursToComplete100Property}
@@ -96,9 +97,9 @@ func sortDatalist() map[string]string {
 }
 
 func productTypesDatalist() map[string]string {
-	return propertiesDatalist([]string{vangogh_integration.GameProductType,
-		vangogh_integration.DlcProductType,
-		vangogh_integration.PackProductType})
+	return propertiesDatalist([]string{gog_integration.ProductTypeGame,
+		gog_integration.ProductTypeDlc,
+		gog_integration.ProductTypePack})
 }
 
 func steamDeckDatalist() map[string]string {
@@ -115,8 +116,8 @@ func languagesDatalist() map[string]string {
 
 func tagsDatalist(rdx redux.Readable) map[string]string {
 	dl := make(map[string]string)
-	for tagId := range rdx.Keys(vangogh_integration.TagNameProperty) {
-		if tagName, ok := rdx.GetLastVal(vangogh_integration.TagNameProperty, tagId); ok {
+	for tagId := range rdx.Keys(vangogh_integration.GogTagNameProperty) {
+		if tagName, ok := rdx.GetLastVal(vangogh_integration.GogTagNameProperty, tagId); ok {
 			dl[tagId] = tagName
 		}
 	}
@@ -165,7 +166,7 @@ func searchInputs(r compton.Registrar, query map[string][]string, container comp
 				datalist = operatingSystemsDatalist()
 			case vangogh_integration.SortProperty:
 				datalist = sortDatalist()
-			case vangogh_integration.ProductTypeProperty:
+			case vangogh_integration.GogProductTypeProperty:
 				datalist = productTypesDatalist()
 			case vangogh_integration.SteamOsAppCompatibilityCategoryProperty:
 				fallthrough
@@ -173,7 +174,7 @@ func searchInputs(r compton.Registrar, query map[string][]string, container comp
 				datalist = steamDeckDatalist()
 			case vangogh_integration.LanguageCodeProperty:
 				datalist = languagesDatalist()
-			case vangogh_integration.TagIdProperty:
+			case vangogh_integration.GogTagIdProperty:
 				datalist = tagsDatalist(rdx)
 			default:
 				datalist = propertyValuesDatalist(property, rdx)

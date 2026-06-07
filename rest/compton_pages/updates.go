@@ -171,7 +171,7 @@ func Updates(section string, rdx redux.Readable, showAll bool, permissions ...au
 	sectionStack := compton.FlexItems(p, direction.Column)
 	dsSection.Append(sectionStack)
 
-	productsList := compton_fragments.ProductsList(p, ids, 0, len(ids), rdx, false, permissions...)
+	productsList := compton_fragments.GogProductsList(p, ids, 0, len(ids), rdx, false, permissions...)
 	sectionStack.Append(productsList)
 
 	/* Show all */

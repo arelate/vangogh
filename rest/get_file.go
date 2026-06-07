@@ -39,7 +39,7 @@ func GetFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	slug, ok := rdx.GetLastVal(vangogh_integration.SlugProperty, id)
+	slug, ok := rdx.GetLastVal(vangogh_integration.GogSlugProperty, id)
 	if !ok || slug == "" {
 		http.Error(w, nod.ErrorStr("no slug for id %s", id), http.StatusNotFound)
 		return
@@ -51,7 +51,7 @@ func GetFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	filename, ok := rdx.GetLastVal(vangogh_integration.ManualUrlFilenameProperty, manualUrl)
+	filename, ok := rdx.GetLastVal(vangogh_integration.GogManualUrlFilenameProperty, manualUrl)
 	if !ok || filename == "" {
 		http.Error(w, nod.ErrorStr("no filename for manual-url %s", manualUrl), http.StatusNotFound)
 		return
