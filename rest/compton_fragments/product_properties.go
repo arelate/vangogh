@@ -42,19 +42,51 @@ func ProductProperties(r compton.Registrar, id string, rdx redux.Readable, prope
 	return productProperties
 }
 
-func searchHref(property, value string) string {
-	return "/search?" + property + "=" + value
+func hrefSearch(property, value string) string {
+
+	q := make(url.Values)
+	q.Set(property, value)
+
+	u := new(url.URL{
+		Path: "/search",
+	})
+
+	u.RawQuery = q.Encode()
+
+	return u.String()
 }
 
-func searchCreditsHref(value string) string {
-	return "/search?credits=" + value
+func hrefSearchCredits(value string) string {
+
+	q := make(url.Values)
+	q.Set(vangogh_integration.CreditsProperty, value)
+
+	u := new(url.URL{
+		Path: "/search",
+	})
+
+	u.RawQuery = q.Encode()
+
+	return u.String()
 }
 
-func grdSortedSearchHref(property, value string) string {
-	return "/search?sort=global-release-date&desc=true&" + property + "=" + value
+func HrefSearchDescSortGogGlobalReleaseDate(property, value string) string {
+
+	q := make(url.Values)
+	q.Set(vangogh_integration.SortProperty, vangogh_integration.GogGlobalReleaseDateProperty)
+	q.Set(vangogh_integration.DescendingProperty, vangogh_integration.TrueValue)
+	q.Set(property, value)
+
+	u := new(url.URL{
+		Path: "/search",
+	})
+
+	u.RawQuery = q.Encode()
+
+	return u.String()
 }
 
-func noHref() string {
+func hrefEmpty() string {
 	return ""
 }
 
@@ -97,23 +129,23 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 		if firstValue == vangogh_integration.TrueValue {
 			title = "Yes"
 		}
-		fmtProperty.values[title] = searchHref(property, firstValue)
+		fmtProperty.values[title] = hrefSearch(property, firstValue)
 	case vangogh_integration.GogOrderDateProperty:
 		for _, value := range values {
 			jtd := formatDate(value)
 			if d, _, ok := strings.Cut(value, "T"); ok {
-				fmtProperty.values[jtd] = searchHref(property, d)
+				fmtProperty.values[jtd] = hrefSearch(property, d)
 			} else {
-				fmtProperty.values[jtd] = searchHref(property, value)
+				fmtProperty.values[jtd] = hrefSearch(property, value)
 			}
 		}
 	case vangogh_integration.LanguageCodeProperty:
 		for _, value := range values {
-			fmtProperty.values[compton_data.FormatLanguage(value)] = searchHref(property, value)
+			fmtProperty.values[compton_data.FormatLanguage(value)] = hrefSearch(property, value)
 		}
 	case vangogh_integration.GogRatingProperty:
 		for _, value := range values {
-			fmtProperty.values[fmtGOGRating(value)] = noHref()
+			fmtProperty.values[fmtGOGRating(value)] = hrefEmpty()
 		}
 	case vangogh_integration.GogTagIdProperty:
 		for _, value := range values {
@@ -121,18 +153,18 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 			if tnp, ok := rdx.GetLastVal(vangogh_integration.GogTagNameProperty, value); ok {
 				tagName = tnp
 			}
-			fmtProperty.values[tagName] = searchHref(property, value)
+			fmtProperty.values[tagName] = hrefSearch(property, value)
 		}
 	case vangogh_integration.GogPriceProperty:
 		for _, value := range values {
 			if !isFree {
 				if isDiscounted && !owned {
 					if bpp, ok := rdx.GetLastVal(vangogh_integration.GogBasePriceProperty, id); ok {
-						fmtProperty.values["Base: "+bpp] = noHref()
+						fmtProperty.values["Base: "+bpp] = hrefEmpty()
 					}
-					fmtProperty.values["Sale: "+value] = noHref()
+					fmtProperty.values["Sale: "+value] = hrefEmpty()
 				} else {
-					fmtProperty.values[value] = noHref()
+					fmtProperty.values[value] = hrefEmpty()
 				}
 			}
 		}
@@ -143,41 +175,41 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 	case vangogh_integration.HltbHoursToComplete100Property:
 		for _, value := range values {
 			ct := strings.TrimLeft(value, "0") + " hrs"
-			fmtProperty.values[ct] = noHref()
+			fmtProperty.values[ct] = hrefEmpty()
 		}
 	case vangogh_integration.HltbReviewScoreProperty:
 		if !isNotPositiveRating(firstValue) {
-			fmtProperty.values[fmtHltbRating(firstValue)] = noHref()
+			fmtProperty.values[fmtHltbRating(firstValue)] = hrefEmpty()
 		}
 	case vangogh_integration.GogDiscountPercentageProperty:
 		for _, value := range values {
-			fmtProperty.values[value] = noHref()
+			fmtProperty.values[value] = hrefEmpty()
 		}
 	case vangogh_integration.GogPublishersProperty:
 		fallthrough
 	case vangogh_integration.GogDevelopersProperty:
 		for _, value := range values {
-			fmtProperty.values[value] = grdSortedSearchHref(property, value)
+			fmtProperty.values[value] = HrefSearchDescSortGogGlobalReleaseDate(property, value)
 		}
 	case vangogh_integration.EnginesBuildsProperty:
 		for _, value := range values {
-			fmtProperty.values[value] = noHref()
+			fmtProperty.values[value] = hrefEmpty()
 		}
 	case vangogh_integration.SteamReviewScoreProperty:
 		if !isNotPositiveRating(firstValue) {
-			fmtProperty.values[fmtSteamRating(firstValue)] = noHref()
+			fmtProperty.values[fmtSteamRating(firstValue)] = hrefEmpty()
 		}
 	case vangogh_integration.OpenCriticMedianScoreProperty:
 		if !isNotPositiveRating(firstValue) {
-			fmtProperty.values[FmtRating(firstValue)] = noHref()
+			fmtProperty.values[FmtRating(firstValue)] = hrefEmpty()
 		}
 	case vangogh_integration.MetacriticScoreProperty:
 		if !isNotPositiveRating(firstValue) {
-			fmtProperty.values[FmtRating(firstValue)] = noHref()
+			fmtProperty.values[FmtRating(firstValue)] = hrefEmpty()
 		}
 	case vangogh_integration.TopPercentProperty:
 		if !isNotPositiveRating(firstValue) {
-			fmtProperty.values[firstValue] = searchHref(property, url.QueryEscape(firstValue))
+			fmtProperty.values[firstValue] = hrefSearch(property, url.QueryEscape(firstValue))
 		}
 	case vangogh_integration.CreatorsProperty:
 		fallthrough
@@ -196,15 +228,15 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 	case vangogh_integration.ComposersProperty:
 		for _, value := range values {
 			if has, ok := rdx.GetLastVal(vangogh_integration.HasMultipleCreditsProperty, value); ok && has == vangogh_integration.TrueValue {
-				fmtProperty.values[value] = searchCreditsHref(value)
+				fmtProperty.values[value] = hrefSearchCredits(value)
 			} else {
-				fmtProperty.values[value] = noHref()
+				fmtProperty.values[value] = hrefEmpty()
 			}
 		}
 	default:
 		for _, value := range values {
 			if value != "" {
-				fmtProperty.values[value] = searchHref(property, value)
+				fmtProperty.values[value] = hrefSearch(property, value)
 			}
 		}
 	}

@@ -88,7 +88,7 @@ func GogProduct(id string, rdx redux.Readable, permissions ...author.Permission)
 			summaryRow.PropIcons(compton_data.PropertyTitles[property], osSymbols...)
 		default:
 			for _, value := range values[property] {
-				href := "/search?sort=global-release-date&desc=true&" + property + "=" + value
+				href := compton_fragments.HrefSearchDescSortGogGlobalReleaseDate(property, value) //"/search?sort=global-release-date&desc=true&" + property + "=" + value
 				summaryRow.PropLinkColor(compton_data.PropertyTitles[property], color.Foreground, value, href)
 			}
 		}
