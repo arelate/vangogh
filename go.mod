@@ -3,7 +3,7 @@ module github.com/arelate/vangogh
 go 1.26.3
 
 require (
-	github.com/arelate/southern_light v0.4.75
+	github.com/arelate/southern_light v0.4.76
 	github.com/boggydigital/atomus v0.1.11
 	github.com/boggydigital/author v0.1.32
 	github.com/boggydigital/backups v0.1.7
@@ -22,5 +22,5 @@ require (
 require (
 	github.com/boggydigital/match_node v0.1.19 // indirect
 	github.com/boggydigital/wits v0.2.3 // indirect
-	golang.org/x/crypto v0.52.0 // indirect
+	golang.org/x/crypto v0.53.0 // indirect
 )
