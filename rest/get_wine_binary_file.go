@@ -19,7 +19,7 @@ func GetWineBinaryFile(w http.ResponseWriter, r *http.Request) {
 	q := r.URL.Query()
 
 	operatingSystem := vangogh_integration.ParseOperatingSystem(q.Get(vangogh_integration.OperatingSystemsProperty))
-	title := q.Get(vangogh_integration.GogTitleProperty)
+	title := q.Get(vangogh_integration.TitleProperty)
 
 	var binary *wine_integration.Binary
 
