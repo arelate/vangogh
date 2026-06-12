@@ -48,19 +48,19 @@ func GetDownloadsHandler(u *url.URL) error {
 	q := u.Query()
 	var manualUrlFilter []string
 
-	if q.Has("manual-url-filter") {
-		manualUrlFilter = strings.Split(q.Get("manual-url-filter"), ",")
+	if q.Has(vangogh_integration.UrlManualUrlFilterParameter) {
+		manualUrlFilter = strings.Split(q.Get(vangogh_integration.UrlManualUrlFilterParameter), ",")
 	}
 
 	gdo := &getDownloadOptions{
-		updateDetails: q.Has("update-details"),
-		validate:      q.Has("validate"),
-		checksumsOnly: q.Has("checksums-only"),
-		queued:        q.Has("queued"),
-		missing:       q.Has("missing"),
-		all:           q.Has("all"),
-		debug:         q.Has("debug"),
-		force:         q.Has("force"),
+		updateDetails: q.Has(vangogh_integration.UrlUpdateDetailsParameter),
+		validate:      q.Has(vangogh_integration.UrlValidateParameter),
+		checksumsOnly: q.Has(vangogh_integration.UrlChecksumsOnlyParameter),
+		queued:        q.Has(vangogh_integration.UrlQueuedParameter),
+		missing:       q.Has(vangogh_integration.UrlMissingParameter),
+		all:           q.Has(vangogh_integration.UrlAllParameter),
+		debug:         q.Has(vangogh_integration.UrlDebugParameter),
+		force:         q.Has(vangogh_integration.UrlForceParameter),
 	}
 
 	return GetDownloads(
@@ -68,7 +68,7 @@ func GetDownloadsHandler(u *url.URL) error {
 		vangogh_integration.OperatingSystemsFromUrl(u),
 		vangogh_integration.LanguageCodesFromUrl(u),
 		vangogh_integration.DownloadTypesFromUrl(u),
-		q.Has("no-patches"),
+		q.Has(vangogh_integration.UrlNoPatchesParameter),
 		vangogh_integration.DownloadsLayoutFromUrl(u),
 		gdo,
 		manualUrlFilter...)

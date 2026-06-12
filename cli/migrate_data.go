@@ -37,7 +37,12 @@ const (
 )
 
 func MigrateDataHandler(u *url.URL) error {
-	return MigrateData(u.Query().Has("force"))
+
+	q := u.Query()
+
+	force := q.Has(vangogh_integration.UrlForceParameter)
+
+	return MigrateData(force)
 }
 
 func MigrateData(force bool) error {

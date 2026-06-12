@@ -27,7 +27,7 @@ func PostImportCookies(w http.ResponseWriter, r *http.Request) {
 	var p compton.PageElement
 
 	var importCookies string
-	if importCookiesValues := r.Form["import-cookies"]; len(importCookiesValues) > 0 {
+	if importCookiesValues := r.Form[vangogh_integration.UrlImportCookiesParameter]; len(importCookiesValues) > 0 {
 		importCookies = importCookiesValues[0]
 	}
 

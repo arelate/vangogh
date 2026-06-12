@@ -24,19 +24,19 @@ func UsersHandler(u *url.URL) error {
 
 	q := u.Query()
 
-	username := q.Get("username")
-	password := q.Get("password")
-	newPassword := q.Get("new-password")
-	role := q.Get("role")
+	username := q.Get(vangogh_integration.UrlUsernameParameter)
+	password := q.Get(vangogh_integration.UrlPasswordParameter)
+	newPassword := q.Get(vangogh_integration.UrlNewPasswordParameter)
+	role := q.Get(vangogh_integration.UrlRoleParameter)
 
 	action := userActionUnknown
-	if q.Has("create") {
+	if q.Has(vangogh_integration.UrlCreateParameter) {
 		action = userActionCreate
-	} else if q.Has("delete") {
+	} else if q.Has(vangogh_integration.UrlDeleteParameter) {
 		action = userActionDelete
-	} else if q.Has("change-password") {
+	} else if q.Has(vangogh_integration.UrlChangePasswordParameter) {
 		action = userActionChangePassword
-	} else if q.Has("list") {
+	} else if q.Has(vangogh_integration.UrlListParameter) {
 		action = userActionList
 	}
 
@@ -56,7 +56,7 @@ func UsersHandler(u *url.URL) error {
 	case userActionList:
 		// do nothing
 	default:
-		return errors.New("unknown user action: " + q.Get("action"))
+		return errors.New("unknown users command action")
 	}
 
 	return Users(action, username, password, newPassword, role)

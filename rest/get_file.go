@@ -20,9 +20,9 @@ func GetFile(w http.ResponseWriter, r *http.Request) {
 
 	q := r.URL.Query()
 
-	id := q.Get("id")
-	manualUrl := q.Get("manual-url")
-	downloadType := vangogh_integration.ParseDownloadType(q.Get("download-type"))
+	id := q.Get(vangogh_integration.UrlIdParameter)
+	manualUrl := q.Get(vangogh_integration.UrlManualUrlParameter)
+	downloadType := vangogh_integration.ParseDownloadType(q.Get(vangogh_integration.UrlDownloadTypeParameter))
 
 	if id == "" {
 		http.Error(w, nod.ErrorStr("missing id"), http.StatusBadRequest)

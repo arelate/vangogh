@@ -15,7 +15,7 @@ func GetSteamCmdBinaryFile(w http.ResponseWriter, r *http.Request) {
 	// GET /api/steamcmd-binary-file?os
 	q := r.URL.Query()
 
-	operatingSystem := vangogh_integration.ParseOperatingSystem(q.Get(vangogh_integration.OperatingSystemsProperty))
+	operatingSystem := vangogh_integration.ParseOperatingSystem(q.Get(vangogh_integration.UrlOperatingSystemParameter))
 	steamCmdUrl := steamcmd.Urls[operatingSystem]
 	filename := filepath.Base(steamCmdUrl)
 

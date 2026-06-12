@@ -1,9 +1,10 @@
 package rest
 
 import (
+	"net/http"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
-	"net/http"
 )
 
 func GetLocalTagsApply(w http.ResponseWriter, r *http.Request) {
@@ -16,17 +17,17 @@ func GetLocalTagsApply(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var id string
-	if len(r.Form["id"]) > 0 {
-		id = r.Form["id"][0]
+	if len(r.Form[vangogh_integration.UrlIdParameter]) > 0 {
+		id = r.Form[vangogh_integration.UrlIdParameter][0]
 	}
 
 	//don't skip if local-tags are empty as this might be a signal to remove existing tags
 	newLocalTag := ""
-	if len(r.Form["new-property-value"]) > 0 {
-		newLocalTag = r.Form["new-property-value"][0]
+	if len(r.Form[vangogh_integration.UrlNewValueParameter]) > 0 {
+		newLocalTag = r.Form[vangogh_integration.UrlNewValueParameter][0]
 	}
 
-	localTags := r.Form["value"]
+	localTags := r.Form[vangogh_integration.UrlValueParameter]
 	if newLocalTag != "" {
 		localTags = append(localTags, newLocalTag)
 	}
@@ -38,14 +39,14 @@ func GetLocalTagsApply(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(add) > 0 {
-		if err := vangogh_integration.AddLocalTags([]string{id}, add, nil); err != nil {
+		if err = vangogh_integration.AddLocalTags([]string{id}, add, nil); err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 			return
 		}
 	}
 
 	if len(rem) > 0 {
-		if err := vangogh_integration.RemoveLocalTags([]string{id}, rem, nil); err != nil {
+		if err = vangogh_integration.RemoveLocalTags([]string{id}, rem, nil); err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 			return
 		}

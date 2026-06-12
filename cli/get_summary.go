@@ -8,7 +8,7 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-func GetSummaryHandler(u *url.URL) error {
+func GetSummaryHandler(_ *url.URL) error {
 	return GetSummary()
 }
 

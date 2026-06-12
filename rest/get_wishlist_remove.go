@@ -13,7 +13,7 @@ func GetWishlistRemove(w http.ResponseWriter, r *http.Request) {
 
 	// GET /wishlist/remove?id
 
-	id := r.URL.Query().Get(vangogh_integration.IdProperty)
+	id := r.URL.Query().Get(vangogh_integration.UrlIdParameter)
 
 	acp := vangogh_integration.AbsCookiesPath()
 

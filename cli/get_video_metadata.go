@@ -22,8 +22,8 @@ func GetVideoMetadataHandler(u *url.URL) error {
 
 	return GetVideoMetadata(
 		ids,
-		q.Has("missing"),
-		q.Has("force"))
+		q.Has(vangogh_integration.UrlMissingParameter),
+		q.Has(vangogh_integration.UrlForceParameter))
 }
 
 func GetVideoMetadata(ids []string, missing, force bool) error {

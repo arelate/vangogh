@@ -21,7 +21,7 @@ func GetReception(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	gogId := r.URL.Query().Get("id")
+	gogId := r.URL.Query().Get(vangogh_integration.UrlIdParameter)
 
 	appReviews, err := getSteamReviews(gogId)
 	if err != nil {

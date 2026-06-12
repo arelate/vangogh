@@ -26,10 +26,10 @@ func UpdateDownloadsHandler(u *url.URL) error {
 		vangogh_integration.OperatingSystemsFromUrl(u),
 		vangogh_integration.LanguageCodesFromUrl(u),
 		vangogh_integration.DownloadTypesFromUrl(u),
-		q.Has("no-patches"),
+		q.Has(vangogh_integration.UrlNoPatchesParameter),
 		vangogh_integration.DownloadsLayoutFromUrl(u),
 		since,
-		q.Has("updates-only"))
+		q.Has(vangogh_integration.UrlUpdatesOnlyParameter))
 }
 
 func UpdateDownloads(

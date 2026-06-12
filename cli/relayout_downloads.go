@@ -22,12 +22,16 @@ func RelayoutDownloadsHandler(u *url.URL) error {
 	langCodes := vangogh_integration.LanguageCodesFromUrl(u)
 	downloadTypes := vangogh_integration.DownloadTypesFromUrl(u)
 
+	noPatches := q.Has(vangogh_integration.UrlNoPatchesParameter)
+	fromLayout := vangogh_integration.ParseDownloadsLayout(q.Get(vangogh_integration.UrlFromParameter))
+	toLayout := vangogh_integration.ParseDownloadsLayout(q.Get(vangogh_integration.UrlToParameter))
+
 	return RelayoutDownloads(operatingSystems,
 		langCodes,
 		downloadTypes,
-		q.Has("no-patches"),
-		vangogh_integration.ParseDownloadsLayout(q.Get("from")),
-		vangogh_integration.ParseDownloadsLayout(q.Get("to")))
+		noPatches,
+		fromLayout,
+		toLayout)
 }
 
 func RelayoutDownloads(

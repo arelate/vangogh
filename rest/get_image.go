@@ -13,12 +13,14 @@ func GetImage(w http.ResponseWriter, r *http.Request) {
 	// GET /image?id
 
 	q := r.URL.Query()
-	imageId := q.Get("id")
+	imageId := q.Get(vangogh_integration.UrlIdParameter)
+
 	if imageId == "" {
 		err := errors.New("empty image id")
 		http.Error(w, nod.Error(err).Error(), http.StatusBadRequest)
 		return
 	}
+
 	if localImagePath, err := vangogh_integration.AbsLocalImagePath(imageId); err == nil && localImagePath != "" {
 		w.Header().Set("Cache-Control", "max-age=31536000")
 		http.ServeFile(w, r, localImagePath)

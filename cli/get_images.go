@@ -24,12 +24,12 @@ func GetImagesHandler(u *url.URL) error {
 
 	var imageTypes []vangogh_integration.ImageType
 
-	if q.Has("image-type") {
-		its := strings.Split(q.Get("image-type"), ",")
+	if q.Has(vangogh_integration.UrlImageTypeParameter) {
+		its := strings.Split(q.Get(vangogh_integration.UrlImageTypeParameter), ",")
 		imageTypes = vangogh_integration.ParseManyImageTypes(its...)
 	}
 
-	if q.Has("all-image-types") {
+	if q.Has(vangogh_integration.UrlAllParameter) {
 		imageTypes = vangogh_integration.AllImageTypes()
 	}
 
@@ -40,8 +40,8 @@ func GetImagesHandler(u *url.URL) error {
 	return GetImages(
 		ids,
 		imageTypes,
-		q.Has("missing"),
-		q.Has("force"))
+		q.Has(vangogh_integration.UrlMissingParameter),
+		q.Has(vangogh_integration.UrlForceParameter))
 }
 
 // GetImages fetches remote images for a given type (box-art, screenshots, background, etc.).

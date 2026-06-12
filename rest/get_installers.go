@@ -19,7 +19,7 @@ func GetInstallers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id := r.URL.Query().Get("id")
+	id := r.URL.Query().Get(vangogh_integration.UrlIdParameter)
 
 	if owned, ok := rdx.GetLastVal(vangogh_integration.GogOwnedProperty, id); !ok || owned != vangogh_integration.TrueValue {
 		w.WriteHeader(http.StatusNoContent)

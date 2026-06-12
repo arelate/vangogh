@@ -22,7 +22,7 @@ import (
 func ReduceHandler(u *url.URL) error {
 
 	productTypes := vangogh_integration.ProductTypesFromUrl(u)
-	force := u.Query().Has("force")
+	force := u.Query().Has(vangogh_integration.UrlForceParameter)
 
 	return Reduce(productTypes, force)
 }

@@ -17,7 +17,7 @@ func GetTagsEdit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id := r.URL.Query().Get("id")
+	id := r.URL.Query().Get(vangogh_integration.UrlIdParameter)
 
 	selectedValues := make(map[string]any)
 	if tagIds, ok := rdx.GetAllValues(vangogh_integration.GogTagIdProperty, id); ok {

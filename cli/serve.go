@@ -15,25 +15,23 @@ func ServeHandler(u *url.URL) error {
 
 	q := u.Query()
 
-	portStr := q.Get("port")
+	portStr := q.Get(vangogh_integration.UrlPortParameter)
 	port, err := strconv.Atoi(portStr)
 	if err != nil {
 		return err
 	}
 
-	oses := vangogh_integration.OperatingSystemsFromUrl(u)
+	operatingSystems := vangogh_integration.OperatingSystemsFromUrl(u)
 	langCodes := vangogh_integration.LanguageCodesFromUrl(u)
-
-	if len(oses) == 0 {
-		oses = []vangogh_integration.OperatingSystem{vangogh_integration.AnyOperatingSystem}
-	}
 
 	layout := vangogh_integration.DownloadsLayoutFromUrl(u)
 
-	rest.SetDefaultDownloadsFilters(oses, langCodes, q.Has("no-patches"))
+	noPatches := q.Has(vangogh_integration.UrlNoPatchesParameter)
 
-	insecureCookies := q.Has("insecure-cookies")
-	stderr := q.Has("stderr")
+	rest.SetDefaultDownloadsFilters(operatingSystems, langCodes, noPatches)
+
+	insecureCookies := q.Has(vangogh_integration.UrlInsecureCookiesParameter)
+	stderr := q.Has(vangogh_integration.UrlStdErrParameter)
 
 	return Serve(port, layout, insecureCookies, stderr)
 }

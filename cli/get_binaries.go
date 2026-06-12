@@ -24,18 +24,14 @@ func GetBinariesHandler(u *url.URL) error {
 
 	q := u.Query()
 
-	force := q.Has("force")
+	force := q.Has(vangogh_integration.UrlForceParameter)
 
-	var operatingSystems []vangogh_integration.OperatingSystem
-	if q.Has(vangogh_integration.OperatingSystemsProperty) {
-		operatingSystems = vangogh_integration.ParseManyOperatingSystems(
-			strings.Split(q.Get(vangogh_integration.OperatingSystemsProperty), ","))
-	}
+	operatingSystems := vangogh_integration.OperatingSystemsFromUrl(u)
 
-	wine := q.Has("wine")
-	steamCmd := q.Has("steamcmd")
+	wine := q.Has(vangogh_integration.UrlWineParameter)
+	steamCmd := q.Has(vangogh_integration.UrlSteamCmdParameter)
 
-	if q.Has("all") {
+	if q.Has(vangogh_integration.UrlAllParameter) {
 		wine = true
 		steamCmd = true
 	}

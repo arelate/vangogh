@@ -33,16 +33,16 @@ func ValidateHandler(u *url.URL) error {
 	q := u.Query()
 
 	var validationStatuses []vangogh_integration.ValidationStatus
-	if q.Has("validation-status") {
-		for vs := range strings.SplitSeq(q.Get("validation-status"), ",") {
+	if q.Has(vangogh_integration.UrlValidationStatusParameter) {
+		for vs := range strings.SplitSeq(q.Get(vangogh_integration.UrlValidationStatusParameter), ",") {
 			validationStatuses = append(validationStatuses, vangogh_integration.ParseValidationStatus(vs))
 		}
 	}
 
 	vo := &validationOptions{
 		validationStatuses: validationStatuses,
-		notValid:           q.Has("not-valid"),
-		all:                q.Has("all"),
+		notValid:           q.Has(vangogh_integration.UrlNotValidParameter),
+		all:                q.Has(vangogh_integration.UrlAllParameter),
 	}
 
 	return Validate(
@@ -50,7 +50,7 @@ func ValidateHandler(u *url.URL) error {
 		vangogh_integration.OperatingSystemsFromUrl(u),
 		vangogh_integration.LanguageCodesFromUrl(u),
 		vangogh_integration.DownloadTypesFromUrl(u),
-		q.Has("no-patches"),
+		q.Has(vangogh_integration.UrlNoPatchesParameter),
 		vangogh_integration.DownloadsLayoutFromUrl(u),
 		vo)
 }

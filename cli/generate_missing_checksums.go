@@ -19,7 +19,7 @@ func GenerateMissingChecksumsHandler(u *url.URL) error {
 	operatingSystems := vangogh_integration.OperatingSystemsFromUrl(u)
 	langCodes := vangogh_integration.LanguageCodesFromUrl(u)
 	downloadTypes := vangogh_integration.DownloadTypesFromUrl(u)
-	noPatches := q.Has("no-patches")
+	noPatches := q.Has(vangogh_integration.UrlNoPatchesParameter)
 	downloadsLayout := vangogh_integration.DownloadsLayoutFromUrl(u)
 
 	return GenerateMissingChecksums(operatingSystems, langCodes, downloadTypes, noPatches, downloadsLayout)

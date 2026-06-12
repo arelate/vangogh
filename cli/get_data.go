@@ -87,12 +87,12 @@ func GetDataHandler(u *url.URL) error {
 	q := u.Query()
 
 	df := new(dataFilter{
-		purchases:          q.Has("purchases"),
-		extraData:          q.Has("extra"),
-		relatedApiProducts: q.Has("related-api-products"),
+		purchases:          q.Has(vangogh_integration.UrlPurchasesParameter),
+		extraData:          q.Has(vangogh_integration.UrlExtraParameter),
+		relatedApiProducts: q.Has(vangogh_integration.UrlRelatedApiProductsParameter),
 	})
 
-	force := q.Has("force")
+	force := q.Has(vangogh_integration.UrlForceParameter)
 	return GetData(ids, productTypes, since, df, force)
 }
 

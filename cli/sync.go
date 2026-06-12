@@ -61,7 +61,7 @@ func initSyncOptions(u *url.URL) *syncOptions {
 		binaries:          q.Has(SynOptionBinaries),
 	}
 
-	if q.Has("all") {
+	if q.Has(vangogh_integration.UrlAllParameter) {
 		so.purchasesData = !q.Has(NegOpt(SyncOptionPurchases))
 		so.extraData = !q.Has(NegOpt(SyncOptionsExtraData))
 		so.descriptionImages = !q.Has(NegOpt(SyncOptionDescriptionImages))

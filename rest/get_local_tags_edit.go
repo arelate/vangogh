@@ -1,10 +1,11 @@
 package rest
 
 import (
+	"net/http"
+
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_pages"
 	"github.com/boggydigital/nod"
-	"net/http"
 )
 
 func GetLocalTagsEdit(w http.ResponseWriter, r *http.Request) {
@@ -16,7 +17,7 @@ func GetLocalTagsEdit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id := r.URL.Query().Get("id")
+	id := r.URL.Query().Get(vangogh_integration.UrlIdParameter)
 
 	selectedValues := make(map[string]any)
 	if lt, ok := rdx.GetAllValues(vangogh_integration.LocalTagsProperty, id); ok {

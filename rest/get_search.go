@@ -24,8 +24,8 @@ func GetSearch(w http.ResponseWriter, r *http.Request) {
 	q := r.URL.Query()
 
 	from, to := 0, 0
-	if q.Has("from") {
-		from64, err := strconv.ParseInt(q.Get("from"), 10, 32)
+	if q.Has(vangogh_integration.UrlFromParameter) {
+		from64, err := strconv.ParseInt(q.Get(vangogh_integration.UrlFromParameter), 10, 32)
 		if err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 			return

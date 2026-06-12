@@ -26,8 +26,9 @@ func GetAtom(w http.ResponseWriter, r *http.Request) {
 		ifModifiedSince := r.Header.Get(IfModifiedSinceHeader)
 		lastModified := stat.ModTime().UTC().Format(http.TimeFormat)
 
-		if ims, err := time.Parse(http.TimeFormat, ifModifiedSince); err == nil {
-			if lm, err := time.Parse(http.TimeFormat, lastModified); err == nil {
+		var ims, lm time.Time
+		if ims, err = time.Parse(http.TimeFormat, ifModifiedSince); err == nil {
+			if lm, err = time.Parse(http.TimeFormat, lastModified); err == nil {
 				if lm.Unix() <= ims.Unix() {
 					w.WriteHeader(http.StatusNotModified)
 					return

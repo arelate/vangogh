@@ -19,7 +19,8 @@ func GetDescriptionImages(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if absLocalFilePath, err := vangogh_integration.AbsDescriptionImagePath(localPath); err == nil && absLocalFilePath != "" {
+	var absLocalFilePath string
+	if absLocalFilePath, err = vangogh_integration.AbsDescriptionImagePath(localPath); err == nil && absLocalFilePath != "" {
 		http.ServeFile(w, r, absLocalFilePath)
 	} else {
 		if err == nil {

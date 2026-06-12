@@ -3,6 +3,7 @@ package rest
 import (
 	"net/http"
 
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_pages"
 	"github.com/boggydigital/nod"
 )
@@ -18,8 +19,8 @@ func GetUpdates(w http.ResponseWriter, r *http.Request) {
 
 	q := r.URL.Query()
 
-	showAll := q.Has("all")
-	section := q.Get("section")
+	showAll := q.Has(vangogh_integration.UrlAllParameter)
+	section := q.Get(vangogh_integration.UrlSectionParameter)
 
 	permissions, err := sb.GetCookiePermissions(r)
 	if err != nil {

@@ -21,8 +21,8 @@ func GetNews(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	gogId := r.URL.Query().Get("id")
-	all := r.URL.Query().Has("all")
+	gogId := r.URL.Query().Get(vangogh_integration.UrlIdParameter)
+	all := r.URL.Query().Has(vangogh_integration.UrlAllParameter)
 
 	appNews, err := getAppNews(gogId)
 	if err != nil {

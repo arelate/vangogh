@@ -14,7 +14,9 @@ func ImportCookiesHandler(u *url.URL) error {
 	ica := nod.Begin("importing cookies...")
 	defer ica.Done()
 
-	cookieStr := u.Query().Get("cookies")
+	q := u.Query()
+
+	cookieStr := q.Get(vangogh_integration.UrlCookiesParameter)
 
 	if err := coost.Import(cookieStr, gog_integration.HostUrl(), vangogh_integration.AbsCookiesPath()); err != nil {
 		return err

@@ -27,8 +27,8 @@ func GetDescriptionImagesHandler(u *url.URL) error {
 		return err
 	}
 
-	all := q.Has("all")
-	force := q.Has("force")
+	all := q.Has(vangogh_integration.UrlAllParameter)
+	force := q.Has(vangogh_integration.UrlForceParameter)
 
 	return GetDescriptionImages(ids, since, all, force)
 }

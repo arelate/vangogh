@@ -3,6 +3,7 @@ package rest
 import (
 	"net/http"
 
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_pages"
 	"github.com/boggydigital/nod"
 )
@@ -16,7 +17,7 @@ func GetDebug(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id := r.URL.Query().Get("id")
+	id := r.URL.Query().Get(vangogh_integration.UrlIdParameter)
 
 	if debugPage, err := compton_pages.Debug(id, rdx); err == nil && debugPage != nil {
 		if err = debugPage.WriteResponse(w); err != nil {

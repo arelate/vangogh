@@ -23,11 +23,11 @@ func SizeHandler(u *url.URL) error {
 		vangogh_integration.OperatingSystemsFromUrl(u),
 		vangogh_integration.LanguageCodesFromUrl(u),
 		vangogh_integration.DownloadTypesFromUrl(u),
-		q.Has("no-patches"),
+		q.Has(vangogh_integration.UrlNoPatchesParameter),
 		vangogh_integration.DownloadsLayoutFromUrl(u),
-		q.Has("missing"),
-		q.Has("debug"),
-		q.Has("all"))
+		q.Has(vangogh_integration.UrlMissingParameter),
+		q.Has(vangogh_integration.UrlDebugParameter),
+		q.Has(vangogh_integration.UrlAllParameter))
 }
 
 func Size(

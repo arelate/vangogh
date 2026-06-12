@@ -3,6 +3,7 @@ package rest
 import (
 	"net/http"
 
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_pages"
 	"github.com/boggydigital/nod"
 )
@@ -16,7 +17,7 @@ func GetMedia(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id := r.URL.Query().Get("id")
+	id := r.URL.Query().Get(vangogh_integration.UrlIdParameter)
 
 	p := compton_pages.Media(id, rdx)
 	if err := p.WriteResponse(w); err != nil {

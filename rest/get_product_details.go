@@ -23,7 +23,7 @@ func GetProductDetails(w http.ResponseWriter, r *http.Request) {
 
 	q := r.URL.Query()
 
-	id := q.Get("id")
+	id := q.Get(vangogh_integration.UrlIdParameter)
 
 	det, err := getGogDetails(id)
 	if err != nil {
