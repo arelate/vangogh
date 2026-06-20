@@ -28,6 +28,7 @@ func GetSteamCmdBinaryFile(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", "max-age=31536000")
 		w.Header().Set("Content-Disposition", "attachment; filename=\""+filename+"\"")
 		w.Header().Set("Content-Length", strconv.FormatInt(fi.Size(), 10))
+		w.Header().Set("Content-Type", "application/octet-stream")
 
 		http.ServeFile(w, r, absFilepath)
 		return
