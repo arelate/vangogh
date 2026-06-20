@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
@@ -59,9 +60,11 @@ func GetFile(w http.ResponseWriter, r *http.Request) {
 
 	absDownloadPath := filepath.Join(absSlugDownloadDir, filename)
 
-	if _, err := os.Stat(absDownloadPath); err == nil {
+	var fi os.FileInfo
+	if fi, err = os.Stat(absDownloadPath); err == nil {
 		w.Header().Set("Cache-Control", "max-age=31536000")
 		w.Header().Set("Content-Disposition", "attachment; filename=\""+filename+"\"")
+		w.Header().Set("Content-Length", strconv.FormatInt(fi.Size(), 10))
 		http.ServeFile(w, r, absDownloadPath)
 	} else {
 		http.Error(w, nod.Error(err).Error(), http.StatusNotFound)

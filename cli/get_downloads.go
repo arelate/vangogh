@@ -39,6 +39,8 @@ type getDownloadOptions struct {
 	force         bool
 }
 
+var errTooManyDownloadErrors = errors.New("too many download errors")
+
 func GetDownloadsHandler(u *url.URL) error {
 	ids, err := vangogh_integration.IdsFromUrl(u)
 	if err != nil {
@@ -294,7 +296,9 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 		if len(gdd.manualUrlFilter) > 0 && !slices.Contains(gdd.manualUrlFilter, dl.ManualUrl) {
 			continue
 		}
-		if err = gdd.downloadManualUrl(slug, &dl, hc, dc); err != nil {
+		if err = gdd.downloadManualUrl(slug, &dl, hc, dc); errors.Is(err, errTooManyDownloadErrors) {
+			return err
+		} else if err != nil {
 			sda.Error(err)
 		}
 	}
@@ -439,7 +443,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 					dca.Error(err)
 					gdd.totalDownloadErrors++
 					if gdd.totalDownloadErrors >= totalDownloadErrorsLimit {
-						return errors.New("too many download errors")
+						return errTooManyDownloadErrors
 					}
 				}
 

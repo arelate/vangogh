@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 
 	"github.com/arelate/southern_light/steamcmd"
 	"github.com/arelate/southern_light/vangogh_integration"
@@ -23,7 +24,13 @@ func GetSteamCmdBinaryFile(w http.ResponseWriter, r *http.Request) {
 
 	absFilepath := filepath.Join(steamBinariesDir, filename)
 
-	if _, err := os.Stat(absFilepath); err == nil {
+	if fi, err := os.Stat(absFilepath); err == nil {
+		w.Header().Set("Cache-Control", "max-age=31536000")
+		w.Header().Set("Content-Disposition", "attachment; filename=\""+filename+"\"")
+		w.Header().Set("Content-Length", strconv.FormatInt(fi.Size(), 10))
+
+		http.ServeFile(w, r, absFilepath)
+		return
 	} else if os.IsNotExist(err) {
 		http.NotFound(w, r)
 		return
@@ -32,8 +39,4 @@ func GetSteamCmdBinaryFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Cache-Control", "max-age=31536000")
-	w.Header().Set("Content-Disposition", "attachment; filename=\""+filename+"\"")
-
-	http.ServeFile(w, r, absFilepath)
 }
