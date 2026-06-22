@@ -24,8 +24,8 @@ import (
 )
 
 const (
-	manualUrlDownloadRetries = 2
-	totalDownloadErrorsLimit = 10
+	manualUrlDownloadRetries = 3
+	totalDownloadErrorsLimit = 15
 )
 
 type getDownloadOptions struct {
@@ -69,7 +69,8 @@ func GetDownloadsHandler(u *url.URL) error {
 		ids,
 		vangogh_integration.OperatingSystemsFromUrl(u),
 		vangogh_integration.LanguageCodesFromUrl(u),
-		vangogh_integration.DownloadTypesFromUrl(u),
+		q.Has(vangogh_integration.UrlNoDlcsParameter),
+		q.Has(vangogh_integration.UrlNoExtrasParameter),
 		q.Has(vangogh_integration.UrlNoPatchesParameter),
 		vangogh_integration.DownloadsLayoutFromUrl(u),
 		gdo,
@@ -80,8 +81,7 @@ func GetDownloads(
 	ids []string,
 	operatingSystems []vangogh_integration.OperatingSystem,
 	langCodes []string,
-	downloadTypes []vangogh_integration.DownloadType,
-	noPatches bool,
+	noDlcs, noExtras, noPatches bool,
 	downloadsLayout vangogh_integration.DownloadsLayout,
 	options *getDownloadOptions,
 	manualUrlFilter ...string) error {
@@ -89,7 +89,7 @@ func GetDownloads(
 	gda := nod.NewProgress("downloading product files...")
 	defer gda.Done()
 
-	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
+	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, noDlcs, noExtras, noPatches)
 
 	hc, err := gogAuthHttpClient()
 	if err != nil {
@@ -128,8 +128,9 @@ func GetDownloads(
 		missingIds, err = itemizations.MissingLocalDownloads(
 			rdx,
 			operatingSystems,
-			downloadTypes,
 			langCodes,
+			noDlcs,
+			noExtras,
 			noPatches,
 			downloadsLayout,
 			options.debug)
@@ -197,7 +198,8 @@ func GetDownloads(
 		rdx,
 		operatingSystems,
 		langCodes,
-		downloadTypes,
+		noDlcs,
+		noExtras,
 		noPatches,
 		gdd,
 		gda); err != nil {

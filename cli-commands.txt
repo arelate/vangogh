@@ -13,7 +13,8 @@ cleanup
     slug&
     os&$={operating-systems^}
     lang-code&$={language-codes^}
-    download-type&$={download-types^}
+    no-dlc$
+    no-extras$
     no-patches$
     downloads-layout$={downloads-layouts^}
     all
@@ -22,7 +23,8 @@ cleanup
 generate-missing-checksums
     os&$={operating-systems^}
     lang-code&$={language-codes^}
-    download-type&$={download-types^}
+    no-dlc$
+    no-extras$
     no-patches$
     downloads-layout$={downloads-layouts^}
 
@@ -52,7 +54,8 @@ get-downloads
     slug&
     os&$={operating-systems^}
     lang-code&$={language-codes^}
-    download-type&$={download-types^}
+    no-dlc$
+    no-extras$
     no-patches$
     manual-url-filter&
     downloads-layout$={downloads-layouts^}
@@ -94,7 +97,8 @@ reduce
 relayout-downloads
     os&$={operating-systems^}
     lang-code&$={language-codes^}
-    download-type&$={download-types^}
+    no-dlc$
+    no-extras$
     no-patches$
     from*={downloads-layouts}
     to*={downloads-layouts}
@@ -113,7 +117,8 @@ size
     slug&
     os&$={operating-systems^}
     lang-code&$={language-codes^}
-    download-type&$={download-types^}
+    no-dlc$
+    no-extras$
     no-patches$
     downloads-layout$={downloads-layouts^}
     missing
@@ -127,7 +132,8 @@ sync
     since-hours-ago
     os&$={operating-systems^}
     lang-code&$={language-codes^}
-    download-type&$={download-types^}
+    no-dlc$
+    no-extras$
     no-patches$
     downloads-layout$={downloads-layouts^}
     debug$
@@ -138,7 +144,8 @@ sync
 update-downloads
     os&$={operating-systems^}
     lang-code&$={language-codes^}
-    download-type&$={download-types^}
+    no-dlc$
+    no-extras$
     no-patches$
     downloads-layout$={downloads-layouts^}
     since-hours-ago
@@ -159,7 +166,8 @@ validate
     slug&
     os&$={operating-systems^}
     lang-code&$={language-codes^}
-    download-type&$={download-types^}
+    no-dlc$
+    no-extras$
     no-patches$
     downloads-layout$={downloads-layouts^}
     validation-status&={validation-statuses}

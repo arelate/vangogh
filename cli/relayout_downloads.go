@@ -20,15 +20,16 @@ func RelayoutDownloadsHandler(u *url.URL) error {
 
 	operatingSystems := vangogh_integration.OperatingSystemsFromUrl(u)
 	langCodes := vangogh_integration.LanguageCodesFromUrl(u)
-	downloadTypes := vangogh_integration.DownloadTypesFromUrl(u)
-
+	noDlcs := q.Has(vangogh_integration.UrlNoDlcsParameter)
+	noExtras := q.Has(vangogh_integration.UrlNoExtrasParameter)
 	noPatches := q.Has(vangogh_integration.UrlNoPatchesParameter)
 	fromLayout := vangogh_integration.ParseDownloadsLayout(q.Get(vangogh_integration.UrlFromParameter))
 	toLayout := vangogh_integration.ParseDownloadsLayout(q.Get(vangogh_integration.UrlToParameter))
 
 	return RelayoutDownloads(operatingSystems,
 		langCodes,
-		downloadTypes,
+		noDlcs,
+		noExtras,
 		noPatches,
 		fromLayout,
 		toLayout)
@@ -37,8 +38,7 @@ func RelayoutDownloadsHandler(u *url.URL) error {
 func RelayoutDownloads(
 	operatingSystems []vangogh_integration.OperatingSystem,
 	langCodes []string,
-	downloadTypes []vangogh_integration.DownloadType,
-	noPatches bool,
+	noDlcs, noExtras, noPatches bool,
 	from, to vangogh_integration.DownloadsLayout) error {
 
 	rda := nod.NewProgress("changing downloads layout from %s to %s...", from, to)
@@ -78,7 +78,7 @@ func RelayoutDownloads(
 		to:   to,
 	}
 
-	if err = vangogh_integration.MapDownloads(ids, rdx, operatingSystems, langCodes, downloadTypes, noPatches, drp, rda); err != nil {
+	if err = vangogh_integration.MapDownloads(ids, rdx, operatingSystems, langCodes, noDlcs, noExtras, noPatches, drp, rda); err != nil {
 		return err
 	}
 

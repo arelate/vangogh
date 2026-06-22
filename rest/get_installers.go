@@ -102,6 +102,7 @@ func getDownloadsList(det *gog_integration.Details,
 
 	return dl.Only(operatingSystems,
 		langCodes,
-		[]vangogh_integration.DownloadType{vangogh_integration.AnyDownloadType},
+		false,
+		false,
 		noPatches), nil
 }

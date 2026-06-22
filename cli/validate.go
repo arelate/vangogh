@@ -49,7 +49,8 @@ func ValidateHandler(u *url.URL) error {
 		ids,
 		vangogh_integration.OperatingSystemsFromUrl(u),
 		vangogh_integration.LanguageCodesFromUrl(u),
-		vangogh_integration.DownloadTypesFromUrl(u),
+		q.Has(vangogh_integration.UrlNoDlcsParameter),
+		q.Has(vangogh_integration.UrlNoExtrasParameter),
 		q.Has(vangogh_integration.UrlNoPatchesParameter),
 		vangogh_integration.DownloadsLayoutFromUrl(u),
 		vo)
@@ -59,15 +60,14 @@ func Validate(
 	ids []string,
 	operatingSystems []vangogh_integration.OperatingSystem,
 	langCodes []string,
-	downloadTypes []vangogh_integration.DownloadType,
-	noPatches bool,
+	noDlcs, noExtras, noPatches bool,
 	downloadsLayout vangogh_integration.DownloadsLayout,
 	vo *validationOptions) error {
 
 	va := nod.NewProgress("validating...")
 	defer va.Done()
 
-	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
+	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, noDlcs, noExtras, noPatches)
 
 	properties := append(vangogh_integration.DownloadsLifecycleProperties(),
 		vangogh_integration.GogSlugProperty,
@@ -128,7 +128,8 @@ func Validate(
 		rdx,
 		operatingSystems,
 		langCodes,
-		downloadTypes,
+		noDlcs,
+		noExtras,
 		noPatches,
 		vd,
 		va); err != nil {

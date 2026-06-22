@@ -90,11 +90,12 @@ func SyncHandler(u *url.URL) error {
 		syncOpts,
 		vangogh_integration.OperatingSystemsFromUrl(u),
 		vangogh_integration.LanguageCodesFromUrl(u),
-		vangogh_integration.DownloadTypesFromUrl(u),
-		q.Has("no-patches"),
+		q.Has(vangogh_integration.UrlNoDlcsParameter),
+		q.Has(vangogh_integration.UrlNoExtrasParameter),
+		q.Has(vangogh_integration.UrlNoPatchesParameter),
 		vangogh_integration.DownloadsLayoutFromUrl(u),
-		!q.Has("no-cleanup"),
-		q.Has("force"))
+		!q.Has(vangogh_integration.UrlNoCleanupParameter),
+		q.Has(vangogh_integration.UrlForceParameter))
 }
 
 func Sync(
@@ -102,8 +103,7 @@ func Sync(
 	syncOpts *syncOptions,
 	operatingSystems []vangogh_integration.OperatingSystem,
 	langCodes []string,
-	downloadTypes []vangogh_integration.DownloadType,
-	noPatches bool,
+	noDlcs, noExtras, noPatches bool,
 	downloadsLayout vangogh_integration.DownloadsLayout,
 	cleanup bool,
 	force bool) error {
@@ -191,7 +191,8 @@ func Sync(
 		if err = GetDownloads(nil,
 			operatingSystems,
 			langCodes,
-			downloadTypes,
+			noDlcs,
+			noExtras,
 			noPatches,
 			downloadsLayout,
 			&getDownloadOptions{
@@ -206,7 +207,7 @@ func Sync(
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
 
-		if err = GenerateMissingChecksums(operatingSystems, langCodes, downloadTypes, noPatches, downloadsLayout); err != nil {
+		if err = GenerateMissingChecksums(operatingSystems, langCodes, noDlcs, noExtras, noPatches, downloadsLayout); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
 
@@ -218,7 +219,8 @@ func Sync(
 			if err = Cleanup(nil,
 				operatingSystems,
 				langCodes,
-				downloadTypes,
+				noDlcs,
+				noExtras,
 				noPatches,
 				downloadsLayout,
 				true,

@@ -15,7 +15,6 @@ var FuncMap = map[string]func() []string{
 	"image-types":         vangogh_integration.ImageTypesCloValues,
 	"redux-properties":    vangogh_integration.ReduxProperties,
 	"operating-systems":   vangogh_integration.OperatingSystemsCloValues,
-	"download-types":      vangogh_integration.DownloadTypesCloValues,
 	"downloads-layouts":   vangogh_integration.DownloadsLayoutsCloValues,
 	"language-codes":      gog_integration.LanguageCodesCloValues,
 	"validation-statuses": vangogh_integration.AllValidationStatusCloValues,

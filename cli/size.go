@@ -22,7 +22,8 @@ func SizeHandler(u *url.URL) error {
 		ids,
 		vangogh_integration.OperatingSystemsFromUrl(u),
 		vangogh_integration.LanguageCodesFromUrl(u),
-		vangogh_integration.DownloadTypesFromUrl(u),
+		q.Has(vangogh_integration.UrlNoDlcsParameter),
+		q.Has(vangogh_integration.UrlNoExtrasParameter),
 		q.Has(vangogh_integration.UrlNoPatchesParameter),
 		vangogh_integration.DownloadsLayoutFromUrl(u),
 		q.Has(vangogh_integration.UrlMissingParameter),
@@ -34,7 +35,8 @@ func Size(
 	ids []string,
 	operatingSystems []vangogh_integration.OperatingSystem,
 	langCodes []string,
-	downloadTypes []vangogh_integration.DownloadType,
+	noDlcs bool,
+	noExtras bool,
 	noPatches bool,
 	downloadsLayout vangogh_integration.DownloadsLayout,
 	missing bool,
@@ -44,7 +46,7 @@ func Size(
 	sa := nod.NewProgress("estimating downloads size...")
 	defer sa.Done()
 
-	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
+	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, noDlcs, noExtras, noPatches)
 
 	rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(),
 		vangogh_integration.GogSlugProperty,
@@ -59,8 +61,9 @@ func Size(
 		missingIds, err := itemizations.MissingLocalDownloads(
 			rdx,
 			operatingSystems,
-			downloadTypes,
 			langCodes,
+			noDlcs,
+			noExtras,
 			noPatches,
 			downloadsLayout,
 			debug)
@@ -109,7 +112,8 @@ func Size(
 		rdx,
 		operatingSystems,
 		langCodes,
-		downloadTypes,
+		noDlcs,
+		noExtras,
 		noPatches,
 		sd,
 		sa); err != nil {

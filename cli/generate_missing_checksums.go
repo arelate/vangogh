@@ -18,17 +18,17 @@ func GenerateMissingChecksumsHandler(u *url.URL) error {
 
 	operatingSystems := vangogh_integration.OperatingSystemsFromUrl(u)
 	langCodes := vangogh_integration.LanguageCodesFromUrl(u)
-	downloadTypes := vangogh_integration.DownloadTypesFromUrl(u)
+	noDlcs := q.Has(vangogh_integration.UrlNoDlcsParameter)
+	noExtras := q.Has(vangogh_integration.UrlNoExtrasParameter)
 	noPatches := q.Has(vangogh_integration.UrlNoPatchesParameter)
 	downloadsLayout := vangogh_integration.DownloadsLayoutFromUrl(u)
 
-	return GenerateMissingChecksums(operatingSystems, langCodes, downloadTypes, noPatches, downloadsLayout)
+	return GenerateMissingChecksums(operatingSystems, langCodes, noDlcs, noExtras, noPatches, downloadsLayout)
 }
 
 func GenerateMissingChecksums(operatingSystems []vangogh_integration.OperatingSystem,
 	langCodes []string,
-	downloadTypes []vangogh_integration.DownloadType,
-	noPatches bool,
+	noDlcs, noExtras, noPatches bool,
 	downloadsLayout vangogh_integration.DownloadsLayout) error {
 
 	gmca := nod.NewProgress("generating missing checksums...")
@@ -66,7 +66,8 @@ func GenerateMissingChecksums(operatingSystems []vangogh_integration.OperatingSy
 		rdx,
 		operatingSystems,
 		langCodes,
-		downloadTypes,
+		noDlcs,
+		noExtras,
 		noPatches,
 		mcp,
 		gmca); err != nil {

@@ -27,7 +27,8 @@ func CleanupHandler(u *url.URL) error {
 		ids,
 		vangogh_integration.OperatingSystemsFromUrl(u),
 		vangogh_integration.LanguageCodesFromUrl(u),
-		vangogh_integration.DownloadTypesFromUrl(u),
+		q.Has(vangogh_integration.UrlNoDlcsParameter),
+		q.Has(vangogh_integration.UrlNoExtrasParameter),
 		q.Has(vangogh_integration.UrlNoPatchesParameter),
 		vangogh_integration.DownloadsLayoutFromUrl(u),
 		q.Has(vangogh_integration.UrlAllParameter),
@@ -38,8 +39,7 @@ func Cleanup(
 	ids []string,
 	operatingSystems []vangogh_integration.OperatingSystem,
 	langCodes []string,
-	downloadTypes []vangogh_integration.DownloadType,
-	noPatches bool,
+	noDlcs, noExtras, noPatches bool,
 	downloadsLayout vangogh_integration.DownloadsLayout,
 	all, test bool) error {
 
@@ -55,7 +55,7 @@ func Cleanup(
 		return err
 	}
 
-	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, downloadTypes, noPatches)
+	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, noDlcs, noExtras, noPatches)
 
 	if all {
 
@@ -89,7 +89,8 @@ func Cleanup(
 		rdx,
 		operatingSystems,
 		langCodes,
-		downloadTypes,
+		noDlcs,
+		noExtras,
 		noPatches,
 		cd,
 		ca); err != nil {

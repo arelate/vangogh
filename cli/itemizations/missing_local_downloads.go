@@ -14,8 +14,9 @@ import (
 func MissingLocalDownloads(
 	rdx redux.Readable,
 	operatingSystems []vangogh_integration.OperatingSystem,
-	downloadTypes []vangogh_integration.DownloadType,
 	langCodes []string,
+	noDlcs bool,
+	noExtras bool,
 	noPatches bool,
 	downloadsLayout vangogh_integration.DownloadsLayout,
 	debug bool) ([]string, error) {
@@ -66,7 +67,8 @@ func MissingLocalDownloads(
 		rdx,
 		operatingSystems,
 		langCodes,
-		downloadTypes,
+		noDlcs,
+		noExtras,
 		noPatches,
 		mdd,
 		mlda); err != nil {
