@@ -12,7 +12,7 @@ import (
 
 var FuncMap = map[string]func() []string{
 	"all-product-types":   vangogh_integration.ProductTypesCloValues,
-	"image-types":         vangogh_integration.ImageTypesCloValues,
+	"image-types":         gog_integration.ImageTypesCloValues,
 	"redux-properties":    vangogh_integration.ReduxProperties,
 	"operating-systems":   vangogh_integration.OperatingSystemsCloValues,
 	"downloads-layouts":   vangogh_integration.DownloadsLayoutsCloValues,

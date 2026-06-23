@@ -110,7 +110,7 @@ func getMd5Checksum(absDownloadPath string) (string, error) {
 	}
 	defer chkFile.Close()
 
-	var chkData vangogh_integration.ValidationFile
+	var chkData gog_integration.ValidationFile
 	if err = xml.NewDecoder(chkFile).Decode(&chkData); err != nil {
 		return "", err
 	}

@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/itemizations"
 	"github.com/arelate/vangogh/cli/reqs"
@@ -22,15 +23,15 @@ func GetImagesHandler(u *url.URL) error {
 
 	q := u.Query()
 
-	var imageTypes []vangogh_integration.ImageType
+	var imageTypes []gog_integration.ImageType
 
 	if q.Has(vangogh_integration.UrlImageTypeParameter) {
 		its := strings.Split(q.Get(vangogh_integration.UrlImageTypeParameter), ",")
-		imageTypes = vangogh_integration.ParseManyImageTypes(its...)
+		imageTypes = gog_integration.ParseManyImageTypes(its...)
 	}
 
 	if q.Has(vangogh_integration.UrlAllParameter) {
-		imageTypes = vangogh_integration.AllImageTypes()
+		imageTypes = gog_integration.AllImageTypes()
 	}
 
 	if len(imageTypes) == 0 {
@@ -47,7 +48,7 @@ func GetImagesHandler(u *url.URL) error {
 // GetImages fetches remote images for a given type (box-art, screenshots, background, etc.).
 // If requested it can check locally present files and download all missing (used in data files,
 // but not present locally) images for a given type.
-func GetImages(ids []string, its []vangogh_integration.ImageType, missing, force bool) error {
+func GetImages(ids []string, its []gog_integration.ImageType, missing, force bool) error {
 
 	gia := nod.NewProgress("getting images...")
 	defer gia.Done()
@@ -58,7 +59,7 @@ func GetImages(ids []string, its []vangogh_integration.ImageType, missing, force
 	}
 
 	//for every product we'll collect image types missing for id and download only those
-	idMissingTypes := make(map[string][]vangogh_integration.ImageType)
+	idMissingTypes := make(map[string][]gog_integration.ImageType)
 
 	if missing {
 		var localImageSet map[string]any
@@ -101,7 +102,7 @@ func GetImages(ids []string, its []vangogh_integration.ImageType, missing, force
 
 	for id, missingIts := range idMissingTypes {
 
-		missingImageTypes := map[vangogh_integration.ImageType]bool{}
+		missingImageTypes := map[gog_integration.ImageType]bool{}
 
 		for _, it := range missingIts {
 
@@ -113,7 +114,7 @@ func GetImages(ids []string, its []vangogh_integration.ImageType, missing, force
 			}
 
 			var srcUrls []*url.URL
-			srcUrls, err = vangogh_integration.ImagePropertyUrls(images, it)
+			srcUrls, err = gog_integration.ImagePropertyUrls(images, it)
 			if err != nil {
 				return err
 			}
@@ -131,12 +132,7 @@ func GetImages(ids []string, its []vangogh_integration.ImageType, missing, force
 	return nil
 }
 
-func imageTypesReduxAssets(otherProperties []string, its []vangogh_integration.ImageType) (redux.Writeable, error) {
-	for _, it := range its {
-		if !vangogh_integration.IsValidImageType(it) {
-			return nil, errors.New("invalid image type: " + it.String())
-		}
-	}
+func imageTypesReduxAssets(otherProperties []string, its []gog_integration.ImageType) (redux.Writeable, error) {
 
 	propSet := make(map[string]bool)
 	propSet[vangogh_integration.GogTitleProperty] = true

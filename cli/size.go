@@ -120,7 +120,7 @@ func Size(
 		return err
 	}
 
-	sa.EndWithResult("%.2fGB", sd.TotalGBsEstimate())
+	sa.EndWithResult("%s", vangogh_integration.FormatBytes(sd.TotalBytesEstimate()))
 
 	return nil
 }
@@ -137,9 +137,9 @@ func (sd *sizeDelegate) Process(_, _ string, list vangogh_integration.DownloadsL
 	return nil
 }
 
-func (sd *sizeDelegate) TotalGBsEstimate() float64 {
+func (sd *sizeDelegate) TotalBytesEstimate() int64 {
 	if sd.dlList != nil {
-		return sd.dlList.TotalGBsEstimate()
+		return sd.dlList.TotalBytesEstimate()
 	}
 	return 0
 }

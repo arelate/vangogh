@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/redux"
 
@@ -166,7 +167,7 @@ func Sync(
 	// get images
 	if syncOpts.images {
 
-		if err = GetImages(nil, vangogh_integration.AllImageTypes(), true, force); err != nil {
+		if err = GetImages(nil, gog_integration.AllImageTypes(), true, force); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
 
@@ -283,7 +284,7 @@ func Sync(
 	// get extra images
 	if syncOpts.images {
 
-		if err = GetImages(nil, vangogh_integration.AllImageTypes(), true, force); err != nil {
+		if err = GetImages(nil, gog_integration.AllImageTypes(), true, force); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
 

@@ -95,7 +95,7 @@ func getDownloadsList(det *gog_integration.Details,
 	langCodes []string,
 	noPatches bool) (vangogh_integration.DownloadsList, error) {
 
-	dl, err := vangogh_integration.FromDetails(det, rdx)
+	dl, err := vangogh_integration.FromDetails(det)
 	if err != nil {
 		return nil, err
 	}

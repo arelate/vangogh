@@ -1,18 +1,19 @@
 package itemizations
 
 import (
+	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/redux"
 )
 
 type imageReduxGetter struct {
-	imageType vangogh_integration.ImageType
+	imageType gog_integration.ImageType
 	rdx       redux.Readable
 }
 
 func NewImageReduxGetter(
-	it vangogh_integration.ImageType,
+	it gog_integration.ImageType,
 	rdx redux.Readable) *imageReduxGetter {
 	return &imageReduxGetter{
 		imageType: it,
@@ -25,7 +26,7 @@ func (ieg *imageReduxGetter) GetImageIds(id string) ([]string, bool) {
 }
 
 func MissingLocalImages(
-	it vangogh_integration.ImageType,
+	it gog_integration.ImageType,
 	rdx redux.Readable,
 	localImageIds map[string]any) (map[string]any, error) {
 

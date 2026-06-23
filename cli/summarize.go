@@ -131,7 +131,7 @@ func Summarize(since int64) error {
 	}
 
 	for section, ids := range summary {
-		sortedIds, sortErr := rdx.Sort(ids, vangogh_integration.DefaultDesc, vangogh_integration.DefaultSort)
+		sortedIds, sortErr := rdx.Sort(ids, false, vangogh_integration.GogTitleProperty)
 		if sortErr != nil {
 			return sortErr
 		}

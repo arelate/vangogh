@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/kevlar"
@@ -209,7 +210,7 @@ func hashPathMd5(absPath string, tpw nod.TotalProgressWriter) (string, error) {
 	return fmt.Sprintf("%x", h.Sum(nil)), nil
 }
 
-func readMd5(absChecksumPath string) (*vangogh_integration.ValidationFile, error) {
+func readMd5(absChecksumPath string) (*gog_integration.ValidationFile, error) {
 
 	if _, err := os.Stat(absChecksumPath); err != nil {
 		return nil, err
@@ -221,7 +222,7 @@ func readMd5(absChecksumPath string) (*vangogh_integration.ValidationFile, error
 	}
 	defer chkFile.Close()
 
-	var chkData vangogh_integration.ValidationFile
+	var chkData gog_integration.ValidationFile
 	if err = xml.NewDecoder(chkFile).Decode(&chkData); err != nil {
 		return nil, err
 	}
