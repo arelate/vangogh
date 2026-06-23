@@ -15,7 +15,7 @@ import (
 )
 
 func GetDescriptionImagesHandler(u *url.URL) error {
-	since, err := vangogh_integration.SinceFromUrl(u)
+	since, err := vangogh_integration.SinceHouseAgoFromUrl(u)
 	if err != nil {
 		return nil
 	}

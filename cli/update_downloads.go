@@ -16,7 +16,7 @@ func UpdateDownloadsHandler(u *url.URL) error {
 
 	q := u.Query()
 
-	since, err := vangogh_integration.SinceFromUrl(u)
+	since, err := vangogh_integration.SinceHouseAgoFromUrl(u)
 	if err != nil {
 		return err
 	}

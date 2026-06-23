@@ -78,7 +78,7 @@ func initSyncOptions(u *url.URL) *syncOptions {
 func SyncHandler(u *url.URL) error {
 	syncOpts := initSyncOptions(u)
 
-	since, err := vangogh_integration.SinceFromUrl(u)
+	since, err := vangogh_integration.SinceHouseAgoFromUrl(u)
 	if err != nil {
 		return err
 	}

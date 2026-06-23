@@ -79,7 +79,7 @@ func GetDataHandler(u *url.URL) error {
 
 	productTypes := vangogh_integration.ProductTypesFromUrl(u)
 
-	since, err := vangogh_integration.SinceFromUrl(u)
+	since, err := vangogh_integration.SinceHouseAgoFromUrl(u)
 	if err != nil {
 		return err
 	}
