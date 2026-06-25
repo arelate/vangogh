@@ -150,7 +150,7 @@ func reduceGogCatalogPageProperties(page string, catalogPage *gog_integration.Ca
 				values = cp.GetEditions()
 			case vangogh_integration.GogRootEditionsProperty:
 				values = cp.GetRootEditions()
-			case vangogh_integration.GogCatalogPageProductsProperty:
+			case vangogh_integration.GogCatalogProductPageProperty:
 				values = []string{page}
 			case vangogh_integration.GogUserWishlistProperty:
 				if !rdx.HasValue(vangogh_integration.GogUserWishlistProperty, cp.Id, vangogh_integration.TrueValue) {

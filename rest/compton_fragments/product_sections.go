@@ -17,7 +17,7 @@ func ProductSections(id string, rdx redux.Readable, permissions ...author.Permis
 
 	hasSections = append(hasSections, compton_data.InfoSection)
 
-	if sr, ok := rdx.GetLastVal(vangogh_integration.SummaryRatingProperty, id); ok && sr != "" {
+	if sr, ok := rdx.GetLastVal(vangogh_integration.VangoghSummaryRatingProperty, id); ok && sr != "" {
 		hasSections = append(hasSections, compton_data.ReceptionSection)
 	}
 
@@ -33,7 +33,7 @@ func ProductSections(id string, rdx redux.Readable, permissions ...author.Permis
 	}
 
 	if rdx.HasKey(vangogh_integration.GogScreenshotsProperty, id) ||
-		rdx.HasKey(vangogh_integration.VideoIdProperty, id) {
+		rdx.HasKey(vangogh_integration.GogYouTubeVideoIdProperty, id) {
 		hasSections = append(hasSections, compton_data.MediaSection)
 	}
 
@@ -42,8 +42,12 @@ func ProductSections(id string, rdx redux.Readable, permissions ...author.Permis
 		return nil, err
 	}
 
-	if hasChangelog ||
-		rdx.HasValue(vangogh_integration.TypesProperty, id, vangogh_integration.SteamAppNews.String()) {
+	hasSteamAppNews, err := compton_data.HasKeyValuesBytes(id, vangogh_integration.SteamAppNews.String())
+	if err != nil {
+		return nil, err
+	}
+
+	if hasChangelog || hasSteamAppNews {
 		hasSections = append(hasSections, compton_data.NewsSection)
 	}
 

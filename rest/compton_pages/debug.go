@@ -34,13 +34,7 @@ func Debug(gogId string, rdx redux.Readable) (compton.PageElement, error) {
 		productTitle = "Title Unknown, Id=" + gogId
 	}
 
-	var productTypes []vangogh_integration.ProductType
-	if pts, ok := rdx.GetAllValues(vangogh_integration.TypesProperty, gogId); ok && len(pts) > 0 {
-		for _, pt := range pts {
-			productTypes = append(productTypes, vangogh_integration.ParseProductType(pt))
-		}
-	}
-	//productTypes := slices.Collect(vangogh_integration.AllProductTypes())
+	productTypes := slices.Collect(vangogh_integration.AllProductTypes())
 
 	p := compton.Page(productTitle)
 	p.RegisterStyles(compton_styles.Styles, "debug.css")
@@ -122,9 +116,9 @@ func Debug(gogId string, rdx redux.Readable) (compton.PageElement, error) {
 	}
 
 	propertyProductType := map[string]vangogh_integration.ProductType{
-		vangogh_integration.GogCatalogPageProductsProperty: vangogh_integration.GogCatalogPage,
-		vangogh_integration.GogAccountPageProductsProperty: vangogh_integration.GogAccountPage,
-		vangogh_integration.GogOrderPageProductsProperty:   vangogh_integration.GogOrderPage,
+		vangogh_integration.GogCatalogProductPageProperty: vangogh_integration.GogCatalogPage,
+		vangogh_integration.GogAccountProductPageProperty: vangogh_integration.GogAccountPage,
+		vangogh_integration.GogOrderPageProductsProperty:  vangogh_integration.GogOrderPage,
 	}
 
 	sortedProperties := slices.Sorted(maps.Keys(propertyProductType))
@@ -255,7 +249,6 @@ func Debug(gogId string, rdx redux.Readable) (compton.PageElement, error) {
 		vangogh_integration.GogCopyrightsProperty,
 		vangogh_integration.GogStoreTagsProperty,
 		vangogh_integration.GogScreenshotsProperty,
-		vangogh_integration.TypesProperty,
 		vangogh_integration.HltbPlatformsProperty,
 		vangogh_integration.ShortDescriptionProperty,
 		vangogh_integration.SteamCategoriesProperty,

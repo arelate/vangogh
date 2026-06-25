@@ -52,18 +52,18 @@ func Installers(id string, messages []string, dls vangogh_integration.DownloadsL
 
 	var dvRow *compton.FrowElement
 
-	if downloadCompleted, ok, err := rdx.ParseLastValTime(vangogh_integration.DownloadCompletedProperty, id); ok && err == nil {
+	if downloadCompleted, ok, err := rdx.ParseLastValTime(vangogh_integration.VangoghDownloadCompletedProperty, id); ok && err == nil {
 		dvRow = compton.Frow(s).FontSize(size.XSmall)
 		dvRow.PropVal("Downloaded", downloadCompleted.Local().Format(time.DateTime))
 
 	} else if !ok {
 		var downloadStarted time.Time
-		if downloadStarted, ok, err = rdx.ParseLastValTime(vangogh_integration.DownloadStartedProperty, id); ok && err == nil {
+		if downloadStarted, ok, err = rdx.ParseLastValTime(vangogh_integration.VangoghDownloadStartedProperty, id); ok && err == nil {
 			dvRow = compton.Frow(s).FontSize(size.XSmall)
 			dvRow.PropVal("Download Started", downloadStarted.Local().Format(time.DateTime))
 		} else if !ok {
 			var downloadQueued time.Time
-			if downloadQueued, ok, err = rdx.ParseLastValTime(vangogh_integration.DownloadQueuedProperty, id); ok && err == nil {
+			if downloadQueued, ok, err = rdx.ParseLastValTime(vangogh_integration.VangoghDownloadQueuedProperty, id); ok && err == nil {
 				dvRow = compton.Frow(s).FontSize(size.XSmall)
 				dvRow.PropVal("Download Queued", downloadQueued.Local().Format(time.DateTime))
 			}

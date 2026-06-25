@@ -32,15 +32,15 @@ func Updates(section string, rdx redux.Readable, showAll bool, permissions ...au
 	var month time.Month
 	var day int
 
-	if sdt, ok := rdx.GetLastVal(vangogh_integration.SyncEventsProperty, vangogh_integration.SyncPurchasesDataKey); ok {
+	if sdt, ok := rdx.GetLastVal(vangogh_integration.VangoghSyncEventsProperty, vangogh_integration.SyncPurchasesDataKey); ok {
 		if sdi, err := strconv.ParseInt(sdt, 10, 64); err == nil {
 			_, month, day = time.Unix(sdi, 0).Date()
 		}
 	}
 
-	for updateSection := range rdx.Keys(vangogh_integration.LastSyncUpdatesProperty) {
+	for updateSection := range rdx.Keys(vangogh_integration.VangoghLastSyncUpdatesProperty) {
 
-		ids, _ := rdx.GetAllValues(vangogh_integration.LastSyncUpdatesProperty, updateSection)
+		ids, _ := rdx.GetAllValues(vangogh_integration.VangoghLastSyncUpdatesProperty, updateSection)
 		updateTotals[updateSection] = len(ids)
 
 		paginate = len(ids) > updatedProductsLimit

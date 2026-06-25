@@ -63,11 +63,11 @@ func formatBadge(id, property string, rdx redux.Readable) *compton.FormattedBadg
 				fmtBadge.Icon = compton.CircleCompactDisk
 			}
 		}
-	case vangogh_integration.DownloadQueuedProperty:
+	case vangogh_integration.VangoghDownloadQueuedProperty:
 		if productDownloadStatus == vangogh_integration.DownloadStatusQueued {
 			fmtBadge.Icon = compton.CircleClockArrows
 		}
-	case vangogh_integration.DownloadStartedProperty:
+	case vangogh_integration.VangoghDownloadStartedProperty:
 		if productDownloadStatus == vangogh_integration.DownloadStatusDownloading {
 			fmtBadge.Icon = compton.CircleDownwardArrow
 		}
@@ -144,8 +144,8 @@ func formatBadge(id, property string, rdx redux.Readable) *compton.FormattedBadg
 				fmtBadge.Title = tagName
 			}
 		}
-	case vangogh_integration.LocalTagsProperty:
-		if localTags, ok := rdx.GetAllValues(vangogh_integration.LocalTagsProperty, id); ok {
+	case vangogh_integration.VangoghLocalTagsProperty:
+		if localTags, ok := rdx.GetAllValues(vangogh_integration.VangoghLocalTagsProperty, id); ok {
 			fmtBadge.Title = strings.Join(localTags, ", ")
 		}
 	case vangogh_integration.GogStoreTagsProperty:

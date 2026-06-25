@@ -4,9 +4,9 @@ import "github.com/arelate/southern_light/vangogh_integration"
 
 var DigestProperties = []string{
 	vangogh_integration.GogTagIdProperty,
-	vangogh_integration.LocalTagsProperty,
+	vangogh_integration.VangoghLocalTagsProperty,
 	vangogh_integration.SteamDeckAppCompatibilityCategoryProperty,
-	vangogh_integration.SteamOsAppCompatibilityCategoryProperty,
+	vangogh_integration.SteamSteamOsAppCompatibilityCategoryProperty,
 	vangogh_integration.OperatingSystemsProperty,
 	vangogh_integration.HltbPlatformsProperty,
 	vangogh_integration.GogGenresProperty,
@@ -20,8 +20,7 @@ var DigestProperties = []string{
 	vangogh_integration.GogGameModesProperty,
 	vangogh_integration.LanguageCodeProperty,
 	vangogh_integration.GogProductTypeProperty,
-	vangogh_integration.TypesProperty,
-	vangogh_integration.SummaryReviewsProperty,
+	vangogh_integration.VangoghSummaryReviewsProperty,
 	vangogh_integration.SteamReviewScoreDescProperty,
 	vangogh_integration.TopPercentProperty,
 	vangogh_integration.GogProductValidationResultProperty,

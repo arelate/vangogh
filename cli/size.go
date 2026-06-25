@@ -52,7 +52,7 @@ func Size(
 		vangogh_integration.GogSlugProperty,
 		vangogh_integration.GogProductTypeProperty,
 		vangogh_integration.GogManualUrlFilenameProperty,
-		vangogh_integration.DownloadStatusErrorProperty)
+		vangogh_integration.VangoghDownloadStatusErrorProperty)
 	if err != nil {
 		return err
 	}

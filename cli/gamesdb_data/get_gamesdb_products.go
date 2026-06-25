@@ -107,7 +107,7 @@ func reduceGamesDbGogProduct(id string, kvGamesDbGogProducts kevlar.KeyValues, p
 			for _, steamAppId := range steamAppIds {
 				values = append(values, strconv.FormatInt(int64(steamAppId), 10))
 			}
-		case vangogh_integration.VideoIdProperty:
+		case vangogh_integration.GogYouTubeVideoIdProperty:
 			values = gdgp.GetVideoIds()
 		case vangogh_integration.GogThemesProperty:
 			values = gdgp.GetThemes()

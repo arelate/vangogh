@@ -16,10 +16,6 @@ func ReduceMisc() error {
 		return err
 	}
 
-	if err = reduceTypes(rdx); err != nil {
-		return err
-	}
-
 	if err = reduceSummaryRatings(rdx); err != nil {
 		return err
 	}

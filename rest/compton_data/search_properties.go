@@ -12,7 +12,7 @@ var SearchProperties = []string{
 	vangogh_integration.GogOwnedProperty,
 
 	vangogh_integration.GogTagIdProperty,
-	vangogh_integration.LocalTagsProperty,
+	vangogh_integration.VangoghLocalTagsProperty,
 	vangogh_integration.GogUserWishlistProperty,
 
 	vangogh_integration.CreditsProperty,
@@ -27,8 +27,7 @@ var SearchProperties = []string{
 	vangogh_integration.GogPreOrderProperty,
 	vangogh_integration.GogComingSoonProperty,
 	vangogh_integration.GogInDevelopmentProperty,
-	vangogh_integration.TypesProperty,
-	vangogh_integration.SummaryReviewsProperty,
+	vangogh_integration.VangoghSummaryReviewsProperty,
 	vangogh_integration.SteamReviewScoreDescProperty,
 	vangogh_integration.OpenCriticTierProperty,
 	vangogh_integration.TopPercentProperty,
@@ -46,7 +45,7 @@ var SearchProperties = []string{
 	vangogh_integration.SteamCategoriesProperty,
 
 	vangogh_integration.SteamDeckAppCompatibilityCategoryProperty,
-	vangogh_integration.SteamOsAppCompatibilityCategoryProperty,
+	vangogh_integration.SteamSteamOsAppCompatibilityCategoryProperty,
 	vangogh_integration.ProtonDbTierProperty,
 	vangogh_integration.ProtonDbConfidenceProperty,
 

@@ -78,7 +78,7 @@ func TagsEditor(
 
 	action := ""
 	switch tagsProperty {
-	case vangogh_integration.LocalTagsProperty:
+	case vangogh_integration.VangoghLocalTagsProperty:
 		action = "/local-tags/apply"
 	case vangogh_integration.GogTagIdProperty:
 		action = "/tags/apply"

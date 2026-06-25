@@ -3,11 +3,7 @@ package cli
 import (
 	"io"
 	"net/url"
-	"os"
-	"path/filepath"
-	"slices"
 	"strconv"
-	"strings"
 
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
@@ -31,9 +27,10 @@ import (
 // 13. reset GetDataErrorDateProperty, GetDataErrorMessageProperty, GetDataLastUpdatedProperty since the format of the key has changed
 // 14. remove user-access-token value from gog-user-access-token KeyValues
 // 15. rename properties to gog-properties
+// 16. rename misc properties
 
 const (
-	latestDataSchema = 16
+	latestDataSchema = 17
 )
 
 func MigrateDataHandler(u *url.URL) error {
@@ -50,7 +47,7 @@ func MigrateData(force bool) error {
 	defer mda.Done()
 
 	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
-		vangogh_integration.DataSchemeVersionProperty)
+		vangogh_integration.VangoghDataSchemeVersionProperty)
 	if err != nil {
 		return err
 	}
@@ -77,30 +74,8 @@ func MigrateData(force bool) error {
 
 	for schema := currentDataSchema; schema < latestDataSchema; schema++ {
 		switch schema {
-		case 9:
-			// internal version
-		case 10:
-			if err = removeDehydratedImageRepColor(); err != nil {
-				return err
-			}
-		case 11:
-			if err = removeLargeTextProperties(); err != nil {
-				return err
-			}
-		case 12:
-			if err = renameGogProductTypeDirectories(); err != nil {
-				return err
-			}
-		case 13:
-			if err = resetGetDataProperties(); err != nil {
-				return err
-			}
-		case 14:
-			if err = removeUserAccessTokenValue(); err != nil {
-				return err
-			}
-		case 15:
-			if err = renameGogProperties(); err != nil {
+		case 16:
+			if err = renameMiscProperties(); err != nil {
 				return err
 			}
 		}
@@ -109,7 +84,7 @@ func MigrateData(force bool) error {
 	}
 
 	rdx, err = redux.NewWriter(vangogh_integration.AbsReduxDir(),
-		vangogh_integration.DataSchemeVersionProperty)
+		vangogh_integration.VangoghDataSchemeVersionProperty)
 	if err != nil {
 		return err
 	}
@@ -119,11 +94,11 @@ func MigrateData(force bool) error {
 
 func getCurrentDataSchema(rdx redux.Readable) (int, error) {
 
-	if err := rdx.MustHave(vangogh_integration.DataSchemeVersionProperty); err != nil {
+	if err := rdx.MustHave(vangogh_integration.VangoghDataSchemeVersionProperty); err != nil {
 		return -1, err
 	}
 
-	if cds, ok := rdx.GetLastVal(vangogh_integration.DataSchemeVersionProperty, vangogh_integration.DataSchemeVersionProperty); ok && cds != "" {
+	if cds, ok := rdx.GetLastVal(vangogh_integration.VangoghDataSchemeVersionProperty, vangogh_integration.VangoghDataSchemeVersionProperty); ok && cds != "" {
 		if cdi, err := strconv.ParseInt(cds, 10, 32); err == nil {
 			return int(cdi), nil
 		} else {
@@ -135,219 +110,38 @@ func getCurrentDataSchema(rdx redux.Readable) (int, error) {
 }
 
 func setLatestDataSchema(rdx redux.Writeable) error {
-	if err := rdx.MustHave(vangogh_integration.DataSchemeVersionProperty); err != nil {
+	if err := rdx.MustHave(vangogh_integration.VangoghDataSchemeVersionProperty); err != nil {
 		return err
 	}
 
-	return rdx.ReplaceValues(vangogh_integration.DataSchemeVersionProperty,
-		vangogh_integration.DataSchemeVersionProperty,
+	return rdx.ReplaceValues(vangogh_integration.VangoghDataSchemeVersionProperty,
+		vangogh_integration.VangoghDataSchemeVersionProperty,
 		strconv.FormatInt(latestDataSchema, 10))
 }
 
 // migrations
 
-func removeDehydratedImageRepColor() error {
+func renameMiscProperties() error {
 
-	reduxDir := vangogh_integration.AbsReduxDir()
-
-	kvRedux, err := kevlar.New(reduxDir, kevlar.GobExt)
-	if err != nil {
-		return err
-	}
-
-	if err = kvRedux.Cut("dehydrated-image"); err != nil {
-		return err
-	}
-
-	if err = kvRedux.Cut("rep-color"); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func removeLargeTextProperties() error {
-
-	reduxDir := vangogh_integration.AbsReduxDir()
-
-	kvRedux, err := kevlar.New(reduxDir, kevlar.GobExt)
-	if err != nil {
-		return err
-	}
-
-	if err = kvRedux.Cut(vangogh_integration.DescriptionOverviewKeyValues); err != nil {
-		return err
-	}
-	if err = kvRedux.Cut(vangogh_integration.DescriptionFeaturesKeyValues); err != nil {
-		return err
-	}
-	if err = kvRedux.Cut(vangogh_integration.ChangelogKeyValues); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func renameGogProductTypeDirectories() error {
-
-	gogProductTypes := []vangogh_integration.ProductType{
-		vangogh_integration.GogCatalogPage,
-		vangogh_integration.GogAccountPage,
-		vangogh_integration.GogUserWishlist,
-		vangogh_integration.GogDetails,
-		vangogh_integration.GogApiProducts,
-		vangogh_integration.GogLicences,
-		vangogh_integration.GogOrderPage,
-		vangogh_integration.GogUserAccessToken,
-	}
-
-	for _, gpt := range gogProductTypes {
-		newPtDir, err := vangogh_integration.AbsProductTypeDir(gpt)
-		if err != nil {
-			return err
-		}
-
-		existingPtDir := strings.TrimSuffix(newPtDir, gpt.String())
-		existingPtDir = filepath.Join(existingPtDir, strings.TrimPrefix(gpt.String(), "gog-"))
-
-		if _, err = os.Stat(existingPtDir); os.IsNotExist(err) {
-			continue
-		}
-
-		if err = os.Rename(existingPtDir, newPtDir); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-func removeUserAccessTokenValue() error {
-
-	gogUatDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogUserAccessToken)
-	if err != nil {
-		return err
-	}
-
-	kvGogUat, err := kevlar.New(gogUatDir, kevlar.JsonExt)
-	if err != nil {
-		return err
-	}
-
-	if kvGogUat.Has("user-access-token") {
-		return kvGogUat.Cut("user-access-token")
-	}
-
-	return nil
-}
-
-func resetGetDataProperties() error {
-
-	properties := []string{
-		vangogh_integration.GetDataErrorDateProperty,
-		vangogh_integration.GetDataErrorMessageProperty,
-		vangogh_integration.GetDataLastUpdatedProperty,
-	}
-
-	reduxDir := vangogh_integration.AbsReduxDir()
-	rdx, err := redux.NewWriter(reduxDir, properties...)
-	if err != nil {
-		return err
-	}
-
-	for _, p := range properties {
-
-		allKeys := slices.Collect(rdx.Keys(p))
-
-		if err = rdx.CutKeys(p, allKeys...); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-func renameGogProperties() error {
-
-	fromTo := make(map[string]string)
-
-	toGogProperties := []string{
-		vangogh_integration.GogLicencesProperty,
-		vangogh_integration.GogUserWishlistProperty,
-		vangogh_integration.GogAccountPageProductsProperty,
-		vangogh_integration.GogCatalogPageProductsProperty,
-		vangogh_integration.GogOrderPageProductsProperty,
-		vangogh_integration.GogTitleProperty,
-		vangogh_integration.GogOwnedProperty,
-		vangogh_integration.GogDevelopersProperty,
-		vangogh_integration.GogPublishersProperty,
-		vangogh_integration.GogImageProperty,
-		vangogh_integration.GogVerticalImageProperty,
-		vangogh_integration.GogScreenshotsProperty,
-		vangogh_integration.GogHeroProperty,
-		vangogh_integration.GogLogoProperty,
-		vangogh_integration.GogIconProperty,
-		vangogh_integration.GogIconSquareProperty,
-		vangogh_integration.GogBackgroundProperty,
-		vangogh_integration.GogRatingProperty,
-		vangogh_integration.GogProductTypeProperty,
-		vangogh_integration.GogIncludesGamesProperty,
-		vangogh_integration.GogIsIncludedByGamesProperty,
-		vangogh_integration.GogRequiresGamesProperty,
-		vangogh_integration.GogIsRequiredByGamesProperty,
-		vangogh_integration.GogModifiesGamesProperty,
-		vangogh_integration.GogIsModifiedByGamesProperty,
-		vangogh_integration.GogEditionsProperty,
-		vangogh_integration.GogRootEditionsProperty,
-		vangogh_integration.GogStoreTagsProperty,
-		vangogh_integration.GogGenresProperty,
-		vangogh_integration.GogFeaturesProperty,
-		vangogh_integration.GogSeriesProperty,
-		vangogh_integration.GogThemesProperty,
-		vangogh_integration.GogGameModesProperty,
-		vangogh_integration.GogTagIdProperty,
-		vangogh_integration.GogTagNameProperty,
-		vangogh_integration.GogSlugProperty,
-		vangogh_integration.GogGlobalReleaseDateProperty,
-		vangogh_integration.GogManualUrlFilenameProperty,
-		vangogh_integration.GogManualUrlStatusProperty,
-		vangogh_integration.GogManualUrlValidationResultProperty,
-		vangogh_integration.GogManualUrlGeneratedChecksumProperty,
-		vangogh_integration.GogProductValidationResultProperty,
-		vangogh_integration.GogProductGeneratedChecksumProperty,
-		vangogh_integration.GogProductValidationDateProperty,
-		vangogh_integration.GogStoreUrlProperty,
-		vangogh_integration.GogForumUrlProperty,
-		vangogh_integration.GogSupportUrlProperty,
-		vangogh_integration.GogAdditionalRequirementsProperty,
-		vangogh_integration.GogCopyrightsProperty,
-		vangogh_integration.GogInDevelopmentProperty,
-		vangogh_integration.GogPreOrderProperty,
-		vangogh_integration.GogComingSoonProperty,
-		vangogh_integration.GogBasePriceProperty,
-		vangogh_integration.GogPriceProperty,
-		vangogh_integration.GogIsFreeProperty,
-		vangogh_integration.GogIsDemoProperty,
-		vangogh_integration.GogIsModProperty,
-		vangogh_integration.GogIsDiscountedProperty,
-		vangogh_integration.GogDiscountPercentageProperty,
-		vangogh_integration.GogSteamAppIdProperty,
-		vangogh_integration.GogPcgwPageIdProperty,
-		vangogh_integration.GogHltbIdProperty,
-		vangogh_integration.GogIgdbIdProperty,
-		vangogh_integration.GogStrategyWikiIdProperty,
-		vangogh_integration.GogMobyGamesIdProperty,
-		vangogh_integration.GogWikipediaIdProperty,
-		vangogh_integration.GogWineHqIdProperty,
-		vangogh_integration.GogVndbIdProperty,
-		vangogh_integration.GogIgnWikiSlugProperty,
-		vangogh_integration.GogOpenCriticIdProperty,
-		vangogh_integration.GogOpenCriticSlugProperty,
-	}
-
-	for _, toProperty := range toGogProperties {
-		fromProperty := strings.TrimPrefix(toProperty, "gog-")
-		fromTo[fromProperty] = toProperty
+	fromTo := map[string]string{
+		"gog-account-page-products":          vangogh_integration.GogAccountProductPageProperty,
+		"gog-catalog-page-products":          vangogh_integration.GogCatalogProductPageProperty,
+		"gog-tag":                            vangogh_integration.GogTagIdProperty,
+		"local-tags":                         vangogh_integration.VangoghLocalTagsProperty,
+		"download-status-error":              vangogh_integration.VangoghDownloadStatusErrorProperty,
+		"download-queued":                    vangogh_integration.VangoghDownloadQueuedProperty,
+		"download-started":                   vangogh_integration.VangoghDownloadStartedProperty,
+		"download-completed":                 vangogh_integration.VangoghDownloadCompletedProperty,
+		"summary-rating":                     vangogh_integration.VangoghSummaryRatingProperty,
+		"summary-reviews":                    vangogh_integration.VangoghSummaryReviewsProperty,
+		"video-id":                           vangogh_integration.GogYouTubeVideoIdProperty,
+		"video-title":                        vangogh_integration.YouTubeVideoTitleProperty,
+		"video-duration":                     vangogh_integration.YouTubeVideoDurationProperty,
+		"video-error":                        vangogh_integration.YouTubeVideoErrorProperty,
+		"steamos-app-compatibility-category": vangogh_integration.SteamSteamOsAppCompatibilityCategoryProperty,
+		"sync-events":                        vangogh_integration.VangoghSyncEventsProperty,
+		"last-sync-updates":                  vangogh_integration.VangoghLastSyncUpdatesProperty,
+		"data-scheme-version":                vangogh_integration.VangoghDataSchemeVersionProperty,
 	}
 
 	return migrateFromToProperties(fromTo)

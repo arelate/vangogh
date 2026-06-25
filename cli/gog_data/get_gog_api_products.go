@@ -153,7 +153,7 @@ func reduceGogApiProductProperties(id string, ap *gog_integration.ApiProduct, pi
 			values = ap.GetFeatures()
 		case vangogh_integration.GogSeriesProperty:
 			values = []string{ap.GetSeries()}
-		case vangogh_integration.VideoIdProperty:
+		case vangogh_integration.GogYouTubeVideoIdProperty:
 			values = ap.GetVideoIds()
 		case vangogh_integration.OperatingSystemsProperty:
 			values = ap.GetOperatingSystems()

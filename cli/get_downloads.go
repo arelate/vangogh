@@ -226,7 +226,7 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 	if len(list) == 0 {
 		sda.EndWithResult("no downloads for requested operating systems, download types, languages")
 		// if there's nothing to download - remove download from the queue, or it'll be stuck there
-		return gdd.rdx.CutKeys(vangogh_integration.DownloadQueuedProperty, id)
+		return gdd.rdx.CutKeys(vangogh_integration.VangoghDownloadQueuedProperty, id)
 	}
 
 	manualUrls := make([]string, 0, len(list))
@@ -283,7 +283,7 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 
 	formattedNow := time.Now().UTC().Format(time.RFC3339)
 
-	if err := gdd.rdx.ReplaceValues(vangogh_integration.DownloadStartedProperty, id, formattedNow); err != nil {
+	if err := gdd.rdx.ReplaceValues(vangogh_integration.VangoghDownloadStartedProperty, id, formattedNow); err != nil {
 		return err
 	}
 
@@ -307,11 +307,11 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 
 	formattedNow = time.Now().UTC().Format(time.RFC3339)
 
-	if err = gdd.rdx.ReplaceValues(vangogh_integration.DownloadCompletedProperty, id, formattedNow); err != nil {
+	if err = gdd.rdx.ReplaceValues(vangogh_integration.VangoghDownloadCompletedProperty, id, formattedNow); err != nil {
 		return err
 	}
 
-	if err = gdd.rdx.CutKeys(vangogh_integration.DownloadQueuedProperty, id); err != nil {
+	if err = gdd.rdx.CutKeys(vangogh_integration.VangoghDownloadQueuedProperty, id); err != nil {
 		return err
 	}
 
@@ -384,7 +384,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	//check for error status codes and store them for the manualUrl to provide a hint that locally missing file
 	//is not a problem that can be solved locally (it's a remote source error)
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		if err = gdd.rdx.ReplaceValues(vangogh_integration.DownloadStatusErrorProperty, dl.ManualUrl, strconv.Itoa(resp.StatusCode)); err != nil {
+		if err = gdd.rdx.ReplaceValues(vangogh_integration.VangoghDownloadStatusErrorProperty, dl.ManualUrl, strconv.Itoa(resp.StatusCode)); err != nil {
 			return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 		}
 		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, errors.New(resp.Status))
@@ -485,13 +485,13 @@ func getQueuedDownloads(rdx redux.Readable) ([]string, error) {
 	defer gqda.Done()
 
 	if err := rdx.MustHave(vangogh_integration.GogOrderDateProperty,
-		vangogh_integration.DownloadQueuedProperty,
+		vangogh_integration.VangoghDownloadQueuedProperty,
 		vangogh_integration.GogTitleProperty); err != nil {
 		return nil, err
 	}
 
 	queuedDownloads := make([]string, 0)
-	for id := range rdx.Keys(vangogh_integration.DownloadQueuedProperty) {
+	for id := range rdx.Keys(vangogh_integration.VangoghDownloadQueuedProperty) {
 		queuedDownloads = append(queuedDownloads, id)
 	}
 
@@ -519,7 +519,7 @@ func queueDownloads(ids iter.Seq[string]) error {
 	defer qda.Done()
 
 	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
-		vangogh_integration.DownloadQueuedProperty)
+		vangogh_integration.VangoghDownloadQueuedProperty)
 	if err != nil {
 		return err
 	}
@@ -529,5 +529,5 @@ func queueDownloads(ids iter.Seq[string]) error {
 		downloadsQueued[id] = []string{time.Now().UTC().Format(time.RFC3339)}
 	}
 
-	return rdx.BatchReplaceValues(vangogh_integration.DownloadQueuedProperty, downloadsQueued)
+	return rdx.BatchReplaceValues(vangogh_integration.VangoghDownloadQueuedProperty, downloadsQueued)
 }

@@ -35,15 +35,18 @@ func GetVideoMetadata(ids []string, missing, force bool) error {
 	properties = append(properties, vangogh_integration.GogTitleProperty)
 
 	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), properties...)
+	if err != nil {
+		return err
+	}
 
 	videoIds := make([]string, 0, len(ids))
 	for _, id := range ids {
-		if vip, ok := rdx.GetAllValues(vangogh_integration.VideoIdProperty, id); ok {
+		if vip, ok := rdx.GetAllValues(vangogh_integration.GogYouTubeVideoIdProperty, id); ok {
 			for _, vid := range vip {
-				if rdx.HasKey(vangogh_integration.VideoTitleProperty, vid) && !force {
+				if rdx.HasKey(vangogh_integration.YouTubeVideoTitleProperty, vid) && !force {
 					continue
 				}
-				if rdx.HasKey(vangogh_integration.VideoErrorProperty, vid) && !force {
+				if rdx.HasKey(vangogh_integration.YouTubeVideoErrorProperty, vid) && !force {
 					continue
 				}
 				videoIds = append(videoIds, vid)
@@ -52,13 +55,13 @@ func GetVideoMetadata(ids []string, missing, force bool) error {
 	}
 
 	if missing {
-		for id := range rdx.Keys(vangogh_integration.VideoIdProperty) {
-			if vip, ok := rdx.GetAllValues(vangogh_integration.VideoIdProperty, id); ok {
+		for id := range rdx.Keys(vangogh_integration.GogYouTubeVideoIdProperty) {
+			if vip, ok := rdx.GetAllValues(vangogh_integration.GogYouTubeVideoIdProperty, id); ok {
 				for _, vid := range vip {
-					if rdx.HasKey(vangogh_integration.VideoErrorProperty, vid) && !force {
+					if rdx.HasKey(vangogh_integration.YouTubeVideoErrorProperty, vid) && !force {
 						continue
 					}
-					if !rdx.HasKey(vangogh_integration.VideoTitleProperty, vid) {
+					if !rdx.HasKey(vangogh_integration.YouTubeVideoTitleProperty, vid) {
 						videoIds = append(videoIds, vid)
 					}
 				}
@@ -79,7 +82,8 @@ func GetVideoMetadata(ids []string, missing, force bool) error {
 
 	for _, videoId := range videoIds {
 
-		ipr, err := youtube_urls.GetVideoPage(http.DefaultClient, videoId)
+		var ipr *youtube_urls.InitialPlayerResponse
+		ipr, err = youtube_urls.GetVideoPage(http.DefaultClient, videoId)
 		if err != nil {
 			videoErrors[videoId] = append(videoErrors[videoId], err.Error())
 			gvma.Error(err)
@@ -93,15 +97,15 @@ func GetVideoMetadata(ids []string, missing, force bool) error {
 		gvma.Increment()
 	}
 
-	if err = rdx.BatchAddValues(vangogh_integration.VideoTitleProperty, videoTitles); err != nil {
+	if err = rdx.BatchAddValues(vangogh_integration.YouTubeVideoTitleProperty, videoTitles); err != nil {
 		return err
 	}
 
-	if err = rdx.BatchAddValues(vangogh_integration.VideoDurationProperty, videoDurations); err != nil {
+	if err = rdx.BatchAddValues(vangogh_integration.YouTubeVideoDurationProperty, videoDurations); err != nil {
 		return err
 	}
 
-	if err = rdx.BatchAddValues(vangogh_integration.VideoErrorProperty, videoErrors); err != nil {
+	if err = rdx.BatchAddValues(vangogh_integration.YouTubeVideoErrorProperty, videoErrors); err != nil {
 		return err
 	}
 

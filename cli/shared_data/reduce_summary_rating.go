@@ -11,7 +11,7 @@ import (
 
 func reduceSummaryRatings(rdx redux.Writeable) error {
 
-	rsra := nod.Begin(" reducing %s...", vangogh_integration.SummaryRatingProperty)
+	rsra := nod.Begin(" reducing %s...", vangogh_integration.VangoghSummaryRatingProperty)
 	defer rsra.Done()
 
 	avgSummaryRatings := make(map[string][]string)
@@ -76,11 +76,11 @@ func reduceSummaryRatings(rdx redux.Writeable) error {
 		}
 	}
 
-	if err := rdx.BatchReplaceValues(vangogh_integration.SummaryRatingProperty, avgSummaryRatings); err != nil {
+	if err := rdx.BatchReplaceValues(vangogh_integration.VangoghSummaryRatingProperty, avgSummaryRatings); err != nil {
 		return err
 	}
 
-	if err := rdx.BatchReplaceValues(vangogh_integration.SummaryReviewsProperty, avgSummaryReviews); err != nil {
+	if err := rdx.BatchReplaceValues(vangogh_integration.VangoghSummaryReviewsProperty, avgSummaryReviews); err != nil {
 		return err
 	}
 

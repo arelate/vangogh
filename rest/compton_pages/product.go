@@ -128,7 +128,7 @@ func GogProduct(id string, rdx redux.Readable, permissions ...author.Permission)
 			detailsSummary.AppendBadges(productBadges)
 		case compton_data.MediaSection:
 			var videos, images int
-			if vp, sure := rdx.GetAllValues(vangogh_integration.VideoIdProperty, id); sure {
+			if vp, sure := rdx.GetAllValues(vangogh_integration.GogYouTubeVideoIdProperty, id); sure {
 				videos = len(vp)
 			}
 
@@ -209,7 +209,7 @@ func GogProduct(id string, rdx redux.Readable, permissions ...author.Permission)
 			receptionSymbol := compton.NoSymbol
 			receptionColor := color.Gray
 
-			if srep, ok := rdx.GetLastVal(vangogh_integration.SummaryReviewsProperty, id); ok {
+			if srep, ok := rdx.GetLastVal(vangogh_integration.VangoghSummaryReviewsProperty, id); ok {
 
 				if rs, sure := compton_data.ReceptionSymbols[srep]; sure {
 					receptionSymbol = rs
@@ -221,7 +221,7 @@ func GogProduct(id string, rdx redux.Readable, permissions ...author.Permission)
 
 				ratingsReviews := srep
 
-				if srap, sure := rdx.GetLastVal(vangogh_integration.SummaryRatingProperty, id); sure {
+				if srap, sure := rdx.GetLastVal(vangogh_integration.VangoghSummaryRatingProperty, id); sure {
 					ratingsReviews = compton_fragments.FmtRatingValue(srap)
 				}
 

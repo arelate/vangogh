@@ -18,7 +18,7 @@ func GetSummary() error {
 	defer sa.Done()
 
 	rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(),
-		vangogh_integration.LastSyncUpdatesProperty,
+		vangogh_integration.VangoghLastSyncUpdatesProperty,
 		vangogh_integration.GogTitleProperty)
 	if err != nil {
 		return err
@@ -26,8 +26,8 @@ func GetSummary() error {
 
 	summary := make(map[string][]string)
 
-	for section := range rdx.Keys(vangogh_integration.LastSyncUpdatesProperty) {
-		ids, _ := rdx.GetAllValues(vangogh_integration.LastSyncUpdatesProperty, section)
+	for section := range rdx.Keys(vangogh_integration.VangoghLastSyncUpdatesProperty) {
+		ids, _ := rdx.GetAllValues(vangogh_integration.VangoghLastSyncUpdatesProperty, section)
 		for _, id := range ids {
 			if title, ok := rdx.GetLastVal(vangogh_integration.GogTitleProperty, id); ok {
 				summary[section] = append(summary[section], id+" "+title)

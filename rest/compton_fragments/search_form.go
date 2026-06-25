@@ -76,7 +76,7 @@ var sortProperties = []string{
 	vangogh_integration.GogGlobalReleaseDateProperty,
 	vangogh_integration.GogReleaseDateProperty,
 	vangogh_integration.GogOrderDateProperty,
-	vangogh_integration.SummaryRatingProperty,
+	vangogh_integration.VangoghSummaryRatingProperty,
 	vangogh_integration.GogTitleProperty,
 	vangogh_integration.GogRatingProperty,
 	vangogh_integration.GogDiscountPercentageProperty,
@@ -168,7 +168,7 @@ func searchInputs(r compton.Registrar, query map[string][]string, container comp
 				datalist = sortDatalist()
 			case vangogh_integration.GogProductTypeProperty:
 				datalist = productTypesDatalist()
-			case vangogh_integration.SteamOsAppCompatibilityCategoryProperty:
+			case vangogh_integration.SteamSteamOsAppCompatibilityCategoryProperty:
 				fallthrough
 			case vangogh_integration.SteamDeckAppCompatibilityCategoryProperty:
 				datalist = steamDeckDatalist()

@@ -8,7 +8,7 @@ var ProductProperties = []string{
 	vangogh_integration.GogPriceProperty,
 
 	vangogh_integration.GogTagIdProperty,
-	vangogh_integration.LocalTagsProperty,
+	vangogh_integration.VangoghLocalTagsProperty,
 	vangogh_integration.GogUserWishlistProperty,
 
 	vangogh_integration.CreatorsProperty,

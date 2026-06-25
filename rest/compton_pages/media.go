@@ -24,7 +24,7 @@ func Media(id string, rdx redux.Readable) compton.PageElement {
 	s.Append(pageStack)
 
 	var videoIds []string
-	if vids, ok := rdx.GetAllValues(vangogh_integration.VideoIdProperty, id); ok {
+	if vids, ok := rdx.GetAllValues(vangogh_integration.GogYouTubeVideoIdProperty, id); ok {
 		videoIds = vids
 	}
 	slices.Sort(videoIds)
@@ -34,10 +34,10 @@ func Media(id string, rdx redux.Readable) compton.PageElement {
 
 	for _, vid := range videoIds {
 
-		if vtp, ok := rdx.GetLastVal(vangogh_integration.VideoTitleProperty, vid); ok {
+		if vtp, ok := rdx.GetLastVal(vangogh_integration.YouTubeVideoTitleProperty, vid); ok {
 			videoTitles[vid] = vtp
 		}
-		if vdp, ok := rdx.GetLastVal(vangogh_integration.VideoDurationProperty, vid); ok {
+		if vdp, ok := rdx.GetLastVal(vangogh_integration.YouTubeVideoDurationProperty, vid); ok {
 			videoDurations[vid] = vdp
 		}
 	}

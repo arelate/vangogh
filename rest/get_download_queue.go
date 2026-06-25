@@ -18,7 +18,7 @@ func GetDownloadsQueue(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var queuedIds []string
-	for id := range rdx.Keys(vangogh_integration.DownloadQueuedProperty) {
+	for id := range rdx.Keys(vangogh_integration.VangoghDownloadQueuedProperty) {
 		queuedIds = append(queuedIds, id)
 	}
 

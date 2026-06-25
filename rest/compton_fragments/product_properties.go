@@ -227,11 +227,7 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 		fallthrough
 	case vangogh_integration.ComposersProperty:
 		for _, value := range values {
-			if has, ok := rdx.GetLastVal(vangogh_integration.HasMultipleCreditsProperty, value); ok && has == vangogh_integration.TrueValue {
-				fmtProperty.values[value] = hrefSearchCredits(value)
-			} else {
-				fmtProperty.values[value] = hrefEmpty()
-			}
+			fmtProperty.values[value] = hrefSearchCredits(value)
 		}
 	default:
 		for _, value := range values {
@@ -262,7 +258,7 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 		if owned {
 			fmtProperty.actions["Edit"] = "/tags/edit?id=" + id
 		}
-	case vangogh_integration.LocalTagsProperty:
+	case vangogh_integration.VangoghLocalTagsProperty:
 		fmtProperty.actions["Edit"] = "/local-tags/edit?id=" + id
 	case vangogh_integration.SteamReviewScoreDescProperty:
 		fmtProperty.class = ReviewClass(firstValue)
@@ -280,7 +276,7 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 		fallthrough
 	case vangogh_integration.MetacriticScoreProperty:
 		fmtProperty.class = ReviewClass(FmtRating(firstValue))
-	case vangogh_integration.SteamOsAppCompatibilityCategoryProperty:
+	case vangogh_integration.SteamSteamOsAppCompatibilityCategoryProperty:
 		fallthrough
 	case vangogh_integration.SteamDeckAppCompatibilityCategoryProperty:
 		fmtProperty.class = firstValue

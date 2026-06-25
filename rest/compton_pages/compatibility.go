@@ -150,7 +150,7 @@ func addSteamCompatibilitySection(r compton.Registrar, pageStack compton.Element
 	var steamAppCompatibilityProperty string
 	switch steamDevice {
 	case steamOs:
-		steamAppCompatibilityProperty = vangogh_integration.SteamOsAppCompatibilityCategoryProperty
+		steamAppCompatibilityProperty = vangogh_integration.SteamSteamOsAppCompatibilityCategoryProperty
 	case steamDeck:
 		fallthrough
 	default:

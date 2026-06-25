@@ -101,7 +101,7 @@ func reduceDeckCompatibilityReportsProduct(gogIds []string, steamAppId string, k
 			switch property {
 			case vangogh_integration.SteamDeckAppCompatibilityCategoryProperty:
 				values = []string{dcr.SteamDeckString()}
-			case vangogh_integration.SteamOsAppCompatibilityCategoryProperty:
+			case vangogh_integration.SteamSteamOsAppCompatibilityCategoryProperty:
 				values = []string{dcr.SteamOsString()}
 			}
 

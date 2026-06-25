@@ -7,8 +7,8 @@ import (
 var InformationBadgeProperties = []string{
 	// symbols
 	vangogh_integration.GogOwnedProperty,
-	vangogh_integration.DownloadQueuedProperty,
-	vangogh_integration.DownloadStartedProperty,
+	vangogh_integration.VangoghDownloadQueuedProperty,
+	vangogh_integration.VangoghDownloadStartedProperty,
 	//vangogh_integration.DownloadCompletedProperty,
 	vangogh_integration.GogProductValidationResultProperty,
 	vangogh_integration.GogUserWishlistProperty,
@@ -23,6 +23,6 @@ var InformationBadgeProperties = []string{
 	vangogh_integration.GogIsFreeProperty,
 	vangogh_integration.GogDiscountPercentageProperty,
 	vangogh_integration.GogTagIdProperty,
-	vangogh_integration.LocalTagsProperty,
+	vangogh_integration.VangoghLocalTagsProperty,
 	vangogh_integration.GogIsDemoProperty,
 }

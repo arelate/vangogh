@@ -101,7 +101,7 @@ func reduceGogAccountPage(page string, kvGogAccountPages kevlar.KeyValues, piv s
 				continue
 			case vangogh_integration.GogSlugProperty:
 				values = []string{ap.Slug}
-			case vangogh_integration.GogAccountPageProductsProperty:
+			case vangogh_integration.GogAccountProductPageProperty:
 				values = []string{page}
 			case vangogh_integration.GogImageProperty:
 				values = []string{gog_integration.ImageId(ap.GetImage())}

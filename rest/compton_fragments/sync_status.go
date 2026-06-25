@@ -20,7 +20,7 @@ func SyncStatus(r compton.Registrar, rdx redux.Readable, permissions ...author.P
 	var syncEventTimestamp int64
 
 	for _, se := range vangogh_integration.SyncEventsSequence {
-		if sss, ok := rdx.GetLastVal(vangogh_integration.SyncEventsProperty, se); ok {
+		if sss, ok := rdx.GetLastVal(vangogh_integration.VangoghSyncEventsProperty, se); ok {
 			if sci, err := strconv.ParseInt(sss, 10, 64); err == nil {
 				if sci >= syncEventTimestamp {
 					lastCompletedSyncEvent = se

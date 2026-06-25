@@ -71,7 +71,7 @@ func Summarize(since int64) error {
 		vangogh_integration.GogSteamAppIdProperty,
 		vangogh_integration.GogReleaseDateProperty,
 		vangogh_integration.GogGlobalReleaseDateProperty,
-		vangogh_integration.LastSyncUpdatesProperty)
+		vangogh_integration.VangoghLastSyncUpdatesProperty)
 	if err != nil {
 		return err
 	}
@@ -84,7 +84,7 @@ func Summarize(since int64) error {
 	var month time.Month
 	var day int
 
-	if sdt, ok := rdx.GetLastVal(vangogh_integration.SyncEventsProperty, vangogh_integration.SyncPurchasesDataKey); ok {
+	if sdt, ok := rdx.GetLastVal(vangogh_integration.VangoghSyncEventsProperty, vangogh_integration.SyncPurchasesDataKey); ok {
 		if sdi, err := strconv.ParseInt(sdt, 10, 64); err == nil {
 			_, month, day = time.Unix(sdi, 0).Date()
 		}
@@ -138,7 +138,7 @@ func Summarize(since int64) error {
 		summary[section] = sortedIds
 	}
 
-	if err = rdx.BatchReplaceValues(vangogh_integration.LastSyncUpdatesProperty, summary); err != nil {
+	if err = rdx.BatchReplaceValues(vangogh_integration.VangoghLastSyncUpdatesProperty, summary); err != nil {
 		return err
 	}
 

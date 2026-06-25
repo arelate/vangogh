@@ -27,8 +27,7 @@ func reduceCredits(rdx redux.Writeable) error {
 
 		for _, property := range vangogh_integration.CreditsProperties() {
 
-			if property == vangogh_integration.CreditsProperty ||
-				property == vangogh_integration.HasMultipleCreditsProperty {
+			if property == vangogh_integration.CreditsProperty {
 				continue
 			}
 
@@ -58,10 +57,6 @@ func reduceCredits(rdx redux.Writeable) error {
 		default:
 			hasMultipleCredits[author] = []string{vangogh_integration.TrueValue}
 		}
-	}
-
-	if err := rdx.BatchReplaceValues(vangogh_integration.HasMultipleCreditsProperty, hasMultipleCredits); err != nil {
-		return err
 	}
 
 	return rdx.BatchReplaceValues(vangogh_integration.CreditsProperty, idCredits)

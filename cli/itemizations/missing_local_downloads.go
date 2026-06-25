@@ -34,7 +34,7 @@ func MissingLocalDownloads(
 
 	if err := rdx.MustHave(
 		vangogh_integration.GogManualUrlFilenameProperty,
-		vangogh_integration.DownloadStatusErrorProperty); err != nil {
+		vangogh_integration.VangoghDownloadStatusErrorProperty); err != nil {
 		return nil, err
 	}
 
@@ -103,7 +103,7 @@ func (mdd *missingDownloadsDelegate) Process(id, slug string, list vangogh_integ
 
 		//skip manualUrls that have produced error status codes, while they're technically missing
 		//it's due to remote status for this URL, not a problem we can resolve locally
-		status, ok := mdd.rdx.GetLastVal(vangogh_integration.DownloadStatusErrorProperty, dl.ManualUrl)
+		status, ok := mdd.rdx.GetLastVal(vangogh_integration.VangoghDownloadStatusErrorProperty, dl.ManualUrl)
 		if ok && status == "404" {
 			continue
 		}
