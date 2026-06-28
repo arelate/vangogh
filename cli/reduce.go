@@ -141,7 +141,7 @@ func reduceProductType(pt vangogh_integration.ProductType, force bool) error {
 	case vangogh_integration.ProtonDbSummary:
 		return protondb_data.ReduceSummary(steamGogIds, kvPt)
 	case vangogh_integration.OpenCriticApiGame:
-		return opencritic_data.ReduceApiGame(openCriticGogIds, kvPt)
+		return opencritic_data.ReduceApiGame(maps.Keys(openCriticGogIds), kvPt)
 	default:
 		return errors.New("reduction is not supported for " + pt.String())
 	}

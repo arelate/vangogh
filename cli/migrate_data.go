@@ -32,9 +32,11 @@ import (
 // 15. rename properties to gog-properties
 // 16. rename misc properties
 // 17. rename GOG data key values
+// 18. rename gog-opencritic-slug -> opencritic-slug
+// 19. rename engines* -> pcgw-engines
 
 const (
-	latestDataSchema = 18
+	latestDataSchema = 20
 )
 
 func MigrateDataHandler(u *url.URL) error {
@@ -84,6 +86,14 @@ func MigrateData(force bool) error {
 			}
 		case 17:
 			if err = renameGogKeyValues(); err != nil {
+				return err
+			}
+		case 18:
+			if err = renameOpenCriticSlugProperty(); err != nil {
+				return err
+			}
+		case 19:
+			if err = renameEnginesProperties(); err != nil {
 				return err
 			}
 		}
@@ -180,6 +190,19 @@ func renameGogKeyValues() error {
 	}
 
 	return nil
+}
+
+func renameOpenCriticSlugProperty() error {
+	return migrateFromToProperties(map[string]string{
+		"gog-opencritic-slug": vangogh_integration.OpenCriticSlugProperty,
+	})
+}
+
+func renameEnginesProperties() error {
+	return migrateFromToProperties(map[string]string{
+		"engines":        vangogh_integration.PcgwEnginesProperty,
+		"engines-builds": vangogh_integration.PcgwEnginesBuildsProperty,
+	})
 }
 
 func migrateFromToProperties(fromTo map[string]string) error {

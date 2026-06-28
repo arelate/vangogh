@@ -85,7 +85,7 @@ func Debug(gogId string, rdx redux.Readable) (compton.PageElement, error) {
 	}
 
 	var metacriticId string
-	if mid, ok := rdx.GetLastVal(vangogh_integration.MetacriticIdProperty, gogId); ok && mid != "" {
+	if mid, ok := rdx.GetLastVal(vangogh_integration.GogMetacriticIdProperty, gogId); ok && mid != "" {
 		metacriticId = mid
 		idsFrow.PropVal("Metacritic", metacriticId)
 	}

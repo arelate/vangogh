@@ -9,13 +9,12 @@ var InformationBadgeProperties = []string{
 	vangogh_integration.GogOwnedProperty,
 	vangogh_integration.VangoghDownloadQueuedProperty,
 	vangogh_integration.VangoghDownloadStartedProperty,
-	//vangogh_integration.DownloadCompletedProperty,
 	vangogh_integration.GogProductValidationResultProperty,
 	vangogh_integration.GogUserWishlistProperty,
 	vangogh_integration.GogIsModProperty,
 	vangogh_integration.GogStoreTagsProperty, // Good Old Game label
 	vangogh_integration.GogProductTypeProperty,
-	vangogh_integration.TopPercentProperty,
+	vangogh_integration.OpenCriticPercentileProperty,
 	// text
 	vangogh_integration.GogComingSoonProperty,
 	vangogh_integration.GogPreOrderProperty,

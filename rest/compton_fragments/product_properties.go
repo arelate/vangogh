@@ -191,9 +191,13 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 		for _, value := range values {
 			fmtProperty.values[value] = HrefSearchDescSortGogGlobalReleaseDate(property, value)
 		}
-	case vangogh_integration.EnginesBuildsProperty:
-		for _, value := range values {
-			fmtProperty.values[value] = hrefEmpty()
+	case vangogh_integration.PcgwEnginesProperty:
+		if pcgwPageId, ok := rdx.GetLastVal(vangogh_integration.GogPcgwPageIdProperty, id); ok && pcgwPageId != "" {
+			if pcgwEngines, sure := rdx.GetAllValues(vangogh_integration.PcgwEnginesProperty, pcgwPageId); sure {
+				for _, value := range pcgwEngines {
+					fmtProperty.values[value] = hrefEmpty()
+				}
+			}
 		}
 	case vangogh_integration.SteamReviewScoreProperty:
 		if !isNotPositiveRating(firstValue) {
@@ -207,7 +211,7 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 		if !isNotPositiveRating(firstValue) {
 			fmtProperty.values[FmtRating(firstValue)] = hrefEmpty()
 		}
-	case vangogh_integration.TopPercentProperty:
+	case vangogh_integration.OpenCriticPercentileProperty:
 		if !isNotPositiveRating(firstValue) {
 			fmtProperty.values[firstValue] = hrefSearch(property, url.QueryEscape(firstValue))
 		}
@@ -270,7 +274,7 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 		fmtProperty.class = ReviewClass(fmtSteamRating(firstValue))
 	case vangogh_integration.OpenCriticTierProperty:
 		fmtProperty.class = firstValue
-	case vangogh_integration.TopPercentProperty:
+	case vangogh_integration.OpenCriticPercentileProperty:
 		fmtProperty.class = vangogh_integration.RatingPositive
 	case vangogh_integration.OpenCriticMedianScoreProperty:
 		fallthrough

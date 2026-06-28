@@ -1,6 +1,7 @@
 package compton_fragments
 
 import (
+	"strconv"
 	"strings"
 
 	"github.com/arelate/southern_light/gog_integration"
@@ -83,9 +84,11 @@ func formatBadge(id, property string, rdx redux.Readable) *compton.FormattedBadg
 				}
 			}
 		}
-	case vangogh_integration.TopPercentProperty:
-		if rdx.HasKey(vangogh_integration.TopPercentProperty, id) {
-			fmtBadge.Icon = compton.Trophy
+	case vangogh_integration.OpenCriticPercentileProperty:
+		if ocps, ok := rdx.GetLastVal(vangogh_integration.OpenCriticPercentileProperty, id); ok && ocps != "" {
+			if ocpi, err := strconv.ParseInt(ocps, 10, 64); err == nil && ocpi >= 80 {
+				fmtBadge.Icon = compton.Trophy
+			}
 		}
 	case vangogh_integration.GogUserWishlistProperty:
 		if wish, ok := rdx.GetLastVal(vangogh_integration.GogUserWishlistProperty, id); ok && wish == vangogh_integration.TrueValue {

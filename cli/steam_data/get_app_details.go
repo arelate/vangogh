@@ -105,13 +105,14 @@ func reduceAppDetailsProduct(gogIds []string, steamAppId string, kvAppDetails ke
 				values = []string{ad.GetWebsite()}
 			case vangogh_integration.MetacriticScoreProperty:
 				values = []string{strconv.FormatInt(int64(ad.GetMetacriticScore()), 10)}
-			case vangogh_integration.MetacriticIdProperty:
-				mid, err := ad.GetMetacriticId()
+			case vangogh_integration.SteamMetacriticIdProperty:
+				var metacriticId string
+				metacriticId, err = ad.GetMetacriticId()
 				if err != nil {
 					return err
 				}
 
-				values = []string{mid}
+				values = []string{metacriticId}
 			case vangogh_integration.SteamCategoriesProperty:
 				values = ad.GetCategories()
 			case vangogh_integration.SteamGenresProperty:

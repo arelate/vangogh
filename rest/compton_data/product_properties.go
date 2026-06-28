@@ -31,8 +31,8 @@ var ProductProperties = []string{
 	vangogh_integration.SteamCategoriesProperty,
 	vangogh_integration.GogGameModesProperty,
 
-	vangogh_integration.EnginesProperty,
-	vangogh_integration.EnginesBuildsProperty,
+	vangogh_integration.PcgwEnginesProperty,
+	vangogh_integration.PcgwEnginesBuildsProperty,
 
 	vangogh_integration.HltbPlatformsProperty,
 	vangogh_integration.HltbHoursToCompleteMainProperty,

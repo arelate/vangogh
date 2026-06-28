@@ -22,7 +22,7 @@ var DigestProperties = []string{
 	vangogh_integration.GogProductTypeProperty,
 	vangogh_integration.VangoghSummaryReviewsProperty,
 	vangogh_integration.SteamReviewScoreDescProperty,
-	vangogh_integration.TopPercentProperty,
+	vangogh_integration.OpenCriticPercentileProperty,
 	vangogh_integration.GogProductValidationResultProperty,
 	vangogh_integration.GogProductGeneratedChecksumProperty,
 	vangogh_integration.SortProperty,

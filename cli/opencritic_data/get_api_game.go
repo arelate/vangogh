@@ -3,6 +3,7 @@ package opencritic_data
 import (
 	"encoding/json/v2"
 	"errors"
+	"iter"
 	"maps"
 	"strconv"
 
@@ -37,10 +38,10 @@ func GetApiGame(openCriticGogIds map[string][]string, force bool) error {
 		return err
 	}
 
-	return ReduceApiGame(openCriticGogIds, kvApiGame)
+	return ReduceApiGame(maps.Keys(openCriticGogIds), kvApiGame)
 }
 
-func ReduceApiGame(openCriticGogIds map[string][]string, kvApiGame kevlar.KeyValues) error {
+func ReduceApiGame(openCriticIds iter.Seq[string], kvApiGame kevlar.KeyValues) error {
 
 	dataType := vangogh_integration.OpenCriticApiGame
 
@@ -55,13 +56,13 @@ func ReduceApiGame(openCriticGogIds map[string][]string, kvApiGame kevlar.KeyVal
 
 	apiGameReductions := shared_data.InitReductions(vangogh_integration.OpenCriticApiGameProperties()...)
 
-	for openCriticId, gogIds := range openCriticGogIds {
+	for openCriticId := range openCriticIds {
 		if !kvApiGame.Has(openCriticId) {
 			nod.LogError(errors.New("missing: " + dataType.String() + ", " + openCriticId))
 			continue
 		}
 
-		if err = reduceApiGameProduct(gogIds, openCriticId, kvApiGame, apiGameReductions); err != nil {
+		if err = reduceApiGameProduct(openCriticId, kvApiGame, apiGameReductions); err != nil {
 			return err
 		}
 	}
@@ -69,7 +70,7 @@ func ReduceApiGame(openCriticGogIds map[string][]string, kvApiGame kevlar.KeyVal
 	return shared_data.WriteReductions(rdx, apiGameReductions)
 }
 
-func reduceApiGameProduct(gogIds []string, openCriticId string, kvApiGame kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
+func reduceApiGameProduct(openCriticId string, kvApiGame kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
 
 	rcApiGame, err := kvApiGame.Get(openCriticId)
 	if err != nil {
@@ -98,9 +99,7 @@ func reduceApiGameProduct(gogIds []string, openCriticId string, kvApiGame kevlar
 		}
 
 		if shared_data.IsNotEmpty(values...) {
-			for _, gogId := range gogIds {
-				piv[property][gogId] = values
-			}
+			piv[property][openCriticId] = values
 		}
 	}
 

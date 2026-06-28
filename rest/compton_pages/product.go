@@ -198,12 +198,15 @@ func GogProduct(id string, rdx redux.Readable, permissions ...author.Permission)
 
 			var fmtReceptionBadges []*compton.FormattedBadge
 
-			if tp, sure := rdx.GetLastVal(vangogh_integration.TopPercentProperty, id); sure && tp != "" {
-				fmtReceptionBadges = append(fmtReceptionBadges, &compton.FormattedBadge{
-					Title: tp,
-					Icon:  compton.Trophy,
-					Color: color.Green,
-				})
+			if ocps, sure := rdx.GetLastVal(vangogh_integration.OpenCriticPercentileProperty, id); sure && ocps != "" {
+				var ocpi int64
+				if ocpi, err = strconv.ParseInt(ocps, 10, 64); err == nil && ocpi >= 80 {
+					fmtReceptionBadges = append(fmtReceptionBadges, &compton.FormattedBadge{
+						Title: "P" + ocps,
+						Icon:  compton.Trophy,
+						Color: color.Green,
+					})
+				}
 			}
 
 			receptionSymbol := compton.NoSymbol

@@ -9,6 +9,6 @@ var ReceptionProperties = []string{
 	vangogh_integration.HltbReviewScoreProperty,
 	vangogh_integration.OpenCriticMedianScoreProperty,
 	vangogh_integration.OpenCriticTierProperty,
-	vangogh_integration.TopPercentProperty,
+	vangogh_integration.OpenCriticPercentileProperty,
 	vangogh_integration.SteamReviewScoreDescProperty,
 }

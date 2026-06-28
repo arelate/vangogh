@@ -247,14 +247,14 @@ func externalLinks(id string, rdx redux.Readable) map[string][]string {
 	}
 
 	if openCriticId, ok := rdx.GetLastVal(vangogh_integration.GogOpenCriticIdProperty, id); ok {
-		if openCriticSlug, sure := rdx.GetLastVal(vangogh_integration.GogOpenCriticSlugProperty, id); sure {
+		if openCriticSlug, sure := rdx.GetLastVal(vangogh_integration.OpenCriticSlugProperty, openCriticId); sure {
 			openCriticUrl := compton_data.OpenCriticUrlProperty + "=" + opencritic_integration.GameUrl(openCriticId, openCriticSlug).String()
 			links[compton_data.OtherLinksProperty] =
 				append(links[compton_data.OtherLinksProperty], openCriticUrl)
 		}
 	}
 
-	if metacriticId, ok := rdx.GetLastVal(vangogh_integration.MetacriticIdProperty, id); ok {
+	if metacriticId, ok := rdx.GetLastVal(vangogh_integration.GogMetacriticIdProperty, id); ok {
 		metacriticUrl := compton_data.MetacriticUrlProperty + "=" + metacritic_integration.GameUrl(metacriticId).String()
 		links[compton_data.OtherLinksProperty] =
 			append(links[compton_data.OtherLinksProperty], metacriticUrl)

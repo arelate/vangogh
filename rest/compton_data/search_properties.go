@@ -30,11 +30,9 @@ var SearchProperties = []string{
 	vangogh_integration.VangoghSummaryReviewsProperty,
 	vangogh_integration.SteamReviewScoreDescProperty,
 	vangogh_integration.OpenCriticTierProperty,
-	vangogh_integration.TopPercentProperty,
+	vangogh_integration.OpenCriticPercentileProperty,
 
 	vangogh_integration.HltbPlatformsProperty,
-	vangogh_integration.EnginesProperty,
-	vangogh_integration.EnginesBuildsProperty,
 	vangogh_integration.GogSeriesProperty,
 	vangogh_integration.GogGenresProperty,
 	vangogh_integration.GogThemesProperty,
