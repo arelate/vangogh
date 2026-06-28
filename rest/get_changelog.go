@@ -25,7 +25,7 @@ func GetChangelog(w http.ResponseWriter, r *http.Request) {
 		pageTitle = title
 	}
 
-	changelog, err := compton_data.GetKeyValuesBytes(id, vangogh_integration.ChangelogKeyValues)
+	changelog, err := compton_data.GetKeyValuesBytes(id, vangogh_integration.GogChangelogKeyValues)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return

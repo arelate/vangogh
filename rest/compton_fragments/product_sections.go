@@ -37,7 +37,7 @@ func ProductSections(id string, rdx redux.Readable, permissions ...author.Permis
 		hasSections = append(hasSections, compton_data.MediaSection)
 	}
 
-	hasChangelog, err := compton_data.HasKeyValuesBytes(id, vangogh_integration.ChangelogKeyValues)
+	hasChangelog, err := compton_data.HasKeyValuesBytes(id, vangogh_integration.GogChangelogKeyValues)
 	if err != nil {
 		return nil, err
 	}

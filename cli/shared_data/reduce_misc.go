@@ -16,15 +16,15 @@ func ReduceMisc() error {
 		return err
 	}
 
+	if err = reduceTopPercent(rdx); err != nil {
+		return err
+	}
+
 	if err = reduceSummaryRatings(rdx); err != nil {
 		return err
 	}
 
 	if err = reduceDeveloperPublisher(rdx); err != nil {
-		return err
-	}
-
-	if err = reduceTopPercent(rdx); err != nil {
 		return err
 	}
 

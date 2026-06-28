@@ -25,13 +25,13 @@ func GetDescription(w http.ResponseWriter, r *http.Request) {
 		pageTitle = title
 	}
 
-	descOverview, err := compton_data.GetKeyValuesBytes(id, vangogh_integration.DescriptionOverviewKeyValues)
+	descOverview, err := compton_data.GetKeyValuesBytes(id, vangogh_integration.GogDescriptionOverviewKeyValues)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
 	}
 
-	descFeatures, err := compton_data.GetKeyValuesBytes(id, vangogh_integration.DescriptionFeaturesKeyValues)
+	descFeatures, err := compton_data.GetKeyValuesBytes(id, vangogh_integration.GogDescriptionFeaturesKeyValues)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return

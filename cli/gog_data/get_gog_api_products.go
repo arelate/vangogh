@@ -228,12 +228,12 @@ func reduceApiProductKeyValues(id string, ap *gog_integration.ApiProduct, apiPro
 		reader = nil
 
 		switch kv {
-		case vangogh_integration.DescriptionOverviewKeyValues:
+		case vangogh_integration.GogDescriptionOverviewKeyValues:
 			do := ap.GetDescriptionOverview()
 			if do != "" {
 				reader = strings.NewReader(do)
 			}
-		case vangogh_integration.DescriptionFeaturesKeyValues:
+		case vangogh_integration.GogDescriptionFeaturesKeyValues:
 			df := ap.GetDescriptionFeatures()
 			if df != "" {
 				reader = strings.NewReader(df)

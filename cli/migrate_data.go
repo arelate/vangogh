@@ -3,7 +3,10 @@ package cli
 import (
 	"io"
 	"net/url"
+	"os"
+	"path/filepath"
 	"strconv"
+	"strings"
 
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/kevlar"
@@ -28,9 +31,10 @@ import (
 // 14. remove user-access-token value from gog-user-access-token KeyValues
 // 15. rename properties to gog-properties
 // 16. rename misc properties
+// 17. rename GOG data key values
 
 const (
-	latestDataSchema = 17
+	latestDataSchema = 18
 )
 
 func MigrateDataHandler(u *url.URL) error {
@@ -76,6 +80,10 @@ func MigrateData(force bool) error {
 		switch schema {
 		case 16:
 			if err = renameMiscProperties(); err != nil {
+				return err
+			}
+		case 17:
+			if err = renameGogKeyValues(); err != nil {
 				return err
 			}
 		}
@@ -145,6 +153,33 @@ func renameMiscProperties() error {
 	}
 
 	return migrateFromToProperties(fromTo)
+}
+
+func renameGogKeyValues() error {
+	kvs := []string{
+		vangogh_integration.GogDescriptionOverviewKeyValues,
+		vangogh_integration.GogDescriptionFeaturesKeyValues,
+		vangogh_integration.GogChangelogKeyValues,
+	}
+
+	metadataDir := vangogh_integration.Pwd.AbsDirPath(vangogh_integration.Metadata)
+
+	for _, kv := range kvs {
+
+		oldKvDir := filepath.Join(metadataDir, strings.TrimPrefix(kv, "gog-"))
+		newKvDir := filepath.Join(metadataDir, kv)
+
+		if _, err := os.Stat(oldKvDir); os.IsNotExist(err) {
+			continue
+		}
+
+		if err := os.Rename(oldKvDir, newKvDir); err != nil {
+			return err
+		}
+
+	}
+
+	return nil
 }
 
 func migrateFromToProperties(fromTo map[string]string) error {

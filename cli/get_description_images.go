@@ -40,13 +40,13 @@ func GetDescriptionImages(ids []string, since int64, all, force bool) error {
 
 	metadataDir := vangogh_integration.Pwd.AbsDirPath(vangogh_integration.Metadata)
 
-	descOverviewDir := filepath.Join(metadataDir, vangogh_integration.DescriptionOverviewKeyValues)
+	descOverviewDir := filepath.Join(metadataDir, vangogh_integration.GogDescriptionOverviewKeyValues)
 	kvDescOverview, err := kevlar.New(descOverviewDir, kevlar.TxtExt)
 	if err != nil {
 		return err
 	}
 
-	descFeaturesDir := filepath.Join(metadataDir, vangogh_integration.DescriptionFeaturesKeyValues)
+	descFeaturesDir := filepath.Join(metadataDir, vangogh_integration.GogDescriptionFeaturesKeyValues)
 	kvDescFeatures, err := kevlar.New(descFeaturesDir, kevlar.TxtExt)
 	if err != nil {
 		return err

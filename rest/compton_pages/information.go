@@ -58,7 +58,7 @@ func Info(id string, rdx redux.Readable, permissions ...author.Permission) compt
 		shortDescSpan.AddClass("short-description")
 	}
 
-	hasDescOverview, err := compton_data.HasKeyValuesBytes(id, vangogh_integration.DescriptionOverviewKeyValues)
+	hasDescOverview, err := compton_data.HasKeyValuesBytes(id, vangogh_integration.GogDescriptionOverviewKeyValues)
 	if err != nil {
 		return s.Error(err)
 	}

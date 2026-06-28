@@ -156,7 +156,7 @@ func reduceGogDetailsKeyValues(id string, det *gog_integration.Details, detailsK
 		reader = nil
 
 		switch kv {
-		case vangogh_integration.ChangelogKeyValues:
+		case vangogh_integration.GogChangelogKeyValues:
 			cl := det.GetChangelog()
 			if cl != "" {
 				reader = strings.NewReader(cl)
