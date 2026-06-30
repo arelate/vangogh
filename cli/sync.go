@@ -149,14 +149,6 @@ func Sync(
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
 
-		if err = shared_data.ReduceMisc(); err != nil {
-			return setSyncInterrupted(err, syncEventsRdx)
-		}
-
-		if err = setSyncEvent(vangogh_integration.SyncReducePurchasesDataKey, syncEventsRdx); err != nil {
-			return setSyncInterrupted(err, syncEventsRdx)
-		}
-
 		// summarize sync updates now, since other updates are digital artifacts
 		// and won't affect the summaries
 		if err = Summarize(syncStart); err != nil {
@@ -263,14 +255,6 @@ func Sync(
 		}
 
 		if err = setSyncEvent(vangogh_integration.SyncExtraData, syncEventsRdx); err != nil {
-			return setSyncInterrupted(err, syncEventsRdx)
-		}
-
-		if err = shared_data.ReduceMisc(); err != nil {
-			return setSyncInterrupted(err, syncEventsRdx)
-		}
-
-		if err = setSyncEvent(vangogh_integration.SyncReduceExtraDataKey, syncEventsRdx); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
 

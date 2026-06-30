@@ -102,7 +102,11 @@ func ReduceGogApiProducts(kvGogApiProducts kevlar.KeyValues, since int64, force 
 		}
 	}
 
-	return shared_data.WriteReductions(rdx, apiProductReductions)
+	if err = shared_data.WriteReductions(rdx, apiProductReductions); err != nil {
+		return err
+	}
+
+	return reduceOwned(rdx)
 }
 
 func unmarshallGogApiProduct(id string, kvGogApiProduct kevlar.KeyValues) (*gog_integration.ApiProduct, error) {
@@ -203,6 +207,10 @@ func reduceGogApiProductProperties(id string, ap *gog_integration.ApiProduct, pi
 			values = []string{strconv.FormatBool(ap.GetPreOrder())}
 		case vangogh_integration.GogScreenshotsProperty:
 			values = gog_integration.ImageIds(ap.GetScreenshots()...)
+		case vangogh_integration.GogOwnedProperty:
+			continue
+		case vangogh_integration.GogLicencesProperty:
+			continue
 		}
 
 		if shared_data.IsNotEmpty(values...) {
@@ -245,6 +253,68 @@ func reduceApiProductKeyValues(id string, ap *gog_integration.ApiProduct, apiPro
 				return err
 			}
 		}
+	}
+
+	return nil
+}
+
+func reduceOwned(rdx redux.Writeable) error {
+
+	roa := nod.Begin(" reducing %s...", vangogh_integration.GogOwnedProperty)
+	defer roa.Done()
+
+	if err := rdx.MustHave(vangogh_integration.GogOwnedProperty,
+		vangogh_integration.GogIncludesGamesProperty,
+		vangogh_integration.GogLicencesProperty,
+		vangogh_integration.GogTitleProperty); err != nil {
+		return err
+	}
+
+	owned := make(map[string][]string)
+
+	for id := range rdx.Keys(vangogh_integration.GogIncludesGamesProperty) {
+
+		// set all included products as owned
+		owned[id] = []string{vangogh_integration.TrueValue}
+		if includesGames, ok := rdx.GetAllValues(vangogh_integration.GogIncludesGamesProperty, id); ok {
+			for _, igId := range includesGames {
+				owned[igId] = []string{vangogh_integration.TrueValue}
+			}
+		}
+
+		// set all PACKs as owned when all included products are owned
+		if includesGames, ok := rdx.GetAllValues(vangogh_integration.GogIncludesGamesProperty, id); ok {
+			includedGamesOwned := len(includesGames) > 0
+			for _, igId := range includesGames {
+				if !rdx.HasKey(vangogh_integration.GogLicencesProperty, igId) {
+					includedGamesOwned = false
+					break
+				}
+			}
+			if includedGamesOwned {
+				owned[id] = []string{vangogh_integration.TrueValue}
+			}
+		}
+	}
+
+	for id := range rdx.Keys(vangogh_integration.GogTitleProperty) {
+		if _, ok := owned[id]; !ok {
+			owned[id] = []string{vangogh_integration.FalseValue}
+		}
+	}
+
+	// some products coming from licences will not have a title
+	// we need to filter them out from owned, otherwise Search > Owned view
+	// will have fewer products than declared (since product card are NOT
+	// created for products without a title)
+	for id := range owned {
+		if !rdx.HasKey(vangogh_integration.GogTitleProperty, id) {
+			owned[id] = []string{vangogh_integration.FalseValue}
+		}
+	}
+
+	if err := rdx.BatchReplaceValues(vangogh_integration.GogOwnedProperty, owned); err != nil {
+		return err
 	}
 
 	return nil

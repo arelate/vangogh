@@ -42,7 +42,7 @@ func Reduce(productTypes []vangogh_integration.ProductType, force bool) error {
 		}
 	}
 
-	return shared_data.ReduceMisc()
+	return nil
 }
 
 func reduceProductType(pt vangogh_integration.ProductType, force bool) error {
