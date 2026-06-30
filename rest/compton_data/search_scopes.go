@@ -4,7 +4,6 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/compton"
 )
@@ -39,10 +38,8 @@ func SearchScopes() map[string]string {
 	queries[SearchNew] = ""
 
 	q := make(url.Values)
-	q.Set(vangogh_integration.GogOwnedProperty, vangogh_integration.TrueValue)
-	q.Set(vangogh_integration.GogProductTypeProperty, gog_integration.ProductTypeGame)
-	q.Set(vangogh_integration.UrlSortParameter, vangogh_integration.GogOrderDateProperty)
-	q.Set(vangogh_integration.UrlDescendingParameter, vangogh_integration.TrueValue)
+	q.Set(vangogh_integration.GogIsAccountProductProperty, vangogh_integration.TrueValue)
+	q.Set(vangogh_integration.UrlSortParameter, vangogh_integration.GogAccountProductOrderProperty)
 	queries[SearchGog] = q.Encode()
 
 	q = make(url.Values)
