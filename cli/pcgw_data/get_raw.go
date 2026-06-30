@@ -2,6 +2,7 @@ package pcgw_data
 
 import (
 	"errors"
+	"iter"
 	"maps"
 	"net/url"
 	"slices"
@@ -39,10 +40,10 @@ func GetRaw(pcgwGogIds map[string][]string, force bool) error {
 		return err
 	}
 
-	return ReduceRaw(pcgwGogIds, kvRaw)
+	return ReduceRaw(maps.Keys(pcgwGogIds), kvRaw)
 }
 
-func ReduceRaw(pcgwGogIds map[string][]string, kvRaw kevlar.KeyValues) error {
+func ReduceRaw(pcgwPageIds iter.Seq[string], kvRaw kevlar.KeyValues) error {
 
 	dataType := vangogh_integration.PcgwRaw
 
@@ -57,15 +58,13 @@ func ReduceRaw(pcgwGogIds map[string][]string, kvRaw kevlar.KeyValues) error {
 
 	rawReductions := shared_data.InitReductions(vangogh_integration.PcgwRawProperties()...)
 
-	rra.TotalInt(len(pcgwGogIds))
-
-	for pcgwPageId, gogIds := range pcgwGogIds {
+	for pcgwPageId := range pcgwPageIds {
 		if !kvRaw.Has(pcgwPageId) {
 			nod.LogError(errors.New("missing: " + dataType.String() + ", " + pcgwPageId))
 			continue
 		}
 
-		if err = reduceRawProduct(gogIds, pcgwPageId, kvRaw, rawReductions, rdx); err != nil {
+		if err = reduceRawProduct(pcgwPageId, kvRaw, rawReductions, rdx); err != nil {
 			return err
 		}
 
@@ -75,7 +74,7 @@ func ReduceRaw(pcgwGogIds map[string][]string, kvRaw kevlar.KeyValues) error {
 	return shared_data.WriteReductions(rdx, rawReductions)
 }
 
-func reduceRawProduct(gogIds []string, pcgwPageId string, kvRaw kevlar.KeyValues, piv shared_data.PropertyIdValues, rdx redux.Readable) error {
+func reduceRawProduct(pcgwPageId string, kvRaw kevlar.KeyValues, piv shared_data.PropertyIdValues, rdx redux.Readable) error {
 
 	rcRaw, err := kvRaw.Get(pcgwPageId)
 	if err != nil {
@@ -103,7 +102,6 @@ func reduceRawProduct(gogIds []string, pcgwPageId string, kvRaw kevlar.KeyValues
 					}
 				}
 			}
-			continue
 		case vangogh_integration.OpenCriticSlugProperty:
 			if ocids := propertyValues[vangogh_integration.GogOpenCriticIdProperty]; len(ocids) > 0 {
 				for _, opencriticId := range ocids {
@@ -112,30 +110,18 @@ func reduceRawProduct(gogIds []string, pcgwPageId string, kvRaw kevlar.KeyValues
 					}
 				}
 			}
-			continue
 		case vangogh_integration.PcgwEnginesProperty:
 			fallthrough
 		case vangogh_integration.PcgwEnginesBuildsProperty:
 			if values, ok := propertyValues[property]; ok && shared_data.IsNotEmpty(values...) {
 				piv[property][pcgwPageId] = values
 			}
-			continue
-		}
-
-		for _, gogId := range gogIds {
-
-			switch property {
-			case vangogh_integration.WebsiteProperty:
-				if rdx.HasKey(property, gogId) {
-					continue
-				}
-
-				if values, ok := propertyValues[property]; ok && shared_data.IsNotEmpty(values...) {
-					piv[property][gogId] = values
-				}
+		case vangogh_integration.PcgwWebsiteProperty:
+			if values, ok := propertyValues[property]; ok && shared_data.IsNotEmpty(values...) {
+				piv[property][pcgwPageId] = values
 			}
-
 		}
+
 	}
 
 	return nil
@@ -155,7 +141,7 @@ var prefixedProperties = map[string]string{
 	"|mobygames":     vangogh_integration.GogMobyGamesIdProperty,
 	"|wikipedia":     vangogh_integration.GogWikipediaIdProperty,
 	"|winehq":        vangogh_integration.GogWineHqIdProperty,
-	"|official site": vangogh_integration.WebsiteProperty,
+	"|official site": vangogh_integration.PcgwWebsiteProperty,
 
 	"{{mm}} [https://vndb.org/": vangogh_integration.GogVndbIdProperty,
 
@@ -215,7 +201,7 @@ func parsePropertyValues(propertyLines map[string][]string) map[string][]string 
 			fallthrough
 		case vangogh_integration.GogWineHqIdProperty:
 			fallthrough
-		case vangogh_integration.WebsiteProperty:
+		case vangogh_integration.PcgwWebsiteProperty:
 			parsedLines = parseInfoboxPropertyLines(lines)
 		case vangogh_integration.GogVndbIdProperty:
 			parsedLines = parseVndbLines(lines)

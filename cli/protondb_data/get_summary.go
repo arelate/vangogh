@@ -3,6 +3,7 @@ package protondb_data
 import (
 	"encoding/json/v2"
 	"errors"
+	"iter"
 	"maps"
 
 	"github.com/arelate/southern_light/protondb_integration"
@@ -36,10 +37,10 @@ func GetSummary(steamGogIds map[string][]string, since int64, force bool) error 
 		return err
 	}
 
-	return ReduceSummary(steamGogIds, kvSummary)
+	return ReduceSummary(maps.Keys(steamGogIds), kvSummary)
 }
 
-func ReduceSummary(steamGogIds map[string][]string, kvSummary kevlar.KeyValues) error {
+func ReduceSummary(steamAppIds iter.Seq[string], kvSummary kevlar.KeyValues) error {
 
 	dataType := vangogh_integration.ProtonDbSummary
 
@@ -54,16 +55,14 @@ func ReduceSummary(steamGogIds map[string][]string, kvSummary kevlar.KeyValues) 
 
 	summaryReductions := shared_data.InitReductions(vangogh_integration.ProtonDbSummaryProperties()...)
 
-	rsa.TotalInt(len(steamGogIds))
-
-	for steamAppId, gogIds := range steamGogIds {
+	for steamAppId := range steamAppIds {
 		if !kvSummary.Has(steamAppId) {
 			nod.LogError(errors.New("missing: " + dataType.String() + ", " + steamAppId))
 			rsa.Increment()
 			continue
 		}
 
-		if err = reduceSummaryProduct(gogIds, steamAppId, kvSummary, summaryReductions); err != nil {
+		if err = reduceSummaryProduct(steamAppId, kvSummary, summaryReductions); err != nil {
 			return err
 		}
 
@@ -73,7 +72,7 @@ func ReduceSummary(steamGogIds map[string][]string, kvSummary kevlar.KeyValues) 
 	return shared_data.WriteReductions(rdx, summaryReductions)
 }
 
-func reduceSummaryProduct(gogIds []string, steamAppId string, kvSummary kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
+func reduceSummaryProduct(steamAppId string, kvSummary kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
 
 	rcSummary, err := kvSummary.Get(steamAppId)
 	if err != nil {
@@ -88,20 +87,17 @@ func reduceSummaryProduct(gogIds []string, steamAppId string, kvSummary kevlar.K
 
 	for property := range piv {
 
-		for _, gogId := range gogIds {
+		var values []string
 
-			var values []string
+		switch property {
+		case vangogh_integration.ProtonDbTierProperty:
+			values = []string{sum.String()}
+		case vangogh_integration.ProtonDbConfidenceProperty:
+			values = []string{sum.GetConfidence()}
+		}
 
-			switch property {
-			case vangogh_integration.ProtonDbTierProperty:
-				values = []string{sum.String()}
-			case vangogh_integration.ProtonDbConfidenceProperty:
-				values = []string{sum.GetConfidence()}
-			}
-
-			if shared_data.IsNotEmpty(values...) {
-				piv[property][gogId] = values
-			}
+		if shared_data.IsNotEmpty(values...) {
+			piv[property][steamAppId] = values
 		}
 	}
 

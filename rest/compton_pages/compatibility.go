@@ -147,6 +147,11 @@ func getDeckAppCompatibilityReport(gogId string, rdx redux.Readable) (*steam_int
 
 func addSteamCompatibilitySection(r compton.Registrar, pageStack compton.Element, id, title string, dacr *steam_integration.DeckAppCompatibilityReport, steamDevice string, rdx redux.Readable) {
 
+	var steamAppId string
+	if said, ok := rdx.GetLastVal(vangogh_integration.GogSteamAppIdProperty, id); ok && said != "" {
+		steamAppId = said
+	}
+
 	var steamAppCompatibilityProperty string
 	switch steamDevice {
 	case steamOs:
@@ -159,7 +164,7 @@ func addSteamCompatibilitySection(r compton.Registrar, pageStack compton.Element
 
 	var compatCategory string
 
-	if category, ok := rdx.GetLastVal(steamAppCompatibilityProperty, id); ok {
+	if category, ok := rdx.GetLastVal(steamAppCompatibilityProperty, steamAppId); ok {
 		compatCategory = category
 	} else {
 		compatCategory = "Unknown"

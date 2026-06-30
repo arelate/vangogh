@@ -3,6 +3,7 @@ package steam_data
 import (
 	"encoding/json/v2"
 	"errors"
+	"iter"
 	"maps"
 	"time"
 
@@ -38,10 +39,10 @@ func GetAppNews(steamGogIds map[string][]string, force bool) error {
 		return err
 	}
 
-	return ReduceAppNews(steamGogIds, kvAppNews)
+	return ReduceAppNews(maps.Keys(steamGogIds), kvAppNews)
 }
 
-func ReduceAppNews(steamGogIds map[string][]string, kvAppNews kevlar.KeyValues) error {
+func ReduceAppNews(steamAppIds iter.Seq[string], kvAppNews kevlar.KeyValues) error {
 
 	dataType := vangogh_integration.SteamAppNews
 
@@ -56,16 +57,14 @@ func ReduceAppNews(steamGogIds map[string][]string, kvAppNews kevlar.KeyValues) 
 
 	appNewsReductions := shared_data.InitReductions(vangogh_integration.SteamAppNewsProperties()...)
 
-	rana.TotalInt(len(steamGogIds))
-
-	for steamAppId, gogIds := range steamGogIds {
+	for steamAppId := range steamAppIds {
 		if !kvAppNews.Has(steamAppId) {
 			nod.LogError(errors.New("missing: " + dataType.String() + ", " + steamAppId))
 			rana.Increment()
 			continue
 		}
 
-		if err = reduceAppNewsProduct(gogIds, steamAppId, kvAppNews, appNewsReductions); err != nil {
+		if err = reduceAppNewsProduct(steamAppId, kvAppNews, appNewsReductions); err != nil {
 			return err
 		}
 
@@ -75,7 +74,7 @@ func ReduceAppNews(steamGogIds map[string][]string, kvAppNews kevlar.KeyValues) 
 	return shared_data.WriteReductions(rdx, appNewsReductions)
 }
 
-func reduceAppNewsProduct(gogIds []string, steamAppId string, kvAppNews kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
+func reduceAppNewsProduct(steamAppId string, kvAppNews kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
 
 	rcAppNews, err := kvAppNews.Get(steamAppId)
 	if err != nil {
@@ -90,23 +89,21 @@ func reduceAppNewsProduct(gogIds []string, steamAppId string, kvAppNews kevlar.K
 
 	for property := range piv {
 
-		for _, gogId := range gogIds {
-			var values []string
+		var values []string
 
-			switch property {
-			case vangogh_integration.SteamLastCommunityUpdateProperty:
-				for _, newsItem := range gnfar.AppNews.NewsItems {
-					if newsItem.FeedType != compton_data.FeedTypeCommunityAnnouncement {
-						continue
-					}
-					values = []string{time.Unix(newsItem.Date, 0).Format(time.RFC3339)}
-					break
+		switch property {
+		case vangogh_integration.SteamLastCommunityUpdateProperty:
+			for _, newsItem := range gnfar.AppNews.NewsItems {
+				if newsItem.FeedType != compton_data.FeedTypeCommunityAnnouncement {
+					continue
 				}
+				values = []string{time.Unix(newsItem.Date, 0).Format(time.RFC3339)}
+				break
 			}
+		}
 
-			if shared_data.IsNotEmpty(values...) {
-				piv[property][gogId] = values
-			}
+		if shared_data.IsNotEmpty(values...) {
+			piv[property][steamAppId] = values
 		}
 	}
 

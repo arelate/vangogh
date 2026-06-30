@@ -17,7 +17,7 @@ func ProductSections(id string, rdx redux.Readable, permissions ...author.Permis
 
 	hasSections = append(hasSections, compton_data.InfoSection)
 
-	if sr, ok := rdx.GetLastVal(vangogh_integration.VangoghSummaryRatingProperty, id); ok && sr != "" {
+	if sr, ok := rdx.GetLastVal(vangogh_integration.GogRatingProperty, id); ok && sr != "" {
 		hasSections = append(hasSections, compton_data.ReceptionSection)
 	}
 
@@ -51,10 +51,12 @@ func ProductSections(id string, rdx redux.Readable, permissions ...author.Permis
 		hasSections = append(hasSections, compton_data.NewsSection)
 	}
 
-	if sdc, ok := rdx.GetLastVal(vangogh_integration.SteamDeckAppCompatibilityCategoryProperty, id); ok && sdc != "Unknown" {
-		hasSections = append(hasSections, compton_data.CompatibilitySection)
-	} else if pt, sure := rdx.GetLastVal(vangogh_integration.ProtonDbTierProperty, id); sure && pt != "" {
-		hasSections = append(hasSections, compton_data.CompatibilitySection)
+	if steamAppId, ok := rdx.GetLastVal(vangogh_integration.GogSteamAppIdProperty, id); ok && steamAppId != "" {
+		if sdc, sure := rdx.GetLastVal(vangogh_integration.SteamDeckAppCompatibilityCategoryProperty, steamAppId); sure && sdc != "Unknown" {
+			hasSections = append(hasSections, compton_data.CompatibilitySection)
+		} else if pt, yeah := rdx.GetLastVal(vangogh_integration.ProtonDbTierProperty, steamAppId); yeah && pt != "" {
+			hasSections = append(hasSections, compton_data.CompatibilitySection)
+		}
 	}
 
 	if slices.Contains(permissions, perm.ReadFiles) {

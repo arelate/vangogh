@@ -164,24 +164,26 @@ func GogProduct(id string, rdx redux.Readable, permissions ...author.Permission)
 			dcColor := color.Gray
 			dcSymbol := compton.NoSymbol
 
-			if dcp, ok := rdx.GetLastVal(vangogh_integration.SteamDeckAppCompatibilityCategoryProperty, id); ok {
-				dcText = dcp
-				if dcs, sure := compton_data.CompatibilitySymbols[dcp]; sure {
-					dcSymbol = dcs
-				}
-				if dcc, sure := compton_data.CompatibilityColors[dcp]; sure {
-					dcColor = dcc
-				}
-			}
-
-			if dcText == "" || dcText == "Unknown" {
-				if pt, ok := rdx.GetLastVal(vangogh_integration.ProtonDbTierProperty, id); ok {
-					dcText = pt
-					if dcs, sure := compton_data.CompatibilitySymbols[pt]; sure {
+			if steamAppId, sure := rdx.GetLastVal(vangogh_integration.GogSteamAppIdProperty, id); sure && steamAppId != "" {
+				if sdcc, yeah := rdx.GetLastVal(vangogh_integration.SteamDeckAppCompatibilityCategoryProperty, steamAppId); yeah && sdcc != "" {
+					dcText = sdcc
+					if dcs, huh := compton_data.CompatibilitySymbols[sdcc]; huh {
 						dcSymbol = dcs
 					}
-					if dcc, sure := compton_data.CompatibilityColors[pt]; sure {
+					if dcc, huh := compton_data.CompatibilityColors[sdcc]; huh {
 						dcColor = dcc
+					}
+				}
+
+				if dcText == "" || dcText == "Unknown" {
+					if pt, yeah := rdx.GetLastVal(vangogh_integration.ProtonDbTierProperty, steamAppId); yeah {
+						dcText = pt
+						if dcs, huh := compton_data.CompatibilitySymbols[pt]; huh {
+							dcSymbol = dcs
+						}
+						if dcc, huh := compton_data.CompatibilityColors[pt]; huh {
+							dcColor = dcc
+						}
 					}
 				}
 			}
@@ -198,43 +200,65 @@ func GogProduct(id string, rdx redux.Readable, permissions ...author.Permission)
 
 			var fmtReceptionBadges []*compton.FormattedBadge
 
-			if ocps, sure := rdx.GetLastVal(vangogh_integration.OpenCriticPercentileProperty, id); sure && ocps != "" {
-				var ocpi int64
-				if ocpi, err = strconv.ParseInt(ocps, 10, 64); err == nil && ocpi >= 80 {
-					fmtReceptionBadges = append(fmtReceptionBadges, &compton.FormattedBadge{
-						Title: "P" + ocps,
-						Icon:  compton.Trophy,
-						Color: color.Green,
-					})
+			if openCriticId, sure := rdx.GetLastVal(vangogh_integration.GogOpenCriticIdProperty, id); sure && openCriticId != "" {
+				if ocps, yeah := rdx.GetLastVal(vangogh_integration.OpenCriticPercentileProperty, openCriticId); yeah && ocps != "" {
+					var ocpi int64
+					if ocpi, err = strconv.ParseInt(ocps, 10, 64); err == nil && ocpi >= 80 {
+						fmtReceptionBadges = append(fmtReceptionBadges, &compton.FormattedBadge{
+							Title: "P" + ocps,
+							Icon:  compton.Trophy,
+							Color: color.Green,
+						})
+					}
 				}
+
 			}
 
 			receptionSymbol := compton.NoSymbol
 			receptionColor := color.Gray
 
-			if srep, ok := rdx.GetLastVal(vangogh_integration.VangoghSummaryReviewsProperty, id); ok {
+			if steamAppId, sure := rdx.GetLastVal(vangogh_integration.GogSteamAppIdProperty, id); sure && steamAppId != "" {
+				if steamReviews, yeah := rdx.GetLastVal(vangogh_integration.SteamReviewScoreDescProperty, steamAppId); yeah {
+					rc := compton_fragments.ReviewClass(steamReviews)
+					if rsb, huh := compton_data.ReceptionSymbols[rc]; huh {
+						receptionSymbol = rsb
+					}
+					if rcl, huh := compton_data.ReceptionColors[rc]; huh {
+						receptionColor = rcl
+					}
 
-				if rs, sure := compton_data.ReceptionSymbols[srep]; sure {
-					receptionSymbol = rs
+					fmtReceptionBadges = append(fmtReceptionBadges, &compton.FormattedBadge{
+						Title: steamReviews,
+						Icon:  receptionSymbol,
+						Color: receptionColor,
+					})
+
 				}
-
-				if rc, sure := compton_data.ReceptionColors[srep]; sure {
-					receptionColor = rc
-				}
-
-				ratingsReviews := srep
-
-				if srap, sure := rdx.GetLastVal(vangogh_integration.VangoghSummaryRatingProperty, id); sure {
-					ratingsReviews = compton_fragments.FmtRatingValue(srap)
-				}
-
-				fmtReceptionBadges = append(fmtReceptionBadges, &compton.FormattedBadge{
-					Title: ratingsReviews,
-					Icon:  receptionSymbol,
-					Color: receptionColor,
-				})
-
 			}
+
+			//if srep, sure := rdx.GetLastVal(vangogh_integration.VangoghSummaryReviewsProperty, id); sure {
+			//
+			//	if rs, yeah := compton_data.ReceptionSymbols[srep]; yeah {
+			//		receptionSymbol = rs
+			//	}
+			//
+			//	if rc, yeah := compton_data.ReceptionColors[srep]; yeah {
+			//		receptionColor = rc
+			//	}
+			//
+			//	ratingsReviews := srep
+			//
+			//	if srap, yeah := rdx.GetLastVal(vangogh_integration.VangoghSummaryRatingProperty, id); yeah {
+			//		ratingsReviews = compton_fragments.FmtRatingValue(srap)
+			//	}
+			//
+			//	fmtReceptionBadges = append(fmtReceptionBadges, &compton.FormattedBadge{
+			//		Title: ratingsReviews,
+			//		Icon:  receptionSymbol,
+			//		Color: receptionColor,
+			//	})
+			//
+			//}
 
 			detailsSummary.AppendBadges(compton.Badges(p, fmtReceptionBadges...))
 		case compton_data.OfferingsSection:
@@ -272,24 +296,27 @@ func GogProduct(id string, rdx redux.Readable, permissions ...author.Permission)
 			}
 		case compton_data.NewsSection:
 
-			if lcut, ok, err := rdx.ParseLastValTime(vangogh_integration.SteamLastCommunityUpdateProperty, id); ok && err == nil {
+			if steamAppId, sure := rdx.GetLastVal(vangogh_integration.GogSteamAppIdProperty, id); sure {
 
-				updateColor := color.Gray
+				if lcut, yeah, err := rdx.ParseLastValTime(vangogh_integration.SteamLastCommunityUpdateProperty, steamAppId); yeah && err == nil {
 
-				if (time.Since(lcut).Hours() / 24) < 30 {
-					updateColor = color.Green
+					updateColor := color.Gray
+
+					if (time.Since(lcut).Hours() / 24) < 30 {
+						updateColor = color.Green
+					}
+
+					fmtNewsBadge := &compton.FormattedBadge{
+						Title: lcut.Format("Jan 2, '06"),
+						Icon:  compton.NewsBroadcast,
+						Color: updateColor,
+					}
+
+					detailsSummary.AppendBadges(compton.Badges(p, fmtNewsBadge))
+
+				} else if err != nil {
+					nod.LogError(err)
 				}
-
-				fmtNewsBadge := &compton.FormattedBadge{
-					Title: lcut.Format("Jan 2, '06"),
-					Icon:  compton.NewsBroadcast,
-					Color: updateColor,
-				}
-
-				detailsSummary.AppendBadges(compton.Badges(p, fmtNewsBadge))
-
-			} else if err != nil {
-				nod.LogError(err)
 			}
 
 		case compton_data.InstallersSection:

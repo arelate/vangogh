@@ -119,27 +119,27 @@ func reduceProductType(pt vangogh_integration.ProductType, force bool) error {
 	case vangogh_integration.GamesDbGogProducts:
 		return gamesdb_data.ReduceGamesDbGogProducts(kvPt, -1)
 	case vangogh_integration.SteamAppDetails:
-		return steam_data.ReduceAppDetails(steamGogIds, kvPt)
+		return steam_data.ReduceAppDetails(maps.Keys(steamGogIds), kvPt)
 	case vangogh_integration.SteamAppNews:
-		return steam_data.ReduceAppNews(steamGogIds, kvPt)
+		return steam_data.ReduceAppNews(maps.Keys(steamGogIds), kvPt)
 	case vangogh_integration.SteamAppReviews:
-		return steam_data.ReduceAppReviews(steamGogIds, kvPt)
+		return steam_data.ReduceAppReviews(maps.Keys(steamGogIds), kvPt)
 	case vangogh_integration.SteamDeckCompatibilityReport:
-		return steam_data.ReduceDeckCompatibilityReports(steamGogIds, kvPt)
+		return steam_data.ReduceDeckCompatibilityReports(maps.Keys(steamGogIds), kvPt)
 	case vangogh_integration.PcgwGogPageId:
 		return pcgw_data.ReduceGogPageIds(gameGogIds, kvPt)
 	case vangogh_integration.PcgwSteamPageId:
 		return pcgw_data.ReduceSteamPageIds(steamGogIds, kvPt)
 	case vangogh_integration.PcgwRaw:
-		return pcgw_data.ReduceRaw(pcgwGogIds, kvPt)
+		return pcgw_data.ReduceRaw(maps.Keys(pcgwGogIds), kvPt)
 	case vangogh_integration.WikipediaRaw:
 		return wikipedia_data.ReduceRaw(wikipediaGogIds, kvPt)
 	case vangogh_integration.HltbRootPage:
 		// do nothing
 	case vangogh_integration.HltbData:
-		return hltb_data.ReduceData(hltbGogIds, kvPt)
+		return hltb_data.ReduceData(maps.Keys(hltbGogIds), kvPt)
 	case vangogh_integration.ProtonDbSummary:
-		return protondb_data.ReduceSummary(steamGogIds, kvPt)
+		return protondb_data.ReduceSummary(maps.Keys(steamGogIds), kvPt)
 	case vangogh_integration.OpenCriticApiGame:
 		return opencritic_data.ReduceApiGame(maps.Keys(openCriticGogIds), kvPt)
 	default:

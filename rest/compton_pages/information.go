@@ -9,7 +9,6 @@ import (
 	"github.com/arelate/southern_light/gogdb_integration"
 	"github.com/arelate/southern_light/hltb_integration"
 	"github.com/arelate/southern_light/igdb_integration"
-	"github.com/arelate/southern_light/ign_integration"
 	"github.com/arelate/southern_light/metacritic_integration"
 	"github.com/arelate/southern_light/mobygames_integration"
 	"github.com/arelate/southern_light/opencritic_integration"
@@ -43,8 +42,10 @@ func Info(id string, rdx redux.Readable, permissions ...author.Permission) compt
 	s.Append(pageStack)
 
 	var shortDesc string
-	if sd, yes := rdx.GetLastVal(vangogh_integration.ShortDescriptionProperty, id); yes && strings.TrimSpace(sd) != "" {
-		shortDesc = sd
+	if steamAppId, ok := rdx.GetLastVal(vangogh_integration.GogSteamAppIdProperty, id); ok && steamAppId != "" {
+		if ssd, sure := rdx.GetLastVal(vangogh_integration.SteamShortDescriptionProperty, steamAppId); sure && strings.TrimSpace(ssd) != "" {
+			shortDesc = ssd
+		}
 	}
 
 	var shortDescSpan *compton.FspanElement
@@ -177,9 +178,18 @@ func externalLinks(id string, rdx redux.Readable) map[string][]string {
 	links[compton_data.OtherLinksProperty] = append(links[compton_data.OtherLinksProperty],
 		compton_data.GOGDBUrlProperty+"="+gogdb_integration.GOGDBUrl(id).String())
 
-	if website, ok := rdx.GetLastVal(vangogh_integration.WebsiteProperty, id); ok && website != "" {
-		links[compton_data.OtherLinksProperty] = append(links[compton_data.OtherLinksProperty],
-			compton_data.WebsiteUrlProperty+"="+website)
+	if steamAppId, ok := rdx.GetLastVal(vangogh_integration.GogSteamAppIdProperty, id); ok && steamAppId != "" {
+		if steamWebsite, sure := rdx.GetLastVal(vangogh_integration.SteamWebsiteProperty, steamAppId); sure && steamWebsite != "" {
+			links[compton_data.OtherLinksProperty] = append(links[compton_data.OtherLinksProperty],
+				compton_data.WebsiteUrlProperty+"="+steamWebsite)
+		}
+	}
+
+	if pcgwPageId, ok := rdx.GetLastVal(vangogh_integration.GogPcgwPageIdProperty, id); ok && pcgwPageId != "" {
+		if pcgwWebsite, sure := rdx.GetLastVal(vangogh_integration.PcgwWebsiteProperty, pcgwPageId); sure && pcgwWebsite != "" {
+			links[compton_data.OtherLinksProperty] = append(links[compton_data.OtherLinksProperty],
+				compton_data.WebsiteUrlProperty+"="+pcgwWebsite)
+		}
 	}
 
 	if pcgwWikiUrl := otherLink(id,
@@ -237,13 +247,6 @@ func externalLinks(id string, rdx redux.Readable) map[string][]string {
 		vndb_integration.ItemUrl, rdx); vndbUrl != "" {
 		links[compton_data.OtherLinksProperty] =
 			append(links[compton_data.OtherLinksProperty], vndbUrl)
-	}
-	if ignWikiUrl := otherLink(id,
-		vangogh_integration.GogIgnWikiSlugProperty,
-		compton_data.IGNWikiUrlProperty,
-		ign_integration.WikiUrl, rdx); ignWikiUrl != "" {
-		links[compton_data.OtherLinksProperty] =
-			append(links[compton_data.OtherLinksProperty], ignWikiUrl)
 	}
 
 	if openCriticId, ok := rdx.GetLastVal(vangogh_integration.GogOpenCriticIdProperty, id); ok {

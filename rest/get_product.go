@@ -36,7 +36,7 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	id := r.URL.Query().Get(vangogh_integration.IdProperty)
+	id := r.URL.Query().Get(vangogh_integration.UrlIdParameter)
 
 	sessionPermissions, err := sb.GetCookiePermissions(r)
 	if err != nil {

@@ -68,9 +68,6 @@ var PropertyTitles = map[string]string{
 	vangogh_integration.HltbPlatformsProperty:           "HLTB Platforms",
 	vangogh_integration.HltbReviewScoreProperty:         "HLTB Rating",
 
-	vangogh_integration.VangoghSummaryRatingProperty:  "Summary Rating",
-	vangogh_integration.VangoghSummaryReviewsProperty: "Summary Reviews",
-
 	vangogh_integration.OpenCriticMedianScoreProperty: "OpenCritic Rating",
 	vangogh_integration.OpenCriticTierProperty:        "OpenCritic Tier",
 	vangogh_integration.OpenCriticPercentileProperty:  "OpenCritic Percentile",

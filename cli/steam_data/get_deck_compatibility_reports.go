@@ -3,6 +3,7 @@ package steam_data
 import (
 	"encoding/json/v2"
 	"errors"
+	"iter"
 	"maps"
 	"strings"
 
@@ -37,10 +38,10 @@ func GetDeckCompatibilityReports(steamGogIds map[string][]string, force bool) er
 		return err
 	}
 
-	return ReduceDeckCompatibilityReports(steamGogIds, kvDeckCompatibilityReports)
+	return ReduceDeckCompatibilityReports(maps.Keys(steamGogIds), kvDeckCompatibilityReports)
 }
 
-func ReduceDeckCompatibilityReports(steamGogIds map[string][]string, kvDeckCompatibilityReports kevlar.KeyValues) error {
+func ReduceDeckCompatibilityReports(steamAppIds iter.Seq[string], kvDeckCompatibilityReports kevlar.KeyValues) error {
 
 	dataType := vangogh_integration.SteamDeckCompatibilityReport
 
@@ -57,16 +58,14 @@ func ReduceDeckCompatibilityReports(steamGogIds map[string][]string, kvDeckCompa
 
 	deckCompatibilityReportsReductions := shared_data.InitReductions(vangogh_integration.SteamDeckCompatibilityReportProperties()...)
 
-	rdcra.TotalInt(len(steamGogIds))
-
-	for steamAppId, gogIds := range steamGogIds {
+	for steamAppId := range steamAppIds {
 		if !kvDeckCompatibilityReports.Has(steamAppId) {
 			nod.LogError(errors.New("missing: " + dataType.String() + ", " + steamAppId))
 			rdcra.Increment()
 			continue
 		}
 
-		if err = reduceDeckCompatibilityReportsProduct(gogIds, steamAppId, kvDeckCompatibilityReports, deckCompatibilityReportsReductions); err != nil {
+		if err = reduceDeckCompatibilityReportsProduct(steamAppId, kvDeckCompatibilityReports, deckCompatibilityReportsReductions); err != nil {
 			return err
 		}
 
@@ -76,7 +75,7 @@ func ReduceDeckCompatibilityReports(steamGogIds map[string][]string, kvDeckCompa
 	return shared_data.WriteReductions(rdx, deckCompatibilityReportsReductions)
 }
 
-func reduceDeckCompatibilityReportsProduct(gogIds []string, steamAppId string, kvDeckCompatibilityReports kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
+func reduceDeckCompatibilityReportsProduct(steamAppId string, kvDeckCompatibilityReports kevlar.KeyValues, piv shared_data.PropertyIdValues) error {
 
 	rcDeckCompatibilityReport, err := kvDeckCompatibilityReports.Get(steamAppId)
 	if err != nil {
@@ -95,19 +94,17 @@ func reduceDeckCompatibilityReportsProduct(gogIds []string, steamAppId string, k
 
 	for property := range piv {
 
-		for _, gogId := range gogIds {
-			var values []string
+		var values []string
 
-			switch property {
-			case vangogh_integration.SteamDeckAppCompatibilityCategoryProperty:
-				values = []string{dcr.SteamDeckString()}
-			case vangogh_integration.SteamSteamOsAppCompatibilityCategoryProperty:
-				values = []string{dcr.SteamOsString()}
-			}
+		switch property {
+		case vangogh_integration.SteamDeckAppCompatibilityCategoryProperty:
+			values = []string{dcr.SteamDeckString()}
+		case vangogh_integration.SteamSteamOsAppCompatibilityCategoryProperty:
+			values = []string{dcr.SteamOsString()}
+		}
 
-			if shared_data.IsNotEmpty(values...) {
-				piv[property][gogId] = values
-			}
+		if shared_data.IsNotEmpty(values...) {
+			piv[property][steamAppId] = values
 		}
 
 	}

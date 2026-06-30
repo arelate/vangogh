@@ -34,9 +34,10 @@ import (
 // 17. rename GOG data key values
 // 18. rename gog-opencritic-slug -> opencritic-slug
 // 19. rename engines* -> pcgw-engines
+// 20. rename Steam properties
 
 const (
-	latestDataSchema = 20
+	latestDataSchema = 21
 )
 
 func MigrateDataHandler(u *url.URL) error {
@@ -80,10 +81,6 @@ func MigrateData(force bool) error {
 
 	for schema := currentDataSchema; schema < latestDataSchema; schema++ {
 		switch schema {
-		case 16:
-			if err = renameMiscProperties(); err != nil {
-				return err
-			}
 		case 17:
 			if err = renameGogKeyValues(); err != nil {
 				return err
@@ -94,6 +91,10 @@ func MigrateData(force bool) error {
 			}
 		case 19:
 			if err = renameEnginesProperties(); err != nil {
+				return err
+			}
+		case 20:
+			if err = renameSteamProperties(); err != nil {
 				return err
 			}
 		}
@@ -139,32 +140,6 @@ func setLatestDataSchema(rdx redux.Writeable) error {
 
 // migrations
 
-func renameMiscProperties() error {
-
-	fromTo := map[string]string{
-		"gog-account-page-products":          vangogh_integration.GogAccountProductPageProperty,
-		"gog-catalog-page-products":          vangogh_integration.GogCatalogProductPageProperty,
-		"gog-tag":                            vangogh_integration.GogTagIdProperty,
-		"local-tags":                         vangogh_integration.VangoghLocalTagsProperty,
-		"download-status-error":              vangogh_integration.VangoghDownloadStatusErrorProperty,
-		"download-queued":                    vangogh_integration.VangoghDownloadQueuedProperty,
-		"download-started":                   vangogh_integration.VangoghDownloadStartedProperty,
-		"download-completed":                 vangogh_integration.VangoghDownloadCompletedProperty,
-		"summary-rating":                     vangogh_integration.VangoghSummaryRatingProperty,
-		"summary-reviews":                    vangogh_integration.VangoghSummaryReviewsProperty,
-		"video-id":                           vangogh_integration.GogYouTubeVideoIdProperty,
-		"video-title":                        vangogh_integration.YouTubeVideoTitleProperty,
-		"video-duration":                     vangogh_integration.YouTubeVideoDurationProperty,
-		"video-error":                        vangogh_integration.YouTubeVideoErrorProperty,
-		"steamos-app-compatibility-category": vangogh_integration.SteamSteamOsAppCompatibilityCategoryProperty,
-		"sync-events":                        vangogh_integration.VangoghSyncEventsProperty,
-		"last-sync-updates":                  vangogh_integration.VangoghLastSyncUpdatesProperty,
-		"data-scheme-version":                vangogh_integration.VangoghDataSchemeVersionProperty,
-	}
-
-	return migrateFromToProperties(fromTo)
-}
-
 func renameGogKeyValues() error {
 	kvs := []string{
 		vangogh_integration.GogDescriptionOverviewKeyValues,
@@ -180,6 +155,10 @@ func renameGogKeyValues() error {
 		newKvDir := filepath.Join(metadataDir, kv)
 
 		if _, err := os.Stat(oldKvDir); os.IsNotExist(err) {
+			continue
+		}
+
+		if _, err := os.Stat(newKvDir); err == nil {
 			continue
 		}
 
@@ -203,6 +182,23 @@ func renameEnginesProperties() error {
 		"engines":        vangogh_integration.PcgwEnginesProperty,
 		"engines-builds": vangogh_integration.PcgwEnginesBuildsProperty,
 	})
+}
+
+func renameSteamProperties() error {
+	steamProperties := []string{
+		vangogh_integration.SteamRequiredAgeProperty,
+		vangogh_integration.SteamControllerSupportProperty,
+		vangogh_integration.SteamShortDescriptionProperty,
+		vangogh_integration.SteamWebsiteProperty,
+	}
+
+	fromTo := make(map[string]string)
+
+	for _, sp := range steamProperties {
+		fromTo[strings.TrimPrefix(sp, "steam-")] = sp
+	}
+
+	return migrateFromToProperties(fromTo)
 }
 
 func migrateFromToProperties(fromTo map[string]string) error {

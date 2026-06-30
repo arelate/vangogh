@@ -93,7 +93,7 @@ func TagsEditor(
 		Width(size.XXXLarge)
 
 	idInput := compton.InputValue(p, input_types.Hidden, id)
-	idInput.SetName(vangogh_integration.IdProperty)
+	idInput.SetName(vangogh_integration.UrlIdParameter)
 	swColumn.Append(idInput)
 
 	conditionInput := compton.InputValue(p, input_types.Hidden, strconv.FormatBool(owned))

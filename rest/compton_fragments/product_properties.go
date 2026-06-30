@@ -110,6 +110,23 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 		isDiscounted = idp == vangogh_integration.TrueValue
 	}
 
+	var hltbId string
+	if hid, ok := rdx.GetLastVal(vangogh_integration.GogHltbIdProperty, id); ok {
+		hltbId = hid
+	}
+	var opencriticId string
+	if ocid, ok := rdx.GetLastVal(vangogh_integration.GogOpenCriticIdProperty, id); ok {
+		opencriticId = ocid
+	}
+	var metacriticId string
+	if mcid, ok := rdx.GetLastVal(vangogh_integration.GogMetacriticIdProperty, id); ok {
+		metacriticId = mcid
+	}
+	var steamAppId string
+	if said, ok := rdx.GetLastVal(vangogh_integration.GogSteamAppIdProperty, id); ok {
+		steamAppId = said
+	}
+
 	var values []string
 	if pvs, ok := rdx.GetAllValues(property, id); ok {
 		values = pvs
@@ -173,13 +190,23 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 	case vangogh_integration.HltbHoursToCompletePlusProperty:
 		fallthrough
 	case vangogh_integration.HltbHoursToComplete100Property:
-		for _, value := range values {
-			ct := strings.TrimLeft(value, "0") + " hrs"
-			fmtProperty.values[ct] = hrefEmpty()
+		if hltbValues, sure := rdx.GetAllValues(property, hltbId); sure {
+			for _, value := range hltbValues {
+				ct := strings.TrimLeft(value, "0") + " hrs"
+				fmtProperty.values[ct] = hrefEmpty()
+			}
+		}
+	case vangogh_integration.HltbPlatformsProperty:
+		if hltbPlatforms, sure := rdx.GetAllValues(property, hltbId); sure {
+			for _, platform := range hltbPlatforms {
+				fmtProperty.values[platform] = hrefEmpty()
+			}
 		}
 	case vangogh_integration.HltbReviewScoreProperty:
-		if !isNotPositiveRating(firstValue) {
-			fmtProperty.values[fmtHltbRating(firstValue)] = hrefEmpty()
+		if hltbRating, sure := rdx.GetLastVal(property, hltbId); sure {
+			if !isNotPositiveRating(hltbRating) {
+				fmtProperty.values[fmtHltbRating(hltbRating)] = hrefEmpty()
+			}
 		}
 	case vangogh_integration.GogDiscountPercentageProperty:
 		for _, value := range values {
@@ -200,20 +227,28 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 			}
 		}
 	case vangogh_integration.SteamReviewScoreProperty:
-		if !isNotPositiveRating(firstValue) {
-			fmtProperty.values[fmtSteamRating(firstValue)] = hrefEmpty()
+		if srs, ok := rdx.GetLastVal(property, steamAppId); ok && srs != "" {
+			if !isNotPositiveRating(srs) {
+				fmtProperty.values[fmtSteamRating(srs)] = hrefEmpty()
+			}
 		}
 	case vangogh_integration.OpenCriticMedianScoreProperty:
-		if !isNotPositiveRating(firstValue) {
-			fmtProperty.values[FmtRating(firstValue)] = hrefEmpty()
+		if ocms, ok := rdx.GetLastVal(property, opencriticId); ok && ocms != "" {
+			if !isNotPositiveRating(ocms) {
+				fmtProperty.values[FmtRating(ocms)] = hrefEmpty()
+			}
 		}
 	case vangogh_integration.MetacriticScoreProperty:
-		if !isNotPositiveRating(firstValue) {
-			fmtProperty.values[FmtRating(firstValue)] = hrefEmpty()
+		if mcs, ok := rdx.GetLastVal(property, metacriticId); ok && mcs != "" {
+			if !isNotPositiveRating(mcs) {
+				fmtProperty.values[FmtRating(mcs)] = hrefEmpty()
+			}
 		}
 	case vangogh_integration.OpenCriticPercentileProperty:
-		if !isNotPositiveRating(firstValue) {
-			fmtProperty.values[firstValue] = hrefSearch(property, url.QueryEscape(firstValue))
+		if ocp, ok := rdx.GetLastVal(property, opencriticId); ok && ocp != "" {
+			if !isNotPositiveRating(ocp) {
+				fmtProperty.values[ocp] = hrefSearch(property, url.QueryEscape(ocp))
+			}
 		}
 	case vangogh_integration.CreatorsProperty:
 		fallthrough
@@ -232,6 +267,26 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 	case vangogh_integration.ComposersProperty:
 		for _, value := range values {
 			fmtProperty.values[value] = hrefSearchCredits(value)
+		}
+	case vangogh_integration.SteamCategoriesProperty:
+		if scs, ok := rdx.GetAllValues(vangogh_integration.SteamCategoriesProperty, steamAppId); ok {
+			for _, value := range scs {
+				fmtProperty.values[value] = hrefEmpty()
+			}
+		}
+	case vangogh_integration.SteamSteamOsAppCompatibilityCategoryProperty:
+		fallthrough
+	case vangogh_integration.SteamDeckAppCompatibilityCategoryProperty:
+		if scc, ok := rdx.GetLastVal(property, steamAppId); ok && scc != "" {
+			fmtProperty.values[scc] = hrefEmpty()
+		}
+	case vangogh_integration.ProtonDbTierProperty:
+		if pt, ok := rdx.GetLastVal(property, steamAppId); ok && pt != "" {
+			fmtProperty.values[pt] = hrefEmpty()
+		}
+	case vangogh_integration.ProtonDbConfidenceProperty:
+		if pc, ok := rdx.GetLastVal(property, steamAppId); ok && pc != "" {
+			fmtProperty.values[pc] = hrefEmpty()
 		}
 	default:
 		for _, value := range values {
@@ -265,29 +320,49 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 	case vangogh_integration.VangoghLocalTagsProperty:
 		fmtProperty.actions["Edit"] = "/local-tags/edit?id=" + id
 	case vangogh_integration.SteamReviewScoreDescProperty:
-		fmtProperty.class = ReviewClass(firstValue)
+		if srsd, ok := rdx.GetLastVal(property, steamAppId); ok && srsd != "" {
+			fmtProperty.class = ReviewClass(srsd)
+		}
 	case vangogh_integration.GogRatingProperty:
 		fmtProperty.class = ReviewClass(fmtGOGRating(firstValue))
 	case vangogh_integration.HltbReviewScoreProperty:
-		fmtProperty.class = ReviewClass(fmtHltbRating(firstValue))
+		if hrs, ok := rdx.GetLastVal(property, hltbId); ok && hrs != "" {
+			fmtProperty.class = ReviewClass(fmtHltbRating(hrs))
+		}
 	case vangogh_integration.SteamReviewScoreProperty:
-		fmtProperty.class = ReviewClass(fmtSteamRating(firstValue))
+		if srs, ok := rdx.GetLastVal(property, steamAppId); ok && srs != "" {
+			fmtProperty.class = ReviewClass(fmtSteamRating(srs))
+		}
 	case vangogh_integration.OpenCriticTierProperty:
-		fmtProperty.class = firstValue
+		if oct, ok := rdx.GetLastVal(property, opencriticId); ok {
+			fmtProperty.class = oct
+		}
 	case vangogh_integration.OpenCriticPercentileProperty:
-		fmtProperty.class = vangogh_integration.RatingPositive
+		if _, ok := rdx.GetLastVal(property, opencriticId); ok {
+			fmtProperty.class = vangogh_integration.RatingPositive
+		}
 	case vangogh_integration.OpenCriticMedianScoreProperty:
-		fallthrough
+		if ocms, ok := rdx.GetLastVal(property, opencriticId); ok {
+			fmtProperty.class = ReviewClass(FmtRating(ocms))
+		}
 	case vangogh_integration.MetacriticScoreProperty:
-		fmtProperty.class = ReviewClass(FmtRating(firstValue))
+		if ms, ok := rdx.GetLastVal(property, metacriticId); ok {
+			fmtProperty.class = ReviewClass(FmtRating(ms))
+		}
 	case vangogh_integration.SteamSteamOsAppCompatibilityCategoryProperty:
 		fallthrough
 	case vangogh_integration.SteamDeckAppCompatibilityCategoryProperty:
-		fmtProperty.class = firstValue
+		if scc, ok := rdx.GetLastVal(property, steamAppId); ok && scc != "" {
+			fmtProperty.class = scc
+		}
 	case vangogh_integration.ProtonDbTierProperty:
-		fmtProperty.class = firstValue
+		if pt, ok := rdx.GetLastVal(property, steamAppId); ok && pt != "" {
+			fmtProperty.class = pt
+		}
 	case vangogh_integration.ProtonDbConfidenceProperty:
-		fmtProperty.class = firstValue
+		if pc, ok := rdx.GetLastVal(property, steamAppId); ok && pc != "" {
+			fmtProperty.class = pc
+		}
 	}
 
 	return fmtProperty

@@ -250,7 +250,7 @@ func Debug(gogId string, rdx redux.Readable) (compton.PageElement, error) {
 		vangogh_integration.GogStoreTagsProperty,
 		vangogh_integration.GogScreenshotsProperty,
 		vangogh_integration.HltbPlatformsProperty,
-		vangogh_integration.ShortDescriptionProperty,
+		vangogh_integration.SteamShortDescriptionProperty,
 		vangogh_integration.SteamCategoriesProperty,
 		vangogh_integration.GogThemesProperty,
 	}

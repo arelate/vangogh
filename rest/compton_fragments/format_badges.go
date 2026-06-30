@@ -85,9 +85,11 @@ func formatBadge(id, property string, rdx redux.Readable) *compton.FormattedBadg
 			}
 		}
 	case vangogh_integration.OpenCriticPercentileProperty:
-		if ocps, ok := rdx.GetLastVal(vangogh_integration.OpenCriticPercentileProperty, id); ok && ocps != "" {
-			if ocpi, err := strconv.ParseInt(ocps, 10, 64); err == nil && ocpi >= 80 {
-				fmtBadge.Icon = compton.Trophy
+		if openCriticId, ok := rdx.GetLastVal(vangogh_integration.GogOpenCriticIdProperty, id); ok && openCriticId != "" {
+			if ocps, sure := rdx.GetLastVal(vangogh_integration.OpenCriticPercentileProperty, openCriticId); sure && ocps != "" {
+				if ocpi, err := strconv.ParseInt(ocps, 10, 64); err == nil && ocpi >= 80 {
+					fmtBadge.Icon = compton.Trophy
+				}
 			}
 		}
 	case vangogh_integration.GogUserWishlistProperty:
