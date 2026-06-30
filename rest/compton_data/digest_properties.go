@@ -15,7 +15,7 @@ var DigestProperties = []string{
 	vangogh_integration.GogProductTypeProperty,
 	vangogh_integration.GogProductValidationResultProperty,
 	vangogh_integration.GogProductGeneratedChecksumProperty,
-	vangogh_integration.SortProperty,
+	vangogh_integration.UrlSortParameter,
 }
 
 var BinaryDigestProperties = []string{
@@ -26,7 +26,7 @@ var BinaryDigestProperties = []string{
 	vangogh_integration.GogPreOrderProperty,
 	vangogh_integration.GogComingSoonProperty,
 	vangogh_integration.GogInDevelopmentProperty,
-	vangogh_integration.DescendingProperty,
+	vangogh_integration.UrlDescendingParameter,
 	vangogh_integration.GogIsDemoProperty,
 	vangogh_integration.GogIsModProperty,
 	vangogh_integration.GogProductGeneratedChecksumProperty,

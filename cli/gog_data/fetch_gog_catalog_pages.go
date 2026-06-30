@@ -71,11 +71,11 @@ func fetchGogCatalogPage(currentPage int, searchAfter string, pageReq *reqs.Para
 
 	if err := fetch.RequestSetValue(strconv.Itoa(currentPage), catalogPageUrl, pageReq, kvCatalogPages); err != nil {
 
-		if err = rdx.ReplaceValues(vangogh_integration.GetDataErrorMessageProperty, ptId, err.Error()); err != nil {
+		if err = rdx.ReplaceValues(vangogh_integration.VangoghGetDataErrorMessageProperty, ptId, err.Error()); err != nil {
 			return err
 		}
 
-		if err = rdx.ReplaceValues(vangogh_integration.GetDataErrorDateProperty, ptId, formattedNow); err != nil {
+		if err = rdx.ReplaceValues(vangogh_integration.VangoghGetDataErrorDateProperty, ptId, formattedNow); err != nil {
 			return err
 		}
 
@@ -84,7 +84,7 @@ func fetchGogCatalogPage(currentPage int, searchAfter string, pageReq *reqs.Para
 		return nil
 	}
 
-	return rdx.ReplaceValues(vangogh_integration.GetDataLastUpdatedProperty, ptId, formattedNow)
+	return rdx.ReplaceValues(vangogh_integration.VangoghGetDataLastUpdatedProperty, ptId, formattedNow)
 }
 
 func getGogProductCountLastId(currentPage int, kvGogCatalogPage kevlar.KeyValues) (int, string, error) {

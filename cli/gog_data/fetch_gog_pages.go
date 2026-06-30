@@ -33,11 +33,11 @@ func fetchGogPages(pageReq *reqs.Params, kv kevlar.KeyValues, tpw nod.TotalProgr
 
 	if err = fetch.RequestSetValue(firstPageId, firstPageUrl, pageReq, kv); err != nil {
 
-		if err = rdx.ReplaceValues(vangogh_integration.GetDataErrorMessageProperty, ptId, err.Error()); err != nil {
+		if err = rdx.ReplaceValues(vangogh_integration.VangoghGetDataErrorMessageProperty, ptId, err.Error()); err != nil {
 			return err
 		}
 
-		if err = rdx.ReplaceValues(vangogh_integration.GetDataErrorDateProperty, ptId, formattedNow); err != nil {
+		if err = rdx.ReplaceValues(vangogh_integration.VangoghGetDataErrorDateProperty, ptId, formattedNow); err != nil {
 			return err
 		}
 
@@ -46,7 +46,7 @@ func fetchGogPages(pageReq *reqs.Params, kv kevlar.KeyValues, tpw nod.TotalProgr
 		return nil
 	}
 
-	if err = rdx.ReplaceValues(vangogh_integration.GetDataLastUpdatedProperty, ptId, formattedNow); err != nil {
+	if err = rdx.ReplaceValues(vangogh_integration.VangoghGetDataLastUpdatedProperty, ptId, formattedNow); err != nil {
 		return err
 	}
 

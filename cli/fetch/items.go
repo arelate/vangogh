@@ -83,13 +83,13 @@ func Items(ids iter.Seq[string], itemReq *reqs.Params, kv kevlar.KeyValues, tpw 
 		}
 	}
 
-	if err = rdx.BatchReplaceValues(vangogh_integration.GetDataLastUpdatedProperty, itemsLastUpdated); err != nil {
+	if err = rdx.BatchReplaceValues(vangogh_integration.VangoghGetDataLastUpdatedProperty, itemsLastUpdated); err != nil {
 		return err
 	}
-	if err = rdx.BatchReplaceValues(vangogh_integration.GetDataErrorMessageProperty, itemsErrMessages); err != nil {
+	if err = rdx.BatchReplaceValues(vangogh_integration.VangoghGetDataErrorMessageProperty, itemsErrMessages); err != nil {
 		return err
 	}
-	if err = rdx.BatchReplaceValues(vangogh_integration.GetDataErrorDateProperty, itemsErrDates); err != nil {
+	if err = rdx.BatchReplaceValues(vangogh_integration.VangoghGetDataErrorDateProperty, itemsErrDates); err != nil {
 		return err
 	}
 

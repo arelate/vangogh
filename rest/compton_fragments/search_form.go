@@ -163,7 +163,7 @@ func searchInputs(r compton.Registrar, query map[string][]string, container comp
 			switch property {
 			case vangogh_integration.GogOperatingSystemsProperty:
 				datalist = operatingSystemsDatalist()
-			case vangogh_integration.SortProperty:
+			case vangogh_integration.UrlSortParameter:
 				datalist = sortDatalist()
 			case vangogh_integration.GogProductTypeProperty:
 				datalist = productTypesDatalist()

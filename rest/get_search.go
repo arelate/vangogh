@@ -59,11 +59,11 @@ func GetSearch(w http.ResponseWriter, r *http.Request) {
 
 	if len(query) > 0 {
 
-		sort := q.Get(vangogh_integration.SortProperty)
+		sort := q.Get(vangogh_integration.UrlSortParameter)
 		if sort == "" {
 			sort = vangogh_integration.GogTitleProperty
 		}
-		desc := q.Get(vangogh_integration.DescendingProperty) == "true"
+		desc := q.Get(vangogh_integration.UrlDescendingParameter) == "true"
 
 		var found []string
 
@@ -114,12 +114,12 @@ func isSortDescOnly(q map[string][]string) bool {
 	case 0:
 		return false
 	case 1:
-		_, okSort := q[vangogh_integration.SortProperty]
-		_, okDesc := q[vangogh_integration.DescendingProperty]
+		_, okSort := q[vangogh_integration.UrlSortParameter]
+		_, okDesc := q[vangogh_integration.UrlDescendingParameter]
 		return okSort || okDesc
 	case 2:
-		_, okSort := q[vangogh_integration.SortProperty]
-		_, okDesc := q[vangogh_integration.DescendingProperty]
+		_, okSort := q[vangogh_integration.UrlSortParameter]
+		_, okDesc := q[vangogh_integration.UrlDescendingParameter]
 		return okSort && okDesc
 	default:
 		return false

@@ -42,12 +42,12 @@ func GetRootPage() error {
 
 	if err = fetch.RequestSetValue(rootPageId, rootPageUrl, reqs.HltbRootPage(), kvRootPage); err != nil {
 
-		if err = rdx.ReplaceValues(vangogh_integration.GetDataErrorMessageProperty, ptId, err.Error()); err != nil {
+		if err = rdx.ReplaceValues(vangogh_integration.VangoghGetDataErrorMessageProperty, ptId, err.Error()); err != nil {
 			return err
 		}
 
 		formattedNow := time.Now().UTC().Format(time.RFC3339)
-		if err = rdx.ReplaceValues(vangogh_integration.GetDataErrorDateProperty, ptId, formattedNow); err != nil {
+		if err = rdx.ReplaceValues(vangogh_integration.VangoghGetDataErrorDateProperty, ptId, formattedNow); err != nil {
 			return err
 		}
 

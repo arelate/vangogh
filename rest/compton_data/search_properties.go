@@ -40,6 +40,6 @@ var SearchProperties = []string{
 	vangogh_integration.GogProductValidationResultProperty,
 	vangogh_integration.GogProductGeneratedChecksumProperty,
 
-	vangogh_integration.SortProperty,
-	vangogh_integration.DescendingProperty,
+	vangogh_integration.UrlSortParameter,
+	vangogh_integration.UrlDescendingParameter,
 }

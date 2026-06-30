@@ -33,13 +33,13 @@ var updatesDelayDays = map[vangogh_integration.ProductType]int{
 
 func ShouldUpdate(id string, pt vangogh_integration.ProductType, rdx redux.Readable) (bool, error) {
 
-	if err := rdx.MustHave(vangogh_integration.GetDataLastUpdatedProperty); err != nil {
+	if err := rdx.MustHave(vangogh_integration.VangoghGetDataLastUpdatedProperty); err != nil {
 		return false, err
 	}
 
 	ptId := vangogh_integration.ProductTypeId(pt, id)
 
-	if !rdx.HasKey(vangogh_integration.GetDataLastUpdatedProperty, ptId) {
+	if !rdx.HasKey(vangogh_integration.VangoghGetDataLastUpdatedProperty, ptId) {
 		return true, nil
 	}
 
@@ -50,7 +50,7 @@ func ShouldUpdate(id string, pt vangogh_integration.ProductType, rdx redux.Reada
 		updateDelayDays = defaultUpdateDelayDays
 	}
 
-	if gdlut, ok, err := rdx.ParseLastValTime(vangogh_integration.GetDataLastUpdatedProperty, ptId); ok && err == nil {
+	if gdlut, ok, err := rdx.ParseLastValTime(vangogh_integration.VangoghGetDataLastUpdatedProperty, ptId); ok && err == nil {
 
 		if time.Since(gdlut).Hours()/24 > float64(updateDelayDays) {
 			nod.Log("updating %s %s, last update: %s", pt, id, gdlut.Format(time.RFC3339))
@@ -68,14 +68,14 @@ func ShouldUpdate(id string, pt vangogh_integration.ProductType, rdx redux.Reada
 
 func ShouldSkip(id string, pt vangogh_integration.ProductType, rdx redux.Writeable) (bool, error) {
 
-	if err := rdx.MustHave(vangogh_integration.GetDataErrorDateProperty,
-		vangogh_integration.GetDataErrorMessageProperty); err != nil {
+	if err := rdx.MustHave(vangogh_integration.VangoghGetDataErrorDateProperty,
+		vangogh_integration.VangoghGetDataErrorMessageProperty); err != nil {
 		return false, err
 	}
 
 	ptId := vangogh_integration.ProductTypeId(pt, id)
 
-	if !rdx.HasKey(vangogh_integration.GetDataErrorDateProperty, ptId) {
+	if !rdx.HasKey(vangogh_integration.VangoghGetDataErrorDateProperty, ptId) {
 		return false, nil
 	}
 
@@ -86,7 +86,7 @@ func ShouldSkip(id string, pt vangogh_integration.ProductType, rdx redux.Writeab
 		errorDelayDays = defaultErrorDelayDays
 	}
 
-	if gdet, ok, err := rdx.ParseLastValTime(vangogh_integration.GetDataErrorDateProperty, ptId); ok && err == nil {
+	if gdet, ok, err := rdx.ParseLastValTime(vangogh_integration.VangoghGetDataErrorDateProperty, ptId); ok && err == nil {
 
 		if time.Since(gdet).Hours()/24 < float64(errorDelayDays) {
 
@@ -96,10 +96,10 @@ func ShouldSkip(id string, pt vangogh_integration.ProductType, rdx redux.Writeab
 
 			nod.Log("clearing %s %s error last encountered: %s", pt, id, gdet.Format(time.RFC3339))
 
-			if err = rdx.CutKeys(vangogh_integration.GetDataErrorDateProperty, ptId); err != nil {
+			if err = rdx.CutKeys(vangogh_integration.VangoghGetDataErrorDateProperty, ptId); err != nil {
 				return false, err
 			}
-			if err = rdx.CutKeys(vangogh_integration.GetDataErrorMessageProperty, ptId); err != nil {
+			if err = rdx.CutKeys(vangogh_integration.VangoghGetDataErrorMessageProperty, ptId); err != nil {
 				return false, err
 			}
 

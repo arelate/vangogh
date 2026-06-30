@@ -37,9 +37,10 @@ import (
 // 20. rename Steam properties
 // 21. rename Wikipedia properties
 // 22. rename os, lang-code, download-type
+// 23. rename vangogh properties
 
 const (
-	latestDataSchema = 23
+	latestDataSchema = 24
 )
 
 func MigrateDataHandler(u *url.URL) error {
@@ -105,6 +106,10 @@ func MigrateData(force bool) error {
 			}
 		case 22:
 			if err = renameOsLangCodeDownloadType(); err != nil {
+				return err
+			}
+		case 23:
+			if err = renameVangoghProperties(); err != nil {
 				return err
 			}
 		}
@@ -226,6 +231,22 @@ func renameOsLangCodeDownloadType() error {
 		"os":        vangogh_integration.GogOperatingSystemsProperty,
 		"lang-code": vangogh_integration.GogLanguageCodeProperty,
 	})
+}
+
+func renameVangoghProperties() error {
+	vangoghProperties := []string{
+		vangogh_integration.VangoghGetDataErrorDateProperty,
+		vangogh_integration.VangoghGetDataErrorMessageProperty,
+		vangogh_integration.VangoghGetDataLastUpdatedProperty,
+	}
+
+	fromTo := make(map[string]string)
+
+	for _, vp := range vangoghProperties {
+		fromTo[strings.TrimPrefix(vp, "vangogh-")] = vp
+	}
+
+	return migrateFromToProperties(fromTo)
 }
 
 func migrateFromToProperties(fromTo map[string]string) error {

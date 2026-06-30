@@ -41,21 +41,21 @@ func SearchScopes() map[string]string {
 	q := make(url.Values)
 	q.Set(vangogh_integration.GogOwnedProperty, vangogh_integration.TrueValue)
 	q.Set(vangogh_integration.GogProductTypeProperty, gog_integration.ProductTypeGame)
-	q.Set(vangogh_integration.SortProperty, vangogh_integration.GogOrderDateProperty)
-	q.Set(vangogh_integration.DescendingProperty, vangogh_integration.TrueValue)
+	q.Set(vangogh_integration.UrlSortParameter, vangogh_integration.GogOrderDateProperty)
+	q.Set(vangogh_integration.UrlDescendingParameter, vangogh_integration.TrueValue)
 	queries[SearchGog] = q.Encode()
 
 	q = make(url.Values)
 	q.Set(vangogh_integration.GogUserWishlistProperty, vangogh_integration.TrueValue)
-	q.Set(vangogh_integration.SortProperty, vangogh_integration.GogReleaseDateProperty)
-	q.Set(vangogh_integration.DescendingProperty, vangogh_integration.TrueValue)
+	q.Set(vangogh_integration.UrlSortParameter, vangogh_integration.GogReleaseDateProperty)
+	q.Set(vangogh_integration.UrlDescendingParameter, vangogh_integration.TrueValue)
 	queries[SearchWishlist] = q.Encode()
 
 	q = make(url.Values)
 	q.Set(vangogh_integration.GogOwnedProperty, vangogh_integration.FalseValue)
 	q.Set(vangogh_integration.GogIsDiscountedProperty, vangogh_integration.TrueValue)
-	q.Set(vangogh_integration.SortProperty, vangogh_integration.GogDiscountPercentageProperty)
-	q.Set(vangogh_integration.DescendingProperty, vangogh_integration.TrueValue)
+	q.Set(vangogh_integration.UrlSortParameter, vangogh_integration.GogDiscountPercentageProperty)
+	q.Set(vangogh_integration.UrlDescendingParameter, vangogh_integration.TrueValue)
 	queries[SearchSale] = q.Encode()
 
 	return queries

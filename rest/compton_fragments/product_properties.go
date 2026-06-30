@@ -59,8 +59,8 @@ func hrefSearch(property, value string) string {
 func HrefSearchDescSortGogGlobalReleaseDate(property, value string) string {
 
 	q := make(url.Values)
-	q.Set(vangogh_integration.SortProperty, vangogh_integration.GogGlobalReleaseDateProperty)
-	q.Set(vangogh_integration.DescendingProperty, vangogh_integration.TrueValue)
+	q.Set(vangogh_integration.UrlSortParameter, vangogh_integration.GogGlobalReleaseDateProperty)
+	q.Set(vangogh_integration.UrlDescendingParameter, vangogh_integration.TrueValue)
 	q.Set(property, value)
 
 	u := new(url.URL{
