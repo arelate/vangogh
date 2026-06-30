@@ -11,19 +11,19 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-func SummarizeProductProperties(id string, rdx redux.Readable) ([]string, map[string][]string) {
+func SummarizeGogProductProperties(id string, rdx redux.Readable) ([]string, map[string][]string) {
 	properties := []string{
-		vangogh_integration.OperatingSystemsProperty,
+		vangogh_integration.GogOperatingSystemsProperty,
 		vangogh_integration.GogDevelopersProperty,
 		vangogh_integration.GogPublishersProperty,
 	}
 	values := make(map[string][]string)
 
 	var oses []string
-	if osp, ok := rdx.GetAllValues(vangogh_integration.OperatingSystemsProperty, id); ok {
+	if osp, ok := rdx.GetAllValues(vangogh_integration.GogOperatingSystemsProperty, id); ok {
 		oses = osp
 	}
-	values[vangogh_integration.OperatingSystemsProperty] = oses
+	values[vangogh_integration.GogOperatingSystemsProperty] = oses
 
 	var developers []string
 	if dp, ok := rdx.GetAllValues(vangogh_integration.GogDevelopersProperty, id); ok {
@@ -62,12 +62,12 @@ func GogProductCard(r compton.Registrar, id string, rdx redux.Readable, permissi
 
 	pc.AppendBadges(compton.Badges(r, fmtBadges...))
 
-	properties, values := SummarizeProductProperties(id, rdx)
+	properties, values := SummarizeGogProductProperties(id, rdx)
 	osSymbols := make([]compton.Element, 0, 2)
 
 	for _, p := range properties {
 		switch p {
-		case vangogh_integration.OperatingSystemsProperty:
+		case vangogh_integration.GogOperatingSystemsProperty:
 			osValues := vangogh_integration.ParseManyOperatingSystems(values[p])
 			for _, os := range compton_data.OSOrder {
 				if slices.Contains(osValues, os) {

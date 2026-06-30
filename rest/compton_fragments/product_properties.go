@@ -146,7 +146,7 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 				fmtProperty.values[jtd] = hrefSearch(property, value)
 			}
 		}
-	case vangogh_integration.LanguageCodeProperty:
+	case vangogh_integration.GogLanguageCodeProperty:
 		for _, value := range values {
 			fmtProperty.values[compton_data.FormatLanguage(value)] = hrefSearch(property, value)
 		}

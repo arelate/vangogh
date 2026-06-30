@@ -74,7 +74,7 @@ func getProductDetails(id string, dls vangogh_integration.DownloadsList, rdx red
 	if productType, ok := rdx.GetLastVal(vangogh_integration.GogProductTypeProperty, id); ok {
 		productDetails.ProductType = productType
 	}
-	if oss, ok := rdx.GetAllValues(vangogh_integration.OperatingSystemsProperty, id); ok {
+	if oss, ok := rdx.GetAllValues(vangogh_integration.GogOperatingSystemsProperty, id); ok {
 		oses := vangogh_integration.ParseManyOperatingSystems(oss)
 		productDetails.OperatingSystems = oses
 	}

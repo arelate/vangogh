@@ -70,7 +70,7 @@ func GogProduct(id string, rdx redux.Readable, permissions ...author.Permission)
 
 	/* Product summary properties */
 
-	properties, values := compton_fragments.SummarizeProductProperties(id, rdx)
+	properties, values := compton_fragments.SummarizeGogProductProperties(id, rdx)
 	osSymbols := make([]compton.Symbol, 0, 2)
 
 	summaryRow := compton.Frow(p).BackgroundColor(color.Transparent)
@@ -78,7 +78,7 @@ func GogProduct(id string, rdx redux.Readable, permissions ...author.Permission)
 
 	for _, property := range properties {
 		switch property {
-		case vangogh_integration.OperatingSystemsProperty:
+		case vangogh_integration.GogOperatingSystemsProperty:
 			osValues := vangogh_integration.ParseManyOperatingSystems(values[property])
 			for _, os := range compton_data.OSOrder {
 				if slices.Contains(osValues, os) {

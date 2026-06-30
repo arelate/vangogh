@@ -22,7 +22,7 @@ func FormatQuery(q map[string][]string, rdx redux.Readable) map[string][]string 
 				fq[p] = append(fq[p], compton_data.BinaryTitles[val])
 			} else {
 				switch p {
-				case vangogh_integration.OperatingSystemsProperty:
+				case vangogh_integration.UrlOperatingSystemParameter:
 					fq[p] = append(fq[p], compton_data.OperatingSystemTitles[val])
 				case vangogh_integration.GogTagIdProperty:
 					if tn, sure := rdx.GetLastVal(vangogh_integration.GogTagNameProperty, val); sure {

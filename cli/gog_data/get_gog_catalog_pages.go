@@ -112,7 +112,7 @@ func reduceGogCatalogPageProperties(page string, catalogPage *gog_integration.Ca
 				values = []string{cp.GetRating()}
 			case vangogh_integration.GogGenresProperty:
 				values = cp.GetGenres()
-			case vangogh_integration.OperatingSystemsProperty:
+			case vangogh_integration.GogOperatingSystemsProperty:
 				values = cp.GetOperatingSystems()
 			case vangogh_integration.GogSlugProperty:
 				values = []string{cp.GetSlug()}

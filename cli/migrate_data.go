@@ -36,9 +36,10 @@ import (
 // 19. rename engines* -> pcgw-engines
 // 20. rename Steam properties
 // 21. rename Wikipedia properties
+// 22. rename os, lang-code, download-type
 
 const (
-	latestDataSchema = 22
+	latestDataSchema = 23
 )
 
 func MigrateDataHandler(u *url.URL) error {
@@ -100,6 +101,10 @@ func MigrateData(force bool) error {
 			}
 		case 21:
 			if err = renameWikipediaProperties(); err != nil {
+				return err
+			}
+		case 22:
+			if err = renameOsLangCodeDownloadType(); err != nil {
 				return err
 			}
 		}
@@ -214,6 +219,13 @@ func renameWikipediaProperties() error {
 	}
 
 	return migrateFromToProperties(fromTo)
+}
+
+func renameOsLangCodeDownloadType() error {
+	return migrateFromToProperties(map[string]string{
+		"os":        vangogh_integration.GogOperatingSystemsProperty,
+		"lang-code": vangogh_integration.GogLanguageCodeProperty,
+	})
 }
 
 func migrateFromToProperties(fromTo map[string]string) error {

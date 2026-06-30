@@ -121,7 +121,7 @@ func reduceGogDetailsProductProperties(id string, det *gog_integration.Details, 
 			values = []string{det.GetGOGRelease()}
 		case vangogh_integration.GogForumUrlProperty:
 			values = []string{det.GetForumUrl()}
-		case vangogh_integration.OperatingSystemsProperty:
+		case vangogh_integration.GogOperatingSystemsProperty:
 			values, err = det.GetOperatingSystems()
 			if err != nil {
 				return err

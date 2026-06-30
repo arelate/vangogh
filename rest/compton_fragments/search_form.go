@@ -161,13 +161,13 @@ func searchInputs(r compton.Registrar, query map[string][]string, container comp
 			listId = "bin-list"
 		} else if slices.Contains(compton_data.DigestProperties, property) {
 			switch property {
-			case vangogh_integration.OperatingSystemsProperty:
+			case vangogh_integration.GogOperatingSystemsProperty:
 				datalist = operatingSystemsDatalist()
 			case vangogh_integration.SortProperty:
 				datalist = sortDatalist()
 			case vangogh_integration.GogProductTypeProperty:
 				datalist = productTypesDatalist()
-			case vangogh_integration.LanguageCodeProperty:
+			case vangogh_integration.GogLanguageCodeProperty:
 				datalist = languagesDatalist()
 			case vangogh_integration.GogTagIdProperty:
 				datalist = tagsDatalist(rdx)

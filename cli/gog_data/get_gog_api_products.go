@@ -155,7 +155,7 @@ func reduceGogApiProductProperties(id string, ap *gog_integration.ApiProduct, pi
 			values = []string{ap.GetSeries()}
 		case vangogh_integration.GogYouTubeVideoIdProperty:
 			values = ap.GetVideoIds()
-		case vangogh_integration.OperatingSystemsProperty:
+		case vangogh_integration.GogOperatingSystemsProperty:
 			values = ap.GetOperatingSystems()
 		case vangogh_integration.GogIncludesGamesProperty:
 			values = ap.GetIncludesGames()
@@ -177,7 +177,7 @@ func reduceGogApiProductProperties(id string, ap *gog_integration.ApiProduct, pi
 				}
 			}
 			values = []string{isMod}
-		case vangogh_integration.LanguageCodeProperty:
+		case vangogh_integration.GogLanguageCodeProperty:
 			values = ap.GetLanguageCodes()
 		case vangogh_integration.GogGlobalReleaseDateProperty:
 			values = []string{ap.GetGlobalRelease()}

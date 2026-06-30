@@ -20,7 +20,7 @@ var ProductProperties = []string{
 	vangogh_integration.WikipediaWritersProperty,
 	vangogh_integration.WikipediaComposersProperty,
 
-	vangogh_integration.LanguageCodeProperty,
+	vangogh_integration.GogLanguageCodeProperty,
 
 	vangogh_integration.GogSeriesProperty,
 	vangogh_integration.GogGenresProperty,
