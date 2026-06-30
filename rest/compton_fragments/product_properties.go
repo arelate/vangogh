@@ -56,20 +56,6 @@ func hrefSearch(property, value string) string {
 	return u.String()
 }
 
-func hrefSearchCredits(value string) string {
-
-	q := make(url.Values)
-	q.Set(vangogh_integration.CreditsProperty, value)
-
-	u := new(url.URL{
-		Path: "/search",
-	})
-
-	u.RawQuery = q.Encode()
-
-	return u.String()
-}
-
 func HrefSearchDescSortGogGlobalReleaseDate(property, value string) string {
 
 	q := make(url.Values)
@@ -125,6 +111,10 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 	var steamAppId string
 	if said, ok := rdx.GetLastVal(vangogh_integration.GogSteamAppIdProperty, id); ok {
 		steamAppId = said
+	}
+	var wikipediaId string
+	if wid, ok := rdx.GetLastVal(vangogh_integration.GogWikipediaIdProperty, id); ok {
+		wikipediaId = wid
 	}
 
 	var values []string
@@ -250,23 +240,25 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 				fmtProperty.values[ocp] = hrefSearch(property, url.QueryEscape(ocp))
 			}
 		}
-	case vangogh_integration.CreatorsProperty:
+	case vangogh_integration.WikipediaCreatorsProperty:
 		fallthrough
-	case vangogh_integration.DirectorsProperty:
+	case vangogh_integration.WikipediaDirectorsProperty:
 		fallthrough
-	case vangogh_integration.ProducersProperty:
+	case vangogh_integration.WikipediaProducersProperty:
 		fallthrough
-	case vangogh_integration.DesignersProperty:
+	case vangogh_integration.WikipediaDesignersProperty:
 		fallthrough
-	case vangogh_integration.ProgrammersProperty:
+	case vangogh_integration.WikipediaProgrammersProperty:
 		fallthrough
-	case vangogh_integration.ArtistsProperty:
+	case vangogh_integration.WikipediaArtistsProperty:
 		fallthrough
-	case vangogh_integration.WritersProperty:
+	case vangogh_integration.WikipediaWritersProperty:
 		fallthrough
-	case vangogh_integration.ComposersProperty:
-		for _, value := range values {
-			fmtProperty.values[value] = hrefSearchCredits(value)
+	case vangogh_integration.WikipediaComposersProperty:
+		if wikipediaValues, ok := rdx.GetAllValues(property, wikipediaId); ok {
+			for _, value := range wikipediaValues {
+				fmtProperty.values[value] = hrefEmpty()
+			}
 		}
 	case vangogh_integration.SteamCategoriesProperty:
 		if scs, ok := rdx.GetAllValues(vangogh_integration.SteamCategoriesProperty, steamAppId); ok {

@@ -2,6 +2,7 @@ package wikipedia_data
 
 import (
 	"errors"
+	"iter"
 	"maps"
 	"slices"
 	"strings"
@@ -37,10 +38,10 @@ func GetRaw(wikipediaGogIds map[string][]string, force bool) error {
 		return err
 	}
 
-	return ReduceRaw(wikipediaGogIds, kvRaw)
+	return ReduceRaw(maps.Keys(wikipediaGogIds), kvRaw)
 }
 
-func ReduceRaw(wikipediaGogIds map[string][]string, kvRaw kevlar.KeyValues) error {
+func ReduceRaw(wikipediaIds iter.Seq[string], kvRaw kevlar.KeyValues) error {
 
 	dataType := vangogh_integration.WikipediaRaw
 
@@ -54,15 +55,13 @@ func ReduceRaw(wikipediaGogIds map[string][]string, kvRaw kevlar.KeyValues) erro
 
 	rawReductions := shared_data.InitReductions(vangogh_integration.WikipediaRawProperties()...)
 
-	rra.TotalInt(len(wikipediaGogIds))
-
-	for wikipediaId, gogIds := range wikipediaGogIds {
+	for wikipediaId := range wikipediaIds {
 		if !kvRaw.Has(wikipediaId) {
 			nod.LogError(errors.New("missing: " + dataType.String() + ", " + wikipediaId))
 			continue
 		}
 
-		if err = reduceRawProduct(gogIds, wikipediaId, kvRaw, rawReductions, rdx); err != nil {
+		if err = reduceRawProduct(wikipediaId, kvRaw, rawReductions, rdx); err != nil {
 			return err
 		}
 
@@ -72,7 +71,7 @@ func ReduceRaw(wikipediaGogIds map[string][]string, kvRaw kevlar.KeyValues) erro
 	return shared_data.WriteReductions(rdx, rawReductions)
 }
 
-func reduceRawProduct(gogIds []string, wikipediaId string, kvRaw kevlar.KeyValues, piv shared_data.PropertyIdValues, rdx redux.Readable) error {
+func reduceRawProduct(wikipediaId string, kvRaw kevlar.KeyValues, piv shared_data.PropertyIdValues, rdx redux.Readable) error {
 
 	rcRaw, err := kvRaw.Get(wikipediaId)
 	if err != nil {
@@ -91,10 +90,8 @@ func reduceRawProduct(gogIds []string, wikipediaId string, kvRaw kevlar.KeyValue
 
 	for property := range piv {
 
-		for _, gogId := range gogIds {
-			if values, ok := parsedCredits[property]; ok && shared_data.IsNotEmpty(values...) {
-				piv[property][gogId] = values
-			}
+		if values, ok := parsedCredits[property]; ok && shared_data.IsNotEmpty(values...) {
+			piv[property][wikipediaId] = values
 		}
 
 	}
@@ -103,22 +100,22 @@ func reduceRawProduct(gogIds []string, wikipediaId string, kvRaw kevlar.KeyValue
 }
 
 var prefixedProperties = map[string]string{
-	"|creator":     vangogh_integration.CreatorsProperty,
-	"| creator":    vangogh_integration.CreatorsProperty,
-	"|director":    vangogh_integration.DirectorsProperty,
-	"| director":   vangogh_integration.DirectorsProperty,
-	"|producer":    vangogh_integration.ProducersProperty,
-	"| producer":   vangogh_integration.ProducersProperty,
-	"|designer":    vangogh_integration.DesignersProperty,
-	"| designer":   vangogh_integration.DesignersProperty,
-	"|programmer":  vangogh_integration.ProgrammersProperty,
-	"| programmer": vangogh_integration.ProgrammersProperty,
-	"|artist":      vangogh_integration.ArtistsProperty,
-	"| artist":     vangogh_integration.ArtistsProperty,
-	"|writer":      vangogh_integration.WritersProperty,
-	"| writer":     vangogh_integration.WritersProperty,
-	"|composer":    vangogh_integration.ComposersProperty,
-	"| composer":   vangogh_integration.ComposersProperty,
+	"|creator":     vangogh_integration.WikipediaCreatorsProperty,
+	"| creator":    vangogh_integration.WikipediaCreatorsProperty,
+	"|director":    vangogh_integration.WikipediaDirectorsProperty,
+	"| director":   vangogh_integration.WikipediaDirectorsProperty,
+	"|producer":    vangogh_integration.WikipediaProducersProperty,
+	"| producer":   vangogh_integration.WikipediaProducersProperty,
+	"|designer":    vangogh_integration.WikipediaDesignersProperty,
+	"| designer":   vangogh_integration.WikipediaDesignersProperty,
+	"|programmer":  vangogh_integration.WikipediaProgrammersProperty,
+	"| programmer": vangogh_integration.WikipediaProgrammersProperty,
+	"|artist":      vangogh_integration.WikipediaArtistsProperty,
+	"| artist":     vangogh_integration.WikipediaArtistsProperty,
+	"|writer":      vangogh_integration.WikipediaWritersProperty,
+	"| writer":     vangogh_integration.WikipediaWritersProperty,
+	"|composer":    vangogh_integration.WikipediaComposersProperty,
+	"| composer":   vangogh_integration.WikipediaComposersProperty,
 }
 
 var listPrefixes = []string{

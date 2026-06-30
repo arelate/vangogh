@@ -98,15 +98,14 @@ var PropertyTitles = map[string]string{
 	MetacriticUrlProperty:   "Metacritic",
 	WebsiteUrlProperty:      "Website",
 
-	vangogh_integration.CreditsProperty:     "Credits",
-	vangogh_integration.CreatorsProperty:    "Creators",
-	vangogh_integration.DirectorsProperty:   "Directors",
-	vangogh_integration.ProducersProperty:   "Producers",
-	vangogh_integration.DesignersProperty:   "Designers",
-	vangogh_integration.ProgrammersProperty: "Programmers",
-	vangogh_integration.ArtistsProperty:     "Artists",
-	vangogh_integration.WritersProperty:     "Writers",
-	vangogh_integration.ComposersProperty:   "Composers",
+	vangogh_integration.WikipediaCreatorsProperty:    "Creators",
+	vangogh_integration.WikipediaDirectorsProperty:   "Directors",
+	vangogh_integration.WikipediaProducersProperty:   "Producers",
+	vangogh_integration.WikipediaDesignersProperty:   "Designers",
+	vangogh_integration.WikipediaProgrammersProperty: "Programmers",
+	vangogh_integration.WikipediaArtistsProperty:     "Artists",
+	vangogh_integration.WikipediaWritersProperty:     "Writers",
+	vangogh_integration.WikipediaComposersProperty:   "Composers",
 }
 
 var ShortPropertyTitles = map[string]string{

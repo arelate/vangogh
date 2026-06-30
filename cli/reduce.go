@@ -133,7 +133,7 @@ func reduceProductType(pt vangogh_integration.ProductType, force bool) error {
 	case vangogh_integration.PcgwRaw:
 		return pcgw_data.ReduceRaw(maps.Keys(pcgwGogIds), kvPt)
 	case vangogh_integration.WikipediaRaw:
-		return wikipedia_data.ReduceRaw(wikipediaGogIds, kvPt)
+		return wikipedia_data.ReduceRaw(maps.Keys(wikipediaGogIds), kvPt)
 	case vangogh_integration.HltbRootPage:
 		// do nothing
 	case vangogh_integration.HltbData:

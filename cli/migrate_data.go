@@ -35,9 +35,10 @@ import (
 // 18. rename gog-opencritic-slug -> opencritic-slug
 // 19. rename engines* -> pcgw-engines
 // 20. rename Steam properties
+// 21. rename Wikipedia properties
 
 const (
-	latestDataSchema = 21
+	latestDataSchema = 22
 )
 
 func MigrateDataHandler(u *url.URL) error {
@@ -95,6 +96,10 @@ func MigrateData(force bool) error {
 			}
 		case 20:
 			if err = renameSteamProperties(); err != nil {
+				return err
+			}
+		case 21:
+			if err = renameWikipediaProperties(); err != nil {
 				return err
 			}
 		}
@@ -196,6 +201,16 @@ func renameSteamProperties() error {
 
 	for _, sp := range steamProperties {
 		fromTo[strings.TrimPrefix(sp, "steam-")] = sp
+	}
+
+	return migrateFromToProperties(fromTo)
+}
+
+func renameWikipediaProperties() error {
+	fromTo := make(map[string]string)
+
+	for _, wp := range vangogh_integration.WikipediaRawProperties() {
+		fromTo[strings.TrimPrefix(wp, "wikipedia-")] = wp
 	}
 
 	return migrateFromToProperties(fromTo)

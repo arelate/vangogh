@@ -11,14 +11,14 @@ var ProductProperties = []string{
 	vangogh_integration.VangoghLocalTagsProperty,
 	vangogh_integration.GogUserWishlistProperty,
 
-	vangogh_integration.CreatorsProperty,
-	vangogh_integration.DirectorsProperty,
-	vangogh_integration.ProducersProperty,
-	vangogh_integration.DesignersProperty,
-	vangogh_integration.ProgrammersProperty,
-	vangogh_integration.ArtistsProperty,
-	vangogh_integration.WritersProperty,
-	vangogh_integration.ComposersProperty,
+	vangogh_integration.WikipediaCreatorsProperty,
+	vangogh_integration.WikipediaDirectorsProperty,
+	vangogh_integration.WikipediaProducersProperty,
+	vangogh_integration.WikipediaDesignersProperty,
+	vangogh_integration.WikipediaProgrammersProperty,
+	vangogh_integration.WikipediaArtistsProperty,
+	vangogh_integration.WikipediaWritersProperty,
+	vangogh_integration.WikipediaComposersProperty,
 
 	vangogh_integration.LanguageCodeProperty,
 

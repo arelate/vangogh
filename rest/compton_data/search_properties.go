@@ -15,8 +15,6 @@ var SearchProperties = []string{
 	vangogh_integration.VangoghLocalTagsProperty,
 	vangogh_integration.GogUserWishlistProperty,
 
-	vangogh_integration.CreditsProperty,
-
 	vangogh_integration.GogProductTypeProperty,
 	vangogh_integration.LanguageCodeProperty,
 

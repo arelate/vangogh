@@ -20,9 +20,5 @@ func ReduceMisc() error {
 		return err
 	}
 
-	if err = reduceCredits(rdx); err != nil {
-		return err
-	}
-
 	return nil
 }
