@@ -263,26 +263,20 @@ func reduceOwned(rdx redux.Writeable) error {
 	roa := nod.Begin(" reducing %s...", vangogh_integration.GogOwnedProperty)
 	defer roa.Done()
 
-	if err := rdx.MustHave(vangogh_integration.GogOwnedProperty,
-		vangogh_integration.GogIncludesGamesProperty,
-		vangogh_integration.GogLicencesProperty,
-		vangogh_integration.GogTitleProperty); err != nil {
-		return err
-	}
-
 	owned := make(map[string][]string)
 
-	for id := range rdx.Keys(vangogh_integration.GogIncludesGamesProperty) {
-
-		// set all included products as owned
+	// set all included products as owned
+	for id := range rdx.Keys(vangogh_integration.GogLicencesProperty) {
 		owned[id] = []string{vangogh_integration.TrueValue}
 		if includesGames, ok := rdx.GetAllValues(vangogh_integration.GogIncludesGamesProperty, id); ok {
 			for _, igId := range includesGames {
 				owned[igId] = []string{vangogh_integration.TrueValue}
 			}
 		}
+	}
 
-		// set all PACKs as owned when all included products are owned
+	// set all PACKs as owned when all included products are owned
+	for id := range rdx.Keys(vangogh_integration.GogIncludesGamesProperty) {
 		if includesGames, ok := rdx.GetAllValues(vangogh_integration.GogIncludesGamesProperty, id); ok {
 			includedGamesOwned := len(includesGames) > 0
 			for _, igId := range includesGames {
