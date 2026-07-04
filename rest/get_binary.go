@@ -65,5 +65,5 @@ func GetBinary(w http.ResponseWriter, r *http.Request) {
 		absFilepath = filepath.Join(wineBinariesDir, filepath.Base(binaryUrl))
 	}
 
-	camino.ServeFile(absFilepath, w, r)
+	camino.ServeFile(w, r, absFilepath)
 }

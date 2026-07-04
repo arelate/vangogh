@@ -15,7 +15,7 @@ func GetDescriptionImage(w http.ResponseWriter, r *http.Request) {
 	relPath := r.PathValue("relPath")
 
 	if absLocalFilePath, err := vangogh_integration.AbsDescriptionImagePath(relPath); err == nil {
-		camino.ServeFile(absLocalFilePath, w, r)
+		camino.ServeFile(w, r, absLocalFilePath)
 	} else {
 		http.Error(w, nod.Error(err).Error(), http.StatusNotFound)
 	}

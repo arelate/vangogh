@@ -61,5 +61,5 @@ func GetGogManualUrl(w http.ResponseWriter, r *http.Request) {
 
 	absDownloadPath := filepath.Join(absSlugDownloadDir, filename)
 
-	camino.ServeFile(absDownloadPath, w, r)
+	camino.ServeFile(w, r, absDownloadPath)
 }

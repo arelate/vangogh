@@ -22,7 +22,7 @@ func GetImage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if localImagePath, err := vangogh_integration.AbsLocalImagePath(imageId); err == nil && localImagePath != "" {
-		camino.ServeFile(localImagePath, w, r)
+		camino.ServeFile(w, r, localImagePath, camino.NoContentDisposition, camino.NoBinaryContentType)
 	} else {
 		if err == nil {
 			err = errors.New("no local image for id: " + imageId)

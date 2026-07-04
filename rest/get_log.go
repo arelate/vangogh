@@ -25,7 +25,8 @@ func GetLog(w http.ResponseWriter, r *http.Request) {
 	case "":
 		http.NotFound(w, r)
 	default:
-		camino.ServeFile(filepath.Join(camino.GetAbs(vangogh_integration.Logs), logId), w, r)
+		absLogPath := filepath.Join(camino.GetAbs(vangogh_integration.Logs), logId)
+		camino.ServeFile(w, r, absLogPath)
 	}
 
 }
