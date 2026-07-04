@@ -2,6 +2,7 @@ package compton_pages
 
 import (
 	"net/url"
+	"path"
 	"strings"
 
 	"github.com/arelate/southern_light"
@@ -34,9 +35,9 @@ import (
 
 const linksValuesLimit = 3
 
-func Info(id string, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
+func GogInformation(id string, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
 
-	s := compton_fragments.ProductSection(compton_data.InfoSection, id, rdx)
+	s := compton_fragments.ProductSection(compton_data.GogInfoSection, id, rdx)
 
 	pageStack := compton.FlexItems(s, direction.Column).RowGap(size.Normal)
 	s.Append(pageStack)
@@ -75,7 +76,7 @@ func Info(id string, rdx redux.Readable, permissions ...author.Permission) compt
 			descriptionLinkTitle = "View Description"
 		}
 
-		descriptionLink := compton.AText(descriptionLinkTitle, "/description?id="+id)
+		descriptionLink := compton.AText(descriptionLinkTitle, path.Join("/gog-description", id))
 		descriptionLink.SetAttribute("target", "_top")
 		descriptionFspan.Append(descriptionLink)
 	}

@@ -6,37 +6,18 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_pages"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/redux"
 )
 
-func GetProduct(w http.ResponseWriter, r *http.Request) {
+func GetGogProduct(w http.ResponseWriter, r *http.Request) {
 
-	// GET /product?slug&steam-app-id -> /product?id
+	// GET /gog-product/{id}
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
 	}
 
-	q := r.URL.Query()
-
-	redirectProperties := []string{vangogh_integration.GogSlugProperty, vangogh_integration.GogSteamAppIdProperty}
-
-	for _, rp := range redirectProperties {
-		if q.Has(rp) {
-			if ids := rdx.Match(q, redux.FullMatch); ids != nil {
-				for id := range ids {
-					http.Redirect(w, r, "/product?id="+id, http.StatusPermanentRedirect)
-					return
-				}
-			} else {
-				http.Error(w, nod.ErrorStr("unknown %s", rp), http.StatusInternalServerError)
-				return
-			}
-		}
-	}
-
-	id := r.URL.Query().Get(vangogh_integration.UrlIdParameter)
+	id := r.PathValue(vangogh_integration.UrlIdParameter)
 
 	sessionPermissions, err := sb.GetCookiePermissions(r)
 	if err != nil {

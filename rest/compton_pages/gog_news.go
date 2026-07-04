@@ -1,6 +1,8 @@
 package compton_pages
 
 import (
+	"path"
+
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
@@ -12,15 +14,15 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-func News(gogId string, rdx redux.Readable, san *steam_integration.AppNews, hasChangelog bool, all bool) compton.PageElement {
+func GogNews(id string, rdx redux.Readable, san *steam_integration.AppNews, hasChangelog bool, all bool) compton.PageElement {
 
-	s := compton_fragments.ProductSection(compton_data.NewsSection, gogId, rdx)
+	s := compton_fragments.ProductSection(compton_data.GogNewsSection, id, rdx)
 
 	pageStack := compton.FlexItems(s, direction.Column)
 	s.Append(pageStack)
 
 	if hasChangelog {
-		changelogLink := compton.A("/changelog?id=" + gogId)
+		changelogLink := compton.A(path.Join("/gog-changelog", id))
 		changelogLink.Append(compton.Fspan(s, "View GOG.com Changelog").
 			FontSize(size.Small).
 			ForegroundColor(color.Foreground))
@@ -57,10 +59,10 @@ func News(gogId string, rdx redux.Readable, san *steam_integration.AppNews, hasC
 	if len(san.NewsItems) > 0 &&
 		len(communityAnnouncements) < len(san.NewsItems) {
 		title := "Show all news items types"
-		href := "/news?id=" + gogId + "&all"
+		href := path.Join("/gog-news", "all", id)
 		if all {
 			title = "Show only community announcements"
-			href = "/news?id=" + gogId
+			href = path.Join("/gog-news", id)
 		}
 
 		communityAnnouncementsNavLink := compton.NavLinks(s)

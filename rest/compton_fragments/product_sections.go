@@ -15,10 +15,10 @@ func ProductSections(id string, rdx redux.Readable, permissions ...author.Permis
 
 	hasSections := make([]string, 0)
 
-	hasSections = append(hasSections, compton_data.InfoSection)
+	hasSections = append(hasSections, compton_data.GogInfoSection)
 
 	if sr, ok := rdx.GetLastVal(vangogh_integration.GogRatingProperty, id); ok && sr != "" {
-		hasSections = append(hasSections, compton_data.ReceptionSection)
+		hasSections = append(hasSections, compton_data.GogReceptionSection)
 	}
 
 	offeringsCount := 0
@@ -29,12 +29,12 @@ func ProductSections(id string, rdx redux.Readable, permissions ...author.Permis
 	}
 
 	if offeringsCount > 0 {
-		hasSections = append(hasSections, compton_data.OfferingsSection)
+		hasSections = append(hasSections, compton_data.GogOfferingsSection)
 	}
 
 	if rdx.HasKey(vangogh_integration.GogScreenshotsProperty, id) ||
 		rdx.HasKey(vangogh_integration.GogYouTubeVideoIdProperty, id) {
-		hasSections = append(hasSections, compton_data.MediaSection)
+		hasSections = append(hasSections, compton_data.GogMediaSection)
 	}
 
 	hasChangelog, err := compton_data.HasKeyValuesBytes(id, vangogh_integration.GogChangelogKeyValues)
@@ -48,14 +48,14 @@ func ProductSections(id string, rdx redux.Readable, permissions ...author.Permis
 	}
 
 	if hasChangelog || hasSteamAppNews {
-		hasSections = append(hasSections, compton_data.NewsSection)
+		hasSections = append(hasSections, compton_data.GogNewsSection)
 	}
 
 	if steamAppId, ok := rdx.GetLastVal(vangogh_integration.GogSteamAppIdProperty, id); ok && steamAppId != "" {
 		if sdc, sure := rdx.GetLastVal(vangogh_integration.SteamDeckAppCompatibilityCategoryProperty, steamAppId); sure && sdc != "Unknown" {
-			hasSections = append(hasSections, compton_data.CompatibilitySection)
+			hasSections = append(hasSections, compton_data.GogCompatibilitySection)
 		} else if pt, yeah := rdx.GetLastVal(vangogh_integration.ProtonDbTierProperty, steamAppId); yeah && pt != "" {
-			hasSections = append(hasSections, compton_data.CompatibilitySection)
+			hasSections = append(hasSections, compton_data.GogCompatibilitySection)
 		}
 	}
 
@@ -66,7 +66,7 @@ func ProductSections(id string, rdx redux.Readable, permissions ...author.Permis
 				if preorder, yeah := rdx.GetLastVal(vangogh_integration.GogPreOrderProperty, id); yeah && preorder == vangogh_integration.TrueValue {
 					// do nothing
 				} else {
-					hasSections = append(hasSections, compton_data.InstallersSection)
+					hasSections = append(hasSections, compton_data.GogInstallersSection)
 				}
 			}
 		}

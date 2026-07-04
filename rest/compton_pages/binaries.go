@@ -1,6 +1,9 @@
 package compton_pages
 
 import (
+	"path"
+
+	"github.com/arelate/southern_light/steamcmd"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/southern_light/wine_integration"
 	"github.com/arelate/vangogh/rest/compton_fragments"
@@ -60,7 +63,9 @@ func Binaries() compton.PageElement {
 				return p
 			}
 
-			link := compton.A("/wine-binary-file?os=" + operatingSystem.String() + "&title=" + binaryTitle)
+			binPath := path.Join("/binary", operatingSystem.String(), binaryTitle)
+
+			link := compton.A(binPath)
 			pageStack.Append(link)
 
 			linkFrow := compton.Frow(p).FontSize(size.Small)
@@ -73,7 +78,10 @@ func Binaries() compton.PageElement {
 
 		}
 
-		link := compton.A("/steamcmd-binary-file?os=" + operatingSystem.String())
+		// SteamCMD
+		steamCmdHref := path.Join("/binary", operatingSystem.String(), steamcmd.Title)
+
+		link := compton.A(steamCmdHref)
 		linkFrow := compton.Frow(p).FontSize(size.Small)
 		link.Append(compton.FICenter(p, linkFrow))
 		linkFrow.Heading("SteamCMD")

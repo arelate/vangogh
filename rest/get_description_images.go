@@ -1,31 +1,22 @@
 package rest
 
 import (
-	"errors"
 	"net/http"
-	"path/filepath"
 
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/camino"
 	"github.com/boggydigital/nod"
 )
 
-func GetDescriptionImages(w http.ResponseWriter, r *http.Request) {
+func GetDescriptionImage(w http.ResponseWriter, r *http.Request) {
 
-	// GET /description-images/{rel-local-path}
+	// GET /description-image/{relPath...}
 
-	localPath, err := filepath.Rel("/description-images/", r.URL.Path)
-	if err != nil {
-		http.Error(w, nod.Error(err).Error(), http.StatusMisdirectedRequest)
-		return
-	}
+	relPath := r.PathValue("relPath")
 
-	var absLocalFilePath string
-	if absLocalFilePath, err = vangogh_integration.AbsDescriptionImagePath(localPath); err == nil && absLocalFilePath != "" {
-		http.ServeFile(w, r, absLocalFilePath)
+	if absLocalFilePath, err := vangogh_integration.AbsDescriptionImagePath(relPath); err == nil {
+		camino.ServeFile(absLocalFilePath, w, r)
 	} else {
-		if err == nil {
-			err = errors.New("file not found: " + absLocalFilePath)
-		}
 		http.Error(w, nod.Error(err).Error(), http.StatusNotFound)
 	}
 }

@@ -12,16 +12,16 @@ import (
 	"github.com/boggydigital/nod"
 )
 
-func GetReception(w http.ResponseWriter, r *http.Request) {
+func GetGogReception(w http.ResponseWriter, r *http.Request) {
 
-	// GET /reception?id
+	// GET /gog-reception/{id}
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
 	}
 
-	gogId := r.URL.Query().Get(vangogh_integration.UrlIdParameter)
+	gogId := r.PathValue(vangogh_integration.UrlIdParameter)
 
 	appReviews, err := getSteamReviews(gogId)
 	if err != nil {
@@ -34,7 +34,7 @@ func GetReception(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	p := compton_pages.Reception(gogId, appReviews, rdx, permissions...)
+	p := compton_pages.GogReception(gogId, appReviews, rdx, permissions...)
 
 	if err = p.Write(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)

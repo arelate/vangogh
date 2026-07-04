@@ -2,6 +2,8 @@ github.com/arelate/southern_light v0.5.3 h1:ozyYOni/3Mccx1+76/pFz35tdhQBDeWx0+Cj
 github.com/arelate/southern_light v0.5.3/go.mod h1:p9CGWk7FfN02vT+cskmUYaroI8FJPkXT1fH1E6Gw6xA=
 github.com/arelate/southern_light v0.5.4 h1:r+xtR2RjWbQ/AO3Ynm4TMWbV2mwn6k56t2HZSxDsr/U=
 github.com/arelate/southern_light v0.5.4/go.mod h1:Z+KymlzGOS2aWU9m5tzkiCYnHFX00v4UsWlkW8KNOJM=
+github.com/arelate/southern_light v0.5.5 h1:StvywBZBjIvfvLe26dHAJm7+3qamea4MUlbx+TPgOCE=
+github.com/arelate/southern_light v0.5.5/go.mod h1:Z+KymlzGOS2aWU9m5tzkiCYnHFX00v4UsWlkW8KNOJM=
 github.com/boggydigital/atomus v0.1.11 h1:n9XRgPqF3OgnK8UK7yJ3aG5sQkwacBjtqzzOxCXz33A=
 github.com/boggydigital/atomus v0.1.11/go.mod h1:/ga4zus10Z3FiNDU4JmRw5fdm0IW78qoezV/Ni44V5s=
 github.com/boggydigital/author v0.1.32 h1:885u0Q2ih/OdYkgfZci/f0IDvJ7kKkq7I7JWx8sviRQ=
@@ -12,6 +14,10 @@ github.com/boggydigital/camino v0.2.15 h1:s6+2uW3EAlDgNk25nszkUKRzdKlH+3YqFZm65P
 github.com/boggydigital/camino v0.2.15/go.mod h1:UuW3eJP/wrm1VkNPvvNETKisvQymCD1d2a8KIe6J6cI=
 github.com/boggydigital/camino v0.2.16 h1:gwcfKKcq80BLMZOb6eIrC6xAJz3Cm6UQQfNE6VTnhww=
 github.com/boggydigital/camino v0.2.16/go.mod h1:UuW3eJP/wrm1VkNPvvNETKisvQymCD1d2a8KIe6J6cI=
+github.com/boggydigital/camino v0.2.17 h1:t2M0ljfQWyfNwKuEY5eUBARXjnJ74MpsL2Of2VVNLEA=
+github.com/boggydigital/camino v0.2.17/go.mod h1:UuW3eJP/wrm1VkNPvvNETKisvQymCD1d2a8KIe6J6cI=
+github.com/boggydigital/camino v0.2.18 h1:RxmKiavtE5KWMEhqXXri/OLG6vvKLqDONoXYl44TWJI=
+github.com/boggydigital/camino v0.2.18/go.mod h1:UuW3eJP/wrm1VkNPvvNETKisvQymCD1d2a8KIe6J6cI=
 github.com/boggydigital/clo v1.0.8 h1:/E+xA4e+tvQrtSmMHN/DeKaVEhiSI2aHDx63dJ98lCU=
 github.com/boggydigital/clo v1.0.8/go.mod h1:InpSSK4uBJOtOdv32DM9BYCA28MuJGb7iRFow24ubUI=
 github.com/boggydigital/compton v0.4.79 h1:ULe56nbtWmlLo0uprlvG07uM+PzbhjA4FEDfKI317aA=

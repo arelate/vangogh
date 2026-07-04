@@ -3,6 +3,7 @@ package rest
 import (
 	"encoding/json/v2"
 	"net/http"
+	"strings"
 
 	"github.com/arelate/southern_light/steam_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
@@ -12,31 +13,31 @@ import (
 	"github.com/boggydigital/nod"
 )
 
-func GetNews(w http.ResponseWriter, r *http.Request) {
+func GetGogNews(w http.ResponseWriter, r *http.Request) {
 
-	// GET /news?id
+	// GET /gog-news/{id}
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
 	}
 
-	gogId := r.URL.Query().Get(vangogh_integration.UrlIdParameter)
-	all := r.URL.Query().Has(vangogh_integration.UrlAllParameter)
+	id := r.PathValue(vangogh_integration.UrlIdParameter)
+	all := strings.Contains(r.URL.Path, "/all/")
 
-	appNews, err := getAppNews(gogId)
+	appNews, err := getAppNews(id)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
 	}
 
-	hasChangelog, err := compton_data.HasKeyValuesBytes(gogId, vangogh_integration.GogChangelogKeyValues)
+	hasChangelog, err := compton_data.HasKeyValuesBytes(id, vangogh_integration.GogChangelogKeyValues)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
 	}
 
-	p := compton_pages.News(gogId, rdx, appNews, hasChangelog, all)
+	p := compton_pages.GogNews(id, rdx, appNews, hasChangelog, all)
 	if err = p.WriteResponse(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return

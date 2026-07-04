@@ -10,16 +10,16 @@ import (
 	"github.com/boggydigital/nod"
 )
 
-func GetInstallers(w http.ResponseWriter, r *http.Request) {
+func GetGogInstallers(w http.ResponseWriter, r *http.Request) {
 
-	// GET /installers?id
+	// GET /gog-installers/{id}
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
 	}
 
-	id := r.URL.Query().Get(vangogh_integration.UrlIdParameter)
+	id := r.PathValue(vangogh_integration.UrlIdParameter)
 
 	if owned, ok := rdx.GetLastVal(vangogh_integration.GogOwnedProperty, id); !ok || owned != vangogh_integration.TrueValue {
 		w.WriteHeader(http.StatusNoContent)
@@ -52,7 +52,7 @@ func GetInstallers(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 			return
 		}
-		gameInstallersPage := compton_pages.Installers(id, det.Messages, dls, rdx)
+		gameInstallersPage := compton_pages.GogInstallers(id, det.Messages, dls, rdx)
 		if err = gameInstallersPage.WriteResponse(w); err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 			return

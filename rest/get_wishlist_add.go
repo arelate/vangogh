@@ -2,6 +2,7 @@ package rest
 
 import (
 	"net/http"
+	"path"
 
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
@@ -36,5 +37,5 @@ func GetWishlistAdd(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, "/product?id="+id, http.StatusTemporaryRedirect)
+	http.Redirect(w, r, path.Join("/gog-product", id), http.StatusTemporaryRedirect)
 }

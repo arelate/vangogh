@@ -8,18 +8,18 @@ import (
 	"github.com/boggydigital/nod"
 )
 
-func GetMedia(w http.ResponseWriter, r *http.Request) {
+func GetGogMedia(w http.ResponseWriter, r *http.Request) {
 
-	// GET /media?id
+	// GET /gog-media/{id}
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
 	}
 
-	id := r.URL.Query().Get(vangogh_integration.UrlIdParameter)
+	id := r.PathValue(vangogh_integration.UrlIdParameter)
 
-	p := compton_pages.Media(id, rdx)
+	p := compton_pages.GogMedia(id, rdx)
 	if err := p.WriteResponse(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}

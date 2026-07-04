@@ -1,41 +1,41 @@
 package compton_data
 
 const (
-	InfoSection          = "info"
-	OfferingsSection     = "offerings"
-	MediaSection         = "media"
-	NewsSection          = "news"
-	ReceptionSection     = "reception"
-	CompatibilitySection = "compatibility"
-	InstallersSection    = "installers"
+	GogInfoSection          = "gog-info"
+	GogOfferingsSection     = "gog-offerings"
+	GogMediaSection         = "gog-media"
+	GogNewsSection          = "gog-news"
+	GogReceptionSection     = "gog-reception"
+	GogCompatibilitySection = "gog-compatibility"
+	GogInstallersSection    = "gog-installers"
 )
 
 var SectionTitles = map[string]string{
-	InfoSection:          "Info",
-	OfferingsSection:     "Offerings",
-	MediaSection:         "Media",
-	NewsSection:          "News",
-	ReceptionSection:     "Reception",
-	CompatibilitySection: "Compatibility",
-	InstallersSection:    "Files",
+	GogInfoSection:          "Info",
+	GogOfferingsSection:     "Offerings",
+	GogMediaSection:         "Media",
+	GogNewsSection:          "News",
+	GogReceptionSection:     "Reception",
+	GogCompatibilitySection: "Compatibility",
+	GogInstallersSection:    "Files",
 }
 
 var SectionStyles = map[string]string{
-	InfoSection:          "info.css",
-	OfferingsSection:     "offerings.css",
-	MediaSection:         "media.css",
-	NewsSection:          "news.css",
-	ReceptionSection:     "reception.css",
-	CompatibilitySection: "compatibility.css",
-	InstallersSection:    "installers.css",
+	GogInfoSection:          "info.css",
+	GogOfferingsSection:     "offerings.css",
+	GogMediaSection:         "media.css",
+	GogNewsSection:          "news.css",
+	GogReceptionSection:     "reception.css",
+	GogCompatibilitySection: "compatibility.css",
+	GogInstallersSection:    "installers.css",
 }
 
 var SectionAccessKeys = map[string]string{
-	InfoSection:          "i",
-	OfferingsSection:     "o",
-	MediaSection:         "m",
-	NewsSection:          "n",
-	ReceptionSection:     "r",
-	CompatibilitySection: "c",
-	InstallersSection:    "f",
+	GogInfoSection:          "i",
+	GogOfferingsSection:     "o",
+	GogMediaSection:         "m",
+	GogNewsSection:          "n",
+	GogReceptionSection:     "r",
+	GogCompatibilitySection: "c",
+	GogInstallersSection:    "f",
 }

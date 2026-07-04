@@ -8,16 +8,16 @@ import (
 	"github.com/boggydigital/nod"
 )
 
-func GetOfferings(w http.ResponseWriter, r *http.Request) {
+func GetGogOfferings(w http.ResponseWriter, r *http.Request) {
 
-	// GET /offerings?id
+	// GET /gog-offerings/{id}
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
 	}
 
-	id := r.URL.Query().Get(vangogh_integration.UrlIdParameter)
+	id := r.PathValue(vangogh_integration.UrlIdParameter)
 
 	permissions, err := sb.GetCookiePermissions(r)
 	if err != nil {

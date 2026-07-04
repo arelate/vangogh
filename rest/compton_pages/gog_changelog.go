@@ -10,7 +10,7 @@ import (
 	"github.com/boggydigital/compton/consts/size"
 )
 
-func Changelog(pageTitle string, changelog string) compton.PageElement {
+func GogChangelog(pageTitle string, changelog string) compton.PageElement {
 
 	p := compton.Page(pageTitle)
 

@@ -2,6 +2,7 @@ package rest
 
 import (
 	"net/http"
+	"path"
 
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/nod"
@@ -52,5 +53,5 @@ func GetLocalTagsApply(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	http.Redirect(w, r, "/product?id="+id, http.StatusTemporaryRedirect)
+	http.Redirect(w, r, path.Join("/gog-product", id), http.StatusTemporaryRedirect)
 }

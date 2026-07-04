@@ -5,15 +5,15 @@ import (
 	"net/http"
 
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/camino"
 	"github.com/boggydigital/nod"
 )
 
 func GetImage(w http.ResponseWriter, r *http.Request) {
 
-	// GET /image?id
+	// GET /image/{imageId}
 
-	q := r.URL.Query()
-	imageId := q.Get(vangogh_integration.UrlIdParameter)
+	imageId := r.PathValue("imageId")
 
 	if imageId == "" {
 		err := errors.New("empty image id")
@@ -22,8 +22,7 @@ func GetImage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if localImagePath, err := vangogh_integration.AbsLocalImagePath(imageId); err == nil && localImagePath != "" {
-		w.Header().Set("Cache-Control", "max-age=31536000")
-		http.ServeFile(w, r, localImagePath)
+		camino.ServeFile(localImagePath, w, r)
 	} else {
 		if err == nil {
 			err = errors.New("no local image for id: " + imageId)

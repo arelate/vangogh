@@ -2,28 +2,29 @@ package rest
 
 import (
 	"net/http"
-	"os"
 	"path/filepath"
-	"strconv"
+	"strings"
 
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/camino"
 	"github.com/boggydigital/nod"
 )
 
-func GetFile(w http.ResponseWriter, r *http.Request) {
+func GetGogManualUrl(w http.ResponseWriter, r *http.Request) {
 
-	// GET /file?id&download-type&manual-url
+	// GET /gog-manual-url/{manualUrl...}
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
 	}
 
-	q := r.URL.Query()
-
-	id := q.Get(vangogh_integration.UrlIdParameter)
-	manualUrl := q.Get(vangogh_integration.UrlManualUrlParameter)
-	downloadType := vangogh_integration.ParseDownloadType(q.Get(vangogh_integration.UrlDownloadTypeParameter))
+	id := r.PathValue(vangogh_integration.UrlIdParameter)
+	downloadType := vangogh_integration.ParseDownloadType(r.PathValue("dt"))
+	manualUrl := r.PathValue("mu")
+	if !strings.HasPrefix(manualUrl, "/") {
+		manualUrl = "/" + manualUrl
+	}
 
 	if id == "" {
 		http.Error(w, nod.ErrorStr("missing id"), http.StatusBadRequest)
@@ -60,17 +61,5 @@ func GetFile(w http.ResponseWriter, r *http.Request) {
 
 	absDownloadPath := filepath.Join(absSlugDownloadDir, filename)
 
-	var fi os.FileInfo
-	if fi, err = os.Stat(absDownloadPath); err == nil {
-		w.Header().Set("Cache-Control", "max-age=31536000")
-		w.Header().Set("Content-Disposition", "attachment; filename=\""+filename+"\"")
-		w.Header().Set("Content-Length", strconv.FormatInt(fi.Size(), 10))
-		w.Header().Set("Content-Type", "application/octet-stream")
-
-		http.ServeFile(w, r, absDownloadPath)
-		return
-	} else {
-		http.Error(w, nod.Error(err).Error(), http.StatusNotFound)
-		return
-	}
+	camino.ServeFile(absDownloadPath, w, r)
 }

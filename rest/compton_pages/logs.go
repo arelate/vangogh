@@ -2,6 +2,7 @@ package compton_pages
 
 import (
 	"os"
+	"path"
 	"slices"
 
 	"github.com/arelate/southern_light/vangogh_integration"
@@ -51,7 +52,7 @@ func Logs(rdx redux.Readable) compton.PageElement {
 
 	for _, fn := range files {
 		logLinkContainer := compton.Fspan(p, "").TextAlign(align.Center)
-		logLinkContainer.Append(compton.AText(fn, "/logs?id="+fn))
+		logLinkContainer.Append(compton.AText(fn, path.Join("/log", fn)))
 		logList.Append(logLinkContainer)
 	}
 

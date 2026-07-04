@@ -2,6 +2,7 @@ package compton_fragments
 
 import (
 	"fmt"
+	"path"
 
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/boggydigital/compton"
@@ -10,7 +11,7 @@ import (
 
 func GogProductPoster(id string, rdx redux.Readable) compton.Element {
 	if imgSrc, ok := rdx.GetLastVal(vangogh_integration.GogImageProperty, id); ok && imgSrc != "" {
-		relImgSrc := "/image?id=" + imgSrc
+		relImgSrc := path.Join("/image", imgSrc)
 
 		imgEager := compton.ImageEager(relImgSrc)
 		imgEager.SetAttribute("fetchpriority", "high")

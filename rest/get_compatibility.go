@@ -8,16 +8,16 @@ import (
 	"github.com/boggydigital/nod"
 )
 
-func GetCompatibility(w http.ResponseWriter, r *http.Request) {
+func GetGogCompatibility(w http.ResponseWriter, r *http.Request) {
 
-	// GET /compatibility?id
+	// GET /gog-compatibility/{id}
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
 	}
 
-	id := r.URL.Query().Get(vangogh_integration.UrlIdParameter)
+	id := r.PathValue(vangogh_integration.UrlIdParameter)
 
 	permissions, err := sb.GetCookiePermissions(r)
 	if err != nil {
@@ -25,7 +25,7 @@ func GetCompatibility(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	p := compton_pages.Compatibility(id, rdx, permissions...)
+	p := compton_pages.GogCompatibility(id, rdx, permissions...)
 	if err = p.WriteResponse(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}

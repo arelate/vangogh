@@ -9,36 +9,31 @@ import (
 	"github.com/boggydigital/nod"
 )
 
-func GetDescription(w http.ResponseWriter, r *http.Request) {
+func GetGogChangelog(w http.ResponseWriter, r *http.Request) {
 
-	// GET /description?id
+	// GET /gog-changelog/{id}
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
 	}
 
-	id := r.URL.Query().Get(vangogh_integration.UrlIdParameter)
+	id := r.PathValue(vangogh_integration.UrlIdParameter)
 
 	var pageTitle string
 	if title, ok := rdx.GetLastVal(vangogh_integration.GogTitleProperty, id); ok {
 		pageTitle = title
 	}
 
-	descOverview, err := compton_data.GetKeyValuesBytes(id, vangogh_integration.GogDescriptionOverviewKeyValues)
+	changelog, err := compton_data.GetKeyValuesBytes(id, vangogh_integration.GogChangelogKeyValues)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
 	}
 
-	descFeatures, err := compton_data.GetKeyValuesBytes(id, vangogh_integration.GogDescriptionFeaturesKeyValues)
-	if err != nil {
-		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-		return
-	}
-
-	p := compton_pages.Description(id, pageTitle, string(descOverview), string(descFeatures), rdx)
+	p := compton_pages.GogChangelog(pageTitle, string(changelog))
 	if err = p.WriteResponse(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+		return
 	}
 }

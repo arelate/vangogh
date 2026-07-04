@@ -1,6 +1,7 @@
 package compton_pages
 
 import (
+	"path"
 	"slices"
 
 	"github.com/arelate/southern_light/vangogh_integration"
@@ -15,9 +16,9 @@ import (
 
 const eagerLoadingScreenshots = 3
 
-func Media(id string, rdx redux.Readable) compton.PageElement {
+func GogMedia(id string, rdx redux.Readable) compton.PageElement {
 
-	s := compton_fragments.ProductSection(compton_data.MediaSection, id, rdx)
+	s := compton_fragments.ProductSection(compton_data.GogMediaSection, id, rdx)
 
 	pageStack := compton.FlexItems(s, direction.Column)
 
@@ -83,7 +84,7 @@ func Media(id string, rdx redux.Readable) compton.PageElement {
 	}
 
 	for ii, src := range screenshots {
-		imageSrc := "/image?id=" + src
+		imageSrc := path.Join("/image", src)
 		link := compton.A(imageSrc)
 		link.SetAttribute("target", "_top")
 		var img compton.Element

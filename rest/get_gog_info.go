@@ -8,16 +8,16 @@ import (
 	"github.com/boggydigital/nod"
 )
 
-func GetInfo(w http.ResponseWriter, r *http.Request) {
+func GetGogInfo(w http.ResponseWriter, r *http.Request) {
 
-	// GET /info?id
+	// GET /gog-info/{id}
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
 	}
 
-	id := r.URL.Query().Get(vangogh_integration.UrlIdParameter)
+	id := r.PathValue(vangogh_integration.UrlIdParameter)
 
 	permissions, err := sb.GetCookiePermissions(r)
 	if err != nil {
@@ -25,7 +25,7 @@ func GetInfo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if p := compton_pages.Info(id, rdx, permissions...); p != nil {
+	if p := compton_pages.GogInformation(id, rdx, permissions...); p != nil {
 		if err = p.WriteResponse(w); err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		}

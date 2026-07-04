@@ -13,7 +13,7 @@ import (
 
 func Offerings(id string, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
 
-	s := compton_fragments.ProductSection(compton_data.OfferingsSection, id, rdx)
+	s := compton_fragments.ProductSection(compton_data.GogOfferingsSection, id, rdx)
 
 	s.AppendSpeculationRules(compton.SpeculationRulesConservativeEagerness, "/*")
 

@@ -2,6 +2,7 @@ package compton_pages
 
 import (
 	_ "embed"
+	"path"
 	"slices"
 	"strconv"
 	"strings"
@@ -119,14 +120,14 @@ func GogProduct(id string, rdx redux.Readable, permissions ...author.Permission)
 		pageStack.Append(detailsSummary)
 
 		switch section {
-		case compton_data.InfoSection:
+		case compton_data.GogInfoSection:
 
 			fmtBadges := compton_fragments.FormatBadges(id, rdx, compton_data.InformationBadgeProperties, permissions...)
 
 			productBadges := compton.Badges(p, fmtBadges...)
 
 			detailsSummary.AppendBadges(productBadges)
-		case compton_data.MediaSection:
+		case compton_data.GogMediaSection:
 			var videos, images int
 			if vp, sure := rdx.GetAllValues(vangogh_integration.GogYouTubeVideoIdProperty, id); sure {
 				videos = len(vp)
@@ -158,7 +159,7 @@ func GogProduct(id string, rdx redux.Readable, permissions ...author.Permission)
 				detailsSummary.AppendBadges(compton.Badges(p, fmtMediaBadges...))
 			}
 
-		case compton_data.CompatibilitySection:
+		case compton_data.GogCompatibilitySection:
 
 			var dcText string
 			dcColor := color.Gray
@@ -196,7 +197,7 @@ func GogProduct(id string, rdx redux.Readable, permissions ...author.Permission)
 
 			detailsSummary.AppendBadges(compton.Badges(p, fmtCompatBadge))
 
-		case compton_data.ReceptionSection:
+		case compton_data.GogReceptionSection:
 
 			var fmtReceptionBadges []*compton.FormattedBadge
 
@@ -261,7 +262,7 @@ func GogProduct(id string, rdx redux.Readable, permissions ...author.Permission)
 			//}
 
 			detailsSummary.AppendBadges(compton.Badges(p, fmtReceptionBadges...))
-		case compton_data.OfferingsSection:
+		case compton_data.GogOfferingsSection:
 			ops := []string{
 				vangogh_integration.GogIsIncludedByGamesProperty,
 				vangogh_integration.GogIsRequiredByGamesProperty,
@@ -294,7 +295,7 @@ func GogProduct(id string, rdx redux.Readable, permissions ...author.Permission)
 
 				detailsSummary.AppendBadges(compton.Badges(p, fmtOfferingsBadges...))
 			}
-		case compton_data.NewsSection:
+		case compton_data.GogNewsSection:
 
 			if steamAppId, sure := rdx.GetLastVal(vangogh_integration.GogSteamAppIdProperty, id); sure {
 
@@ -319,7 +320,7 @@ func GogProduct(id string, rdx redux.Readable, permissions ...author.Permission)
 				}
 			}
 
-		case compton_data.InstallersSection:
+		case compton_data.GogInstallersSection:
 
 			productDvs := vangogh_integration.NewProductDvs(id, rdx)
 
@@ -354,11 +355,11 @@ func GogProduct(id string, rdx redux.Readable, permissions ...author.Permission)
 		}
 
 		eagerness := loading.Lazy
-		if section == compton_data.InfoSection {
+		if section == compton_data.GogInfoSection {
 			eagerness = loading.Eager
 		}
 
-		ifh := compton.IframeExpandHost(p, section, "/"+section+"?id="+id, eagerness)
+		ifh := compton.IframeExpandHost(p, section, path.Join("/", section, id), eagerness)
 		detailsSummary.Append(ifh)
 
 	}

@@ -1,6 +1,7 @@
 package compton_fragments
 
 import (
+	"path"
 	"slices"
 	"strings"
 
@@ -47,7 +48,7 @@ func GogProductCard(r compton.Registrar, id string, rdx redux.Readable, permissi
 	var imageUrl string
 
 	if verticalImageId, ok := rdx.GetLastVal(vangogh_integration.GogVerticalImageProperty, id); ok && verticalImageId != "" {
-		imageUrl = "/image?id=" + verticalImageId
+		imageUrl = path.Join("/image", verticalImageId)
 	}
 
 	pc.AppendImage(imageUrl, 85.5, 120.5)

@@ -3,6 +3,7 @@ package compton_pages
 import (
 	"fmt"
 	"net/url"
+	"path"
 	"slices"
 	"strconv"
 	"strings"
@@ -33,12 +34,12 @@ type DownloadVariant struct {
 	validationStatus         vangogh_integration.ValidationStatus
 }
 
-// Installers will present available installers, DLCs in the following hierarchy:
-// - Operating system heading - Installers and DLCs (separately)
+// GogInstallers will present available installers, DLCs in the following hierarchy:
+// - Operating system heading - GogInstallers and DLCs (separately)
 // - title_values list of downloads by version
-func Installers(id string, messages []string, dls vangogh_integration.DownloadsList, rdx redux.Readable) compton.PageElement {
+func GogInstallers(id string, messages []string, dls vangogh_integration.DownloadsList, rdx redux.Readable) compton.PageElement {
 
-	s := compton_fragments.ProductSection(compton_data.InstallersSection, id, rdx)
+	s := compton_fragments.ProductSection(compton_data.GogInstallersSection, id, rdx)
 
 	pageStack := compton.FlexItems(s, direction.Column).RowGap(size.Normal)
 	s.Append(pageStack)
@@ -267,15 +268,17 @@ func downloadLink(r compton.Registrar,
 
 	var link compton.Element
 
+	href := path.Join("/gog-manual-url", id, dl.DownloadType.String(), dl.ManualUrl)
+
 	switch dl.DownloadType {
 	case vangogh_integration.Extra:
 		if dl.Info > 0 && dl.EstimatedBytes > 0 {
-			link = compton.A("/file?" + q.Encode())
+			link = compton.A(href)
 		} else {
 			link = compton.Content()
 		}
 	default:
-		link = compton.A("/file?" + q.Encode())
+		link = compton.A(href)
 	}
 
 	link.AddClass("download", dl.DownloadType.String())

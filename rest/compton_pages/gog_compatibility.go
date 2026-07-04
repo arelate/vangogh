@@ -60,10 +60,10 @@ var displayTypeSymbols = map[string]compton.Symbol{
 	"Unknown":     compton.TriangleNeutral,
 }
 
-func Compatibility(id string, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
+func GogCompatibility(id string, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
 	title, _ := rdx.GetLastVal(vangogh_integration.GogTitleProperty, id)
 
-	s := compton_fragments.ProductSection(compton_data.CompatibilitySection, id, rdx)
+	s := compton_fragments.ProductSection(compton_data.GogCompatibilitySection, id, rdx)
 
 	pageStack := compton.FlexItems(s, direction.Column)
 	s.Append(pageStack)

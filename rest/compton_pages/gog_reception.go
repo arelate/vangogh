@@ -13,9 +13,9 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-func Reception(id string, sar *steam_integration.AppReviews, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
+func GogReception(id string, sar *steam_integration.AppReviews, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
 
-	s := compton_fragments.ProductSection(compton_data.ReceptionSection, id, rdx)
+	s := compton_fragments.ProductSection(compton_data.GogReceptionSection, id, rdx)
 
 	pageStack := compton.FlexItems(s, direction.Column).RowGap(size.Normal)
 
