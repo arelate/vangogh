@@ -17,17 +17,14 @@ func Backup() error {
 	ba := nod.NewProgress("backing up local data...")
 	defer ba.Done()
 
-	abp := camino.GetAbs(vangogh_integration.Backups)
-	amp := camino.GetAbs(vangogh_integration.Metadata)
-
-	if err := camino.Compress(amp, abp); err != nil {
+	if err := camino.Compress(vangogh_integration.Metadata, vangogh_integration.Backups); err != nil {
 		return err
 	}
 
 	ca := nod.NewProgress("cleaning up old backups...")
 	defer ca.Done()
 
-	if err := camino.CleanupTimed(abp, true); err != nil {
+	if err := camino.CleanupTimed(vangogh_integration.Backups, true); err != nil {
 		return err
 	}
 
