@@ -4,6 +4,7 @@ import (
 	"path/filepath"
 
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/camino"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/redux"
 )
@@ -22,7 +23,7 @@ func InitKeyValues(keyValues ...string) (map[string]kevlar.KeyValues, error) {
 	kvs := make(map[string]kevlar.KeyValues)
 	var err error
 	for _, kv := range keyValues {
-		kvDir := filepath.Join(vangogh_integration.Pwd.AbsDirPath(vangogh_integration.Metadata), kv)
+		kvDir := filepath.Join(camino.GetAbs(vangogh_integration.Metadata), kv)
 		if kvs[kv], err = kevlar.New(kvDir, kevlar.TxtExt); err != nil {
 			return nil, err
 		}

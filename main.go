@@ -11,6 +11,7 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli"
 	"github.com/arelate/vangogh/clo_delegates"
+	"github.com/boggydigital/camino"
 	"github.com/boggydigital/clo"
 	"github.com/boggydigital/nod"
 )
@@ -31,7 +32,7 @@ func main() {
 	vsa := nod.Begin("vangogh is serving your DRM-free needs")
 	defer vsa.Done()
 
-	if err := vangogh_integration.InitPathways(); err != nil {
+	if err := vangogh_integration.InitVangoghCamino(); err != nil {
 		log.Fatalln(nod.Error(err))
 	}
 
@@ -80,7 +81,7 @@ func main() {
 
 	if q := u.Query(); q.Has(debugParam) {
 		var logger io.Closer
-		logger, err = nod.EnableFileLogger(u.Path, vangogh_integration.Pwd.AbsDirPath(vangogh_integration.Logs))
+		logger, err = nod.EnableFileLogger(u.Path, camino.GetAbs(vangogh_integration.Logs))
 		if err != nil {
 			log.Fatalln(err)
 		}

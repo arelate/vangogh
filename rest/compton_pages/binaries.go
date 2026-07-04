@@ -4,6 +4,7 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/southern_light/wine_integration"
 	"github.com/arelate/vangogh/rest/compton_fragments"
+	"github.com/boggydigital/camino"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/direction"
 	"github.com/boggydigital/compton/consts/size"
@@ -27,7 +28,7 @@ func Binaries() compton.PageElement {
 
 	operatingSystems := []vangogh_integration.OperatingSystem{vangogh_integration.Windows, vangogh_integration.MacOS, vangogh_integration.Linux}
 
-	gitHubReleasesDir := vangogh_integration.Pwd.AbsRelDirPath(vangogh_integration.GitHubReleases, vangogh_integration.Metadata)
+	gitHubReleasesDir := camino.GetRel(vangogh_integration.GitHubReleases, vangogh_integration.Metadata)
 
 	kvGitHubReleases, err := kevlar.New(gitHubReleasesDir, kevlar.JsonExt)
 	if err != nil {

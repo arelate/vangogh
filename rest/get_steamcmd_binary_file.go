@@ -8,6 +8,7 @@ import (
 
 	"github.com/arelate/southern_light/steamcmd"
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/camino"
 	"github.com/boggydigital/nod"
 )
 
@@ -20,7 +21,7 @@ func GetSteamCmdBinaryFile(w http.ResponseWriter, r *http.Request) {
 	steamCmdUrl := steamcmd.Urls[operatingSystem]
 	filename := filepath.Base(steamCmdUrl)
 
-	steamBinariesDir := vangogh_integration.Pwd.AbsRelDirPath(vangogh_integration.SteamCmdBinaries, vangogh_integration.Downloads)
+	steamBinariesDir := camino.GetRel(vangogh_integration.SteamCmdBinaries, vangogh_integration.Downloads)
 
 	absFilepath := filepath.Join(steamBinariesDir, filename)
 

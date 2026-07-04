@@ -7,6 +7,7 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/perm"
 	"github.com/boggydigital/author"
+	"github.com/boggydigital/camino"
 	"github.com/boggydigital/nod"
 )
 
@@ -81,7 +82,7 @@ func Users(action userAction, username, password, newPassword, role string) erro
 	ua := nod.Begin("%s users...", actionVerb)
 	defer ua.Done()
 
-	authorDir := vangogh_integration.Pwd.AbsRelDirPath(vangogh_integration.Author, vangogh_integration.Metadata)
+	authorDir := camino.GetRel(vangogh_integration.Author, vangogh_integration.Metadata)
 
 	auth, err := author.NewAuthenticator(authorDir, perm.GetRolesPermissions())
 	if err != nil {

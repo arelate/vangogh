@@ -9,9 +9,9 @@ import (
 
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/reqs"
+	"github.com/boggydigital/camino"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
-	"github.com/boggydigital/pathways"
 )
 
 func GetDescriptionImagesHandler(u *url.URL) error {
@@ -38,7 +38,7 @@ func GetDescriptionImages(ids []string, since int64, all, force bool) error {
 	gdia := nod.NewProgress("getting description images...")
 	defer gdia.Done()
 
-	metadataDir := vangogh_integration.Pwd.AbsDirPath(vangogh_integration.Metadata)
+	metadataDir := camino.GetAbs(vangogh_integration.Metadata)
 
 	descOverviewDir := filepath.Join(metadataDir, vangogh_integration.GogDescriptionOverviewKeyValues)
 	kvDescOverview, err := kevlar.New(descOverviewDir, kevlar.TxtExt)
@@ -148,7 +148,7 @@ func getDescriptionImage(descriptionImageUrl string, force bool) error {
 
 	adiDir, _ := filepath.Split(adip)
 	if _, err = os.Stat(adiDir); os.IsNotExist(err) {
-		if err = os.MkdirAll(adiDir, pathways.PermUrwGrwOr); err != nil {
+		if err = os.MkdirAll(adiDir, camino.DefaultFileMode); err != nil {
 			return err
 		}
 	}

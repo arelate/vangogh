@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/camino"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/redux"
@@ -162,7 +163,7 @@ func renameGogKeyValues() error {
 		vangogh_integration.GogChangelogKeyValues,
 	}
 
-	metadataDir := vangogh_integration.Pwd.AbsDirPath(vangogh_integration.Metadata)
+	metadataDir := camino.GetAbs(vangogh_integration.Metadata)
 
 	for _, kv := range kvs {
 

@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/camino"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/redux"
@@ -189,9 +190,10 @@ func (cd *cleanupDelegate) Process(id string, slug string, list vangogh_integrat
 			prefix = "DELETE"
 		}
 
-		adp := vangogh_integration.Pwd.AbsDirPath(vangogh_integration.Downloads)
+		adp := camino.GetAbs(vangogh_integration.Downloads)
 
-		relDownloadFilename, err := filepath.Rel(adp, absUnexpectedFile)
+		var relDownloadFilename string
+		relDownloadFilename, err = filepath.Rel(adp, absUnexpectedFile)
 		if err != nil {
 			return err
 		}
@@ -204,11 +206,14 @@ func (cd *cleanupDelegate) Process(id string, slug string, list vangogh_integrat
 		}
 		dft.Done()
 
-		absChecksumFile, err := vangogh_integration.AbsChecksumPath(absUnexpectedFile)
+		var absChecksumFile string
+		absChecksumFile, err = vangogh_integration.AbsChecksumPath(absUnexpectedFile)
 		if err != nil {
 			return err
 		}
-		if stat, err := os.Stat(absChecksumFile); err == nil {
+
+		var stat os.FileInfo
+		if stat, err = os.Stat(absChecksumFile); err == nil {
 			cd.totalBytes += stat.Size()
 		} else if os.IsNotExist(err) {
 			continue
@@ -216,9 +221,10 @@ func (cd *cleanupDelegate) Process(id string, slug string, list vangogh_integrat
 			return err
 		}
 
-		acp := vangogh_integration.Pwd.AbsDirPath(vangogh_integration.Checksums)
+		acp := camino.GetAbs(vangogh_integration.Checksums)
 
-		relChecksumFile, err := filepath.Rel(acp, absChecksumFile)
+		var relChecksumFile string
+		relChecksumFile, err = filepath.Rel(acp, absChecksumFile)
 		if err != nil {
 			return err
 		}

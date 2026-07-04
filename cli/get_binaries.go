@@ -15,6 +15,7 @@ import (
 	"github.com/arelate/southern_light/steamcmd"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/southern_light/wine_integration"
+	"github.com/boggydigital/camino"
 	"github.com/boggydigital/dolo"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
@@ -70,7 +71,7 @@ func GetSteamCmdBinaries(operatingSystems []vangogh_integration.OperatingSystem,
 		operatingSystems = vangogh_integration.AllOperatingSystems()
 	}
 
-	steamCmdBinariesDir := vangogh_integration.Pwd.AbsRelDirPath(vangogh_integration.SteamCmdBinaries, vangogh_integration.Downloads)
+	steamCmdBinariesDir := camino.GetRel(vangogh_integration.SteamCmdBinaries, vangogh_integration.Downloads)
 	dc := dolo.DefaultClient
 
 	for _, operatingSystem := range operatingSystems {
@@ -108,7 +109,7 @@ func GetWineBinaries(operatingSystems []vangogh_integration.OperatingSystem, for
 		operatingSystems = vangogh_integration.AllOperatingSystems()
 	}
 
-	gitHubReleasesDir := vangogh_integration.Pwd.AbsRelDirPath(vangogh_integration.GitHubReleases, vangogh_integration.Metadata)
+	gitHubReleasesDir := camino.GetRel(vangogh_integration.GitHubReleases, vangogh_integration.Metadata)
 
 	kvGitHubReleases, err := kevlar.New(gitHubReleasesDir, kevlar.JsonExt)
 	if err != nil {
@@ -236,7 +237,7 @@ func downloadHttpWineBinaries(urls map[string]*url.URL, force bool) error {
 	dhba := nod.NewProgress("downloading binaries...")
 	defer dhba.Done()
 
-	wineBinariesDir := vangogh_integration.Pwd.AbsRelDirPath(vangogh_integration.WineBinaries, vangogh_integration.Downloads)
+	wineBinariesDir := camino.GetRel(vangogh_integration.WineBinaries, vangogh_integration.Downloads)
 
 	dhba.TotalInt(len(urls))
 
@@ -265,7 +266,7 @@ func validateWineBinaries(binaries []wine_integration.Binary, urls map[string]*u
 	vwba := nod.NewProgress("validating binaries...")
 	defer vwba.Done()
 
-	wineBinariesDir := vangogh_integration.Pwd.AbsRelDirPath(vangogh_integration.WineBinaries, vangogh_integration.Downloads)
+	wineBinariesDir := camino.GetRel(vangogh_integration.WineBinaries, vangogh_integration.Downloads)
 
 	for _, binary := range binaries {
 
@@ -304,7 +305,7 @@ func cleanupWineBinaries(urls map[string]*url.URL) error {
 	cba := nod.Begin("cleaning up older binaries versions...")
 	defer cba.Done()
 
-	wineBinariesDir := vangogh_integration.Pwd.AbsRelDirPath(vangogh_integration.WineBinaries, vangogh_integration.Downloads)
+	wineBinariesDir := camino.GetRel(vangogh_integration.WineBinaries, vangogh_integration.Downloads)
 
 	expectedFilenames := make([]string, 0, len(urls))
 	for _, u := range urls {

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/boggydigital/camino"
 	"github.com/boggydigital/kevlar"
 )
 
@@ -33,7 +34,7 @@ func refreshKeyValues(id, property string) (kevlar.KeyValues, error) {
 	var err error
 
 	if refresh {
-		kvDir := filepath.Join(vangogh_integration.Pwd.AbsDirPath(vangogh_integration.Metadata), property)
+		kvDir := filepath.Join(camino.GetAbs(vangogh_integration.Metadata), property)
 		keyValues[property], err = kevlar.New(kvDir, kevlar.TxtExt)
 		keyValuesModTimes[property] = time.Now().UTC().Unix()
 		if err != nil {

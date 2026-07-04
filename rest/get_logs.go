@@ -8,6 +8,7 @@ import (
 
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_pages"
+	"github.com/boggydigital/camino"
 	"github.com/boggydigital/nod"
 )
 
@@ -31,7 +32,7 @@ func GetLogs(w http.ResponseWriter, r *http.Request) {
 
 	if id != "" {
 
-		absLogsDir := vangogh_integration.Pwd.AbsDirPath(vangogh_integration.Logs)
+		absLogsDir := camino.GetAbs(vangogh_integration.Logs)
 		relFilename := filepath.Base(id)
 
 		absFilepath := filepath.Join(absLogsDir, relFilename)

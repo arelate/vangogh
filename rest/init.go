@@ -4,6 +4,7 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/perm"
 	"github.com/boggydigital/author"
+	"github.com/boggydigital/camino"
 	"github.com/boggydigital/redux"
 )
 
@@ -42,7 +43,7 @@ func Init(layout vangogh_integration.DownloadsLayout, insecureCookies bool) erro
 		return err
 	}
 
-	authorDir := vangogh_integration.Pwd.AbsRelDirPath(vangogh_integration.Author, vangogh_integration.Metadata)
+	authorDir := camino.GetRel(vangogh_integration.Author, vangogh_integration.Metadata)
 
 	sb, err = author.NewSessionBouncer(authorDir, perm.GetRolesPermissions(), "/login", insecureCookies)
 	if err != nil {

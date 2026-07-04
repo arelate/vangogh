@@ -6,6 +6,7 @@ import (
 
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_fragments"
+	"github.com/boggydigital/camino"
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/align"
 	"github.com/boggydigital/compton/consts/color"
@@ -29,7 +30,7 @@ func Logs(rdx redux.Readable) compton.PageElement {
 	titleHeading := compton.HeadingText(title, 1)
 	pageStack.Append(compton.FICenter(p, titleHeading))
 
-	absLogsDir := vangogh_integration.Pwd.AbsDirPath(vangogh_integration.Logs)
+	absLogsDir := camino.GetAbs(vangogh_integration.Logs)
 
 	ld, err := os.Open(absLogsDir)
 	if err != nil {
