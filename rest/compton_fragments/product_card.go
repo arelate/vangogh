@@ -48,7 +48,7 @@ func GogProductCard(r compton.Registrar, id string, rdx redux.Readable, permissi
 	var imageUrl string
 
 	if verticalImageId, ok := rdx.GetLastVal(vangogh_integration.GogVerticalImageProperty, id); ok && verticalImageId != "" {
-		imageUrl = path.Join("/image", verticalImageId)
+		imageUrl = path.Join("/gog-image", verticalImageId)
 	}
 
 	pc.AppendImage(imageUrl, 85.5, 120.5)

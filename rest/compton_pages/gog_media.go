@@ -84,7 +84,7 @@ func GogMedia(id string, rdx redux.Readable) compton.PageElement {
 	}
 
 	for ii, src := range screenshots {
-		imageSrc := path.Join("/image", src)
+		imageSrc := path.Join("/gog-image", src)
 		link := compton.A(imageSrc)
 		link.SetAttribute("target", "_top")
 		var img compton.Element

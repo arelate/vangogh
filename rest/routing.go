@@ -45,7 +45,7 @@ func HandleFuncs() {
 		"GET /gog-installers/{id}":    AuthCookie(sb, Log(http.HandlerFunc(GetGogInstallers)), perm.ReadFiles),
 		"GET /binaries":               AuthCookie(sb, Log(http.HandlerFunc(GetBinaries)), perm.ReadFiles),
 		// public media endpoints
-		"GET /image/{imageId}":                AuthCookie(sb, Log(http.HandlerFunc(GetImage)), perm.ReadImages),
+		"GET /gog-image/{imageId}":            AuthCookie(sb, Log(http.HandlerFunc(GetGogImage)), perm.ReadImages),
 		"GET /description-image/{relPath...}": AuthCookie(sb, Log(http.HandlerFunc(GetDescriptionImage)), perm.ReadImages),
 		// binaries endpoints
 		"GET /binary/{os}/{title...}": AuthCookie(sb, Log(http.HandlerFunc(GetBinary)), perm.ReadFiles),
@@ -64,13 +64,13 @@ func HandleFuncs() {
 		"POST /api/auth-user":                       Log(http.HandlerFunc(sb.AuthApiUsernamePassword)),
 		"POST /api/auth-session":                    Log(http.HandlerFunc(sb.AuthApiSession)),
 		"GET /api/available-products":               AuthBearer(sb, Log(http.HandlerFunc(GetAvailableProducts)), perm.ReadApi, perm.ReadProductData),
-		"GET /api/product-details":                  AuthBearer(sb, Log(http.HandlerFunc(GetProductDetails)), perm.ReadApi, perm.ReadProductData),
 		"GET /api/gog-checksums/{id}":               AuthBearer(sb, Log(http.HandlerFunc(GetGogChecksums)), perm.ReadApi, perm.ReadProductData),
 		"GET /api/gog-filenames/{id}":               AuthBearer(sb, Log(http.HandlerFunc(GetGogFilenames)), perm.ReadApi, perm.ReadProductData),
 		"GET /api/binaries/versions":                AuthBearer(sb, Log(http.HandlerFunc(GetBinariesVersions)), perm.ReadApi, perm.ReadProductData),
 		"GET /api/binary/{os}/{title...}":           AuthBearer(sb, Log(http.HandlerFunc(GetBinary)), perm.ReadApi, perm.ReadFiles),
 		"GET /api/gog-manual-url/{id}/{dt}/{mu...}": AuthBearer(sb, Log(http.HandlerFunc(GetGogManualUrl)), perm.ReadApi, perm.ReadFiles),
-		"GET /api/image/{imageId}":                  AuthBearer(sb, Log(http.HandlerFunc(GetImage)), perm.ReadApi, perm.ReadImages),
+		"GET /api/gog-image/{imageId}":              AuthBearer(sb, Log(http.HandlerFunc(GetGogImage)), perm.ReadApi, perm.ReadImages),
+		"GET /api/gog-images/{id}":                  AuthCookie(sb, Log(http.HandlerFunc(GetGogImages)), perm.ReadApi, perm.ReadImages),
 		"GET /api/metadata/{productType}/{id}":      AuthBearer(sb, Log(http.HandlerFunc(GetMetadata)), perm.ReadApi, perm.ReadProductData),
 		// debug endpoints
 		"GET /debug/{id}":                    AuthCookie(sb, Log(http.HandlerFunc(GetDebug)), perm.ReadDebug),

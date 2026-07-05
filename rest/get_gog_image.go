@@ -9,9 +9,9 @@ import (
 	"github.com/boggydigital/nod"
 )
 
-func GetImage(w http.ResponseWriter, r *http.Request) {
+func GetGogImage(w http.ResponseWriter, r *http.Request) {
 
-	// GET /image/{imageId}
+	// GET /gog-image/{imageId}
 
 	imageId := r.PathValue("imageId")
 
