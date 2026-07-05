@@ -12,7 +12,7 @@ import (
 	"github.com/boggydigital/nod"
 )
 
-func GetWineBinariesVersions(w http.ResponseWriter, r *http.Request) {
+func GetBinariesVersions(w http.ResponseWriter, r *http.Request) {
 
 	// GET /api/wine-binaries-versions
 

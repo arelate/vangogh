@@ -13,23 +13,36 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-func GetManualUrlChecksums(w http.ResponseWriter, r *http.Request) {
+func GetGogChecksums(w http.ResponseWriter, r *http.Request) {
 
-	// GET /api/manual-url-checksums?id
+	// GET /api/gog-checksums/{id}
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
 	}
 
-	q := r.URL.Query()
+	id := r.PathValue(vangogh_integration.UrlIdParameter)
 
-	id := q.Get(vangogh_integration.UrlIdParameter)
-
-	det, err := getGogDetails(id)
+	muChecksums, err := getManualUrlChecksums(id, rdx)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+
+	if err = json.MarshalWrite(w, muChecksums); err != nil {
+		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+	}
+
+}
+
+func getManualUrlChecksums(id string, rdx redux.Readable) (map[string]string, error) {
+
+	det, err := getGogDetails(id)
+	if err != nil {
+		return nil, err
 	}
 
 	dls, err := getDownloadsList(det, operatingSystems, langCodes, noPatches)
@@ -37,29 +50,11 @@ func GetManualUrlChecksums(w http.ResponseWriter, r *http.Request) {
 		// details not found is only a fatal error for GAME products,
 		// details don't exist for PACK and DLC products
 		if productType, ok := rdx.GetLastVal(vangogh_integration.GogProductTypeProperty, id); ok && productType == gog_integration.ProductTypeGame {
-			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-			return
+			return nil, err
 		}
 	} else if err != nil {
-		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-		return
+		return nil, err
 	}
-
-	w.Header().Add("Content-Type", applicationJsonContentType)
-
-	muc, err := getManualUrlChecksums(id, dls, rdx)
-	if err != nil {
-		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-		return
-	}
-
-	if err = json.MarshalWrite(w, muc); err != nil {
-		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-	}
-
-}
-
-func getManualUrlChecksums(id string, dls vangogh_integration.DownloadsList, rdx redux.Readable) (map[string]string, error) {
 
 	var slug string
 	if sp, ok := rdx.GetLastVal(vangogh_integration.GogSlugProperty, id); ok {
@@ -74,7 +69,8 @@ func getManualUrlChecksums(id string, dls vangogh_integration.DownloadsList, rdx
 			continue
 		}
 
-		absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.DownloadType, downloadsLayout)
+		var absSlugDownloadDir string
+		absSlugDownloadDir, err = vangogh_integration.AbsSlugDownloadDir(slug, dl.DownloadType, downloadsLayout)
 		if err != nil {
 			return nil, err
 		}
@@ -82,7 +78,8 @@ func getManualUrlChecksums(id string, dls vangogh_integration.DownloadsList, rdx
 		if filename, ok := rdx.GetLastVal(vangogh_integration.GogManualUrlFilenameProperty, dl.ManualUrl); ok {
 			absDownloadPath := filepath.Join(absSlugDownloadDir, filename)
 
-			if md5, err := getMd5Checksum(absDownloadPath); err == nil {
+			var md5 string
+			if md5, err = getMd5Checksum(absDownloadPath); err == nil {
 				muChecksums[dl.ManualUrl] = md5
 			} else {
 				return nil, err
