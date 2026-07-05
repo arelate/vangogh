@@ -158,13 +158,13 @@ func getWineBinaryUrl(bin *wine_integration.Binary, kvGitHubReleases kevlar.KeyV
 
 	switch bin.DownloadUrl {
 	case "":
-		return getGitHubBinaryUrl(bin.GitHubOwnerRepo, bin.GitHubAssetGlob, kvGitHubReleases, force)
+		return getGitHubBinaryUrl(bin.GitHubOwnerRepo, bin.GitHubAssetGlob, kvGitHubReleases, bin.GitHubAssetFilters...)
 	default:
 		return url.Parse(bin.DownloadUrl)
 	}
 }
 
-func getGitHubBinaryUrl(ownerRepo string, assetGlob string, kvGitHubReleases kevlar.KeyValues, force bool) (*url.URL, error) {
+func getGitHubBinaryUrl(ownerRepo string, assetGlob string, kvGitHubReleases kevlar.KeyValues, assetFilters ...string) (*url.URL, error) {
 
 	gghba := nod.Begin(" getting %s GitHub url...", ownerRepo)
 	defer gghba.Done()
@@ -173,7 +173,7 @@ func getGitHubBinaryUrl(ownerRepo string, assetGlob string, kvGitHubReleases kev
 		return nil, err
 	}
 
-	return getGitHubLatestReleaseAssetUrl(ownerRepo, assetGlob, kvGitHubReleases)
+	return getGitHubLatestReleaseAssetUrl(ownerRepo, assetGlob, kvGitHubReleases, assetFilters...)
 }
 
 func getGitHubRepoReleases(ownerRepo string, kvGitHubReleases kevlar.KeyValues) error {
@@ -209,7 +209,7 @@ func getGitHubRepoReleases(ownerRepo string, kvGitHubReleases kevlar.KeyValues) 
 	return nil
 }
 
-func getGitHubLatestReleaseAssetUrl(ownerRepo, assetGlob string, kvGitHubReleases kevlar.KeyValues) (*url.URL, error) {
+func getGitHubLatestReleaseAssetUrl(ownerRepo, assetGlob string, kvGitHubReleases kevlar.KeyValues, assetFilters ...string) (*url.URL, error) {
 
 	cra := nod.Begin(" getting %s latest asset url...", ownerRepo)
 	defer cra.Done()
@@ -223,7 +223,7 @@ func getGitHubLatestReleaseAssetUrl(ownerRepo, assetGlob string, kvGitHubRelease
 		return nil, errors.New("GitHub latest release not found for " + ownerRepo)
 	}
 
-	releaseAsset := github_integration.GetReleaseAsset(latestRelease, assetGlob)
+	releaseAsset := github_integration.GetReleaseAsset(latestRelease, assetGlob, assetFilters...)
 
 	if releaseAsset == nil {
 		return nil, errors.New("GitHub latest release is missing assets matching " + assetGlob + " for " + ownerRepo)
