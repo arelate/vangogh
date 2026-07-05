@@ -70,12 +70,13 @@ func HandleFuncs() {
 		"GET /api/binary/{os}/{title...}":           AuthBearer(sb, Log(http.HandlerFunc(GetBinary)), perm.ReadApi, perm.ReadFiles),
 		"GET /api/gog-manual-url/{id}/{dt}/{mu...}": AuthBearer(sb, Log(http.HandlerFunc(GetGogManualUrl)), perm.ReadApi, perm.ReadFiles),
 		"GET /api/image/{imageId}":                  AuthBearer(sb, Log(http.HandlerFunc(GetImage)), perm.ReadApi, perm.ReadImages),
+		"GET /api/metadata/{productType}/{id}":      AuthBearer(sb, Log(http.HandlerFunc(GetMetadata)), perm.ReadApi, perm.ReadProductData),
 		// debug endpoints
-		"GET /debug":           AuthCookie(sb, Log(http.HandlerFunc(GetDebug)), perm.ReadDebug),
-		"GET /debug-data":      AuthCookie(sb, Log(http.HandlerFunc(GetDebugData)), perm.ReadDebug),
-		"GET /logs":            AuthCookie(sb, Log(http.HandlerFunc(GetLogs)), perm.ReadLogs),
-		"GET /log/{logId}":     AuthCookie(sb, Log(http.HandlerFunc(GetLog)), perm.ReadLogs),
-		"GET /downloads-queue": AuthCookie(sb, Log(http.HandlerFunc(GetDownloadsQueue)), perm.ReadDebug),
+		"GET /debug/{id}":                    AuthCookie(sb, Log(http.HandlerFunc(GetDebug)), perm.ReadDebug),
+		"GET /debug-data/{productType}/{id}": AuthCookie(sb, Log(http.HandlerFunc(GetDebugData)), perm.ReadDebug),
+		"GET /logs":                          AuthCookie(sb, Log(http.HandlerFunc(GetLogs)), perm.ReadLogs),
+		"GET /log/{logId}":                   AuthCookie(sb, Log(http.HandlerFunc(GetLog)), perm.ReadLogs),
+		"GET /downloads-queue":               AuthCookie(sb, Log(http.HandlerFunc(GetDownloadsQueue)), perm.ReadDebug),
 		// cookies import
 		"GET /import-cookies":  AuthCookie(sb, Log(http.HandlerFunc(GetImportCookies)), perm.WriteCookies),
 		"POST /import-cookies": AuthCookie(sb, Log(http.HandlerFunc(PostImportCookies)), perm.WriteCookies),

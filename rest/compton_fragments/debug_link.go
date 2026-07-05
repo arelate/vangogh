@@ -1,6 +1,8 @@
 package compton_fragments
 
 import (
+	"path"
+
 	"github.com/boggydigital/compton"
 	"github.com/boggydigital/compton/consts/color"
 	"github.com/boggydigital/compton/consts/font_weight"
@@ -8,7 +10,7 @@ import (
 )
 
 func DebugLink(r compton.Registrar, id string) compton.Element {
-	debugLink := compton.A("/debug?id=" + id)
+	debugLink := compton.A(path.Join("/debug", id))
 	debugLink.Append(compton.Fspan(r, "Source data").FontSize(size.XSmall).ForegroundColor(color.Foreground).FontWeight(font_weight.Bolder))
 
 	return debugLink

@@ -59,17 +59,7 @@ func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageEleme
 		return nil, err
 	}
 
-	var ext string
-	switch pt {
-	case vangogh_integration.PcgwRaw:
-		fallthrough
-	case vangogh_integration.WikipediaRaw:
-		ext = kevlar.TxtExt
-	default:
-		ext = kevlar.JsonExt
-	}
-
-	kv, err := kevlar.New(absPtDir, ext)
+	kv, err := kevlar.New(absPtDir, pt.Ext())
 	if err != nil {
 		return nil, err
 	}

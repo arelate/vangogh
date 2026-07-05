@@ -10,17 +10,22 @@ import (
 
 func GetDebugData(w http.ResponseWriter, r *http.Request) {
 
-	// GET /debug-data?id&product-type
+	// GET /debug-data/{productType}/{id}
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
 	}
 
-	id := r.URL.Query().Get(vangogh_integration.UrlIdParameter)
-	pts := r.URL.Query().Get(vangogh_integration.UrlProductTypeParameter)
+	id := r.PathValue("id")
+	pts := r.PathValue("productType")
 
 	pt := vangogh_integration.ParseProductType(pts)
+
+	if pt == vangogh_integration.UnknownProductType {
+		http.Error(w, "unknown product type "+pts, http.StatusBadRequest)
+		return
+	}
 
 	if debugDataPage, err := compton_pages.DebugData(id, pt); debugDataPage != nil && err == nil {
 		if err = debugDataPage.WriteResponse(w); err != nil {
