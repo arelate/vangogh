@@ -60,7 +60,7 @@ func GetBinariesVersions(w http.ResponseWriter, r *http.Request) {
 		binariesVersions = append(binariesVersions, wbd)
 	}
 
-	w.Header().Add("Content-Type", applicationJsonContentType)
+	w.Header().Add("Content-Type", "application/json")
 
 	if err = json.MarshalWrite(w, binariesVersions); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)

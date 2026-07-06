@@ -27,7 +27,7 @@ func GetAvailableProducts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Add("Content-Type", applicationJsonContentType)
+	w.Header().Add("Content-Type", "application/json")
 
 	if err = json.MarshalWrite(w, availableProducts); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
