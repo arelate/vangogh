@@ -27,9 +27,9 @@ func GetBinary(w http.ResponseWriter, r *http.Request) {
 		steamCmdUrl := steamcmd.Urls[operatingSystem]
 		filename := filepath.Base(steamCmdUrl)
 
-		steamBinariesDir := camino.GetRel(vangogh_integration.SteamCmdBinaries, vangogh_integration.Downloads)
+		releasesDir := camino.GetRel(vangogh_integration.Releases, vangogh_integration.Binaries)
 
-		absFilepath = filepath.Join(steamBinariesDir, filename)
+		absFilepath = filepath.Join(releasesDir, filename)
 	default:
 		var binary *wine_integration.Binary
 
@@ -47,7 +47,7 @@ func GetBinary(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		wineBinariesDir := camino.GetRel(vangogh_integration.WineBinaries, vangogh_integration.Downloads)
+		releasesDir := camino.GetRel(vangogh_integration.Releases, vangogh_integration.Binaries)
 		gitHubReleasesDir := camino.GetRel(vangogh_integration.GitHubReleases, vangogh_integration.Metadata)
 
 		kvGitHubReleases, err := kevlar.New(gitHubReleasesDir, kevlar.JsonExt)
@@ -62,7 +62,7 @@ func GetBinary(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		absFilepath = filepath.Join(wineBinariesDir, filepath.Base(binaryUrl))
+		absFilepath = filepath.Join(releasesDir, filepath.Base(binaryUrl))
 	}
 
 	camino.ServeFile(w, r, absFilepath)

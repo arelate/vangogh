@@ -24,12 +24,12 @@ EXPOSE 1853
 VOLUME /var/lib/vangogh/backups
 # downloads (cold storage)
 VOLUME /var/lib/vangogh/downloads
+# binaries (cold storage)
+VOLUME /var/lib/vangogh/binaries
 # checksums (hot storage)
 VOLUME /var/lib/vangogh/checksums
 # images (hot storage)
 VOLUME /var/lib/vangogh/images
-# input (hot storage)
-VOLUME /var/lib/vangogh/input
 # description_images (hot storage)
 VOLUME /var/lib/vangogh/description_images
 # logs (cold storage)
