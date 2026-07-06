@@ -24,10 +24,7 @@ func GetRaw(pcgwGogIds map[string][]string, force bool) error {
 	gra := nod.NewProgress("getting %s...", vangogh_integration.PcgwRaw)
 	defer gra.Done()
 
-	rawDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.PcgwRaw)
-	if err != nil {
-		return err
-	}
+	rawDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.PcgwRaw)
 
 	kvRaw, err := kevlar.New(rawDir, kevlar.TxtExt)
 	if err != nil {

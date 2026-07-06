@@ -62,10 +62,8 @@ func GetGogInstallers(w http.ResponseWriter, r *http.Request) {
 }
 
 func getGogDetails(id string) (*gog_integration.Details, error) {
-	gogDetailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogDetails)
-	if err != nil {
-		return nil, err
-	}
+
+	gogDetailsDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogDetails)
 
 	kvGogDetails, err := kevlar.New(gogDetailsDir, kevlar.JsonExt)
 	if err != nil {

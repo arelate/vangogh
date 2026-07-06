@@ -50,10 +50,7 @@ func RelayoutDownloads(
 		return errors.New("from and to downloads layouts must be valid and different")
 	}
 
-	gogDetailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogDetails)
-	if err != nil {
-		return err
-	}
+	gogDetailsDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogDetails)
 
 	kvGogDetails, err := kevlar.New(gogDetailsDir, kevlar.JsonExt)
 	if err != nil {

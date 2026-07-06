@@ -19,10 +19,7 @@ func GetGogOrderPages(hc *http.Client, uat string, since int64, force bool) erro
 	gopa := nod.NewProgress("getting %s...", vangogh_integration.GogOrderPage)
 	defer gopa.Done()
 
-	gogOrderPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogOrderPage)
-	if err != nil {
-		return err
-	}
+	gogOrderPagesDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogOrderPage)
 
 	kvGogOrderPages, err := kevlar.New(gogOrderPagesDir, kevlar.JsonExt)
 	if err != nil {

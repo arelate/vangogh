@@ -438,10 +438,8 @@ func gogAuthHttpClient() (*http.Client, error) {
 }
 
 func readGogUserAccessToken() (string, error) {
-	gogUatDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogUserAccessToken)
-	if err != nil {
-		return "", err
-	}
+
+	gogUatDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogUserAccessToken)
 
 	kvGogUat, err := kevlar.New(gogUatDir, kevlar.JsonExt)
 	if err != nil {

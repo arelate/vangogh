@@ -22,10 +22,7 @@ func GetDeckCompatibilityReports(steamGogIds map[string][]string, force bool) er
 	gdcra := nod.NewProgress("getting %s...", vangogh_integration.SteamDeckCompatibilityReport)
 	defer gdcra.Done()
 
-	deckCompatibilityReportsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.SteamDeckCompatibilityReport)
-	if err != nil {
-		return err
-	}
+	deckCompatibilityReportsDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.SteamDeckCompatibilityReport)
 
 	kvDeckCompatibilityReports, err := kevlar.New(deckCompatibilityReportsDir, kevlar.JsonExt)
 	if err != nil {

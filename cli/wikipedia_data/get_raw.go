@@ -22,10 +22,7 @@ func GetRaw(wikipediaGogIds map[string][]string, force bool) error {
 	gra := nod.NewProgress("getting %s...", vangogh_integration.WikipediaRaw)
 	defer gra.Done()
 
-	rawDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.WikipediaRaw)
-	if err != nil {
-		return err
-	}
+	rawDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.WikipediaRaw)
 
 	kvRaw, err := kevlar.New(rawDir, kevlar.TxtExt)
 	if err != nil {

@@ -18,10 +18,7 @@ func GetRelatedGogApiProducts(hc *http.Client, uat string, since int64, force bo
 	grapva := nod.NewProgress("getting related %s...", vangogh_integration.GogApiProducts)
 	defer grapva.Done()
 
-	gogApiProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogApiProducts)
-	if err != nil {
-		return err
-	}
+	gogApiProductsDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogApiProducts)
 
 	kvGogApiProducts, err := kevlar.New(gogApiProductsDir, kevlar.JsonExt)
 	if err != nil {

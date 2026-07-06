@@ -38,10 +38,7 @@ func MissingLocalDownloads(
 		return nil, err
 	}
 
-	gogDetailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogDetails)
-	if err != nil {
-		return nil, err
-	}
+	gogDetailsDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogDetails)
 
 	kvGogDetails, err := kevlar.New(gogDetailsDir, kevlar.JsonExt)
 	if err != nil {

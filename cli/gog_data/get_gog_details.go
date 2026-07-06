@@ -22,10 +22,7 @@ func GetGogDetails(ids []string, hc *http.Client, uat string, since int64, force
 	gda := nod.NewProgress("getting new or updated %s...", vangogh_integration.GogDetails)
 	defer gda.Done()
 
-	gogDetailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogDetails)
-	if err != nil {
-		return err
-	}
+	gogDetailsDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogDetails)
 
 	kvGogDetails, err := kevlar.New(gogDetailsDir, kevlar.JsonExt)
 	if err != nil {

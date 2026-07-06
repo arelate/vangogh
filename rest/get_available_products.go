@@ -37,10 +37,8 @@ func GetAvailableProducts(w http.ResponseWriter, r *http.Request) {
 
 func getGogAvailableProducts(rdx redux.Readable) ([]vangogh_integration.AvailableProduct, error) {
 
-	gogAccountPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogAccountPage)
-	if err != nil {
-		return nil, err
-	}
+	gogAccountPagesDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogAccountPage)
+
 	kvGogAccountPages, err := kevlar.New(gogAccountPagesDir, kevlar.JsonExt)
 	if err != nil {
 		return nil, err

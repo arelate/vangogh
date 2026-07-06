@@ -81,11 +81,7 @@ func Size(
 
 	if all {
 
-		var gogDetailsDir string
-		gogDetailsDir, err = vangogh_integration.AbsProductTypeDir(vangogh_integration.GogDetails)
-		if err != nil {
-			return err
-		}
+		gogDetailsDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogDetails)
 
 		var kvGogDetails kevlar.KeyValues
 		kvGogDetails, err = kevlar.New(gogDetailsDir, kevlar.JsonExt)

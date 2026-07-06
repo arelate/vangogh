@@ -70,7 +70,6 @@ func HandleFuncs() {
 		"GET /api/binary/{os}/{title...}":           AuthBearer(sb, Log(http.HandlerFunc(GetBinary)), perm.ReadApi, perm.ReadFiles),
 		"GET /api/gog-manual-url/{id}/{dt}/{mu...}": AuthBearer(sb, Log(http.HandlerFunc(GetGogManualUrl)), perm.ReadApi, perm.ReadFiles),
 		"GET /api/gog-image/{imageId}":              AuthBearer(sb, Log(http.HandlerFunc(GetGogImage)), perm.ReadApi, perm.ReadImages),
-		"GET /api/gog-images/{id}":                  AuthCookie(sb, Log(http.HandlerFunc(GetGogImages)), perm.ReadApi, perm.ReadImages),
 		"GET /api/metadata/{productType}/{id}":      AuthBearer(sb, Log(http.HandlerFunc(GetMetadata)), perm.ReadApi, perm.ReadProductData),
 		// debug endpoints
 		"GET /debug/{id}":                    AuthCookie(sb, Log(http.HandlerFunc(GetDebug)), perm.ReadDebug),

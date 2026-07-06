@@ -20,10 +20,7 @@ func GetGogAccountPages(hc *http.Client, uat string, since int64, force bool) er
 	gapa := nod.NewProgress("getting %s...", vangogh_integration.GogAccountPage)
 	defer gapa.Done()
 
-	gogAccountPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogAccountPage)
-	if err != nil {
-		return err
-	}
+	gogAccountPagesDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogAccountPage)
 
 	kvGogAccountPages, err := kevlar.New(gogAccountPagesDir, kevlar.JsonExt)
 	if err != nil {

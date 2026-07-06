@@ -21,10 +21,7 @@ func GetSummary(steamGogIds map[string][]string, since int64, force bool) error 
 	gsa := nod.NewProgress("getting %s...", vangogh_integration.ProtonDbSummary)
 	defer gsa.Done()
 
-	summaryDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.ProtonDbSummary)
-	if err != nil {
-		return err
-	}
+	summaryDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.ProtonDbSummary)
 
 	kvSummary, err := kevlar.New(summaryDir, kevlar.JsonExt)
 	if err != nil {

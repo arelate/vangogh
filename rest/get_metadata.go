@@ -23,11 +23,7 @@ func GetMetadata(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	productTypeDir, err := vangogh_integration.AbsProductTypeDir(productType)
-	if err != nil {
-		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-		return
-	}
+	productTypeDir := vangogh_integration.AbsProductTypeDir(productType)
 
 	kvProductType, err := kevlar.New(productTypeDir, productType.Ext())
 	if err != nil {

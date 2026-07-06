@@ -48,10 +48,7 @@ func Summarize(since int64) error {
 
 	// new products
 
-	gogApiProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogApiProducts)
-	if err != nil {
-		return err
-	}
+	gogApiProductsDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogApiProducts)
 
 	kvGogApiProducts, err := kevlar.New(gogApiProductsDir, kevlar.JsonExt)
 	if err != nil {
@@ -112,10 +109,7 @@ func Summarize(since int64) error {
 
 	// updated news
 
-	appNewsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.SteamAppNews)
-	if err != nil {
-		return err
-	}
+	appNewsDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.SteamAppNews)
 
 	kvAppNews, err := kevlar.New(appNewsDir, kevlar.JsonExt)
 	if err != nil {

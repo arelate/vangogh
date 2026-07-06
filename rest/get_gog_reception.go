@@ -50,10 +50,7 @@ func getSteamReviews(gogId string) (*steam_integration.AppReviews, error) {
 		return nil, errors.New("no steam app id for gog id " + gogId)
 	}
 
-	appReviewsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.SteamAppReviews)
-	if err != nil {
-		return nil, err
-	}
+	appReviewsDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.SteamAppReviews)
 
 	kvAppReviews, err := kevlar.New(appReviewsDir, kevlar.JsonExt)
 	if err != nil {

@@ -26,10 +26,7 @@ func GetGogCatalogPages(hc *http.Client, uat string, since int64) error {
 	gcpa := nod.NewProgress("getting %s...", vangogh_integration.GogCatalogPage)
 	defer gcpa.Done()
 
-	gogCatalogPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogCatalogPage)
-	if err != nil {
-		return err
-	}
+	gogCatalogPagesDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogCatalogPage)
 
 	kvGogCatalogPages, err := kevlar.New(gogCatalogPagesDir, kevlar.JsonExt)
 	if err != nil {

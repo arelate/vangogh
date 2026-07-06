@@ -21,10 +21,7 @@ func GetSteamPageId(steamGogIds map[string][]string, force bool) error {
 	gspia := nod.NewProgress("getting %s...", vangogh_integration.PcgwSteamPageId)
 	defer gspia.Done()
 
-	steamPageIdDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.PcgwSteamPageId)
-	if err != nil {
-		return err
-	}
+	steamPageIdDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.PcgwSteamPageId)
 
 	kvSteamPageId, err := kevlar.New(steamPageIdDir, kevlar.JsonExt)
 	if err != nil {

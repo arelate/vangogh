@@ -52,10 +52,7 @@ func GetDescriptionImages(ids []string, since int64, all, force bool) error {
 		return err
 	}
 
-	gogApiProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogApiProducts)
-	if err != nil {
-		return err
-	}
+	gogApiProductsDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogApiProducts)
 
 	kvGogApiProducts, err := kevlar.New(gogApiProductsDir, kevlar.JsonExt)
 	if err != nil {

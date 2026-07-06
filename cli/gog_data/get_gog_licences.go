@@ -22,10 +22,7 @@ func GetGogLicences(hc *http.Client, userAccessToken string) error {
 	gla := nod.Begin("getting %s...", productType)
 	defer gla.Done()
 
-	gogLicencesDir, err := vangogh_integration.AbsProductTypeDir(productType)
-	if err != nil {
-		return err
-	}
+	gogLicencesDir := vangogh_integration.AbsProductTypeDir(productType)
 
 	kvGogLicences, err := kevlar.New(gogLicencesDir, kevlar.JsonExt)
 	if err != nil {

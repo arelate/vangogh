@@ -103,11 +103,7 @@ func Validate(
 	}
 
 	if vo.all {
-		var gogDetailsDir string
-		gogDetailsDir, err = vangogh_integration.AbsProductTypeDir(vangogh_integration.GogDetails)
-		if err != nil {
-			return err
-		}
+		gogDetailsDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogDetails)
 
 		var kvGogDetails kevlar.KeyValues
 		kvGogDetails, err = kevlar.New(gogDetailsDir, kevlar.JsonExt)
@@ -156,10 +152,7 @@ func validationStatusIds(rdx redux.Readable, validationStatuses ...vangogh_integ
 	avia := nod.NewProgress("itemizing all not valid products...")
 	defer avia.Done()
 
-	gogDetailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogDetails)
-	if err != nil {
-		return nil, err
-	}
+	gogDetailsDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogDetails)
 
 	kvGogDetails, err := kevlar.New(gogDetailsDir, kevlar.JsonExt)
 	if err != nil {

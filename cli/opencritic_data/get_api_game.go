@@ -22,10 +22,7 @@ func GetApiGame(openCriticGogIds map[string][]string, force bool) error {
 	gaga := nod.NewProgress("getting %s...", vangogh_integration.OpenCriticApiGame)
 	defer gaga.Done()
 
-	apiGameDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.OpenCriticApiGame)
-	if err != nil {
-		return err
-	}
+	apiGameDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.OpenCriticApiGame)
 
 	kvApiGame, err := kevlar.New(apiGameDir, kevlar.JsonExt)
 	if err != nil {

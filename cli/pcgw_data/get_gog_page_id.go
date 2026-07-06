@@ -20,10 +20,7 @@ func GetGogPageId(gogIds map[string]any, force bool) error {
 	gspia := nod.NewProgress("getting %s...", vangogh_integration.PcgwGogPageId)
 	defer gspia.Done()
 
-	gogPageIdDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.PcgwGogPageId)
-	if err != nil {
-		return err
-	}
+	gogPageIdDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.PcgwGogPageId)
 
 	kvGogPageId, err := kevlar.New(gogPageIdDir, kevlar.JsonExt)
 	if err != nil {

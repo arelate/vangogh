@@ -22,10 +22,7 @@ func GetGamesDbGogProducts(ids []string, hc *http.Client, uat string, since int6
 	ggdpa := nod.NewProgress("getting %s...", vangogh_integration.GamesDbGogProducts)
 	defer ggdpa.Done()
 
-	gamesDbGogProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GamesDbGogProducts)
-	if err != nil {
-		return err
-	}
+	gamesDbGogProductsDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.GamesDbGogProducts)
 
 	kvGamesDbGogProducts, err := kevlar.New(gamesDbGogProductsDir, kevlar.JsonExt)
 	if err != nil {

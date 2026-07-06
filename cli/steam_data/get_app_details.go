@@ -22,10 +22,7 @@ func GetAppDetails(steamGogIds map[string][]string, force bool) error {
 	gada := nod.NewProgress("getting %s...", vangogh_integration.SteamAppDetails)
 	defer gada.Done()
 
-	appDetailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.SteamAppDetails)
-	if err != nil {
-		return err
-	}
+	appDetailsDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.SteamAppDetails)
 
 	kvAppDetails, err := kevlar.New(appDetailsDir, kevlar.JsonExt)
 	if err != nil {

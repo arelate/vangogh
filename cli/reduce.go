@@ -47,22 +47,9 @@ func Reduce(productTypes []vangogh_integration.ProductType, force bool) error {
 
 func reduceProductType(pt vangogh_integration.ProductType, force bool) error {
 
-	ptDir, err := vangogh_integration.AbsProductTypeDir(pt)
-	if err != nil {
-		return err
-	}
+	ptDir := vangogh_integration.AbsProductTypeDir(pt)
 
-	var ext string
-	switch pt {
-	case vangogh_integration.PcgwRaw:
-		fallthrough
-	case vangogh_integration.WikipediaRaw:
-		ext = kevlar.TxtExt
-	default:
-		ext = kevlar.JsonExt
-	}
-
-	kvPt, err := kevlar.New(ptDir, ext)
+	kvPt, err := kevlar.New(ptDir, pt.Ext())
 	if err != nil {
 		return err
 	}

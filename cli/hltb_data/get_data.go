@@ -23,10 +23,7 @@ func GetData(hltbGogIds map[string][]string, force bool) error {
 	gda := nod.NewProgress("gettings %s...", vangogh_integration.HltbData)
 	defer gda.Done()
 
-	dataDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.HltbData)
-	if err != nil {
-		return err
-	}
+	dataDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.HltbData)
 
 	kvData, err := kevlar.New(dataDir, kevlar.JsonExt)
 	if err != nil {
@@ -49,10 +46,7 @@ func GetData(hltbGogIds map[string][]string, force bool) error {
 
 func readBuildId() (string, error) {
 
-	rootPageDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.HltbRootPage)
-	if err != nil {
-		return "", err
-	}
+	rootPageDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.HltbRootPage)
 
 	kvRootPage, err := kevlar.New(rootPageDir, kevlar.HtmlExt)
 	if err != nil {

@@ -20,10 +20,7 @@ func GetGogUserAccessToken(hc *http.Client) error {
 	guata := nod.Begin("getting %s...", productType)
 	defer guata.Done()
 
-	gogUserAccessTokenDir, err := vangogh_integration.AbsProductTypeDir(productType)
-	if err != nil {
-		return err
-	}
+	gogUserAccessTokenDir := vangogh_integration.AbsProductTypeDir(productType)
 
 	kvGogUserAccessToken, err := kevlar.New(gogUserAccessTokenDir, kevlar.JsonExt)
 	if err != nil {

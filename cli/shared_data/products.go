@@ -149,10 +149,8 @@ func GetGogCatalogPagesProducts(since int64) ([]string, error) {
 	gcppa := nod.NewProgress(" enumerating %s...", vangogh_integration.GogCatalogPage)
 	defer gcppa.Done()
 
-	gogCatalogPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogCatalogPage)
-	if err != nil {
-		return nil, err
-	}
+	gogCatalogPagesDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogCatalogPage)
+
 	kvGogCatalogPages, err := kevlar.New(gogCatalogPagesDir, kevlar.JsonExt)
 	if err != nil {
 		return nil, err
@@ -207,10 +205,8 @@ func GetGogAccountPagesProducts(since int64) ([]string, error) {
 	gappa := nod.NewProgress(" enumerating %s...", vangogh_integration.GogAccountPage)
 	defer gappa.Done()
 
-	gogAccountPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogAccountPage)
-	if err != nil {
-		return nil, err
-	}
+	gogAccountPagesDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogAccountPage)
+
 	kvGogAccountPages, err := kevlar.New(gogAccountPagesDir, kevlar.JsonExt)
 	if err != nil {
 		return nil, err
@@ -262,10 +258,7 @@ func getGogAccountPageProducts(page string, kvGogAccountPages kevlar.KeyValues) 
 
 func GetGogDetailsUpdates(since int64) (map[string]any, error) {
 
-	gogDetailsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogDetails)
-	if err != nil {
-		return nil, err
-	}
+	gogDetailsDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogDetails)
 
 	kvGogDetails, err := kevlar.New(gogDetailsDir, kevlar.JsonExt)
 	if err != nil {
@@ -304,10 +297,7 @@ func getNewUpdatedGogOrderPagesProducts(since int64) (iter.Seq[string], error) {
 	gopa := nod.NewProgress(" enumerating %s new, updated products...", vangogh_integration.GogOrderPage)
 	defer gopa.Done()
 
-	gogOrderPageDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogOrderPage)
-	if err != nil {
-		return nil, err
-	}
+	gogOrderPageDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogOrderPage)
 
 	kvGogOrderPages, err := kevlar.New(gogOrderPageDir, kevlar.JsonExt)
 	if err != nil {
@@ -414,10 +404,7 @@ func getNewUpdatedGogAccountPages(kvDetails kevlar.KeyValues) (iter.Seq[string],
 	gnuapa := nod.NewProgress(" enumerating %s updates...", vangogh_integration.GogAccountPage)
 	defer gnuapa.Done()
 
-	gogAccountPagesDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogAccountPage)
-	if err != nil {
-		return nil, err
-	}
+	gogAccountPagesDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogAccountPage)
 
 	kvGogAccountPages, err := kevlar.New(gogAccountPagesDir, kevlar.JsonExt)
 	if err != nil {

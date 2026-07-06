@@ -23,10 +23,7 @@ func GetGogUserWishlist(hc *http.Client, uat string) error {
 	guwa := nod.Begin("getting %s...", productType)
 	defer guwa.Done()
 
-	gogUserWishlistDir, err := vangogh_integration.AbsProductTypeDir(productType)
-	if err != nil {
-		return err
-	}
+	gogUserWishlistDir := vangogh_integration.AbsProductTypeDir(productType)
 
 	kvGogUserWishlist, err := kevlar.New(gogUserWishlistDir, kevlar.JsonExt)
 	if err != nil {

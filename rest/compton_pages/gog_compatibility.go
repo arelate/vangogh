@@ -117,10 +117,7 @@ func getDeckAppCompatibilityReport(gogId string, rdx redux.Readable) (*steam_int
 
 	}
 
-	deckAppCompatibilityReportDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.SteamDeckCompatibilityReport)
-	if err != nil {
-		return nil, err
-	}
+	deckAppCompatibilityReportDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.SteamDeckCompatibilityReport)
 
 	kvDeckAppCompatibilityReport, err := kevlar.New(deckAppCompatibilityReportDir, kevlar.JsonExt)
 	if err != nil {

@@ -54,10 +54,7 @@ func DebugData(id string, pt vangogh_integration.ProductType) (compton.PageEleme
 
 	ptId := vangogh_integration.ProductTypeId(pt, productOrPageId)
 
-	absPtDir, err := vangogh_integration.AbsProductTypeDir(pt)
-	if err != nil {
-		return nil, err
-	}
+	absPtDir := vangogh_integration.AbsProductTypeDir(pt)
 
 	kv, err := kevlar.New(absPtDir, pt.Ext())
 	if err != nil {

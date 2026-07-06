@@ -43,10 +43,7 @@ func GetGogApiProducts(ids []string, hc *http.Client, uat string, since int64, f
 		}
 	}
 
-	gogApiProductsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogApiProducts)
-	if err != nil {
-		return err
-	}
+	gogApiProductsDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.GogApiProducts)
 
 	kvGogApiProducts, err := kevlar.New(gogApiProductsDir, kevlar.JsonExt)
 	if err != nil {

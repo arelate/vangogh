@@ -22,10 +22,7 @@ func GetAppReviews(steamGogIds map[string][]string, force bool) error {
 	gara := nod.NewProgress("getting %s...", vangogh_integration.SteamAppReviews)
 	defer gara.Done()
 
-	appReviewsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.SteamAppReviews)
-	if err != nil {
-		return err
-	}
+	appReviewsDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.SteamAppReviews)
 
 	kvAppReviews, err := kevlar.New(appReviewsDir, kevlar.JsonExt)
 	if err != nil {

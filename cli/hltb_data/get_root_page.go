@@ -19,10 +19,7 @@ func GetRootPage() error {
 	grpa := nod.Begin("getting %s...", productType)
 	defer grpa.Done()
 
-	rootPageDir, err := vangogh_integration.AbsProductTypeDir(productType)
-	if err != nil {
-		return err
-	}
+	rootPageDir := vangogh_integration.AbsProductTypeDir(productType)
 
 	kvRootPage, err := kevlar.New(rootPageDir, kevlar.HtmlExt)
 	if err != nil {

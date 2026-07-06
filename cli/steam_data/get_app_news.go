@@ -23,10 +23,7 @@ func GetAppNews(steamGogIds map[string][]string, force bool) error {
 	gana := nod.NewProgress("getting %s...", vangogh_integration.SteamAppNews)
 	defer gana.Done()
 
-	appNewsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.SteamAppNews)
-	if err != nil {
-		return err
-	}
+	appNewsDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.SteamAppNews)
 
 	kvAppNews, err := kevlar.New(appNewsDir, kevlar.JsonExt)
 	if err != nil {

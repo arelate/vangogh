@@ -53,10 +53,7 @@ func getAppNews(gogId string) (*steam_integration.AppNews, error) {
 		return nil, nil
 	}
 
-	appNewsDir, err := vangogh_integration.AbsProductTypeDir(vangogh_integration.SteamAppNews)
-	if err != nil {
-		return nil, err
-	}
+	appNewsDir := vangogh_integration.AbsProductTypeDir(vangogh_integration.SteamAppNews)
 
 	kvAppNews, err := kevlar.New(appNewsDir, kevlar.JsonExt)
 	if err != nil {
