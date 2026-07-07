@@ -32,7 +32,7 @@ func Updates(section string, rdx redux.Readable, showAll bool, permissions ...au
 	var month time.Month
 	var day int
 
-	if sdt, ok := rdx.GetLastVal(vangogh_integration.VangoghSyncEventsProperty, vangogh_integration.SyncPurchasesDataKey); ok {
+	if sdt, ok := rdx.GetLastVal(vangogh_integration.VangoghSyncEventsProperty, vangogh_integration.SyncAccountDataKey); ok {
 		if sdi, err := strconv.ParseInt(sdt, 10, 64); err == nil {
 			_, month, day = time.Unix(sdi, 0).Date()
 		}

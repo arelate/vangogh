@@ -94,7 +94,7 @@ func Sync(
 	if err = getAccountData(since, force); err != nil {
 		return setSyncInterrupted(err, syncEventsRdx)
 	} else {
-		if err = setSyncEvent(vangogh_integration.SyncPurchasesDataKey, syncEventsRdx); err != nil {
+		if err = setSyncEvent(vangogh_integration.SyncAccountDataKey, syncEventsRdx); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
 	}
@@ -109,7 +109,7 @@ func Sync(
 	if err = GetImages(nil, gog_integration.AllImageTypes(), true, force); err != nil {
 		return setSyncInterrupted(err, syncEventsRdx)
 	} else {
-		if err = setSyncEvent(vangogh_integration.SyncPurchasesImagesKey, syncEventsRdx); err != nil {
+		if err = setSyncEvent(vangogh_integration.SyncAccountImagesKey, syncEventsRdx); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
 	}
@@ -194,7 +194,7 @@ func Sync(
 		if err = getAdditionalData(since, force); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		} else {
-			if err = setSyncEvent(vangogh_integration.SyncExtraData, syncEventsRdx); err != nil {
+			if err = setSyncEvent(vangogh_integration.SyncAdditionalData, syncEventsRdx); err != nil {
 				return setSyncInterrupted(err, syncEventsRdx)
 			}
 		}
@@ -209,7 +209,7 @@ func Sync(
 		if err = GetImages(nil, gog_integration.AllImageTypes(), true, force); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		} else {
-			if err = setSyncEvent(vangogh_integration.SyncExtraImagesKey, syncEventsRdx); err != nil {
+			if err = setSyncEvent(vangogh_integration.SyncAdditionalImagesKey, syncEventsRdx); err != nil {
 				return setSyncInterrupted(err, syncEventsRdx)
 			}
 		}
