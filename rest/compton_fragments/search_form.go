@@ -72,17 +72,6 @@ func operatingSystemsDatalist() map[string]string {
 		vangogh_integration.Linux})
 }
 
-var sortProperties = []string{
-	vangogh_integration.GogGlobalReleaseDateProperty,
-	vangogh_integration.GogReleaseDateProperty,
-	vangogh_integration.GogOrderDateProperty,
-	vangogh_integration.GogTitleProperty,
-	vangogh_integration.GogRatingProperty,
-	vangogh_integration.GogDiscountPercentageProperty,
-	vangogh_integration.HltbHoursToCompleteMainProperty,
-	vangogh_integration.HltbHoursToCompletePlusProperty,
-	vangogh_integration.HltbHoursToComplete100Property}
-
 func propertiesDatalist(properties []string) map[string]string {
 	dl := make(map[string]string)
 	for _, p := range properties {
@@ -92,7 +81,7 @@ func propertiesDatalist(properties []string) map[string]string {
 }
 
 func sortDatalist() map[string]string {
-	return propertiesDatalist(sortProperties)
+	return propertiesDatalist(compton_data.SortProperties)
 }
 
 func productTypesDatalist() map[string]string {
