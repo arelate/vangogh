@@ -25,12 +25,6 @@ import (
 	"github.com/boggydigital/nod"
 )
 
-type dataFilter struct {
-	purchases          bool
-	extraData          bool
-	relatedApiProducts bool
-}
-
 var gogUserAccessTokenTypes = []vangogh_integration.ProductType{
 	vangogh_integration.GogLicences,
 	vangogh_integration.GogUserWishlist,
@@ -79,31 +73,44 @@ func GetDataHandler(u *url.URL) error {
 
 	productTypes := vangogh_integration.ProductTypesFromUrl(u)
 
+	q := u.Query()
+
+	accountData := q.Has(vangogh_integration.UrlAccountDataParameter)
+	additionalData := q.Has(vangogh_integration.UrlAdditionalDataParameter)
+
+	if accountData {
+		productTypes = append(productTypes, vangogh_integration.GogPurchaseProductTypes()...)
+	}
+
+	if additionalData {
+		productTypes = append(productTypes, slices.Collect(vangogh_integration.AdditionalProductTypes())...)
+	}
+
 	since, err := vangogh_integration.SinceHouseAgoFromUrl(u)
 	if err != nil {
 		return err
 	}
 
-	q := u.Query()
+	force := u.Query().Has(vangogh_integration.UrlForceParameter)
 
-	df := new(dataFilter{
-		purchases:          q.Has(vangogh_integration.UrlPurchasesParameter),
-		extraData:          q.Has(vangogh_integration.UrlExtraParameter),
-		relatedApiProducts: q.Has(vangogh_integration.UrlRelatedApiProductsParameter),
-	})
-
-	force := q.Has(vangogh_integration.UrlForceParameter)
-	return GetData(ids, productTypes, since, df, force)
+	return GetData(ids, productTypes, since, force)
 }
 
-func GetData(ids []string, productTypes []vangogh_integration.ProductType, since int64, dataFilter *dataFilter, force bool) error {
+func getAccountData(since int64, force bool) error {
+	return GetData(nil, vangogh_integration.GogPurchaseProductTypes(), since, force)
+}
 
-	if dataFilter.purchases {
-		productTypes = append(productTypes, vangogh_integration.GogPurchaseProductTypes()...)
-	}
-	if dataFilter.extraData {
-		productTypes = append(productTypes, slices.Collect(vangogh_integration.ExtraProductTypes())...)
-	}
+func getAdditionalData(since int64, force bool) error {
+	additionalProductTypes := slices.Collect(vangogh_integration.AdditionalProductTypes())
+	return GetData(nil, additionalProductTypes, since, force)
+}
+
+func getDownloadsData(ids ...string) error {
+	downloadsProductTypes := []vangogh_integration.ProductType{vangogh_integration.GogDetails}
+	return GetData(ids, downloadsProductTypes, -1, true)
+}
+
+func GetData(ids []string, productTypes []vangogh_integration.ProductType, since int64, force bool) error {
 
 	if len(productTypes) == 0 {
 		productTypes = slices.Collect(vangogh_integration.AllProductTypes())
@@ -169,10 +176,8 @@ func GetData(ids []string, productTypes []vangogh_integration.ProductType, since
 		if err = gog_data.GetGogApiProducts(ids, hc, uat, since, force); err != nil {
 			return err
 		}
-		if dataFilter.relatedApiProducts {
-			if err = gog_data.GetRelatedGogApiProducts(hc, uat, since, force); err != nil {
-				return err
-			}
+		if err = gog_data.GetRelatedGogApiProducts(hc, uat, since, force); err != nil {
+			return err
 		}
 	}
 

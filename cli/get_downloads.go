@@ -29,7 +29,7 @@ const (
 )
 
 type getDownloadOptions struct {
-	updateDetails bool
+	updateData    bool
 	validate      bool
 	checksumsOnly bool
 	queued        bool
@@ -55,7 +55,7 @@ func GetDownloadsHandler(u *url.URL) error {
 	}
 
 	gdo := &getDownloadOptions{
-		updateDetails: q.Has(vangogh_integration.UrlUpdateDetailsParameter),
+		updateData:    q.Has(vangogh_integration.UrlUpdateDataParameter),
 		validate:      q.Has(vangogh_integration.UrlValidateParameter),
 		checksumsOnly: q.Has(vangogh_integration.UrlChecksumsOnlyParameter),
 		queued:        q.Has(vangogh_integration.UrlQueuedParameter),
@@ -163,12 +163,8 @@ func GetDownloads(
 		return nil
 	}
 
-	if options.updateDetails {
-		if err = GetData(ids,
-			[]vangogh_integration.ProductType{vangogh_integration.GogDetails},
-			-1,
-			new(dataFilter),
-			true); err != nil {
+	if options.updateData {
+		if err = getDownloadsData(ids...); err != nil {
 			return err
 		}
 	}

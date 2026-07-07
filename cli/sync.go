@@ -17,6 +17,7 @@ import (
 )
 
 func SyncHandler(u *url.URL) error {
+
 	since, err := vangogh_integration.SinceHouseAgoFromUrl(u)
 	if err != nil {
 		return err
@@ -24,16 +25,22 @@ func SyncHandler(u *url.URL) error {
 
 	q := u.Query()
 
-	return Sync(
-		since,
-		vangogh_integration.OperatingSystemsFromUrl(u),
-		vangogh_integration.LanguageCodesFromUrl(u),
-		q.Has(vangogh_integration.UrlNoDlcsParameter),
-		q.Has(vangogh_integration.UrlNoExtrasParameter),
-		q.Has(vangogh_integration.UrlNoPatchesParameter),
-		vangogh_integration.DownloadsLayoutFromUrl(u),
-		q.Has(vangogh_integration.UrlAllDataParameter),
-		q.Has(vangogh_integration.UrlForceParameter))
+	operatingSystems := vangogh_integration.OperatingSystemsFromUrl(u)
+	languageCodes := vangogh_integration.LanguageCodesFromUrl(u)
+	noDlc := q.Has(vangogh_integration.UrlNoDlcsParameter)
+	noExtras := q.Has(vangogh_integration.UrlNoExtrasParameter)
+	noPatches := q.Has(vangogh_integration.UrlNoPatchesParameter)
+	downloadsLayout := vangogh_integration.DownloadsLayoutFromUrl(u)
+	additionalData := q.Has(vangogh_integration.UrlAdditionalDataParameter)
+	force := q.Has(vangogh_integration.UrlForceParameter)
+
+	return Sync(since,
+		operatingSystems,
+		languageCodes,
+		noDlc, noExtras, noPatches,
+		downloadsLayout,
+		additionalData,
+		force)
 }
 
 func Sync(
@@ -42,16 +49,28 @@ func Sync(
 	langCodes []string,
 	noDlcs, noExtras, noPatches bool,
 	downloadsLayout vangogh_integration.DownloadsLayout,
-	allData bool,
+	additionalData bool,
 	force bool) error {
 
 	// sync sequence:
-	// 1.
+	// 0. resolve since parameter and set to last sync completed if default
+	// 1. get account data
+	// 2. get missing images
+	// 3. get downloads updates and validate them
+	// 4. generate missing checksums
+	// 5. cleanup - remove downloads not linked to account data anymore (previous installer versions)
+	// 6. get videos metadata (titles)
+	// 7. get binaries - WINE and SteamCMD
+	// 8. get additional data and...
+	// - 8.1. images for additional data
+	// - 8.2. description images for additional data
+	// 9. backup metadata
 
 	sa := nod.Begin("syncing data...")
 	defer sa.Done()
 
-	syncEventsRdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), vangogh_integration.VangoghSyncEventsProperty)
+	syncEventsRdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
+		vangogh_integration.VangoghSyncEventsProperty)
 	if err != nil {
 		return err
 	}
@@ -71,7 +90,8 @@ func Sync(
 		return setSyncInterrupted(err, syncEventsRdx)
 	}
 
-	if err = GetData(nil, nil, since, new(dataFilter{purchases: true}), force); err != nil {
+	// 1
+	if err = getAccountData(since, force); err != nil {
 		return setSyncInterrupted(err, syncEventsRdx)
 	} else {
 		if err = setSyncEvent(vangogh_integration.SyncPurchasesDataKey, syncEventsRdx); err != nil {
@@ -85,7 +105,7 @@ func Sync(
 		return setSyncInterrupted(err, syncEventsRdx)
 	}
 
-	// get images
+	// 2
 	if err = GetImages(nil, gog_integration.AllImageTypes(), true, force); err != nil {
 		return setSyncInterrupted(err, syncEventsRdx)
 	} else {
@@ -94,8 +114,7 @@ func Sync(
 		}
 	}
 
-	// get downloads updates
-
+	// 3
 	var updatedDetails map[string]any
 	updatedDetails, err = shared_data.GetGogDetailsUpdates(since)
 	if err != nil {
@@ -113,11 +132,11 @@ func Sync(
 		noExtras,
 		noPatches,
 		downloadsLayout,
-		&getDownloadOptions{
+		new(getDownloadOptions{
 			validate: true,
 			queued:   true,
 			force:    true,
-		}); err != nil {
+		})); err != nil {
 		return setSyncInterrupted(err, syncEventsRdx)
 	} else {
 		if err = setSyncEvent(vangogh_integration.SyncDownloadsKey, syncEventsRdx); err != nil {
@@ -125,6 +144,7 @@ func Sync(
 		}
 	}
 
+	// 4
 	if err = GenerateMissingChecksums(operatingSystems, langCodes, noDlcs, noExtras, noPatches, downloadsLayout); err != nil {
 		return setSyncInterrupted(err, syncEventsRdx)
 	} else {
@@ -133,6 +153,7 @@ func Sync(
 		}
 	}
 
+	// 5
 	if err = Cleanup(nil,
 		operatingSystems,
 		langCodes,
@@ -149,6 +170,7 @@ func Sync(
 		}
 	}
 
+	// 6
 	if err = GetVideoMetadata(nil, true, false); err != nil {
 		return setSyncInterrupted(err, syncEventsRdx)
 	} else {
@@ -157,6 +179,7 @@ func Sync(
 		}
 	}
 
+	// 7
 	if err = GetBinaries(operatingSystems, true, true, force); err != nil {
 		return setSyncInterrupted(err, syncEventsRdx)
 	} else {
@@ -165,10 +188,10 @@ func Sync(
 		}
 	}
 
-	// getting additional data
-	if allData {
+	// 8
+	if additionalData {
 
-		if err = GetData(nil, nil, since, new(dataFilter{extraData: true, relatedApiProducts: true}), force); err != nil {
+		if err = getAdditionalData(since, force); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		} else {
 			if err = setSyncEvent(vangogh_integration.SyncExtraData, syncEventsRdx); err != nil {
@@ -182,7 +205,7 @@ func Sync(
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
 
-		// get extra images
+		// 8.1
 		if err = GetImages(nil, gog_integration.AllImageTypes(), true, force); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		} else {
@@ -191,7 +214,7 @@ func Sync(
 			}
 		}
 
-		// get description images
+		// 8.2
 		if err = GetDescriptionImages(nil, since, false, force); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		} else {
@@ -202,7 +225,7 @@ func Sync(
 
 	}
 
-	// backing up data
+	// 9
 	if err = Backup(); err != nil {
 		return setSyncInterrupted(err, syncEventsRdx)
 	} else {
@@ -253,7 +276,9 @@ func setSinceToLastSyncCompleted(since int64, syncEventsRdx redux.Readable) (int
 	// since-hours-ago specifies hours,
 	// so anything less than an hour in seconds would be default value
 	if utcNow-since < 60*60 {
-		if lscs, ok := syncEventsRdx.GetLastVal(vangogh_integration.VangoghSyncEventsProperty, vangogh_integration.SyncCompleteKey); ok && lscs != "" {
+		if lscs, ok := syncEventsRdx.GetLastVal(
+			vangogh_integration.VangoghSyncEventsProperty,
+			vangogh_integration.SyncCompleteKey); ok && lscs != "" {
 			if lsci, err := strconv.ParseInt(lscs, 10, 64); err == nil {
 				since = lsci
 			} else {
