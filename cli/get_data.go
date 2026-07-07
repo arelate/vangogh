@@ -113,7 +113,7 @@ func getDownloadsData(ids ...string) error {
 func GetData(ids []string, productTypes []vangogh_integration.ProductType, since int64, force bool) error {
 
 	if len(productTypes) == 0 {
-		productTypes = slices.Collect(vangogh_integration.AllProductTypes())
+		return errors.New("get-data requires a product-type or account-data or additional-data")
 	}
 
 	var err error
