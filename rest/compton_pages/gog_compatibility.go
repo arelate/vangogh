@@ -157,6 +157,8 @@ func addSteamCompatibilitySection(r compton.Registrar, pageStack compton.Element
 		steamAppCompatibilityProperty = vangogh_integration.SteamSteamOsAppCompatibilityCategoryProperty
 	case steamMachine:
 		steamAppCompatibilityProperty = vangogh_integration.SteamMachineCompatibilityCategoryProperty
+	case steamFrame:
+		steamAppCompatibilityProperty = vangogh_integration.SteamFrameCompatibilityCategoryProperty
 	case steamDeck:
 		fallthrough
 	default:
@@ -214,6 +216,8 @@ func addSteamCompatibilitySection(r compton.Registrar, pageStack compton.Element
 		getResults = dacr.GetSteamOsResults
 	case steamMachine:
 		getResults = dacr.GetSteamMachineResults
+	case steamFrame:
+		getResults = dacr.GetSteamFrameResults
 	case steamDeck:
 		fallthrough
 	default:
@@ -232,6 +236,8 @@ func addSteamCompatibilitySection(r compton.Registrar, pageStack compton.Element
 		decodeToken = steam_integration.SteamOsDecodeLocToken
 	case steamMachine:
 		decodeToken = steam_integration.SteamMachineDecodeLocToken
+	//case steamFrame:
+	//	decodeToken = steam_integration.SteamFrameDecodeLocToken
 	case steamDeck:
 		fallthrough
 	default:
@@ -244,6 +250,8 @@ func addSteamCompatibilitySection(r compton.Registrar, pageStack compton.Element
 		getDisplayTypes = dacr.GetSteamOsDisplayTypes
 	case steamMachine:
 		getDisplayTypes = dacr.GetSteamMachineDisplayTypes
+	case steamFrame:
+		getDisplayTypes = dacr.GetSteamFrameDisplayTypes
 	case steamDeck:
 		fallthrough
 	default:
