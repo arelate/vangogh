@@ -219,7 +219,12 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 	case vangogh_integration.SteamReviewScoreProperty:
 		if srs, ok := rdx.GetLastVal(property, steamAppId); ok && srs != "" {
 			if !isNotPositiveRating(srs) {
-				fmtProperty.values[fmtSteamRating(srs)] = hrefEmpty()
+				var steamReviewsDesc string
+				if srd, sure := rdx.GetLastVal(vangogh_integration.SteamReviewScoreDescProperty, steamAppId); sure && srd != "" {
+					steamReviewsDesc = srd
+				}
+
+				fmtProperty.values[fmtSteamRating(srs, steamReviewsDesc)] = hrefEmpty()
 			}
 		}
 	case vangogh_integration.OpenCriticMedianScoreProperty:
@@ -323,7 +328,7 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 		}
 	case vangogh_integration.SteamReviewScoreProperty:
 		if srs, ok := rdx.GetLastVal(property, steamAppId); ok && srs != "" {
-			fmtProperty.class = ReviewClass(fmtSteamRating(srs))
+			fmtProperty.class = ReviewClass(fmtSteamRating(srs, ""))
 		}
 	case vangogh_integration.OpenCriticTierProperty:
 		if oct, ok := rdx.GetLastVal(property, opencriticId); ok {
@@ -431,27 +436,17 @@ func fmtHltbRating(rs string) string {
 	return rd
 }
 
-func fmtSteamRating(rs string) string {
-	rd := ""
+func fmtSteamRating(rs, rd string) string {
 	if ri, err := strconv.ParseInt(rs, 10, 32); err == nil {
-		rd = vangogh_integration.RatingDesc(ri * 10)
+		if rd == "" {
+			rd = vangogh_integration.RatingDesc(ri * 10)
+		}
 		if ri > 0 {
 			rd += fmt.Sprintf(" %d%%", ri*10)
 		}
 	}
 	return rd
 
-}
-
-func FmtRatingValue(rs string) string {
-	var rv string
-	if rf, err := strconv.ParseFloat(rs, 64); err == nil {
-		ri := int64(rf)
-		if ri > 0 {
-			rv = fmt.Sprintf(" %d%%", ri)
-		}
-	}
-	return rv
 }
 
 func FmtRating(rs string) string {

@@ -64,6 +64,8 @@ github.com/boggydigital/wits v0.2.3 h1:Z0eB+QlIA18fJmblyV6ZJQ/swPYSFhOxfgMXOQz4/
 github.com/boggydigital/wits v0.2.3/go.mod h1:aR/z0vfMLtg0b4hcts0qiSTZcA51O8A2N3U9laqd2Lc=
 github.com/boggydigital/yet_urls v0.1.62 h1:OYPrno/DvLGE+gYf4N4E4GfBfNE63wCJDrw6lDf+Q2M=
 github.com/boggydigital/yet_urls v0.1.62/go.mod h1:yKUqUolrUOgs1D63d3/BJ5SKdrVoY2Qq7k/cQ9vOrVI=
+github.com/boggydigital/yet_urls v0.1.64 h1:2VjqOasVSIbNt+gfCgaAvKJle8lw/8xmnqiEV1jvP34=
+github.com/boggydigital/yet_urls v0.1.64/go.mod h1:CQ/o9+Ra4aFqgw/QsA7DE7KFTcozlY1A7oSLUcHAJgI=
 golang.org/x/crypto v0.53.0 h1:QZ4Muo8THX6CizN2vPPd5fBGHyogrdK9fG4wLPFUsto=
 golang.org/x/crypto v0.53.0/go.mod h1:DNLU434OwVakk9PzuwV8w62mAJpRJL3vsgcfp4Qnsio=
 golang.org/x/crypto v0.54.0 h1:YLIA59K4fiNzHzjnZt2tUJQjQtUWfWbeHBqKtk3eScw=

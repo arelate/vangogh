@@ -221,6 +221,7 @@ func GogProduct(id string, rdx redux.Readable, permissions ...author.Permission)
 			if steamAppId, sure := rdx.GetLastVal(vangogh_integration.GogSteamAppIdProperty, id); sure && steamAppId != "" {
 				if steamReviews, yeah := rdx.GetLastVal(vangogh_integration.SteamReviewScoreDescProperty, steamAppId); yeah {
 					rc := compton_fragments.ReviewClass(steamReviews)
+
 					if rsb, huh := compton_data.ReceptionSymbols[rc]; huh {
 						receptionSymbol = rsb
 					}
@@ -229,37 +230,35 @@ func GogProduct(id string, rdx redux.Readable, permissions ...author.Permission)
 					}
 
 					fmtReceptionBadges = append(fmtReceptionBadges, &compton.FormattedBadge{
-						Title: steamReviews,
+						Title: compton_fragments.ReviewClass(steamReviews),
 						Icon:  receptionSymbol,
 						Color: receptionColor,
 					})
 
 				}
-			}
+			} else {
+				if gogRating, yeah := rdx.GetLastVal(vangogh_integration.GogRatingProperty, id); yeah && gogRating != "" {
+					var gri int64
+					if gri, err = strconv.ParseInt(gogRating, 10, 32); err == nil {
+						rd := vangogh_integration.RatingDesc(gri * 2)
+						rc := compton_fragments.ReviewClass(rd)
 
-			//if srep, sure := rdx.GetLastVal(vangogh_integration.VangoghSummaryReviewsProperty, id); sure {
-			//
-			//	if rs, yeah := compton_data.ReceptionSymbols[srep]; yeah {
-			//		receptionSymbol = rs
-			//	}
-			//
-			//	if rc, yeah := compton_data.ReceptionColors[srep]; yeah {
-			//		receptionColor = rc
-			//	}
-			//
-			//	ratingsReviews := srep
-			//
-			//	if srap, yeah := rdx.GetLastVal(vangogh_integration.VangoghSummaryRatingProperty, id); yeah {
-			//		ratingsReviews = compton_fragments.FmtRatingValue(srap)
-			//	}
-			//
-			//	fmtReceptionBadges = append(fmtReceptionBadges, &compton.FormattedBadge{
-			//		Title: ratingsReviews,
-			//		Icon:  receptionSymbol,
-			//		Color: receptionColor,
-			//	})
-			//
-			//}
+						if rsb, huh := compton_data.ReceptionSymbols[rc]; huh {
+							receptionSymbol = rsb
+						}
+						if rcl, huh := compton_data.ReceptionColors[rc]; huh {
+							receptionColor = rcl
+						}
+
+						fmtReceptionBadges = append(fmtReceptionBadges, &compton.FormattedBadge{
+							Title: rd,
+							Icon:  receptionSymbol,
+							Color: receptionColor,
+						})
+					}
+
+				}
+			}
 
 			detailsSummary.AppendBadges(compton.Badges(p, fmtReceptionBadges...))
 		case compton_data.GogOfferingsSection:

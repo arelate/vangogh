@@ -42,16 +42,24 @@ func ProductSections(id string, rdx redux.Readable, permissions ...author.Permis
 		return nil, err
 	}
 
-	hasSteamAppNews, err := compton_data.HasKeyValuesBytes(id, vangogh_integration.SteamAppNews.String())
-	if err != nil {
-		return nil, err
+	var steamAppId string
+	if said, ok := rdx.GetLastVal(vangogh_integration.GogSteamAppIdProperty, id); ok && said != "" {
+		steamAppId = said
+	}
+
+	var hasSteamAppNews bool
+	if steamAppId != "" {
+		hasSteamAppNews, err = compton_data.HasKeyValuesBytes(steamAppId, vangogh_integration.SteamAppNews.String())
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	if hasChangelog || hasSteamAppNews {
 		hasSections = append(hasSections, compton_data.GogNewsSection)
 	}
 
-	if steamAppId, ok := rdx.GetLastVal(vangogh_integration.GogSteamAppIdProperty, id); ok && steamAppId != "" {
+	if steamAppId != "" {
 		if sdc, sure := rdx.GetLastVal(vangogh_integration.SteamDeckAppCompatibilityCategoryProperty, steamAppId); sure && sdc != "Unknown" {
 			hasSections = append(hasSections, compton_data.GogCompatibilitySection)
 		} else if pt, yeah := rdx.GetLastVal(vangogh_integration.ProtonDbTierProperty, steamAppId); yeah && pt != "" {

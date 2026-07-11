@@ -14,7 +14,7 @@ require (
 	github.com/boggydigital/kevlar v0.6.13
 	github.com/boggydigital/nod v0.1.30
 	github.com/boggydigital/redux v0.1.12
-	github.com/boggydigital/yet_urls v0.1.62
+	github.com/boggydigital/yet_urls v0.1.64
 	golang.org/x/net v0.57.0
 )
 
