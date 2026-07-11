@@ -91,7 +91,7 @@ func GogCompatibility(gogId string, rdx redux.Readable, permissions ...author.Pe
 		return s
 	}
 
-	for _, device := range []string{steamDeck, steamMachine, steamOs} {
+	for _, device := range []string{steamDeck, steamMachine, steamFrame, steamOs} {
 		addSteamCompatibilitySection(s, pageStack, gogId, title, deckCompatibilityReport, device, rdx)
 	}
 
@@ -236,8 +236,8 @@ func addSteamCompatibilitySection(r compton.Registrar, pageStack compton.Element
 		decodeToken = steam_integration.SteamOsDecodeLocToken
 	case steamMachine:
 		decodeToken = steam_integration.SteamMachineDecodeLocToken
-	//case steamFrame:
-	//	decodeToken = steam_integration.SteamFrameDecodeLocToken
+	case steamFrame:
+		decodeToken = steam_integration.SteamFrameDecodeLocToken
 	case steamDeck:
 		fallthrough
 	default:
