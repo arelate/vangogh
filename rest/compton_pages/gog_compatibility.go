@@ -28,8 +28,10 @@ const (
 )
 
 const (
-	steamDeck = "Steam Deck"
-	steamOs   = "SteamOS"
+	steamDeck    = "Steam Deck"
+	steamMachine = "Steam Machine"
+	steamFrame   = "Steam Frame"
+	steamOs      = "SteamOS"
 )
 
 var messageByCategory = map[string]string{
@@ -60,10 +62,10 @@ var displayTypeSymbols = map[string]compton.Symbol{
 	"Unknown":     compton.TriangleNeutral,
 }
 
-func GogCompatibility(id string, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
-	title, _ := rdx.GetLastVal(vangogh_integration.GogTitleProperty, id)
+func GogCompatibility(gogId string, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
+	title, _ := rdx.GetLastVal(vangogh_integration.GogTitleProperty, gogId)
 
-	s := compton_fragments.ProductSection(compton_data.GogCompatibilitySection, id, rdx)
+	s := compton_fragments.ProductSection(compton_data.GogCompatibilitySection, gogId, rdx)
 
 	pageStack := compton.FlexItems(s, direction.Column)
 	s.Append(pageStack)
@@ -74,11 +76,11 @@ func GogCompatibility(id string, rdx redux.Readable, permissions ...author.Permi
 		ColumnWidthRule(size.XXXSmall)
 	pageStack.Append(compatibilityRow)
 
-	for _, rrp := range compton_fragments.ProductProperties(s, id, rdx, compton_data.CompatibilityProperties, permissions...) {
+	for _, rrp := range compton_fragments.ProductProperties(s, gogId, rdx, compton_data.CompatibilityProperties, permissions...) {
 		compatibilityRow.Append(rrp)
 	}
 
-	deckCompatibilityReport, err := getDeckAppCompatibilityReport(id, rdx)
+	deckCompatibilityReport, err := getDeckAppCompatibilityReport(gogId, rdx)
 	if err != nil {
 		errorFspan := compton.Fspan(s, err.Error())
 		pageStack.Append(errorFspan)
@@ -89,8 +91,8 @@ func GogCompatibility(id string, rdx redux.Readable, permissions ...author.Permi
 		return s
 	}
 
-	for _, device := range []string{steamDeck, steamOs} {
-		addSteamCompatibilitySection(s, pageStack, id, title, deckCompatibilityReport, device, rdx)
+	for _, device := range []string{steamDeck, steamMachine, steamOs} {
+		addSteamCompatibilitySection(s, pageStack, gogId, title, deckCompatibilityReport, device, rdx)
 	}
 
 	return s
@@ -153,6 +155,8 @@ func addSteamCompatibilitySection(r compton.Registrar, pageStack compton.Element
 	switch steamDevice {
 	case steamOs:
 		steamAppCompatibilityProperty = vangogh_integration.SteamSteamOsAppCompatibilityCategoryProperty
+	case steamMachine:
+		steamAppCompatibilityProperty = vangogh_integration.SteamMachineCompatibilityCategoryProperty
 	case steamDeck:
 		fallthrough
 	default:
@@ -208,6 +212,8 @@ func addSteamCompatibilitySection(r compton.Registrar, pageStack compton.Element
 	switch steamDevice {
 	case steamOs:
 		getResults = dacr.GetSteamOsResults
+	case steamMachine:
+		getResults = dacr.GetSteamMachineResults
 	case steamDeck:
 		fallthrough
 	default:
@@ -224,6 +230,8 @@ func addSteamCompatibilitySection(r compton.Registrar, pageStack compton.Element
 	switch steamDevice {
 	case steamOs:
 		decodeToken = steam_integration.SteamOsDecodeLocToken
+	case steamMachine:
+		decodeToken = steam_integration.SteamMachineDecodeLocToken
 	case steamDeck:
 		fallthrough
 	default:
@@ -234,6 +242,8 @@ func addSteamCompatibilitySection(r compton.Registrar, pageStack compton.Element
 	switch steamDevice {
 	case steamOs:
 		getDisplayTypes = dacr.GetSteamOsDisplayTypes
+	case steamMachine:
+		getDisplayTypes = dacr.GetSteamMachineDisplayTypes
 	case steamDeck:
 		fallthrough
 	default:

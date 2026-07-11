@@ -4,6 +4,7 @@ import "github.com/arelate/southern_light/vangogh_integration"
 
 var CompatibilityProperties = []string{
 	vangogh_integration.SteamDeckAppCompatibilityCategoryProperty,
+	vangogh_integration.SteamMachineCompatibilityCategoryProperty,
 	vangogh_integration.SteamSteamOsAppCompatibilityCategoryProperty,
 	vangogh_integration.ProtonDbTierProperty,
 	vangogh_integration.ProtonDbConfidenceProperty,

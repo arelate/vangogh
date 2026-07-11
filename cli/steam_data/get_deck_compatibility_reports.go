@@ -96,6 +96,10 @@ func reduceDeckCompatibilityReportsProduct(steamAppId string, kvDeckCompatibilit
 		switch property {
 		case vangogh_integration.SteamDeckAppCompatibilityCategoryProperty:
 			values = []string{dcr.SteamDeckString()}
+		case vangogh_integration.SteamMachineCompatibilityCategoryProperty:
+			values = []string{dcr.SteamMachineString()}
+		case vangogh_integration.SteamFrameCompatibilityCategoryProperty:
+			values = []string{dcr.SteamFrameString()}
 		case vangogh_integration.SteamSteamOsAppCompatibilityCategoryProperty:
 			values = []string{dcr.SteamOsString()}
 		}
