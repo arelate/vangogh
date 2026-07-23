@@ -62,8 +62,7 @@ func ReduceGogLicences(kvGogLicences kevlar.KeyValues) error {
 	rla := nod.Begin(" reducing %s...", vangogh_integration.GogLicences)
 	defer rla.Done()
 
-	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
-		vangogh_integration.GogLicencesProperty)
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), vangogh_integration.GogLicencesProperties()...)
 	if err != nil {
 		return err
 	}
@@ -90,6 +89,10 @@ func ReduceGogLicences(kvGogLicences kevlar.KeyValues) error {
 	}
 
 	if err = rdx.CutKeys(key, slices.Collect(rdx.Keys(key))...); err != nil {
+		return err
+	}
+
+	if err = rdx.BatchAddValues(vangogh_integration.GogOwnedProperty, licencesMap); err != nil {
 		return err
 	}
 
