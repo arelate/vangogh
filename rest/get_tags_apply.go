@@ -22,6 +22,10 @@ func GetGogTagsApply(w http.ResponseWriter, r *http.Request) {
 	if len(r.Form[vangogh_integration.UrlIdParameter]) > 0 {
 		id = r.Form[vangogh_integration.UrlIdParameter][0]
 	}
+	if !isAllowed(id, digits) {
+		http.Error(w, errCharactersNotAllowed, http.StatusBadRequest)
+		return
+	}
 
 	owned := false
 	if len(r.Form[vangogh_integration.UrlConditionParameter]) > 0 {
