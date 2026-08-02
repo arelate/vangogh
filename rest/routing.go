@@ -50,12 +50,12 @@ func HandleFuncs() {
 		// binaries endpoints
 		"GET /binary/{os}/{title...}": AuthCookie(sb, Log(http.HandlerFunc(GetBinary)), perm.ReadFiles),
 		// auth data endpoints
-		"GET /wishlist/add":     AuthCookie(sb, Log(http.HandlerFunc(GetWishlistAdd)), perm.WriteWishlist),
-		"GET /wishlist/remove":  AuthCookie(sb, Log(http.HandlerFunc(GetWishlistRemove)), perm.WriteWishlist),
-		"GET /tags/edit":        AuthCookie(sb, Log(http.HandlerFunc(GetTagsEdit)), perm.WriteTagId),
-		"GET /tags/apply":       AuthCookie(sb, Log(http.HandlerFunc(GetTagsApply)), perm.WriteTagId),
-		"GET /local-tags/edit":  AuthCookie(sb, Log(http.HandlerFunc(GetLocalTagsEdit)), perm.WriteLocalTags),
-		"GET /local-tags/apply": AuthCookie(sb, Log(http.HandlerFunc(GetLocalTagsApply)), perm.WriteLocalTags),
+		"GET /gog-wishlist/add":    AuthCookie(sb, Log(http.HandlerFunc(GetGogWishlistAdd)), perm.WriteWishlist),
+		"GET /gog-wishlist/remove": AuthCookie(sb, Log(http.HandlerFunc(GetGogWishlistRemove)), perm.WriteWishlist),
+		"GET /gog-tags/edit":       AuthCookie(sb, Log(http.HandlerFunc(GetGogTagsEdit)), perm.WriteTagId),
+		"GET /gog-tags/apply":      AuthCookie(sb, Log(http.HandlerFunc(GetGogTagsApply)), perm.WriteTagId),
+		"GET /local-tags/edit":     AuthCookie(sb, Log(http.HandlerFunc(GetLocalTagsEdit)), perm.WriteLocalTags),
+		"GET /local-tags/apply":    AuthCookie(sb, Log(http.HandlerFunc(GetLocalTagsApply)), perm.WriteLocalTags),
 		// auth files endpoints
 		"GET /gog-manual-url/{id}/{dt}/{mu...}": AuthCookie(sb, Log(http.HandlerFunc(GetGogManualUrl)), perm.ReadFiles),
 		// products redirects

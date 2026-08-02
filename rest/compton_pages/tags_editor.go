@@ -81,7 +81,7 @@ func TagsEditor(
 	case vangogh_integration.VangoghLocalTagsProperty:
 		action = "/local-tags/apply"
 	case vangogh_integration.GogTagIdProperty:
-		action = "/tags/apply"
+		action = "/gog-tags/apply"
 	default:
 		panic("unknown tags property editor")
 	}

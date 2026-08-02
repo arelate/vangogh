@@ -303,16 +303,16 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 		if !owned || firstValue == vangogh_integration.TrueValue {
 			switch firstValue {
 			case vangogh_integration.TrueValue:
-				fmtProperty.actions["Remove"] = "/wishlist/remove?id=" + id
+				fmtProperty.actions["Remove"] = "/gog-wishlist/remove?id=" + id
 			case vangogh_integration.FalseValue:
 				fallthrough
 			default:
-				fmtProperty.actions["Add"] = "/wishlist/add?id=" + id
+				fmtProperty.actions["Add"] = "/gog-wishlist/add?id=" + id
 			}
 		}
 	case vangogh_integration.GogTagIdProperty:
 		if owned {
-			fmtProperty.actions["Edit"] = "/tags/edit?id=" + id
+			fmtProperty.actions["Edit"] = "/gog-tags/edit?id=" + id
 		}
 	case vangogh_integration.VangoghLocalTagsProperty:
 		fmtProperty.actions["Edit"] = "/local-tags/edit?id=" + id

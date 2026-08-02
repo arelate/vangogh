@@ -9,9 +9,9 @@ import (
 	"github.com/boggydigital/nod"
 )
 
-func GetTagsApply(w http.ResponseWriter, r *http.Request) {
+func GetGogTagsApply(w http.ResponseWriter, r *http.Request) {
 
-	// GET /tags/apply
+	// GET /gog-tags/apply
 
 	if err := r.ParseForm(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusBadRequest)

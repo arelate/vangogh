@@ -9,15 +9,17 @@ import (
 	"github.com/boggydigital/nod"
 )
 
-func GetWishlistRemove(w http.ResponseWriter, r *http.Request) {
+func GetGogWishlistRemove(w http.ResponseWriter, r *http.Request) {
 
-	// GET /wishlist/remove?id
+	// GET /gog-wishlist/remove?id
 
 	id := r.URL.Query().Get(vangogh_integration.UrlIdParameter)
+	if !isAllowed(id, digits) {
+		http.Error(w, errCharactersNotAllowed, http.StatusBadRequest)
+		return
+	}
 
-	acp := vangogh_integration.AbsCookiesPath()
-
-	jar, err := coost.Read(gog_integration.HostUrl(), acp)
+	jar, err := coost.Read(gog_integration.HostUrl(), vangogh_integration.AbsCookiesPath())
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
@@ -26,8 +28,9 @@ func GetWishlistRemove(w http.ResponseWriter, r *http.Request) {
 	hc := http.DefaultClient
 	hc.Jar = jar
 
-	if pids, err := vangogh_integration.RemoveFromLocalWishlist([]string{id}, nil); err == nil {
-		if err := gog_integration.RemoveFromWishlist(hc, pids...); err != nil {
+	var pids []string
+	if pids, err = vangogh_integration.RemoveFromLocalWishlist([]string{id}, nil); err == nil {
+		if err = gog_integration.RemoveFromWishlist(hc, pids...); err != nil {
 			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 			return
 		}
