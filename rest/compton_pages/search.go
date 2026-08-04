@@ -5,6 +5,7 @@ import (
 	"slices"
 	"strconv"
 
+	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
 	"github.com/boggydigital/author"
@@ -63,8 +64,23 @@ func Search(query map[string][]string, ids []string, from, to int, rdx redux.Rea
 		props := maps.Keys(query)
 		sortedPropes := slices.Sorted(props)
 		for _, prop := range sortedPropes {
-			vals := fq[prop]
-			queryFrow.PropVal(compton_data.PropertyTitles[prop], vals...)
+			switch prop {
+			case vangogh_integration.UrlSortParameter:
+				sortSelect := compton.Select()
+
+				for _, sp := range compton_data.SortProperties {
+					sortOption := compton.Option(sp, compton_data.PropertyTitles[sp])
+					if slices.Contains(fq[prop], compton_data.PropertyTitles[sp]) {
+						sortOption.SetAttribute("selected", "")
+					}
+					sortSelect.Append(sortOption)
+				}
+
+				queryFrow.PropVal("Sort")
+				queryFrow.Elements(sortSelect)
+			default:
+				queryFrow.PropVal(compton_data.PropertyTitles[prop], fq[prop]...)
+			}
 		}
 		queryFrow.LinkColor("Clear", "/search", color.Foreground)
 	}
