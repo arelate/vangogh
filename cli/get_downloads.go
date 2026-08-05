@@ -330,9 +330,9 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 
 	//downloading a manual URL is the following set of steps:
 	//0 - set the manual-url status to downloading
-	//1 - check if local file exists (based on manual-url -> filename) before attempting to resolve manual-url
-	//2 - resolve the source URL to an actual session URL
-	//3 - set association from manualUrl to a resolved resolvedFilename
+	//1 - resolve the source URL to an actual session URL
+	//2 - set association from manualUrl to a resolved resolvedFilename
+	//3 - check if local file exists (based on manual-url -> filename)
 	//4 - construct local relative dir and resolvedFilename based on manualUrl type (installer, movie, dlc, extra)
 	//5 - for a given set of extensions - download checksums for installers
 	//6 - download authorized session URL to a file
@@ -345,6 +345,33 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	}
 
 	// 1
+	resp, err := httpClient.Head(gog_integration.ManualDownloadUrl(dl.ManualUrl).String())
+	if err != nil {
+		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
+	}
+
+	//check for error status codes and store them for the manualUrl to provide a hint that locally missing file
+	//is not a problem that can be solved locally (it's a remote source error)
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		if err = gdd.rdx.ReplaceValues(vangogh_integration.VangoghDownloadStatusErrorProperty, dl.ManualUrl, strconv.Itoa(resp.StatusCode)); err != nil {
+			return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
+		}
+		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, errors.New(resp.Status))
+	}
+
+	resolvedUrl := resp.Request.URL
+
+	if err = resp.Body.Close(); err != nil {
+		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
+	}
+
+	// 2
+	_, resolvedFilename := path.Split(resolvedUrl.Path)
+	if err = gdd.rdx.ReplaceValues(vangogh_integration.GogManualUrlFilenameProperty, dl.ManualUrl, resolvedFilename); err != nil {
+		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
+	}
+
+	// 3
 	if !gdd.forceUpdate {
 		if filename, ok := gdd.rdx.GetLastVal(vangogh_integration.GogManualUrlFilenameProperty, dl.ManualUrl); ok && filename != "" {
 			absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.DownloadType, gdd.downloadsLayout)
@@ -368,33 +395,6 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 				return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 			}
 		}
-	}
-
-	// 2
-	resp, err := httpClient.Head(gog_integration.ManualDownloadUrl(dl.ManualUrl).String())
-	if err != nil {
-		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
-	}
-
-	//check for error status codes and store them for the manualUrl to provide a hint that locally missing file
-	//is not a problem that can be solved locally (it's a remote source error)
-	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		if err = gdd.rdx.ReplaceValues(vangogh_integration.VangoghDownloadStatusErrorProperty, dl.ManualUrl, strconv.Itoa(resp.StatusCode)); err != nil {
-			return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
-		}
-		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, errors.New(resp.Status))
-	}
-
-	resolvedUrl := resp.Request.URL
-
-	if err = resp.Body.Close(); err != nil {
-		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
-	}
-
-	// 3
-	_, resolvedFilename := path.Split(resolvedUrl.Path)
-	if err = gdd.rdx.ReplaceValues(vangogh_integration.GogManualUrlFilenameProperty, dl.ManualUrl, resolvedFilename); err != nil {
-		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 	}
 
 	// 4
