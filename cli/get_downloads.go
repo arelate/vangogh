@@ -37,6 +37,7 @@ type getDownloadOptions struct {
 	all           bool
 	debug         bool
 	force         bool
+	forceChecksum bool
 }
 
 var errTooManyDownloadErrors = errors.New("too many download errors")
@@ -172,6 +173,7 @@ func GetDownloads(
 	gdd := &getDownloadsDelegate{
 		rdx:             rdx,
 		forceUpdate:     options.force,
+		forceChecksum:   options.forceChecksum,
 		downloadsLayout: downloadsLayout,
 		checksumsOnly:   options.checksumsOnly,
 		manualUrlFilter: manualUrlFilter,
@@ -204,6 +206,7 @@ func GetDownloads(
 type getDownloadsDelegate struct {
 	rdx                 redux.Writeable
 	forceUpdate         bool
+	forceChecksum       bool
 	downloadsLayout     vangogh_integration.DownloadsLayout
 	checksumsOnly       bool
 	manualUrlFilter     []string
@@ -284,7 +287,7 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 		return err
 	}
 
-	dc := reqs.GetDoloClient()
+	dc := reqs.GetFilesDoloClient()
 
 	for _, dl := range list {
 		if len(gdd.manualUrlFilter) > 0 && !slices.Contains(gdd.manualUrlFilter, dl.ManualUrl) {
@@ -414,7 +417,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 
 			// delete existing checksum in case the origin checksum produced 404 for a silently
 			// updated new version and we'd use a generated checksum to validate
-			if _, err = os.Stat(absChecksumPath); err == nil && gdd.forceUpdate {
+			if _, err = os.Stat(absChecksumPath); err == nil && (gdd.forceUpdate || gdd.forceChecksum) {
 				if err = os.Remove(absChecksumPath); err != nil {
 					return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 				}
@@ -428,17 +431,13 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 
 			for range manualUrlDownloadRetries {
 
-				if err = dlClient.Download(resolvedUrl, gdd.forceUpdate, dca, absChecksumPath); err == nil {
+				if err = dlClient.Download(resolvedUrl, gdd.forceUpdate || gdd.forceChecksum, dca, absChecksumPath); err == nil {
 					dca.EndWithResult("downloaded")
 					break
 				} else {
 					//don't interrupt normal download due to checksum download error,
 					//so don't return this error, just log it
 					dca.Error(err)
-					gdd.totalDownloadErrors++
-					if gdd.totalDownloadErrors >= totalDownloadErrorsLimit {
-						return errTooManyDownloadErrors
-					}
 				}
 
 			}

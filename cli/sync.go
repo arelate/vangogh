@@ -133,9 +133,9 @@ func Sync(
 		noPatches,
 		downloadsLayout,
 		new(getDownloadOptions{
-			validate: true,
-			queued:   true,
-			force:    true,
+			validate:      true,
+			queued:        true,
+			forceChecksum: true,
 		})); err != nil {
 		return setSyncInterrupted(err, syncEventsRdx)
 	} else {

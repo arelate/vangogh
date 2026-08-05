@@ -98,10 +98,6 @@ func UpdateDownloads(
 		noPatches,
 		downloadsLayout,
 		&getDownloadOptions{
-			checksumsOnly: false,
-			missing:       false,
-			all:           false,
-			debug:         false,
-			force:         true,
+			forceChecksum: true,
 		})
 }

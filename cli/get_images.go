@@ -166,7 +166,7 @@ func getImage(imageUrl *url.URL, force bool) error {
 		}
 	}
 
-	dc := reqs.GetDoloClient()
+	dc := reqs.GetFilesDoloClient()
 
 	return dc.Download(imageUrl, force, nil, dstImageDir)
 }
