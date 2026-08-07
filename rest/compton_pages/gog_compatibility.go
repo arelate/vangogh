@@ -230,20 +230,6 @@ func addSteamCompatibilitySection(r compton.Registrar, pageStack compton.Element
 		pageStack.Append(compton.Hr())
 	}
 
-	var decodeToken func(string) string
-	switch steamDevice {
-	case steamOs:
-		decodeToken = steam_integration.SteamOsDecodeLocToken
-	case steamMachine:
-		decodeToken = steam_integration.SteamMachineDecodeLocToken
-	case steamFrame:
-		decodeToken = steam_integration.SteamFrameDecodeLocToken
-	case steamDeck:
-		fallthrough
-	default:
-		decodeToken = steam_integration.SteamDeckDecodeLocToken
-	}
-
 	var getDisplayTypes func() []string
 	switch steamDevice {
 	case steamOs:
@@ -271,7 +257,7 @@ func addSteamCompatibilitySection(r compton.Registrar, pageStack compton.Element
 			displayTypeIcon := compton.Fspan(r, "").ForegroundColor(displayTypeColors[dt])
 			displayTypeIcon.AddClass("svg")
 			displayTypeIcon.Append(compton.SvgUse(r, displayTypeSymbols[dt]))
-			decodedResult := decodeToken(result)
+			decodedResult := steam_integration.SteamDecodeLocToken(result)
 			if decodedResult == "" {
 				decodedResult = result
 			}
