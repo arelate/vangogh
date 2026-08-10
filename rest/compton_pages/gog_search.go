@@ -16,22 +16,19 @@ import (
 
 const filterSearchTitle = "Filter & search"
 
-func Search(query map[string][]string, ids []string, from, to int, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
+func GogSearch(section string, query map[string][]string, ids []string, from, to int, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
 
 	query = permittedQuery(query, permissions...)
 
-	p, pageStack := compton_fragments.AppPage(compton_data.AppNavSearch)
+	p, pageStack := compton_fragments.AppPage("GOG Search")
 
 	p.AppendSpeculationRules(compton.SpeculationRulesConservativeEagerness, "/*")
 
 	/* Nav stack = App navigation + Search shortcuts */
 
-	appNavLinks := compton_fragments.AppNavLinks(p, compton_data.AppNavSearch)
-
-	searchScope := compton_data.SearchScopeFromQuery(query)
-	searchLinks := compton_fragments.SearchLinks(p, searchScope, permissions...)
-
-	pageStack.Append(compton.FICenter(p, appNavLinks, searchLinks))
+	pageStack.Append(compton.FICenter(p,
+		compton_fragments.DistributorNavLinks(p, "GOG"),
+		compton_fragments.GogNavLinks(p, section)))
 
 	/* Filter & Search details */
 
@@ -48,7 +45,6 @@ func Search(query map[string][]string, ids []string, from, to int, rdx redux.Rea
 			compton_data.ManyItemsSinglePageTemplate,
 			compton_data.ManyItemsManyPagesTemplate)
 
-		//resultsBadge := compton.BadgeText(p, cf.Title(from, to, len(ids)), color.Foreground).FontSize(size.XXSmall)
 		filterSearchDetails.AppendBadges(compton.Badges(p, &compton.FormattedBadge{
 			Title: cf.Title(from, to, len(ids)),
 			Icon:  compton.NoSymbol,
@@ -65,10 +61,10 @@ func Search(query map[string][]string, ids []string, from, to int, rdx redux.Rea
 		for _, prop := range sortedPropes {
 			queryFrow.PropVal(compton_data.PropertyTitles[prop], fq[prop]...)
 		}
-		queryFrow.LinkColor("Clear", "/search", color.Foreground)
+		queryFrow.LinkColor("Clear", "/gog/search", color.Foreground)
 	}
 
-	filterSearchDetails.Append(compton_fragments.SearchForm(p, query, queryFrow, rdx, permissions...))
+	filterSearchDetails.Append(compton_fragments.GogSearchForm(p, query, queryFrow, rdx, permissions...))
 	pageStack.Append(filterSearchDetails)
 
 	if queryFrow != nil {
@@ -95,7 +91,7 @@ func Search(query map[string][]string, ids []string, from, to int, rdx redux.Rea
 		backToTopNavLinks.AppendLink(p, &compton.NavTarget{Href: "#_top", Title: "Back to top"})
 
 		nextPageNavLink := compton.NavLinks(p)
-		nextPageNavLink.AppendLink(p, &compton.NavTarget{Href: "/search?" + enq, Title: "Next page"})
+		nextPageNavLink.AppendLink(p, &compton.NavTarget{Href: "/gog/search?" + enq, Title: "Next page"})
 
 		pageStack.Append(compton.FICenter(p, backToTopNavLinks, nextPageNavLink).ColumnGap(size.Small))
 	}

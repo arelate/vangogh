@@ -2,35 +2,34 @@ package rest
 
 import (
 	"net/http"
+	"net/url"
 
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/rest/compton_pages"
 	"github.com/boggydigital/nod"
 )
 
-func GetUpdates(w http.ResponseWriter, r *http.Request) {
+func GetGogOwned(w http.ResponseWriter, r *http.Request) {
 
-	// GET /updates?section&all
+	// GET /gog/owned
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
 	}
 
-	q := r.URL.Query()
+	q := make(url.Values)
+	q.Set(vangogh_integration.GogIsAccountProductProperty, vangogh_integration.TrueValue)
+	q.Set(vangogh_integration.UrlSortParameter, vangogh_integration.GogAccountProductOrderProperty)
 
-	showAll := q.Has(vangogh_integration.UrlAllParameter)
-	section := q.Get(vangogh_integration.UrlSectionParameter)
-
-	permissions, err := sb.GetCookiePermissions(r)
+	ids, from, to, err := searchResults(q)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
 	}
 
-	updatesPage := compton_pages.Updates(section, rdx, showAll, permissions...)
-	if err = updatesPage.WriteResponse(w); err != nil {
+	gogSectionPage := compton_pages.GogSearch("Owned", q, ids, from, to, rdx)
+	if err = gogSectionPage.WriteResponse(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-		return
 	}
 }

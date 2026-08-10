@@ -99,12 +99,6 @@ func Sync(
 		}
 	}
 
-	// summarize sync updates now, since other updates are digital artifacts
-	// and won't affect the summaries
-	if err = Summarize(syncStart); err != nil {
-		return setSyncInterrupted(err, syncEventsRdx)
-	}
-
 	// 2
 	if err = GetImages(nil, gog_integration.AllImageTypes(), true, force); err != nil {
 		return setSyncInterrupted(err, syncEventsRdx)
@@ -199,12 +193,6 @@ func Sync(
 			}
 		}
 
-		// summarize extra data updates now, since other updates are digital artifacts
-		// and won't affect the summaries
-		if err = Summarize(syncStart); err != nil {
-			return setSyncInterrupted(err, syncEventsRdx)
-		}
-
 		// 8.1
 		if err = GetImages(nil, gog_integration.AllImageTypes(), true, force); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
@@ -232,11 +220,6 @@ func Sync(
 		if err = setSyncEvent(vangogh_integration.SyncBackup, syncEventsRdx); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		}
-	}
-
-	// print new, updated
-	if err = GetSummary(); err != nil {
-		return setSyncInterrupted(err, syncEventsRdx)
 	}
 
 	if err = setSyncEvent(vangogh_integration.SyncCompleteKey, syncEventsRdx); err != nil {

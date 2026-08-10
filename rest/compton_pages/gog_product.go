@@ -50,8 +50,8 @@ func GogProduct(id string, rdx redux.Readable, permissions ...author.Permission)
 
 	/* App navigation */
 
-	appNavLinks := compton_fragments.AppNavLinks(p, "")
-	pageStack.Append(compton.FICenter(p, appNavLinks))
+	distNavLinks := compton_fragments.DistributorNavLinks(p, "GOG")
+	pageStack.Append(compton.FICenter(p, distNavLinks))
 
 	/* Product poster */
 

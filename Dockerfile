@@ -36,8 +36,6 @@ VOLUME /var/lib/vangogh/description_images
 VOLUME /var/log/vangogh
 # metadata (hot storage)
 VOLUME /var/lib/vangogh/metadata
-# output (hot storage)
-VOLUME /var/lib/vangogh/output
 
 USER nobody
 

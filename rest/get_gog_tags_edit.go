@@ -43,7 +43,7 @@ func GetGogTagsEdit(w http.ResponseWriter, r *http.Request) {
 		owned = true
 	}
 
-	ltePage := compton_pages.TagsEditor(id, owned, vangogh_integration.GogTagIdProperty, tagNames, selectedValues, rdx)
+	ltePage := compton_pages.GogTagsEditor(id, owned, vangogh_integration.GogTagIdProperty, tagNames, selectedValues, rdx)
 	if err := ltePage.Write(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return

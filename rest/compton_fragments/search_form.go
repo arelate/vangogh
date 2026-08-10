@@ -19,9 +19,9 @@ import (
 	"golang.org/x/net/html/atom"
 )
 
-func SearchForm(r compton.Registrar, query map[string][]string, searchQuery *compton.FrowElement, rdx redux.Readable, permissions ...author.Permission) compton.Element {
+func GogSearchForm(r compton.Registrar, query map[string][]string, searchQuery *compton.FrowElement, rdx redux.Readable, permissions ...author.Permission) compton.Element {
 
-	form := compton.Form("/search", http.MethodGet)
+	form := compton.Form("/gog/search", http.MethodGet)
 	formStack := compton.FlexItems(r, direction.Column)
 	form.Append(formStack)
 

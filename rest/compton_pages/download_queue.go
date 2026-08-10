@@ -20,7 +20,7 @@ func DownloadsQueue(ids []string, rdx redux.Readable, permissions ...author.Perm
 	pageStack := compton.FlexItems(p, direction.Column)
 	p.Append(pageStack)
 
-	appNavLinks := compton_fragments.AppNavLinks(p, "")
+	appNavLinks := compton_fragments.DistributorNavLinks(p, "")
 	pageStack.Append(compton.FICenter(p, appNavLinks))
 
 	dqDetails := compton.DSLarge(p, title, len(ids) > 0).

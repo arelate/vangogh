@@ -6,4 +6,3 @@ images=/var/lib/vangogh/images
 description_images=/var/lib/vangogh/description_images
 logs=/var/lib/vangogh/logs
 metadata=/var/lib/vangogh/metadata
-output=/van/lib/vangogh

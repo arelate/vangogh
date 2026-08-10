@@ -26,7 +26,7 @@ func GogDescription(id string, pageTitle string, descOverview, descFeatures stri
 		RowGap(size.Normal)
 	p.Append(compton.FICenter(p, pageStack))
 
-	appNavLinks := compton_fragments.AppNavLinks(p, "")
+	appNavLinks := compton_fragments.DistributorNavLinks(p, "")
 	pageStack.Append(compton.FICenter(p, appNavLinks))
 
 	headingRow := compton.FlexItems(p, direction.Column).RowGap(size.XSmall)

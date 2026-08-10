@@ -2,6 +2,7 @@ package rest
 
 import (
 	"net/http"
+	"net/url"
 	"path"
 	"slices"
 	"strconv"
@@ -13,9 +14,9 @@ import (
 	"github.com/boggydigital/nod"
 )
 
-func GetSearch(w http.ResponseWriter, r *http.Request) {
+func GetGogSearch(w http.ResponseWriter, r *http.Request) {
 
-	// GET /search?(search_params)&from
+	// GET /gog/search?(query)&from
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
@@ -56,29 +57,50 @@ func GetSearch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var ids []string
+	ids, from, to, err := searchResults(q)
+	if err != nil {
+		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if len(ids) == 1 {
+		http.Redirect(w, r, path.Join("/gog-product", ids[0]), http.StatusPermanentRedirect)
+		return
+	}
+
+	permissions, err := sb.GetCookiePermissions(r)
+	if err != nil {
+		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+		return
+	}
+
+	searchPage := compton_pages.GogSearch("Search", query, ids, from, to, rdx, permissions...)
+	if err = searchPage.WriteResponse(w); err != nil {
+		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+	}
+}
+
+func searchResults(query url.Values) (ids []string, from int, to int, err error) {
 
 	if len(query) > 0 {
 
-		sort := q.Get(vangogh_integration.UrlSortParameter)
+		sort := query.Get(vangogh_integration.UrlSortParameter)
 		if sort == "" {
 			sort = vangogh_integration.GogTitleProperty
 		}
-		desc := q.Get(vangogh_integration.UrlDescendingParameter) == "true"
+		desc := query.Get(vangogh_integration.UrlDescendingParameter) == "true"
 
 		var found []string
 
 		if isSortDescOnly(query) {
 			found = slices.Collect(rdx.Keys(vangogh_integration.GogTitleProperty))
 		} else {
-			found = slices.Collect(rdx.Match(q))
+			found = slices.Collect(rdx.Match(query))
 		}
 
-		var err error
 		ids, err = rdx.Sort(found, desc, sort, vangogh_integration.GogTitleProperty, vangogh_integration.GogProductTypeProperty)
 		if err != nil {
-			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-			return
+			return nil, 0, 0, err
 		}
 
 		if from > len(ids)-1 {
@@ -93,21 +115,7 @@ func GetSearch(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if len(ids) == 1 {
-		http.Redirect(w, r, path.Join("/gog-product", ids[0]), http.StatusPermanentRedirect)
-		return
-	}
-
-	permissions, err := sb.GetCookiePermissions(r)
-	if err != nil {
-		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-		return
-	}
-
-	searchPage := compton_pages.Search(query, ids, from, to, rdx, permissions...)
-	if err = searchPage.WriteResponse(w); err != nil {
-		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-	}
+	return ids, from, to, nil
 }
 
 func isSortDescOnly(q map[string][]string) bool {

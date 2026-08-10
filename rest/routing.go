@@ -23,14 +23,16 @@ func HandleFuncs() {
 		// static resources
 		"GET /manifest.json": Log(http.HandlerFunc(GetManifest)),
 		"GET /icon.png":      Log(http.HandlerFunc(GetIcon)),
-		"GET /atom":          Log(http.HandlerFunc(GetAtom)),
 		// public data endpoints
 		"GET /login":  Log(http.HandlerFunc(GetLogin)),
 		"GET /logout": Log(http.HandlerFunc(sb.DeauthCookieSession)),
 		"POST /auth":  Log(http.HandlerFunc(sb.AuthBrowserUsernamePassword)),
 		// authenticated endpoints
-		"GET /updates":                AuthCookie(sb, Log(http.HandlerFunc(GetUpdates)), perm.ReadUpdates),
-		"GET /search":                 AuthCookie(sb, Log(http.HandlerFunc(GetSearch)), perm.ReadSearch),
+		"GET /gog/search":             AuthCookie(sb, Log(http.HandlerFunc(GetGogSearch)), perm.ReadSearch),
+		"GET /gog/owned":              AuthCookie(sb, Log(http.HandlerFunc(GetGogOwned)), perm.ReadOwned),
+		"GET /gog/catalog":            AuthCookie(sb, Log(http.HandlerFunc(GetGogCatalog)), perm.ReadProductData),
+		"GET /gog/wishlist":           AuthCookie(sb, Log(http.HandlerFunc(GetGogWishlist)), perm.ReadWishlist),
+		"GET /gog/sale":               AuthCookie(sb, Log(http.HandlerFunc(GetGogSale)), perm.ReadProductData),
 		"GET /gog-product/{id}":       AuthCookie(sb, Log(http.HandlerFunc(GetGogProduct)), perm.ReadProductData),
 		"GET /gog-slug/{slug}":        AuthCookie(sb, Log(http.HandlerFunc(GetGogSlug)), perm.ReadProductData),
 		"GET /gog-info/{id}":          AuthCookie(sb, Log(http.HandlerFunc(GetGogInfo)), perm.ReadProductData),
@@ -81,7 +83,9 @@ func HandleFuncs() {
 		"GET /import-cookies":  AuthCookie(sb, Log(http.HandlerFunc(GetImportCookies)), perm.WriteCookies),
 		"POST /import-cookies": AuthCookie(sb, Log(http.HandlerFunc(PostImportCookies)), perm.WriteCookies),
 		// start at the updates
-		"GET /": Redirect("/updates", http.StatusPermanentRedirect),
+		"GET /": Redirect("/gog", http.StatusPermanentRedirect),
+		// TODO: replace with dispatch based on permissions and data availability
+		"GET /gog": Redirect("/gog/owned", http.StatusPermanentRedirect),
 	}
 
 	for route, path := range compton_data.SearchScopes() {

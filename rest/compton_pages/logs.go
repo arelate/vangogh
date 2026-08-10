@@ -25,7 +25,7 @@ func Logs(rdx redux.Readable) compton.PageElement {
 	pageStack := compton.FlexItems(p, direction.Column)
 	p.Append(pageStack)
 
-	appNavLinks := compton_fragments.AppNavLinks(p, "")
+	appNavLinks := compton_fragments.DistributorNavLinks(p, "")
 	pageStack.Append(compton.FICenter(p, appNavLinks))
 
 	titleHeading := compton.HeadingText(title, 1)

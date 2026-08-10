@@ -76,8 +76,6 @@ get-images
     all
     force
 
-get-summary
-
 get-video-metadata
     id^&
     slug&
@@ -124,9 +122,6 @@ size
     missing
     debug
     all
-
-summarize
-    since-hours-ago
 
 sync
     since-hours-ago

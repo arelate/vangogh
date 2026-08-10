@@ -20,7 +20,7 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-func TagsEditor(
+func GogTagsEditor(
 	id string,
 	owned bool,
 	tagsProperty string,
@@ -41,8 +41,7 @@ func TagsEditor(
 
 	/* App navigation */
 
-	appNavLinks := compton_fragments.AppNavLinks(p, "")
-	pageStack.Append(compton.FICenter(p, appNavLinks))
+	pageStack.Append(compton.FICenter(p, compton_fragments.DistributorNavLinks(p, "GOG")))
 
 	/* Product poster */
 

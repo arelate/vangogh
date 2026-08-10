@@ -56,7 +56,7 @@ func GetGogTagsApply(w http.ResponseWriter, r *http.Request) {
 		hc.Jar = jar
 
 		if len(add) > 0 {
-			if err := vangogh_integration.AddTags(hc, []string{id}, add, nil); err != nil {
+			if err = vangogh_integration.AddTags(hc, []string{id}, add, nil); err != nil {
 				http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 				return
 			}
