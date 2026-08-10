@@ -79,8 +79,8 @@ func HandleFuncs() {
 		// cookies import
 		"GET /import-cookies":  AuthCookie(sb, Log(http.HandlerFunc(GetImportCookies)), perm.WriteCookies),
 		"POST /import-cookies": AuthCookie(sb, Log(http.HandlerFunc(PostImportCookies)), perm.WriteCookies),
-		// start at the updates
-		"GET /": Redirect("/gog/dispatch", http.StatusPermanentRedirect),
+		// start at the GOG owned
+		"GET /": Redirect("/gog/owned", http.StatusPermanentRedirect),
 	}
 
 	for p, h := range patternHandlers {

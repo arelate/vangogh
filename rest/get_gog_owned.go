@@ -3,8 +3,10 @@ package rest
 import (
 	"net/http"
 	"net/url"
+	"slices"
 
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/perm"
 	"github.com/arelate/vangogh/rest/compton_pages"
 	"github.com/boggydigital/nod"
 )
@@ -31,6 +33,11 @@ func GetGogOwned(w http.ResponseWriter, r *http.Request) {
 	permissions, err := sb.GetCookiePermissions(r)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if !slices.Contains(permissions, perm.ReadOwned) {
+		http.Redirect(w, r, "/gog/catalog", http.StatusTemporaryRedirect)
 		return
 	}
 
