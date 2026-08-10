@@ -10,7 +10,7 @@ import (
 
 func GetGogProduct(w http.ResponseWriter, r *http.Request) {
 
-	// GET /gog-product/{id}
+	// GET /gog/product/{id}
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)

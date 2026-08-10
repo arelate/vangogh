@@ -12,7 +12,7 @@ import (
 
 func GetGogFilenames(w http.ResponseWriter, r *http.Request) {
 
-	// GET /api/gog-filenames/{id}
+	// GET /api/gog/filenames/{id}
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)

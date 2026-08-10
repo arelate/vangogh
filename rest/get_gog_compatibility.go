@@ -10,7 +10,7 @@ import (
 
 func GetGogCompatibility(w http.ResponseWriter, r *http.Request) {
 
-	// GET /gog-compatibility/{id}
+	// GET /gog/compatibility/{id}
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)

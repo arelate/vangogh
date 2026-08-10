@@ -10,7 +10,7 @@ import (
 
 func GetGogTagsEdit(w http.ResponseWriter, r *http.Request) {
 
-	// GET /gog-tags/edit?id
+	// GET /gog/tags/edit?id
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)

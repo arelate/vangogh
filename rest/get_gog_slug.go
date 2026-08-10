@@ -12,7 +12,7 @@ import (
 
 func GetGogSlug(w http.ResponseWriter, r *http.Request) {
 
-	// GET /gog-slug/{slug}
+	// GET /gog/slug/{slug}
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
@@ -25,7 +25,7 @@ func GetGogSlug(w http.ResponseWriter, r *http.Request) {
 	q.Set(vangogh_integration.GogSlugProperty, slug)
 
 	for id := range rdx.Match(q, redux.FullMatch) {
-		http.Redirect(w, r, path.Join("/gog-product", id), http.StatusPermanentRedirect)
+		http.Redirect(w, r, path.Join("/gog/product", id), http.StatusPermanentRedirect)
 		return
 	}
 

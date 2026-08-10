@@ -11,7 +11,7 @@ import (
 
 func GetGogDescription(w http.ResponseWriter, r *http.Request) {
 
-	// GET /gog-description/{id}
+	// GET /gog/description/{id}
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)

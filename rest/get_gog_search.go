@@ -64,7 +64,7 @@ func GetGogSearch(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(ids) == 1 {
-		http.Redirect(w, r, path.Join("/gog-product", ids[0]), http.StatusPermanentRedirect)
+		http.Redirect(w, r, path.Join("/gog/product", ids[0]), http.StatusPermanentRedirect)
 		return
 	}
 

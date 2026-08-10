@@ -76,7 +76,7 @@ func GogInformation(id string, rdx redux.Readable, permissions ...author.Permiss
 			descriptionLinkTitle = "View Description"
 		}
 
-		descriptionLink := compton.AText(descriptionLinkTitle, path.Join("/gog-description", id))
+		descriptionLink := compton.AText(descriptionLinkTitle, path.Join("/gog/description", id))
 		descriptionLink.SetAttribute("target", "_top")
 		descriptionFspan.Append(descriptionLink)
 	}

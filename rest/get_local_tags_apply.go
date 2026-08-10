@@ -53,5 +53,5 @@ func GetLocalTagsApply(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	http.Redirect(w, r, path.Join("/gog-product", id), http.StatusTemporaryRedirect)
+	http.Redirect(w, r, path.Join("/gog/product", id), http.StatusTemporaryRedirect)
 }

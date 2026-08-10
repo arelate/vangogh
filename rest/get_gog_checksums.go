@@ -15,7 +15,7 @@ import (
 
 func GetGogChecksums(w http.ResponseWriter, r *http.Request) {
 
-	// GET /api/gog-checksums/{id}
+	// GET /api/gog/checksums/{id}
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)

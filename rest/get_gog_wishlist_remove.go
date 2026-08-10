@@ -11,7 +11,7 @@ import (
 
 func GetGogWishlistRemove(w http.ResponseWriter, r *http.Request) {
 
-	// GET /gog-wishlist/remove?id
+	// GET /gog/wishlist/remove?id
 
 	id := r.URL.Query().Get(vangogh_integration.UrlIdParameter)
 	if !isAllowed(id, digits) {

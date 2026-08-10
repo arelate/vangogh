@@ -10,7 +10,7 @@ import (
 
 func GetGogInfo(w http.ResponseWriter, r *http.Request) {
 
-	// GET /gog-info/{id}
+	// GET /gog/info/{id}
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)

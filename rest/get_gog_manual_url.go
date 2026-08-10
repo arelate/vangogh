@@ -12,7 +12,7 @@ import (
 
 func GetGogManualUrl(w http.ResponseWriter, r *http.Request) {
 
-	// GET /gog-manual-url/{manualUrl...}
+	// GET /gog/manual-url/{manualUrl...}
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)

@@ -21,7 +21,7 @@ func GogProductsList(r compton.Registrar, ids []string, from, to int, rdx redux.
 
 	for ii := from; ii < to; ii++ {
 		id := ids[ii]
-		productLink := compton.A(path.Join("/gog-product", id))
+		productLink := compton.A(path.Join("/gog/product", id))
 		if topTarget {
 			productLink.SetAttribute("target", "_top")
 		}

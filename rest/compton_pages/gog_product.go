@@ -106,6 +106,7 @@ func GogProduct(id string, rdx redux.Readable, permissions ...author.Permission)
 
 	for ii, section := range hasSections {
 
+		sectionId := strings.Replace(section, "/", "-", -1)
 		sectionTitle := compton_data.SectionTitles[section]
 		detailsSummary := compton.DSLarge(p, sectionTitle,
 			slices.Contains(openSections, section)).
@@ -113,7 +114,7 @@ func GogProduct(id string, rdx redux.Readable, permissions ...author.Permission)
 			MarkerColor(color.Gray).
 			DetailsMarginBlockEnd(size.Unset).
 			SummaryMarginBlockEnd(size.Normal)
-		detailsSummary.SetId(section)
+		detailsSummary.SetId(sectionId)
 		detailsSummary.SetTabIndex(ii + 1)
 		detailsSummary.SetAccessKey(compton_data.SectionAccessKeys[section])
 
@@ -358,7 +359,7 @@ func GogProduct(id string, rdx redux.Readable, permissions ...author.Permission)
 			eagerness = loading.Eager
 		}
 
-		ifh := compton.IframeExpandHost(p, section, path.Join("/", section, id), eagerness)
+		ifh := compton.IframeExpandHost(p, sectionId, path.Join("/", section, id), eagerness)
 		detailsSummary.Append(ifh)
 
 	}

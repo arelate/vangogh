@@ -14,7 +14,7 @@ import (
 
 func GetGogReception(w http.ResponseWriter, r *http.Request) {
 
-	// GET /gog-reception/{id}
+	// GET /gog/reception/{id}
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)

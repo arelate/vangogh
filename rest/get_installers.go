@@ -12,7 +12,7 @@ import (
 
 func GetGogInstallers(w http.ResponseWriter, r *http.Request) {
 
-	// GET /gog-installers/{id}
+	// GET /gog/installers/{id}
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)

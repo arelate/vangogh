@@ -268,7 +268,7 @@ func downloadLink(r compton.Registrar,
 
 	var link compton.Element
 
-	href := path.Join("/gog-manual-url", id, dl.DownloadType.String(), dl.ManualUrl)
+	href := path.Join("/gog/manual-url", id, dl.DownloadType.String(), dl.ManualUrl)
 
 	switch dl.DownloadType {
 	case vangogh_integration.Extra:

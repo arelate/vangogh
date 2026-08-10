@@ -11,7 +11,7 @@ import (
 
 func GetGogImage(w http.ResponseWriter, r *http.Request) {
 
-	// GET /gog-image/{imageId}
+	// GET /gog/image/{imageId}
 
 	imageId := r.PathValue("imageId")
 

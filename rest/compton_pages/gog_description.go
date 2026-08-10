@@ -112,7 +112,7 @@ func rewriteDescriptionImagesLinks(desc string) string {
 		if u, err := url.Parse(itemUrl); err != nil {
 			continue
 		} else {
-			ggUrl := path.Join("/description-image", u.Path)
+			ggUrl := path.Join("/gog", "description-image", u.Path)
 			desc = strings.Replace(desc, itemUrl, ggUrl, -1)
 		}
 	}
@@ -128,7 +128,7 @@ func rewriteGameLinks(desc string) string {
 			continue
 		} else {
 			_, slug := path.Split(u.Path)
-			ggUrl := path.Join("/gog-slug", slug)
+			ggUrl := path.Join("/gog/slug", slug)
 			desc = strings.Replace(desc, gameLink, ggUrl, -1)
 		}
 	}

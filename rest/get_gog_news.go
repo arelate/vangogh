@@ -15,7 +15,7 @@ import (
 
 func GetGogNews(w http.ResponseWriter, r *http.Request) {
 
-	// GET /gog-news/{id}
+	// GET /gog/news/{id}
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
@@ -23,7 +23,7 @@ func GetGogNews(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := r.PathValue(vangogh_integration.UrlIdParameter)
-	all := strings.Contains(r.URL.Path, "/all/")
+	all := strings.Contains(r.URL.Path, "/all")
 
 	appNews, err := getAppNews(id)
 	if err != nil {

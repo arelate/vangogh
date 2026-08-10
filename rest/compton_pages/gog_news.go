@@ -22,7 +22,7 @@ func GogNews(id string, rdx redux.Readable, san *steam_integration.AppNews, hasC
 	s.Append(pageStack)
 
 	if hasChangelog {
-		changelogLink := compton.A(path.Join("/gog-changelog", id))
+		changelogLink := compton.A(path.Join("/gog/changelog", id))
 		changelogLink.Append(compton.Fspan(s, "View GOG.com Changelog").
 			FontSize(size.Small).
 			ForegroundColor(color.Foreground))
@@ -59,10 +59,10 @@ func GogNews(id string, rdx redux.Readable, san *steam_integration.AppNews, hasC
 	if len(san.NewsItems) > 0 &&
 		len(communityAnnouncements) < len(san.NewsItems) {
 		title := "Show all news items types"
-		href := path.Join("/gog-news", "all", id)
+		href := path.Join("/gog/news", id, "all")
 		if all {
 			title = "Show only community announcements"
-			href = path.Join("/gog-news", id)
+			href = path.Join("/gog/news", id)
 		}
 
 		communityAnnouncementsNavLink := compton.NavLinks(s)

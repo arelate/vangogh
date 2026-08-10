@@ -1,13 +1,13 @@
 package compton_data
 
 const (
-	GogInfoSection          = "gog-info"
-	GogOfferingsSection     = "gog-offerings"
-	GogMediaSection         = "gog-media"
-	GogNewsSection          = "gog-news"
-	GogReceptionSection     = "gog-reception"
-	GogCompatibilitySection = "gog-compatibility"
-	GogInstallersSection    = "gog-installers"
+	GogInfoSection          = "gog/info"
+	GogOfferingsSection     = "gog/offerings"
+	GogMediaSection         = "gog/media"
+	GogNewsSection          = "gog/news"
+	GogReceptionSection     = "gog/reception"
+	GogCompatibilitySection = "gog/compatibility"
+	GogInstallersSection    = "gog/installers"
 )
 
 var SectionTitles = map[string]string{

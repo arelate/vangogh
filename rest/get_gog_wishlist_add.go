@@ -12,7 +12,7 @@ import (
 
 func GetGogWishlistAdd(w http.ResponseWriter, r *http.Request) {
 
-	// GET /gog-wishlist/add?id
+	// GET /gog/wishlist/add?id
 
 	id := r.URL.Query().Get(vangogh_integration.UrlIdParameter)
 	if !isAllowed(id, digits) {
@@ -40,5 +40,5 @@ func GetGogWishlistAdd(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, path.Join("/gog-product", id), http.StatusTemporaryRedirect)
+	http.Redirect(w, r, path.Join("/gog/product", id), http.StatusTemporaryRedirect)
 }
