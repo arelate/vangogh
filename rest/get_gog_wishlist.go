@@ -29,7 +29,13 @@ func GetGogWishlist(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	gogSectionPage := compton_pages.GogSearch("Wishlist", q, ids, from, to, rdx)
+	permissions, err := sb.GetCookiePermissions(r)
+	if err != nil {
+		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+		return
+	}
+
+	gogSectionPage := compton_pages.GogSearch("Wishlist", q, ids, from, to, rdx, permissions...)
 	if err = gogSectionPage.WriteResponse(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}
