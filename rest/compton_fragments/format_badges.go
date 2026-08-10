@@ -154,7 +154,7 @@ func formatBadge(id, property string, rdx redux.Readable) *compton.FormattedBadg
 			fmtBadge.Title = strings.Join(localTags, ", ")
 		}
 	case vangogh_integration.GogStoreTagsProperty:
-		if rdx.HasValue(vangogh_integration.GogStoreTagsProperty, id, compton_data.GogPreservationProgramTag) {
+		if rdx.HasValue(vangogh_integration.GogStoreTagsProperty, id, "Good Old Game") {
 			fmtBadge.Icon = compton.Gemstone
 		} else {
 			fmtBadge.Title = ""

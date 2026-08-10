@@ -2,8 +2,10 @@ package compton_pages
 
 import (
 	"maps"
+	"net/url"
 	"slices"
 	"strconv"
+	"strings"
 
 	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/arelate/vangogh/rest/compton_fragments"
@@ -85,7 +87,7 @@ func GogSearch(section string, query map[string][]string, ids []string, from, to
 
 	if to < len(ids) {
 		query["from"] = []string{strconv.Itoa(to)}
-		enq := compton_data.EncodeQuery(query)
+		enq := encodeQuery(query)
 
 		backToTopNavLinks := compton.NavLinks(p)
 		backToTopNavLinks.AppendLink(p, &compton.NavTarget{Href: "#_top", Title: "Back to top"})
@@ -98,9 +100,20 @@ func GogSearch(section string, query map[string][]string, ids []string, from, to
 
 	/* Standard app footer */
 
+	pageStack.Append(compton.Br(), compton_fragments.SyncStatus(p, rdx, permissions...))
+
 	pageStack.Append(compton.Br(), compton.FICenter(p, compton_fragments.GitHubLink(p), compton_fragments.LogoutLink(p)))
 
 	return p
+}
+
+func encodeQuery(query map[string][]string) string {
+	q := &url.Values{}
+	for property, values := range query {
+		q.Set(property, strings.Join(values, ", "))
+	}
+
+	return q.Encode()
 }
 
 func permittedQuery(query map[string][]string, permissions ...author.Permission) map[string][]string {

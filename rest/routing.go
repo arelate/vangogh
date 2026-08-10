@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/arelate/vangogh/perm"
-	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/boggydigital/author"
 	"github.com/boggydigital/nod"
 )
@@ -86,10 +85,6 @@ func HandleFuncs() {
 		"GET /": Redirect("/gog", http.StatusPermanentRedirect),
 		// TODO: replace with dispatch based on permissions and data availability
 		"GET /gog": Redirect("/gog/owned", http.StatusPermanentRedirect),
-	}
-
-	for route, path := range compton_data.SearchScopes() {
-		patternHandlers["GET /products/"+route] = Redirect(path, http.StatusPermanentRedirect)
 	}
 
 	for p, h := range patternHandlers {
