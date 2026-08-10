@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"errors"
 	"net/http"
 	"slices"
 
@@ -24,5 +25,7 @@ func GetGogDispatch(w http.ResponseWriter, r *http.Request) {
 	} else if slices.Contains(permissions, perm.ReadProductData) {
 		http.Redirect(w, r, "/gog/catalog", http.StatusPermanentRedirect)
 		return
+	} else {
+		http.Error(w, nod.Error(errors.New("unathorized to view product data")).Error(), http.StatusUnauthorized)
 	}
 }
