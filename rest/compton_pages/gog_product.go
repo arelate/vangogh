@@ -401,6 +401,8 @@ func GogProduct(id string, rdx redux.Readable, permissions ...author.Permission)
 
 	/* Standard app footer */
 
+	pageStack.Append(compton.Br(), compton_fragments.SyncStatus(p, rdx, permissions...))
+
 	var footerLinks []compton.Element
 
 	if slices.Contains(permissions, perm.ReadDebug) {
