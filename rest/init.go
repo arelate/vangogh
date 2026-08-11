@@ -8,10 +8,6 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-const (
-	SearchResultsLimit = 60 // divisible by 2,3,4,5,6
-)
-
 var (
 	operatingSystems []vangogh_integration.OperatingSystem
 	langCodes        []string
