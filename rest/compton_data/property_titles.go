@@ -53,6 +53,7 @@ var PropertyTitles = map[string]string{
 	vangogh_integration.ProtonDbConfidenceProperty:                   "ProtonDB Confidence",
 	vangogh_integration.UrlSortParameter:                             "Sort",
 	vangogh_integration.UrlDescendingParameter:                       "Desc",
+	vangogh_integration.UrlFromParameter:                             "From",
 	vangogh_integration.GogGlobalReleaseDateProperty:                 "Global Release",
 	vangogh_integration.GogReleaseDateProperty:                       "GOG.com Release",
 	vangogh_integration.GogOrderDateProperty:                         "GOG.com Order",
