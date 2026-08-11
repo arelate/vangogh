@@ -354,12 +354,7 @@ func GogProduct(id string, rdx redux.Readable, permissions ...author.Permission)
 			detailsSummary.SummaryMarginBlockEnd(size.Normal)
 		}
 
-		eagerness := loading.Lazy
-		if section == compton_data.GogInfoSection {
-			eagerness = loading.Eager
-		}
-
-		ifh := compton.IframeExpandHost(p, sectionId, path.Join("/", section, id), eagerness)
+		ifh := compton.IframeExpandHost(p, sectionId, path.Join("/", section, id), loading.Eager)
 		detailsSummary.Append(ifh)
 
 	}

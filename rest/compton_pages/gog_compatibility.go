@@ -35,14 +35,11 @@ const (
 )
 
 var messageByCategory = map[string]string{
-	"Verified": "Valve’s testing indicates that <span class='title'>%s</span> is " +
-		"<a class='Verified' target='_top' href='/search?steam-deck-app-compatibility-category=Verified'>Verified</a> on %s. " +
+	"Verified": "Valve’s testing indicates that <span class='title'>%s</span> is <span class='Verified'>Verified</span> on %s. " +
 		"This game is fully functional on %s, and works great with the built-in controls and display.",
-	"Playable": "Valve’s testing indicates that <span class='title'>%s</span> is " +
-		"<a class='Playable' target='_top' href='/search?steam-deck-app-compatibility-category=Playable'>Playable</a> on %s. " +
+	"Playable": "Valve’s testing indicates that <span class='title'>%s</span> is <span class='Playable'>Playable</span> on %s. " +
 		"This game is functional on %s, but might require extra effort to interact with or configure.",
-	"Unsupported": "Valve’s testing indicates that <span class='title'>%s</span> is " +
-		"<a class='Unsupported' target='_top' href='/search?steam-deck-app-compatibility-category=Unsupported'>Unsupported</a> on %s. " +
+	"Unsupported": "Valve’s testing indicates that <span class='title'>%s</span> is <span class='Unsupported'>Unsupported</span> on %s. " +
 		"Some or all of this game currently doesn't function on %s.",
 	"Unknown": "Valve is still learning about <span class='title'>%s</span> on %s. " +
 		"We do not currently have further information regarding %s compatibility.",

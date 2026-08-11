@@ -48,7 +48,7 @@ func hrefSearch(property, value string) string {
 	q.Set(property, value)
 
 	u := new(url.URL{
-		Path: "/search",
+		Path: "/gog/search",
 	})
 
 	u.RawQuery = q.Encode()
@@ -64,7 +64,7 @@ func HrefSearchDescSortGogGlobalReleaseDate(property, value string) string {
 	q.Set(property, value)
 
 	u := new(url.URL{
-		Path: "/search",
+		Path: "/gog/search",
 	})
 
 	u.RawQuery = q.Encode()
