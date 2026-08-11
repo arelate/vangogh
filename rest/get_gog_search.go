@@ -103,6 +103,12 @@ func searchResults(query url.Values) (ids []string, from int, to int, err error)
 			return nil, 0, 0, err
 		}
 
+		if fromStr := query.Get("from"); fromStr != "" {
+			if from, err = strconv.Atoi(fromStr); err != nil {
+				return nil, 0, 0, err
+			}
+		}
+
 		if from > len(ids)-1 {
 			from = 0
 		}
