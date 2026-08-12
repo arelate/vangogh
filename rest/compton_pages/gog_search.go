@@ -3,6 +3,7 @@ package compton_pages
 import (
 	"maps"
 	"net/url"
+	"path"
 	"slices"
 	"strconv"
 
@@ -18,11 +19,19 @@ import (
 
 const filterSearchTitle = "Filter & search"
 
-func GogSearch(sectionUrl string, query url.Values, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
+func GogSearch(sectionUrl string, sortBy string, query url.Values, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
 
 	query = permittedQuery(query, permissions...)
 
 	maps.Copy(query, compton_data.GogSectionSearchQuery(sectionUrl))
+
+	if sortBy != "" {
+		if parameters, ok := compton_data.SortByParameters[sortBy]; ok {
+			for key, value := range parameters {
+				query.Set(key, value)
+			}
+		}
+	}
 
 	sectionTitle := "vangogh"
 	if st, ok := compton_data.GogSectionTitles[sectionUrl]; ok {
@@ -52,7 +61,7 @@ func GogSearch(sectionUrl string, query url.Values, rdx redux.Readable, permissi
 		return p.Error(err)
 	}
 
-	if shouldDisplayQuery(sectionUrl) {
+	if showSearchQuery(sectionUrl) {
 
 		if len(query) > 0 {
 
@@ -88,6 +97,23 @@ func GogSearch(sectionUrl string, query url.Values, rdx redux.Readable, permissi
 		}
 	}
 
+	if sortByOptions, ok := compton_data.GogSectionSortBy[sectionUrl]; ok {
+
+		sortOptionsNavLinks := compton.NavLinks(p)
+
+		for _, sortByOption := range sortByOptions {
+
+			sortOptionsNavLinks.AppendLink(p, new(compton.NavTarget{
+				Href:     path.Join(sectionUrl, sortByOption),
+				Title:    compton_data.SortByTitles[sortByOption],
+				Selected: isCurrentSort(sortByOption, query),
+			}))
+
+		}
+
+		pageStack.Append(compton.FICenter(p, sortOptionsNavLinks))
+	}
+
 	/* Search results product cards */
 
 	if len(ids) > 0 {
@@ -114,7 +140,7 @@ func GogSearch(sectionUrl string, query url.Values, rdx redux.Readable, permissi
 		backToTopNavLinks.AppendLink(p, &compton.NavTarget{Href: "#_top", Title: "Back to top"})
 
 		nextPageNavLink := compton.NavLinks(p)
-		nextPageNavLink.AppendLink(p, &compton.NavTarget{Href: sectionUrl + "?" + nextQuery.Encode(), Title: "Next page"})
+		nextPageNavLink.AppendLink(p, &compton.NavTarget{Href: path.Join(sectionUrl, sortBy) + "?" + nextQuery.Encode(), Title: "Next page"})
 
 		pageStack.Append(compton.FICenter(p, backToTopNavLinks, nextPageNavLink).ColumnGap(size.Small))
 	}
@@ -182,13 +208,25 @@ func useSearchQuery(sectionUrl string) bool {
 	}
 }
 
-func shouldDisplayQuery(sectionUrl string) bool {
+func showSearchQuery(sectionUrl string) bool {
 	switch sectionUrl {
 	case compton_data.GogSectionSearchUrl:
 		return true
 	default:
 		return false
 	}
+}
+
+func isCurrentSort(sortBy string, query url.Values) bool {
+	if sortParams, ok := compton_data.SortByParameters[sortBy]; ok {
+		for key, value := range sortParams {
+			if !query.Has(key) || query.Get(key) != value {
+				return false
+			}
+		}
+	}
+
+	return true
 }
 
 func isSortDescOnly(q map[string][]string) bool {

@@ -27,7 +27,9 @@ func getGogSection(sectionUrl string, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	gogSectionPage := compton_pages.GogSearch(sectionUrl, r.URL.Query(), rdx, permissions...)
+	sortBy := r.PathValue("sortBy")
+
+	gogSectionPage := compton_pages.GogSearch(sectionUrl, sortBy, r.URL.Query(), rdx, permissions...)
 	if err = gogSectionPage.WriteResponse(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 	}

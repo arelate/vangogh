@@ -52,6 +52,7 @@ func GogSectionSearchQuery(sectionUrl string) url.Values {
 	case GogSectionOwnedUrl:
 		q.Set(vangogh_integration.GogIsAccountProductProperty, vangogh_integration.TrueValue)
 		q.Set(vangogh_integration.UrlSortParameter, vangogh_integration.GogAccountProductOrderProperty)
+		q.Set(vangogh_integration.UrlDescendingParameter, vangogh_integration.FalseValue)
 	case GogSectionSaleUrl:
 		q.Set(vangogh_integration.GogOwnedProperty, vangogh_integration.FalseValue)
 		q.Set(vangogh_integration.GogIsDiscountedProperty, vangogh_integration.TrueValue)
@@ -67,4 +68,42 @@ func GogSectionSearchQuery(sectionUrl string) url.Values {
 	}
 
 	return q
+}
+
+const (
+	SortByPurchaseDate      = "purchases"
+	SortByDownloadUpdated   = "downloads"
+	SortByGogReleaseDate    = "gog-release"
+	SortByGlobalReleaseDate = "global-release"
+)
+
+var GogSectionSortBy = map[string][]string{
+	GogSectionOwnedUrl:   {SortByPurchaseDate, SortByDownloadUpdated},
+	GogSectionCatalogUrl: {SortByGogReleaseDate, SortByGlobalReleaseDate},
+}
+
+var SortByParameters = map[string]map[string]string{
+	SortByPurchaseDate: {
+		vangogh_integration.UrlSortParameter:       vangogh_integration.GogAccountProductOrderProperty,
+		vangogh_integration.UrlDescendingParameter: vangogh_integration.FalseValue,
+	},
+	SortByDownloadUpdated: {
+		vangogh_integration.UrlSortParameter:       vangogh_integration.VangoghDownloadCompletedProperty,
+		vangogh_integration.UrlDescendingParameter: vangogh_integration.TrueValue,
+	},
+	SortByGogReleaseDate: {
+		vangogh_integration.UrlSortParameter:       vangogh_integration.GogReleaseDateProperty,
+		vangogh_integration.UrlDescendingParameter: vangogh_integration.TrueValue,
+	},
+	SortByGlobalReleaseDate: {
+		vangogh_integration.UrlSortParameter:       vangogh_integration.GogGlobalReleaseDateProperty,
+		vangogh_integration.UrlDescendingParameter: vangogh_integration.TrueValue,
+	},
+}
+
+var SortByTitles = map[string]string{
+	SortByPurchaseDate:      "Purchase date",
+	SortByDownloadUpdated:   "Download updated",
+	SortByGogReleaseDate:    "GOG release",
+	SortByGlobalReleaseDate: "Global release",
 }
