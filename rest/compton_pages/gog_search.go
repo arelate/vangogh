@@ -20,14 +20,6 @@ const (
 	SearchResultsLimit = 60 // divisible by 2,3,4,5,6
 )
 
-var gogSectionTitles = map[string]string{
-	"/gog/search":   "Search",
-	"/gog/owned":    "Owned",
-	"/gog/catalog":  "Catalog",
-	"/gog/wishlist": "Wishlist",
-	"/gog/sale":     "Sale",
-}
-
 const filterSearchTitle = "Filter & search"
 
 func GogSearch(sectionUrl string, query url.Values, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
@@ -37,7 +29,7 @@ func GogSearch(sectionUrl string, query url.Values, rdx redux.Readable, permissi
 	maps.Copy(query, searchQueryByUrl(sectionUrl))
 
 	sectionTitle := "vangogh"
-	if st, ok := gogSectionTitles[sectionUrl]; ok {
+	if st, ok := compton_data.GogSectionTitles[sectionUrl]; ok {
 		sectionTitle = st
 	}
 
@@ -64,37 +56,40 @@ func GogSearch(sectionUrl string, query url.Values, rdx redux.Readable, permissi
 		return p.Error(err)
 	}
 
-	if len(query) > 0 {
+	if shouldDisplayQuery(sectionUrl) {
 
-		cf := compton.NewCountFormatter(
-			compton_data.SingleItemTemplate,
-			compton_data.ManyItemsSinglePageTemplate,
-			compton_data.ManyItemsManyPagesTemplate)
+		if len(query) > 0 {
 
-		filterSearchDetails.AppendBadges(compton.Badges(p, &compton.FormattedBadge{
-			Title: cf.Title(from, to, len(ids)),
-			Icon:  compton.NoSymbol,
-			Color: color.Gray,
-		}))
-	}
+			cf := compton.NewCountFormatter(
+				compton_data.SingleItemTemplate,
+				compton_data.ManyItemsSinglePageTemplate,
+				compton_data.ManyItemsManyPagesTemplate)
 
-	var queryFrow *compton.FrowElement
-	if len(query) > 0 {
-		queryFrow = compton.Frow(p).FontSize(size.XSmall)
-		fq := compton_fragments.FormatQuery(query, rdx)
-		props := maps.Keys(query)
-		sortedPropes := slices.Sorted(props)
-		for _, prop := range sortedPropes {
-			queryFrow.PropVal(compton_data.PropertyTitles[prop], fq[prop]...)
+			filterSearchDetails.AppendBadges(compton.Badges(p, &compton.FormattedBadge{
+				Title: cf.Title(from, to, len(ids)),
+				Icon:  compton.NoSymbol,
+				Color: color.Gray,
+			}))
 		}
-		queryFrow.LinkColor("Clear", "/gog/search", color.Foreground)
-	}
 
-	filterSearchDetails.Append(compton_fragments.GogSearchForm(p, query, queryFrow, rdx, permissions...))
-	pageStack.Append(filterSearchDetails)
+		var queryFrow *compton.FrowElement
+		if len(query) > 0 {
+			queryFrow = compton.Frow(p).FontSize(size.XSmall)
+			fq := compton_fragments.FormatQuery(query, rdx)
+			props := maps.Keys(query)
+			sortedPropes := slices.Sorted(props)
+			for _, prop := range sortedPropes {
+				queryFrow.PropVal(compton_data.PropertyTitles[prop], fq[prop]...)
+			}
+			queryFrow.LinkColor("Clear", "/gog/search", color.Foreground)
+		}
 
-	if queryFrow != nil {
-		pageStack.Append(compton.FICenter(p, queryFrow))
+		filterSearchDetails.Append(compton_fragments.GogSearchForm(p, query, queryFrow, rdx, permissions...))
+		pageStack.Append(filterSearchDetails)
+
+		if queryFrow != nil {
+			pageStack.Append(compton.FICenter(p, queryFrow))
+		}
 	}
 
 	/* Search results product cards */
@@ -113,7 +108,7 @@ func GogSearch(sectionUrl string, query url.Values, rdx redux.Readable, permissi
 
 		nextQuery := make(url.Values)
 
-		if useOriginalQuery(sectionUrl) {
+		if useSearchQuery(sectionUrl) {
 			maps.Copy(nextQuery, query)
 		}
 
@@ -182,9 +177,18 @@ func searchResults(query url.Values, rdx redux.Readable) (ids []string, from int
 	return ids, from, to, nil
 }
 
-func useOriginalQuery(sectionUrl string) bool {
+func useSearchQuery(sectionUrl string) bool {
 	switch sectionUrl {
-	case "/gog/search":
+	case compton_data.GogSectionSearchUrl:
+		return true
+	default:
+		return false
+	}
+}
+
+func shouldDisplayQuery(sectionUrl string) bool {
+	switch sectionUrl {
+	case compton_data.GogSectionSearchUrl:
 		return true
 	default:
 		return false

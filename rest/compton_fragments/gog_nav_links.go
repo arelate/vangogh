@@ -1,45 +1,22 @@
 package compton_fragments
 
-import "github.com/boggydigital/compton"
+import (
+	"github.com/arelate/vangogh/rest/compton_data"
+	"github.com/boggydigital/compton"
+)
 
 func GogNavLinks(r compton.Registrar, current string) compton.Element {
 
 	gogNavLinks := compton.NavLinks(r)
 
-	gogNavLinks.AppendLink(r, &compton.NavTarget{
-		Href:        "/gog/search",
-		Title:       "Search",
-		IconElement: compton.SvgUse(r, compton.Search),
-		Selected:    current == "Search",
-	})
-
-	gogNavLinks.AppendLink(r, &compton.NavTarget{
-		Href:        "/gog/owned",
-		Title:       "Owned",
-		IconElement: compton.SvgUse(r, compton.CircleCompactDisk),
-		Selected:    current == "Owned",
-	})
-
-	gogNavLinks.AppendLink(r, &compton.NavTarget{
-		Href:        "/gog/catalog",
-		Title:       "Catalog",
-		IconElement: compton.SvgUse(r, compton.ShoppingLabel),
-		Selected:    current == "Catalog",
-	})
-
-	gogNavLinks.AppendLink(r, &compton.NavTarget{
-		Href:        "/gog/wishlist",
-		Title:       "Wishlist",
-		IconElement: compton.SvgUse(r, compton.Heart),
-		Selected:    current == "Wishlist",
-	})
-
-	gogNavLinks.AppendLink(r, &compton.NavTarget{
-		Href:        "/gog/sale",
-		Title:       "Sale",
-		IconElement: compton.SvgUse(r, compton.Percent),
-		Selected:    current == "Sale",
-	})
+	for _, gogSection := range compton_data.AllGogSectionUrls() {
+		gogNavLinks.AppendLink(r, &compton.NavTarget{
+			Href:        gogSection,
+			Title:       compton_data.GogSectionTitles[gogSection],
+			IconElement: compton.SvgUse(r, compton_data.GogSectionSymbols[gogSection]),
+			Selected:    current == compton_data.GogSectionTitles[gogSection],
+		})
+	}
 
 	return gogNavLinks
 }
