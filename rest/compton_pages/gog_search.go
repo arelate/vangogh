@@ -16,17 +16,13 @@ import (
 	"github.com/boggydigital/redux"
 )
 
-const (
-	SearchResultsLimit = 60 // divisible by 2,3,4,5,6
-)
-
 const filterSearchTitle = "Filter & search"
 
 func GogSearch(sectionUrl string, query url.Values, rdx redux.Readable, permissions ...author.Permission) compton.PageElement {
 
 	query = permittedQuery(query, permissions...)
 
-	maps.Copy(query, searchQueryByUrl(sectionUrl))
+	maps.Copy(query, compton_data.GogSectionSearchQuery(sectionUrl))
 
 	sectionTitle := "vangogh"
 	if st, ok := compton_data.GogSectionTitles[sectionUrl]; ok {
@@ -167,10 +163,10 @@ func searchResults(query url.Values, rdx redux.Readable) (ids []string, from int
 		from = 0
 	}
 
-	to = from + SearchResultsLimit
+	to = from + compton_data.SearchResultsLimit
 	if to > len(ids) {
 		to = len(ids)
-	} else if to+SearchResultsLimit > len(ids) {
+	} else if to+compton_data.SearchResultsLimit > len(ids) {
 		to = len(ids)
 	}
 
@@ -232,28 +228,4 @@ func permittedQuery(query map[string][]string, permissions ...author.Permission)
 	}
 
 	return permQuery
-}
-
-func searchQueryByUrl(sectionUrl string) url.Values {
-	q := make(url.Values)
-
-	switch sectionUrl {
-	case "/gog/owned":
-		q.Set(vangogh_integration.GogIsAccountProductProperty, vangogh_integration.TrueValue)
-		q.Set(vangogh_integration.UrlSortParameter, vangogh_integration.GogAccountProductOrderProperty)
-	case "/gog/sale":
-		q.Set(vangogh_integration.GogOwnedProperty, vangogh_integration.FalseValue)
-		q.Set(vangogh_integration.GogIsDiscountedProperty, vangogh_integration.TrueValue)
-		q.Set(vangogh_integration.UrlSortParameter, vangogh_integration.GogDiscountPercentageProperty)
-		q.Set(vangogh_integration.UrlDescendingParameter, vangogh_integration.TrueValue)
-	case "/gog/wishlist":
-		q.Set(vangogh_integration.GogUserWishlistProperty, vangogh_integration.TrueValue)
-		q.Set(vangogh_integration.UrlSortParameter, vangogh_integration.GogReleaseDateProperty)
-		q.Set(vangogh_integration.UrlDescendingParameter, vangogh_integration.TrueValue)
-	case "/gog/catalog":
-		q.Set(vangogh_integration.UrlSortParameter, vangogh_integration.GogReleaseDateProperty)
-		q.Set(vangogh_integration.UrlDescendingParameter, vangogh_integration.TrueValue)
-	}
-
-	return q
 }
