@@ -36,5 +36,4 @@ func GetGogSearch(w http.ResponseWriter, r *http.Request) {
 	}
 
 	getGogSection("/gog/search", w, r)
-
 }

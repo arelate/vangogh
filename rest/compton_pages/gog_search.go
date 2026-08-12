@@ -113,7 +113,7 @@ func GogSearch(sectionUrl string, query url.Values, rdx redux.Readable, permissi
 
 		nextQuery := make(url.Values)
 
-		if sectionUrl == "/gog/search" {
+		if useOriginalQuery(sectionUrl) {
 			maps.Copy(nextQuery, query)
 		}
 
@@ -180,6 +180,15 @@ func searchResults(query url.Values, rdx redux.Readable) (ids []string, from int
 	}
 
 	return ids, from, to, nil
+}
+
+func useOriginalQuery(sectionUrl string) bool {
+	switch sectionUrl {
+	case "/gog/search":
+		return true
+	default:
+		return false
+	}
 }
 
 func isSortDescOnly(q map[string][]string) bool {
