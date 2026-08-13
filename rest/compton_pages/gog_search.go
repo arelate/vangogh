@@ -44,9 +44,29 @@ func GogSearch(sectionUrl string, sortBy string, query url.Values, rdx redux.Rea
 
 	/* Nav stack = App navigation + Search shortcuts */
 
-	pageStack.Append(compton.FICenter(p,
+	navLinksContainer := compton.FICenter(p)
+	pageStack.Append(navLinksContainer)
+
+	navLinksContainer.Append(
 		compton_fragments.DistributorNavLinks(p, "GOG"),
-		compton_fragments.GogNavLinks(p, sectionTitle)))
+		compton_fragments.GogNavLinks(p, sectionTitle))
+
+	if sortByOptions, ok := compton_data.GogSectionSortBy[sectionUrl]; ok {
+
+		sortOptionsNavLinks := compton.NavLinks(p)
+
+		for _, sortByOption := range sortByOptions {
+
+			sortOptionsNavLinks.AppendLink(p, new(compton.NavTarget{
+				Href:     path.Join(sectionUrl, sortByOption),
+				Title:    compton_data.SortByTitles[sortByOption],
+				Selected: isCurrentSort(sortByOption, query),
+			}))
+
+		}
+
+		navLinksContainer.Append(sortOptionsNavLinks)
+	}
 
 	/* Filter & Search details */
 
@@ -95,23 +115,6 @@ func GogSearch(sectionUrl string, sortBy string, query url.Values, rdx redux.Rea
 		if queryFrow != nil {
 			pageStack.Append(compton.FICenter(p, queryFrow))
 		}
-	}
-
-	if sortByOptions, ok := compton_data.GogSectionSortBy[sectionUrl]; ok {
-
-		sortOptionsNavLinks := compton.NavLinks(p)
-
-		for _, sortByOption := range sortByOptions {
-
-			sortOptionsNavLinks.AppendLink(p, new(compton.NavTarget{
-				Href:     path.Join(sectionUrl, sortByOption),
-				Title:    compton_data.SortByTitles[sortByOption],
-				Selected: isCurrentSort(sortByOption, query),
-			}))
-
-		}
-
-		pageStack.Append(compton.FICenter(p, sortOptionsNavLinks))
 	}
 
 	/* Search results product cards */

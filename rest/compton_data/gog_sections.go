@@ -102,8 +102,8 @@ var SortByParameters = map[string]map[string]string{
 }
 
 var SortByTitles = map[string]string{
-	SortByPurchaseDate:      "Purchase date",
-	SortByDownloadUpdated:   "Download updated",
+	SortByPurchaseDate:      "Purchases",
+	SortByDownloadUpdated:   "Updates",
 	SortByGogReleaseDate:    "GOG release",
 	SortByGlobalReleaseDate: "Global release",
 }
