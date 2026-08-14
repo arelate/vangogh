@@ -121,9 +121,9 @@ func GogSearch(sectionUrl string, sortBy string, query url.Values, rdx redux.Rea
 			compton_data.ManyItemsSinglePageTemplate,
 			compton_data.ManyItemsManyPagesTemplate)
 
-		pageStack.Append(compton.FICenter(p, compton.Fspan(p, cf.Title(from, to, len(ids))).
+		navLinksContainer.Append(compton.Fspan(p, cf.Title(from, to, len(ids))).
 			FontSize(size.XXSmall).
-			ForegroundColor(color.Gray)))
+			ForegroundColor(color.Gray))
 	}
 
 	/* Search results product cards */
@@ -136,7 +136,7 @@ func GogSearch(sectionUrl string, sortBy string, query url.Values, rdx redux.Rea
 			compton.Fspan(p, "Nothing found.").ForegroundColor(color.Foreground)))
 	}
 
-	/* Show more... button */
+	/* Next page button */
 
 	if to < len(ids) {
 
@@ -148,11 +148,13 @@ func GogSearch(sectionUrl string, sortBy string, query url.Values, rdx redux.Rea
 
 		nextQuery.Set(vangogh_integration.UrlFromParameter, strconv.Itoa(to))
 
+		nextPageNavLink := compton.NavLinks(p)
+		nextPageNavLink.AppendLink(p, &compton.NavTarget{Href: path.Join(sectionUrl, sortBy) + "?" + nextQuery.Encode(), Title: "Next"})
+
 		backToTopNavLinks := compton.NavLinks(p)
 		backToTopNavLinks.AppendLink(p, &compton.NavTarget{Href: "#_top", Title: "Back to top"})
 
-		nextPageNavLink := compton.NavLinks(p)
-		nextPageNavLink.AppendLink(p, &compton.NavTarget{Href: path.Join(sectionUrl, sortBy) + "?" + nextQuery.Encode(), Title: "Next page"})
+		navLinksContainer.Append(nextPageNavLink)
 
 		pageStack.Append(compton.FICenter(p, backToTopNavLinks, nextPageNavLink).ColumnGap(size.Small))
 	}
