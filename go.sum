@@ -4,6 +4,8 @@ github.com/arelate/southern_light v0.5.26 h1:OJbBHqVLi/+0qZA+JLd2BjRYopP0rHcufn2
 github.com/arelate/southern_light v0.5.26/go.mod h1:4LVfkvC38F7iYd+iUXVdExMFR9rNPEOAWrr6SIIX2V0=
 github.com/arelate/southern_light v0.5.27 h1:CE3Y0Zv7jrrJSQOQbyliCpbaxUAFU3gE37zfNVJbBhI=
 github.com/arelate/southern_light v0.5.27/go.mod h1:4LVfkvC38F7iYd+iUXVdExMFR9rNPEOAWrr6SIIX2V0=
+github.com/arelate/southern_light v0.5.28 h1:MM0UZJo6BjOFQSN8lj9inqmRCaNlNQwRw6QWulFKM+Y=
+github.com/arelate/southern_light v0.5.28/go.mod h1:4LVfkvC38F7iYd+iUXVdExMFR9rNPEOAWrr6SIIX2V0=
 github.com/boggydigital/author v0.1.33 h1:Fm0g8/1dwe42M+VmTNDeNawgGWgYJFRjZJcWQll9udo=
 github.com/boggydigital/author v0.1.33/go.mod h1:Gf5oTibwNL5s7oc4T14aigmCy6ivJeHqkFeSvQUZGBY=
 github.com/boggydigital/camino v0.2.19 h1:mAwgurNO7anUlBJmC4yhhZ4bpasiwa9b7soMCu9UjDg=
