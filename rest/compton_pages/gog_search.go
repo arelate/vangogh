@@ -81,6 +81,19 @@ func GogSearch(sectionUrl string, sortBy string, query url.Values, rdx redux.Rea
 		return p.Error(err)
 	}
 
+	nextQuery := make(url.Values)
+
+	if useSearchQuery(sectionUrl) {
+		maps.Copy(nextQuery, query)
+	}
+
+	nextQuery.Set(vangogh_integration.UrlFromParameter, strconv.Itoa(to))
+
+	nextPageUrl := path.Join(sectionUrl, sortBy) + "?" + nextQuery.Encode()
+
+	nextPageNavLink := compton.NavLinks(p)
+	nextPageNavLink.AppendLink(p, &compton.NavTarget{Href: nextPageUrl, Title: "Next page"})
+
 	if showSearchQuery(sectionUrl) {
 
 		if len(query) > 0 {
@@ -107,6 +120,7 @@ func GogSearch(sectionUrl string, sortBy string, query url.Values, rdx redux.Rea
 				queryFrow.PropVal(compton_data.PropertyTitles[prop], fq[prop]...)
 			}
 			queryFrow.LinkColor("Clear", "/gog/search", color.Foreground)
+			queryFrow.LinkColor("Next page", nextPageUrl, color.Gray)
 		}
 
 		filterSearchDetails.Append(compton_fragments.GogSearchForm(p, query, queryFrow, rdx, permissions...))
@@ -121,9 +135,14 @@ func GogSearch(sectionUrl string, sortBy string, query url.Values, rdx redux.Rea
 			compton_data.ManyItemsSinglePageTemplate,
 			compton_data.ManyItemsManyPagesTemplate)
 
-		navLinksContainer.Append(compton.Fspan(p, cf.Title(from, to, len(ids))).
+		nextPageLink := compton.A(nextPageUrl)
+		nextPageLink.SetAttribute("title", "Tap to advance")
+
+		nextPageLink.Append(compton.Fspan(p, cf.Title(from, to, len(ids))).
 			FontSize(size.XXSmall).
 			ForegroundColor(color.Gray))
+
+		navLinksContainer.Append(nextPageLink)
 	}
 
 	/* Search results product cards */
@@ -140,21 +159,8 @@ func GogSearch(sectionUrl string, sortBy string, query url.Values, rdx redux.Rea
 
 	if to < len(ids) {
 
-		nextQuery := make(url.Values)
-
-		if useSearchQuery(sectionUrl) {
-			maps.Copy(nextQuery, query)
-		}
-
-		nextQuery.Set(vangogh_integration.UrlFromParameter, strconv.Itoa(to))
-
-		nextPageNavLink := compton.NavLinks(p)
-		nextPageNavLink.AppendLink(p, &compton.NavTarget{Href: path.Join(sectionUrl, sortBy) + "?" + nextQuery.Encode(), Title: "Next"})
-
 		backToTopNavLinks := compton.NavLinks(p)
 		backToTopNavLinks.AppendLink(p, &compton.NavTarget{Href: "#_top", Title: "Back to top"})
-
-		navLinksContainer.Append(nextPageNavLink)
 
 		pageStack.Append(compton.FICenter(p, backToTopNavLinks, nextPageNavLink).ColumnGap(size.Small))
 	}
