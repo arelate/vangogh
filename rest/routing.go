@@ -38,7 +38,8 @@ func HandleFuncs() {
 		"GET /gog/wishlist":          Redirect("/gog/wishlist/releases", http.StatusPermanentRedirect),
 		"GET /gog/wishlist/{sortBy}": AuthCookie(sb, Log(http.HandlerFunc(GetGogWishlist)), perm.ReadWishlist),
 
-		"GET /gog/sale": AuthCookie(sb, Log(http.HandlerFunc(GetGogSale)), perm.ReadProductData),
+		"GET /gog/sale":          Redirect("/gog/sale/discount", http.StatusPermanentRedirect),
+		"GET /gog/sale/{sortBy}": AuthCookie(sb, Log(http.HandlerFunc(GetGogSale)), perm.ReadProductData),
 
 		"GET /gog/product/{id}":       AuthCookie(sb, Log(http.HandlerFunc(GetGogProduct)), perm.ReadProductData),
 		"GET /gog/slug/{slug}":        AuthCookie(sb, Log(http.HandlerFunc(GetGogSlug)), perm.ReadProductData),

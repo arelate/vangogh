@@ -115,6 +115,15 @@ func GogSearch(sectionUrl string, sortBy string, query url.Values, rdx redux.Rea
 		if queryFrow != nil {
 			pageStack.Append(compton.FICenter(p, queryFrow))
 		}
+	} else {
+		cf := compton.NewCountFormatter(
+			compton_data.SingleItemTemplate,
+			compton_data.ManyItemsSinglePageTemplate,
+			compton_data.ManyItemsManyPagesTemplate)
+
+		pageStack.Append(compton.FICenter(p, compton.Fspan(p, cf.Title(from, to, len(ids))).
+			FontSize(size.XXSmall).
+			ForegroundColor(color.Gray)))
 	}
 
 	/* Search results product cards */

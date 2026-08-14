@@ -67,13 +67,15 @@ const (
 	SortByDownloadUpdated      = "downloads"
 	SortByGogReleaseDate       = "releases"
 	SortBySteamCommunityUpdate = "news"
-	SortByDiscounted           = "discounted"
+	SortByDiscount             = "discount"
+	SortByGogRating            = "ratings"
 )
 
 var GogSectionSortBy = map[string][]string{
 	GogSectionOwnedUrl:    {SortByPurchaseDate, SortByDownloadUpdated},
 	GogSectionCatalogUrl:  {SortByGogReleaseDate, SortBySteamCommunityUpdate},
-	GogSectionWishlistUrl: {SortByGogReleaseDate, SortByDiscounted},
+	GogSectionWishlistUrl: {SortByGogReleaseDate, SortByDiscount},
+	GogSectionSaleUrl:     {SortByDiscount, SortByGogRating},
 }
 
 var SortByParameters = map[string]map[string]string{
@@ -93,10 +95,14 @@ var SortByParameters = map[string]map[string]string{
 		vangogh_integration.UrlSortParameter:       vangogh_integration.VangoghSteamLastCommunityUpdateProperty,
 		vangogh_integration.UrlDescendingParameter: vangogh_integration.TrueValue,
 	},
-	SortByDiscounted: {
+	SortByDiscount: {
 		vangogh_integration.GogIsDiscountedProperty: vangogh_integration.TrueValue,
 		vangogh_integration.UrlSortParameter:        vangogh_integration.GogDiscountPercentageProperty,
 		vangogh_integration.UrlDescendingParameter:  vangogh_integration.TrueValue,
+	},
+	SortByGogRating: {
+		vangogh_integration.UrlSortParameter:       vangogh_integration.GogRatingProperty,
+		vangogh_integration.UrlDescendingParameter: vangogh_integration.TrueValue,
 	},
 }
 
@@ -105,5 +111,6 @@ var SortByTitles = map[string]string{
 	SortByDownloadUpdated:      "Updated",
 	SortByGogReleaseDate:       "Released",
 	SortBySteamCommunityUpdate: "News",
-	SortByDiscounted:           "Discounted",
+	SortByDiscount:             "Discount",
+	SortByGogRating:            "Rating",
 }
