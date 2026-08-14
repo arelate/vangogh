@@ -51,35 +51,29 @@ func GogSectionSearchQuery(sectionUrl string) url.Values {
 	switch sectionUrl {
 	case GogSectionOwnedUrl:
 		q.Set(vangogh_integration.GogIsAccountProductProperty, vangogh_integration.TrueValue)
-		q.Set(vangogh_integration.UrlSortParameter, vangogh_integration.GogAccountProductOrderProperty)
-		q.Set(vangogh_integration.UrlDescendingParameter, vangogh_integration.FalseValue)
 	case GogSectionSaleUrl:
 		q.Set(vangogh_integration.GogOwnedProperty, vangogh_integration.FalseValue)
 		q.Set(vangogh_integration.GogIsDiscountedProperty, vangogh_integration.TrueValue)
-		q.Set(vangogh_integration.UrlSortParameter, vangogh_integration.GogDiscountPercentageProperty)
-		q.Set(vangogh_integration.UrlDescendingParameter, vangogh_integration.TrueValue)
 	case GogSectionWishlistUrl:
 		q.Set(vangogh_integration.GogUserWishlistProperty, vangogh_integration.TrueValue)
-		q.Set(vangogh_integration.UrlSortParameter, vangogh_integration.GogReleaseDateProperty)
-		q.Set(vangogh_integration.UrlDescendingParameter, vangogh_integration.TrueValue)
 	case GogSectionCatalogUrl:
-		q.Set(vangogh_integration.UrlSortParameter, vangogh_integration.GogReleaseDateProperty)
-		q.Set(vangogh_integration.UrlDescendingParameter, vangogh_integration.TrueValue)
 	}
 
 	return q
 }
 
 const (
-	SortByPurchaseDate      = "purchases"
-	SortByDownloadUpdated   = "downloads"
-	SortByGogReleaseDate    = "gog-release"
-	SortByGlobalReleaseDate = "global-release"
+	SortByPurchaseDate         = "purchases"
+	SortByDownloadUpdated      = "downloads"
+	SortByGogReleaseDate       = "releases"
+	SortBySteamCommunityUpdate = "news"
+	SortByDiscounted           = "discounted"
 )
 
 var GogSectionSortBy = map[string][]string{
-	GogSectionOwnedUrl:   {SortByPurchaseDate, SortByDownloadUpdated},
-	GogSectionCatalogUrl: {SortByGogReleaseDate, SortByGlobalReleaseDate},
+	GogSectionOwnedUrl:    {SortByPurchaseDate, SortByDownloadUpdated},
+	GogSectionCatalogUrl:  {SortByGogReleaseDate, SortBySteamCommunityUpdate},
+	GogSectionWishlistUrl: {SortByGogReleaseDate, SortByDiscounted},
 }
 
 var SortByParameters = map[string]map[string]string{
@@ -95,15 +89,21 @@ var SortByParameters = map[string]map[string]string{
 		vangogh_integration.UrlSortParameter:       vangogh_integration.GogReleaseDateProperty,
 		vangogh_integration.UrlDescendingParameter: vangogh_integration.TrueValue,
 	},
-	SortByGlobalReleaseDate: {
-		vangogh_integration.UrlSortParameter:       vangogh_integration.GogGlobalReleaseDateProperty,
+	SortBySteamCommunityUpdate: {
+		vangogh_integration.UrlSortParameter:       vangogh_integration.VangoghSteamLastCommunityUpdateProperty,
 		vangogh_integration.UrlDescendingParameter: vangogh_integration.TrueValue,
+	},
+	SortByDiscounted: {
+		vangogh_integration.GogIsDiscountedProperty: vangogh_integration.TrueValue,
+		vangogh_integration.UrlSortParameter:        vangogh_integration.GogDiscountPercentageProperty,
+		vangogh_integration.UrlDescendingParameter:  vangogh_integration.TrueValue,
 	},
 }
 
 var SortByTitles = map[string]string{
-	SortByPurchaseDate:      "Purchases",
-	SortByDownloadUpdated:   "Updates",
-	SortByGogReleaseDate:    "GOG release",
-	SortByGlobalReleaseDate: "Global release",
+	SortByPurchaseDate:         "Purchased",
+	SortByDownloadUpdated:      "Updated",
+	SortByGogReleaseDate:       "Released",
+	SortBySteamCommunityUpdate: "News",
+	SortByDiscounted:           "Discounted",
 }

@@ -112,7 +112,8 @@ var PropertyTitles = map[string]string{
 	vangogh_integration.WikipediaWritersProperty:     "Writers",
 	vangogh_integration.WikipediaComposersProperty:   "Composers",
 
-	vangogh_integration.VangoghDownloadCompletedProperty: "Download Completed",
+	vangogh_integration.VangoghDownloadCompletedProperty:        "Download Completed",
+	vangogh_integration.VangoghSteamLastCommunityUpdateProperty: "Steam News Updated",
 }
 
 var ShortPropertyTitles = map[string]string{

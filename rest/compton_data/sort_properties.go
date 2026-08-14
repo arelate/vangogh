@@ -12,5 +12,6 @@ var SortProperties = []string{
 	vangogh_integration.GogRatingProperty,
 	vangogh_integration.GogDiscountPercentageProperty,
 	vangogh_integration.VangoghDownloadCompletedProperty,
+	vangogh_integration.VangoghSteamLastCommunityUpdateProperty,
 	vangogh_integration.GogAccountProductOrderProperty,
 }

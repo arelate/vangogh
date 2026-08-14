@@ -2,6 +2,8 @@ github.com/arelate/southern_light v0.5.25 h1:hwryW9kSHjRXFNsNAyx0jgA1tKszmWD7a2r
 github.com/arelate/southern_light v0.5.25/go.mod h1:4LVfkvC38F7iYd+iUXVdExMFR9rNPEOAWrr6SIIX2V0=
 github.com/arelate/southern_light v0.5.26 h1:OJbBHqVLi/+0qZA+JLd2BjRYopP0rHcufn2twQU5pBQ=
 github.com/arelate/southern_light v0.5.26/go.mod h1:4LVfkvC38F7iYd+iUXVdExMFR9rNPEOAWrr6SIIX2V0=
+github.com/arelate/southern_light v0.5.27 h1:CE3Y0Zv7jrrJSQOQbyliCpbaxUAFU3gE37zfNVJbBhI=
+github.com/arelate/southern_light v0.5.27/go.mod h1:4LVfkvC38F7iYd+iUXVdExMFR9rNPEOAWrr6SIIX2V0=
 github.com/boggydigital/author v0.1.33 h1:Fm0g8/1dwe42M+VmTNDeNawgGWgYJFRjZJcWQll9udo=
 github.com/boggydigital/author v0.1.33/go.mod h1:Gf5oTibwNL5s7oc4T14aigmCy6ivJeHqkFeSvQUZGBY=
 github.com/boggydigital/camino v0.2.19 h1:mAwgurNO7anUlBJmC4yhhZ4bpasiwa9b7soMCu9UjDg=
@@ -28,5 +30,9 @@ github.com/boggydigital/yet_urls v0.1.65 h1:NJvF3i/pW3AwCQx8MOdCVol974VuFZnK204C
 github.com/boggydigital/yet_urls v0.1.65/go.mod h1:CQ/o9+Ra4aFqgw/QsA7DE7KFTcozlY1A7oSLUcHAJgI=
 golang.org/x/crypto v0.54.0 h1:YLIA59K4fiNzHzjnZt2tUJQjQtUWfWbeHBqKtk3eScw=
 golang.org/x/crypto v0.54.0/go.mod h1:KWL8ny2AZdGR2cWmzeHrp2azQPGogOv+HeQaVEXC2dk=
+golang.org/x/crypto v0.55.0 h1:+KWHjbgOaAQ66dh/YlkZKHlz9ZUlq61AFirAR9ntP8M=
+golang.org/x/crypto v0.55.0/go.mod h1:uq0V9dE/fzQuJtbnL+2EhWOE63vo164FY8xqEnV9xis=
 golang.org/x/net v0.57.0 h1:K5+3DljvIuDG9/Jv9rvyMywYNFCQ9RSUY6OOTTkT+tE=
 golang.org/x/net v0.57.0/go.mod h1:KpXc8iv+r3XplLAG/f7Jsf9RPszJzdR0f58q9vGOuEU=
+golang.org/x/net v0.58.0 h1:ynWG7rqYi4ccpTEuPZ2QGWHktVEM9DMCj9yzDE0Q7To=
+golang.org/x/net v0.58.0/go.mod h1:YwCddHnFlT7eLQqVprV19OnhLGtc5xOKgE0RyqgfWAU=

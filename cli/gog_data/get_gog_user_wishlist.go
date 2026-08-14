@@ -11,6 +11,7 @@ import (
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/cli/fetch"
 	"github.com/arelate/vangogh/cli/reqs"
+	"github.com/arelate/vangogh/cli/shared_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 	"github.com/boggydigital/redux"
@@ -63,9 +64,7 @@ func ReduceGogUserWishlist(kvGogUserWishlist kevlar.KeyValues) error {
 	ruwa := nod.Begin(" reducing %s...", vangogh_integration.GogUserWishlist)
 	defer ruwa.Done()
 
-	key := vangogh_integration.GogUserWishlistProperty
-
-	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), key)
+	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), vangogh_integration.GogUserWishlistProperties()...)
 	if err != nil {
 		return err
 	}
@@ -86,20 +85,22 @@ func ReduceGogUserWishlist(kvGogUserWishlist kevlar.KeyValues) error {
 	// so in order to process the data we attempt a type conversion
 	// and handle both known data types (and fail if data has another format)
 
+	wishlistReductions := shared_data.InitReductions(vangogh_integration.GogUserWishlistProperties()...)
+
 	if uwlMap, ok := userWishlist.Wishlist.(map[string]any); ok {
 
-		userWishlistMap := make(map[string][]string, len(uwlMap))
 		for id, flag := range uwlMap {
 			if wishlisted, sure := flag.(bool); sure && wishlisted {
-				userWishlistMap[id] = []string{vangogh_integration.TrueValue}
+				wishlistReductions[vangogh_integration.GogUserWishlistProperty][id] = []string{vangogh_integration.TrueValue}
 			}
 		}
 
-		if err = rdx.CutKeys(key, slices.Collect(rdx.Keys(key))...); err != nil {
+		if err = rdx.CutKeys(vangogh_integration.GogUserWishlistProperty,
+			slices.Collect(rdx.Keys(vangogh_integration.GogUserWishlistProperty))...); err != nil {
 			return err
 		}
 
-		return rdx.BatchAddValues(key, userWishlistMap)
+		return shared_data.WriteReductions(rdx, wishlistReductions)
 
 	} else if uwlSlice, sure := userWishlist.Wishlist.([]any); sure {
 		if len(uwlSlice) == 0 {

@@ -3,7 +3,6 @@ package steam_data
 import (
 	"encoding/json/v2"
 	"errors"
-	"iter"
 	"maps"
 	"time"
 
@@ -36,10 +35,10 @@ func GetAppNews(steamGogIds map[string][]string, force bool) error {
 		return err
 	}
 
-	return ReduceAppNews(maps.Keys(steamGogIds), kvAppNews)
+	return ReduceAppNews(steamGogIds, kvAppNews)
 }
 
-func ReduceAppNews(steamAppIds iter.Seq[string], kvAppNews kevlar.KeyValues) error {
+func ReduceAppNews(steamAppIds map[string][]string, kvAppNews kevlar.KeyValues) error {
 
 	dataType := vangogh_integration.SteamAppNews
 
@@ -54,7 +53,7 @@ func ReduceAppNews(steamAppIds iter.Seq[string], kvAppNews kevlar.KeyValues) err
 
 	appNewsReductions := shared_data.InitReductions(vangogh_integration.SteamAppNewsProperties()...)
 
-	for steamAppId := range steamAppIds {
+	for steamAppId, gogIds := range steamAppIds {
 		if !kvAppNews.Has(steamAppId) {
 			nod.LogError(errors.New("missing: " + dataType.String() + ", " + steamAppId))
 			rana.Increment()
@@ -63,6 +62,13 @@ func ReduceAppNews(steamAppIds iter.Seq[string], kvAppNews kevlar.KeyValues) err
 
 		if err = reduceAppNewsProduct(steamAppId, kvAppNews, appNewsReductions); err != nil {
 			return err
+		}
+
+		if len(appNewsReductions[vangogh_integration.SteamLastCommunityUpdateProperty]) > 0 {
+			for _, gogId := range gogIds {
+				appNewsReductions[vangogh_integration.VangoghSteamLastCommunityUpdateProperty][gogId] =
+					appNewsReductions[vangogh_integration.SteamLastCommunityUpdateProperty][steamAppId]
+			}
 		}
 
 		rana.Increment()

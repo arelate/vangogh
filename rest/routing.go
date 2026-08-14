@@ -27,11 +27,19 @@ func HandleFuncs() {
 		"GET /logout": Log(http.HandlerFunc(sb.DeauthCookieSession)),
 		"POST /auth":  Log(http.HandlerFunc(sb.AuthBrowserUsernamePassword)),
 		// authenticated endpoints
-		"GET /gog/search":             AuthCookie(sb, Log(http.HandlerFunc(GetGogSearch)), perm.ReadSearch),
-		"GET /gog/owned/{sortBy}":     AuthCookie(sb, Log(http.HandlerFunc(GetGogOwned)), perm.ReadOwned),
-		"GET /gog/catalog/{sortBy}":   AuthCookie(sb, Log(http.HandlerFunc(GetGogCatalog)), perm.ReadProductData),
-		"GET /gog/wishlist":           AuthCookie(sb, Log(http.HandlerFunc(GetGogWishlist)), perm.ReadWishlist),
-		"GET /gog/sale":               AuthCookie(sb, Log(http.HandlerFunc(GetGogSale)), perm.ReadProductData),
+		"GET /gog/search": AuthCookie(sb, Log(http.HandlerFunc(GetGogSearch)), perm.ReadSearch),
+
+		"GET /gog/owned":          Redirect("/gog/owned/purchases", http.StatusTemporaryRedirect),
+		"GET /gog/owned/{sortBy}": AuthCookie(sb, Log(http.HandlerFunc(GetGogOwned)), perm.ReadOwned),
+
+		"GET /gog/catalog":          Redirect("/gog/catalog/releases", http.StatusPermanentRedirect),
+		"GET /gog/catalog/{sortBy}": AuthCookie(sb, Log(http.HandlerFunc(GetGogCatalog)), perm.ReadProductData),
+
+		"GET /gog/wishlist":          Redirect("/gog/wishlist/releases", http.StatusPermanentRedirect),
+		"GET /gog/wishlist/{sortBy}": AuthCookie(sb, Log(http.HandlerFunc(GetGogWishlist)), perm.ReadWishlist),
+
+		"GET /gog/sale": AuthCookie(sb, Log(http.HandlerFunc(GetGogSale)), perm.ReadProductData),
+
 		"GET /gog/product/{id}":       AuthCookie(sb, Log(http.HandlerFunc(GetGogProduct)), perm.ReadProductData),
 		"GET /gog/slug/{slug}":        AuthCookie(sb, Log(http.HandlerFunc(GetGogSlug)), perm.ReadProductData),
 		"GET /gog/info/{id}":          AuthCookie(sb, Log(http.HandlerFunc(GetGogInfo)), perm.ReadProductData),
@@ -80,9 +88,7 @@ func HandleFuncs() {
 		"GET /import-cookies":  AuthCookie(sb, Log(http.HandlerFunc(GetImportCookies)), perm.WriteCookies),
 		"POST /import-cookies": AuthCookie(sb, Log(http.HandlerFunc(PostImportCookies)), perm.WriteCookies),
 		// start at the GOG owned
-		"GET /":            Redirect("/gog/owned", http.StatusPermanentRedirect),
-		"GET /gog/owned":   Redirect("/gog/owned/purchases", http.StatusTemporaryRedirect),
-		"GET /gog/catalog": Redirect("/gog/catalog/gog-release", http.StatusPermanentRedirect),
+		"GET /": Redirect("/gog/owned", http.StatusPermanentRedirect),
 	}
 
 	for p, h := range patternHandlers {
