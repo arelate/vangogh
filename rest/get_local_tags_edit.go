@@ -10,14 +10,18 @@ import (
 
 func GetLocalTagsEdit(w http.ResponseWriter, r *http.Request) {
 
-	// GET /local-tags/edit?id
+	// GET /local-tags/edit/{id}
 
 	if err := RefreshRedux(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return
 	}
 
-	id := r.URL.Query().Get(vangogh_integration.UrlIdParameter)
+	id := r.PathValue(vangogh_integration.UrlIdParameter)
+	if !isAllowed(id, digits) {
+		http.Error(w, errCharactersNotAllowed, http.StatusBadRequest)
+		return
+	}
 
 	selectedValues := make(map[string]any)
 	if lt, ok := rdx.GetAllValues(vangogh_integration.VangoghLocalTagsProperty, id); ok {

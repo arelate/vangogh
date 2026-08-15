@@ -3,6 +3,7 @@ package compton_fragments
 import (
 	"fmt"
 	"net/url"
+	"path"
 	"slices"
 	"strconv"
 	"strings"
@@ -303,19 +304,19 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 		if !owned || firstValue == vangogh_integration.TrueValue {
 			switch firstValue {
 			case vangogh_integration.TrueValue:
-				fmtProperty.actions["Remove"] = "/gog/wishlist/remove?id=" + id
+				fmtProperty.actions["Remove"] = path.Join("/gog/wishlist/remove", id)
 			case vangogh_integration.FalseValue:
 				fallthrough
 			default:
-				fmtProperty.actions["Add"] = "/gog/wishlist/add?id=" + id
+				fmtProperty.actions["Add"] = path.Join("/gog/wishlist/add", id)
 			}
 		}
 	case vangogh_integration.GogTagIdProperty:
 		if owned {
-			fmtProperty.actions["Edit"] = "/gog/tags/edit?id=" + id
+			fmtProperty.actions["Edit"] = path.Join("/gog/tags/edit", id)
 		}
 	case vangogh_integration.VangoghLocalTagsProperty:
-		fmtProperty.actions["Edit"] = "/local-tags/edit?id=" + id
+		fmtProperty.actions["Edit"] = path.Join("/local-tags/edit", id)
 	case vangogh_integration.SteamReviewScoreDescProperty:
 		if srsd, ok := rdx.GetLastVal(property, steamAppId); ok && srsd != "" {
 			fmtProperty.class = ReviewClass(srsd)
@@ -394,7 +395,7 @@ func propertyTitleValues(r compton.Registrar, property string, fmtProperty forma
 		for ac, acHref := range fmtProperty.actions {
 			actionLink := compton.A(acHref)
 			actionLink.SetAttribute("target", "_top")
-			actionLink.Append(compton.Fspan(r, ac).ForegroundColor(color.Foreground).Width(size.Initial))
+			actionLink.Append(compton.Fspan(r, ac).ForegroundColor(color.Red).Width(size.Initial))
 			tv.Append(actionLink)
 		}
 	}

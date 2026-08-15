@@ -8,18 +8,19 @@ import (
 	"github.com/boggydigital/nod"
 )
 
-func GetLocalTagsApply(w http.ResponseWriter, r *http.Request) {
+func PostLocalTagsApply(w http.ResponseWriter, r *http.Request) {
 
-	// GET /local-tags/apply
+	// POST /local-tags/apply/{id}
 
 	if err := r.ParseForm(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusBadRequest)
 		return
 	}
 
-	var id string
-	if len(r.Form[vangogh_integration.UrlIdParameter]) > 0 {
-		id = r.Form[vangogh_integration.UrlIdParameter][0]
+	id := r.PathValue(vangogh_integration.UrlIdParameter)
+	if !isAllowed(id, digits) {
+		http.Error(w, errCharactersNotAllowed, http.StatusBadRequest)
+		return
 	}
 
 	//don't skip if local-tags are empty as this might be a signal to remove existing tags
@@ -53,5 +54,6 @@ func GetLocalTagsApply(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	http.Redirect(w, r, path.Join("/gog/product", id), http.StatusTemporaryRedirect)
+	w.Header().Set("Location", path.Join("/gog/product", id))
+	w.WriteHeader(http.StatusSeeOther)
 }

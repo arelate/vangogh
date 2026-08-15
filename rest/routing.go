@@ -3,8 +3,10 @@ package rest
 import (
 	_ "embed"
 	"net/http"
+	"path"
 
 	"github.com/arelate/vangogh/perm"
+	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/boggydigital/author"
 	"github.com/boggydigital/nod"
 )
@@ -29,16 +31,18 @@ func HandleFuncs() {
 		// authenticated endpoints
 		"GET /gog/search": AuthCookie(sb, Log(http.HandlerFunc(GetGogSearch)), perm.ReadSearch),
 
-		"GET /gog/owned":          Redirect("/gog/owned/purchases", http.StatusTemporaryRedirect),
+		"GET /gog/owned":          Redirect(path.Join("/gog/owned", compton_data.SortByPurchaseDate), http.StatusTemporaryRedirect),
 		"GET /gog/owned/{sortBy}": AuthCookie(sb, Log(http.HandlerFunc(GetGogOwned)), perm.ReadOwned),
 
-		"GET /gog/catalog":          Redirect("/gog/catalog/releases", http.StatusPermanentRedirect),
+		"GET /gog/catalog":          Redirect(path.Join("/gog/catalog", compton_data.SortByGogReleaseDate), http.StatusPermanentRedirect),
 		"GET /gog/catalog/{sortBy}": AuthCookie(sb, Log(http.HandlerFunc(GetGogCatalog)), perm.ReadProductData),
 
-		"GET /gog/wishlist":          Redirect("/gog/wishlist/releases", http.StatusPermanentRedirect),
-		"GET /gog/wishlist/{sortBy}": AuthCookie(sb, Log(http.HandlerFunc(GetGogWishlist)), perm.ReadWishlist),
+		"GET /gog/wishlist":             Redirect(path.Join("/gog/wishlist", compton_data.SortByGogReleaseDate), http.StatusPermanentRedirect),
+		"GET /gog/wishlist/{sortBy}":    AuthCookie(sb, Log(http.HandlerFunc(GetGogWishlist)), perm.ReadWishlist),
+		"GET /gog/wishlist/add/{id}":    AuthCookie(sb, Log(http.HandlerFunc(GetGogWishlistAdd)), perm.WriteWishlist),
+		"GET /gog/wishlist/remove/{id}": AuthCookie(sb, Log(http.HandlerFunc(GetGogWishlistRemove)), perm.WriteWishlist),
 
-		"GET /gog/sale":          Redirect("/gog/sale/discount", http.StatusPermanentRedirect),
+		"GET /gog/sale":          Redirect(path.Join("/gog/sale", compton_data.SortByDiscount), http.StatusPermanentRedirect),
 		"GET /gog/sale/{sortBy}": AuthCookie(sb, Log(http.HandlerFunc(GetGogSale)), perm.ReadProductData),
 
 		"GET /gog/product/{id}":       AuthCookie(sb, Log(http.HandlerFunc(GetGogProduct)), perm.ReadProductData),
@@ -60,12 +64,10 @@ func HandleFuncs() {
 		// binaries endpoints
 		"GET /binary/{os}/{title...}": AuthCookie(sb, Log(http.HandlerFunc(GetBinary)), perm.ReadFiles),
 		// auth data endpoints
-		"GET /gog/wishlist/add":    AuthCookie(sb, Log(http.HandlerFunc(GetGogWishlistAdd)), perm.WriteWishlist),
-		"GET /gog/wishlist/remove": AuthCookie(sb, Log(http.HandlerFunc(GetGogWishlistRemove)), perm.WriteWishlist),
-		"GET /gog/tags/edit":       AuthCookie(sb, Log(http.HandlerFunc(GetGogTagsEdit)), perm.WriteTagId),
-		"GET /gog/tags/apply":      AuthCookie(sb, Log(http.HandlerFunc(GetGogTagsApply)), perm.WriteTagId),
-		"GET /local-tags/edit":     AuthCookie(sb, Log(http.HandlerFunc(GetLocalTagsEdit)), perm.WriteLocalTags),
-		"GET /local-tags/apply":    AuthCookie(sb, Log(http.HandlerFunc(GetLocalTagsApply)), perm.WriteLocalTags),
+		"GET /gog/tags/edit/{id}":     AuthCookie(sb, Log(http.HandlerFunc(GetGogTagsEdit)), perm.ReadTagId),
+		"GET /local-tags/edit/{id}":   AuthCookie(sb, Log(http.HandlerFunc(GetLocalTagsEdit)), perm.ReadLocalTags),
+		"POST /gog/tags/apply/{id}":   AuthCookie(sb, Log(http.HandlerFunc(PostGogTagsApply)), perm.WriteTagId),
+		"POST /local-tags/apply/{id}": AuthCookie(sb, Log(http.HandlerFunc(PostLocalTagsApply)), perm.WriteLocalTags),
 		// auth files endpoints
 		"GET /gog/manual-url/{id}/{dt}/{mu...}": AuthCookie(sb, Log(http.HandlerFunc(GetGogManualUrl)), perm.ReadFiles),
 		// API

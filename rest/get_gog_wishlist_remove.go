@@ -2,6 +2,7 @@ package rest
 
 import (
 	"net/http"
+	"path"
 
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
@@ -11,9 +12,9 @@ import (
 
 func GetGogWishlistRemove(w http.ResponseWriter, r *http.Request) {
 
-	// GET /gog/wishlist/remove?id
+	// GET /gog/wishlist/remove/{id}
 
-	id := r.URL.Query().Get(vangogh_integration.UrlIdParameter)
+	id := r.PathValue(vangogh_integration.UrlIdParameter)
 	if !isAllowed(id, digits) {
 		http.Error(w, errCharactersNotAllowed, http.StatusBadRequest)
 		return
@@ -39,5 +40,5 @@ func GetGogWishlistRemove(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, "/product?id="+id, http.StatusTemporaryRedirect)
+	http.Redirect(w, r, path.Join("/gog/product", id), http.StatusTemporaryRedirect)
 }

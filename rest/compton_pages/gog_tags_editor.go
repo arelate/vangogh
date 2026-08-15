@@ -3,6 +3,7 @@ package compton_pages
 import (
 	"maps"
 	"net/http"
+	"path"
 	"slices"
 	"strconv"
 
@@ -78,22 +79,18 @@ func GogTagsEditor(
 	action := ""
 	switch tagsProperty {
 	case vangogh_integration.VangoghLocalTagsProperty:
-		action = "/local-tags/apply"
+		action = path.Join("/local-tags/apply", id)
 	case vangogh_integration.GogTagIdProperty:
-		action = "/gog/tags/apply"
+		action = path.Join("/gog/tags/apply", id)
 	default:
 		panic("unknown tags property editor")
 	}
 
-	editTagsForm := compton.Form(action, http.MethodGet)
+	editTagsForm := compton.Form(action, http.MethodPost)
 	swColumn := compton.FlexItems(p, direction.Column).
 		AlignContent(align.Center).
 		JustifyContent(align.Start).
 		Width(size.XXXLarge)
-
-	idInput := compton.InputValue(p, input_types.Hidden, id)
-	idInput.SetName(vangogh_integration.UrlIdParameter)
-	swColumn.Append(idInput)
 
 	conditionInput := compton.InputValue(p, input_types.Hidden, strconv.FormatBool(owned))
 	conditionInput.SetName("condition")

@@ -2,6 +2,7 @@ package rest
 
 import (
 	"net/http"
+	"path"
 
 	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
@@ -9,19 +10,16 @@ import (
 	"github.com/boggydigital/nod"
 )
 
-func GetGogTagsApply(w http.ResponseWriter, r *http.Request) {
+func PostGogTagsApply(w http.ResponseWriter, r *http.Request) {
 
-	// GET /gog/tags/apply
+	// POST /gog/tags/apply/{id}
 
 	if err := r.ParseForm(); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusBadRequest)
 		return
 	}
 
-	var id string
-	if len(r.Form[vangogh_integration.UrlIdParameter]) > 0 {
-		id = r.Form[vangogh_integration.UrlIdParameter][0]
-	}
+	id := r.PathValue(vangogh_integration.UrlIdParameter)
 	if !isAllowed(id, digits) {
 		http.Error(w, errCharactersNotAllowed, http.StatusBadRequest)
 		return
@@ -70,5 +68,6 @@ func GetGogTagsApply(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	http.Redirect(w, r, "/product?id="+id, http.StatusTemporaryRedirect)
+	w.Header().Set("Location", path.Join("/gog/product", id))
+	w.WriteHeader(http.StatusSeeOther)
 }

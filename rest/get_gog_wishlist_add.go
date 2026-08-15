@@ -12,9 +12,9 @@ import (
 
 func GetGogWishlistAdd(w http.ResponseWriter, r *http.Request) {
 
-	// GET /gog/wishlist/add?id
+	// GET /gog/wishlist/add/{id}
 
-	id := r.URL.Query().Get(vangogh_integration.UrlIdParameter)
+	id := r.PathValue(vangogh_integration.UrlIdParameter)
 	if !isAllowed(id, digits) {
 		http.Error(w, errCharactersNotAllowed, http.StatusBadRequest)
 		return
