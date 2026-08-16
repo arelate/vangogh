@@ -45,7 +45,14 @@ func GetDefaultUserAgent() string {
 	return "vangogh " + GitTag
 }
 
-func GetFilesDoloClient() *dolo.Client {
+func GetMediaDoloClient() *dolo.Client {
+	return dolo.NewClient(http.DefaultClient, &dolo.ClientOptions{
+		UserAgent:       GetDefaultUserAgent(),
+		ResumeDownloads: true,
+	})
+}
+
+func GetInstallersDoloClient() *dolo.Client {
 	return dolo.NewClient(http.DefaultClient, &dolo.ClientOptions{
 		UserAgent:          GetDefaultUserAgent(),
 		CheckContentLength: true,

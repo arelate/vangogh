@@ -287,7 +287,7 @@ func (gdd *getDownloadsDelegate) Process(id, slug string, list vangogh_integrati
 		return err
 	}
 
-	dc := reqs.GetFilesDoloClient()
+	dc := reqs.GetInstallersDoloClient()
 
 	for _, dl := range list {
 		if len(gdd.manualUrlFilter) > 0 && !slices.Contains(gdd.manualUrlFilter, dl.ManualUrl) {

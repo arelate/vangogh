@@ -150,7 +150,7 @@ func getDescriptionImage(descriptionImageUrl string, force bool) error {
 		}
 	}
 
-	dc := reqs.GetFilesDoloClient()
+	dc := reqs.GetMediaDoloClient()
 
 	if err = dc.Download(diu, force, gdia, adip); err != nil {
 		if ext := filepath.Ext(adip); ext != "" && strings.Contains(err.Error(), "404") {
