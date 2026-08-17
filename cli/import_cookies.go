@@ -18,7 +18,10 @@ func ImportCookiesHandler(u *url.URL) error {
 
 	cookieStr := q.Get(vangogh_integration.UrlCookiesParameter)
 
-	if err := coost.Import(cookieStr, gog_integration.HostUrl(), vangogh_integration.AbsCookiesPath()); err != nil {
+	if err := coost.Import(cookieStr,
+		gog_integration.HostUrl(),
+		vangogh_integration.AbsCookiesPath(),
+		"gog_al", "gog_lc", "gog_us", "sessions_gog_com", "uqid", "sso_rt_metadata"); err != nil {
 		return err
 	}
 
