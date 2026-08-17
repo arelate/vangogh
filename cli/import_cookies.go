@@ -9,6 +9,8 @@ import (
 	"github.com/boggydigital/nod"
 )
 
+var gogCookiesFilter = []string{"gog-al", "gog_lc", "gog_us", "sessions_gog_com", "uqid", "sso_rt_metadata"}
+
 func ImportCookiesHandler(u *url.URL) error {
 
 	ica := nod.Begin("importing cookies...")
@@ -21,7 +23,7 @@ func ImportCookiesHandler(u *url.URL) error {
 	if err := coost.Import(cookieStr,
 		gog_integration.HostUrl(),
 		vangogh_integration.AbsCookiesPath(),
-		"gog-al", "gog_lc", "gog_us", "sessions_gog_com", "uqid", "sso_rt_metadata"); err != nil {
+		gogCookiesFilter...); err != nil {
 		return err
 	}
 
