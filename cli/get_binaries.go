@@ -84,7 +84,7 @@ func GetSteamCmdBinaries(operatingSystems []vangogh_integration.OperatingSystem,
 		}
 
 		if err = dc.Download(scbu, force, osa, releasesDir); err != nil {
-			return err
+			nod.LogError(err)
 		}
 
 		osa.Done()
@@ -132,7 +132,8 @@ func GetWineBinaries(operatingSystems []vangogh_integration.OperatingSystem, for
 		if u, err = getWineBinaryUrl(&binary, kvGitHubReleases, force); err == nil && u != nil {
 			binariesUrls[binary.String()] = u
 		} else if err != nil {
-			return err
+			gwba.Error(err)
+			continue
 		}
 	}
 
@@ -292,7 +293,7 @@ func validateWineBinaries(binaries []wine_integration.Binary, urls map[string]*u
 			}
 
 			if err = wine_integration.ValidateWineBinary(&wbd, releasesDir, since, force); err != nil {
-				return err
+				vwba.Error(err)
 			}
 		}
 	}
