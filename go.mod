@@ -8,7 +8,7 @@ require (
 	github.com/boggydigital/camino v0.2.19
 	github.com/boggydigital/clo v1.0.8
 	github.com/boggydigital/compton v0.4.80
-	github.com/boggydigital/coost v0.4.2
+	github.com/boggydigital/coost v0.4.3
 	github.com/boggydigital/dolo v0.2.26
 	github.com/boggydigital/kevlar v0.6.13
 	github.com/boggydigital/nod v0.1.30
