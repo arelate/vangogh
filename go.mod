@@ -1,9 +1,9 @@
 module github.com/arelate/vangogh
 
-go 1.26.6
+go 1.27.0
 
 require (
-	github.com/arelate/southern_light v0.5.29
+	github.com/arelate/southern_light v0.5.30
 	github.com/boggydigital/author v0.1.33
 	github.com/boggydigital/camino v0.2.19
 	github.com/boggydigital/clo v1.0.8
