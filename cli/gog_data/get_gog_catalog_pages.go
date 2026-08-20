@@ -113,6 +113,10 @@ func reduceGogCatalogPageProperties(page string, catalogPage *gog_integration.Ca
 				values = []string{gog_integration.ImageId(cp.GetImage())}
 			case vangogh_integration.GogVerticalImageProperty:
 				values = []string{gog_integration.ImageId(cp.GetVerticalImage())}
+			case vangogh_integration.GogLogoProperty:
+				values = []string{gog_integration.ImageId(cp.GetLogo())}
+			case vangogh_integration.GogBackgroundProperty:
+				values = []string{gog_integration.ImageId(cp.GetGalaxyBackgroundImage())}
 			case vangogh_integration.GogFeaturesProperty:
 				values = cp.GetFeatures()
 			case vangogh_integration.GogRatingProperty:
@@ -125,6 +129,8 @@ func reduceGogCatalogPageProperties(page string, catalogPage *gog_integration.Ca
 				values = []string{cp.GetSlug()}
 			case vangogh_integration.GogGlobalReleaseDateProperty:
 				values = []string{cp.GetGlobalRelease()}
+			case vangogh_integration.GogReleaseDateProperty:
+				values = []string{cp.GetGogRelease()}
 			case vangogh_integration.GogProductTypeProperty:
 				values = []string{cp.GetProductType()}
 			case vangogh_integration.GogStoreTagsProperty:
