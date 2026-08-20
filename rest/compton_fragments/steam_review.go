@@ -69,7 +69,7 @@ func SteamReview(r compton.Registrar, review steam_integration.Review) compton.E
 	}
 
 	if review.PrimarilySteamDeck {
-		topFr.Highlight("Primarily Steam Deck")
+		topFr.Highlight("Steam Deck")
 	}
 	if !review.SteamPurchase {
 		topFr.Highlight("Not Steam purchase")
@@ -78,7 +78,7 @@ func SteamReview(r compton.Registrar, review steam_integration.Review) compton.E
 		topFr.Highlight("Received for free")
 	}
 	if review.WrittenDuringEarlyAccess {
-		topFr.Highlight("Written during Early Access")
+		topFr.Highlight("Early Access")
 	}
 
 	container.Append(topFr)
