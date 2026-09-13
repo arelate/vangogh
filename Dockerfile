@@ -15,10 +15,8 @@ COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 EXPOSE 1853
 
-# cold storage is less frequently accessed data,
-# that can be stored on hibernating HDD.
-# hot storage is frequently accessed data,
-# that can benefit from being stored on SSD.
+# cold storage is less frequently accessed data, that can be stored on hibernating HDD.
+# hot storage is frequently accessed data, that can benefit from being stored on SSD.
 
 # backups (cold storage)
 VOLUME /var/lib/vangogh/backups
