@@ -108,7 +108,7 @@ func (mcp *missingChecksumProcessor) Process(id string, slug string, downloadsLi
 
 func (mcp *missingChecksumProcessor) generateManualUrlMissingChecksum(slug, manualUrl string, dt vangogh_integration.DownloadType) error {
 
-	absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dt, mcp.downloadsLayout)
+	absSlugDownloadDir, err := vangogh_integration.AbsGogSlugDownloadDir(slug, dt, mcp.downloadsLayout)
 	if err != nil {
 		return err
 	}

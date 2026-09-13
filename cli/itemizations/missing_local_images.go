@@ -37,7 +37,7 @@ func MissingLocalImages(
 
 	if localImageIds == nil {
 		var err error
-		if localImageIds, err = vangogh_integration.LocalImageIds(); err != nil {
+		if localImageIds, err = vangogh_integration.LocalGogImageIds(); err != nil {
 			return map[string]any{}, err
 		}
 	}

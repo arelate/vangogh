@@ -70,7 +70,7 @@ func getManualUrlChecksums(id string, rdx redux.Readable) (map[string]string, er
 		}
 
 		var absSlugDownloadDir string
-		absSlugDownloadDir, err = vangogh_integration.AbsSlugDownloadDir(slug, dl.DownloadType, downloadsLayout)
+		absSlugDownloadDir, err = vangogh_integration.AbsGogSlugDownloadDir(slug, dl.DownloadType, downloadsLayout)
 		if err != nil {
 			return nil, err
 		}

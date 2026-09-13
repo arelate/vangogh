@@ -141,7 +141,7 @@ func (cd *cleanupDelegate) Process(id string, slug string, list vangogh_integrat
 
 	for _, dl := range list {
 
-		absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.DownloadType, cd.downloadsLayout)
+		absSlugDownloadDir, err := vangogh_integration.AbsGogSlugDownloadDir(slug, dl.DownloadType, cd.downloadsLayout)
 		if err != nil {
 			return err
 		}
@@ -217,7 +217,7 @@ func (cd *cleanupDelegate) Process(id string, slug string, list vangogh_integrat
 			return err
 		}
 
-		acp := camino.GetAbs(vangogh_integration.Checksums)
+		acp := camino.GetRel(vangogh_integration.Checksums, vangogh_integration.Downloads)
 
 		var relChecksumFile string
 		relChecksumFile, err = filepath.Rel(acp, absChecksumFile)

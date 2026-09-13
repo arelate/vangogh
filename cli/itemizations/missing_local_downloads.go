@@ -120,7 +120,7 @@ func (mdd *missingDownloadsDelegate) Process(id, slug string, list vangogh_integ
 			break
 		}
 
-		absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.DownloadType, mdd.downloadsLayout)
+		absSlugDownloadDir, err := vangogh_integration.AbsGogSlugDownloadDir(slug, dl.DownloadType, mdd.downloadsLayout)
 		if err != nil {
 			return err
 		}
@@ -138,7 +138,7 @@ func (mdd *missingDownloadsDelegate) Process(id, slug string, list vangogh_integ
 	}
 
 	// 3
-	absSlugDownloadsDir, err := vangogh_integration.AbsSlugDownloadDir(slug, vangogh_integration.Installer, mdd.downloadsLayout)
+	absSlugDownloadsDir, err := vangogh_integration.AbsGogSlugDownloadDir(slug, vangogh_integration.Installer, mdd.downloadsLayout)
 	if err != nil {
 		return err
 	}

@@ -1,8 +1,6 @@
 backups=/var/lib/vangogh/backups
 binaries=/var/lib/vangogh/binaries
 downloads=/var/lib/vangogh/downloads
-checksums=/var/lib/vangogh/checksums
 images=/var/lib/vangogh/images
-description_images=/var/lib/vangogh/description_images
 logs=/var/lib/vangogh/logs
 metadata=/var/lib/vangogh/metadata

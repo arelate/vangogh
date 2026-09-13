@@ -99,7 +99,7 @@ func (drp *downloadsRelayoutProcessor) Process(_ string, slug string, downloadsL
 		return nil
 	}
 
-	fromDir, err := vangogh_integration.AbsSlugDownloadDir(slug, vangogh_integration.Installer, drp.from)
+	fromDir, err := vangogh_integration.AbsGogSlugDownloadDir(slug, vangogh_integration.Installer, drp.from)
 	if err != nil {
 		return err
 	}
@@ -109,7 +109,7 @@ func (drp *downloadsRelayoutProcessor) Process(_ string, slug string, downloadsL
 		return nil
 	}
 
-	toDir, err := vangogh_integration.AbsSlugDownloadDir(slug, vangogh_integration.Installer, drp.to)
+	toDir, err := vangogh_integration.AbsGogSlugDownloadDir(slug, vangogh_integration.Installer, drp.to)
 	if err != nil {
 		return err
 	}

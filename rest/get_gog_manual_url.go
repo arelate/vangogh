@@ -47,7 +47,7 @@ func GetGogManualUrl(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, downloadType, downloadsLayout)
+	absSlugDownloadDir, err := vangogh_integration.AbsGogSlugDownloadDir(slug, downloadType, downloadsLayout)
 	if err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return

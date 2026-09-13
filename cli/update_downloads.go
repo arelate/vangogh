@@ -74,7 +74,7 @@ func UpdateDownloads(
 
 			if slug, ok := rdx.GetLastVal(vangogh_integration.GogSlugProperty, id); ok {
 				var absSlugDownloadDir string
-				absSlugDownloadDir, err = vangogh_integration.AbsSlugDownloadDir(slug, vangogh_integration.Installer, downloadsLayout)
+				absSlugDownloadDir, err = vangogh_integration.AbsGogSlugDownloadDir(slug, vangogh_integration.Installer, downloadsLayout)
 				if err != nil {
 					return err
 				}

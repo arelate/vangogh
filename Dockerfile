@@ -26,12 +26,8 @@ VOLUME /var/lib/vangogh/backups
 VOLUME /var/lib/vangogh/downloads
 # binaries (cold storage)
 VOLUME /var/lib/vangogh/binaries
-# checksums (hot storage)
-VOLUME /var/lib/vangogh/checksums
 # images (hot storage)
 VOLUME /var/lib/vangogh/images
-# description_images (hot storage)
-VOLUME /var/lib/vangogh/description_images
 # logs (cold storage)
 VOLUME /var/log/vangogh
 # metadata (hot storage)

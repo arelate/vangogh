@@ -63,7 +63,7 @@ func GetImages(ids []string, its []gog_integration.ImageType, missing, force boo
 
 	if missing {
 		var localImageSet map[string]any
-		localImageSet, err = vangogh_integration.LocalImageIds()
+		localImageSet, err = vangogh_integration.LocalGogImageIds()
 		if err != nil {
 			return err
 		}
@@ -155,7 +155,7 @@ func imageTypesReduxAssets(otherProperties []string, its []gog_integration.Image
 
 func getImage(imageUrl *url.URL, force bool) error {
 
-	dstImageDir, err := vangogh_integration.AbsImagesDirByImageId(imageUrl.Path)
+	dstImageDir, err := vangogh_integration.AbsGogImagesDirByImageId(imageUrl.Path)
 	if err != nil {
 		return err
 	}

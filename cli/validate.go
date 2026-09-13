@@ -239,7 +239,7 @@ func validateManualUrl(
 		return vs, nil
 	}
 
-	absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.DownloadType, layout)
+	absSlugDownloadDir, err := vangogh_integration.AbsGogSlugDownloadDir(slug, dl.DownloadType, layout)
 	if err != nil {
 		return vangogh_integration.ValidationStatusError, err
 	}

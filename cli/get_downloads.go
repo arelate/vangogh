@@ -374,7 +374,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	// 3
 	if !gdd.forceUpdate {
 		if filename, ok := gdd.rdx.GetLastVal(vangogh_integration.GogManualUrlFilenameProperty, dl.ManualUrl); ok && filename != "" {
-			absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.DownloadType, gdd.downloadsLayout)
+			absSlugDownloadDir, err := vangogh_integration.AbsGogSlugDownloadDir(slug, dl.DownloadType, gdd.downloadsLayout)
 			if err != nil {
 				return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 			}
@@ -398,7 +398,7 @@ func (gdd *getDownloadsDelegate) downloadManualUrl(
 	}
 
 	// 4
-	absSlugDownloadDir, err := vangogh_integration.AbsSlugDownloadDir(slug, dl.DownloadType, gdd.downloadsLayout)
+	absSlugDownloadDir, err := vangogh_integration.AbsGogSlugDownloadDir(slug, dl.DownloadType, gdd.downloadsLayout)
 	if err != nil {
 		return errManualUrlDownloadInterrupted(dl.ManualUrl, gdd.rdx, err)
 	}
