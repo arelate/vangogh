@@ -50,7 +50,6 @@ func Debug(gogId string, rdx redux.Readable) (compton.PageElement, error) {
 
 	heading := compton.Heading(2)
 	heading.Append(compton.Fspan(p, productTitle).TextAlign(align.Center))
-	//heading.SetAttribute("style", "view-transition-name:product-title-"+gogId)
 	headingRow.Append(heading)
 
 	subHeading := compton.Heading(3)
@@ -296,6 +295,10 @@ func Debug(gogId string, rdx redux.Readable) (compton.PageElement, error) {
 }
 
 func productTypeSection(r compton.Registrar, id string, pt vangogh_integration.ProductType) compton.Element {
+	if id == "" {
+		return nil
+	}
+
 	ds := compton.DSLarge(r, compton_data.TypesTitles[pt.String()], false)
 
 	id = url.QueryEscape(id)
