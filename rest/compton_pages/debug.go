@@ -43,7 +43,7 @@ func Debug(gogId string, rdx redux.Readable) (compton.PageElement, error) {
 	pageStack := compton.FlexItems(p, direction.Column)
 	p.Append(pageStack)
 
-	appNavLinks := compton_fragments.DistributorNavLinks(p, "")
+	appNavLinks := compton_fragments.DistributorNavLinks(p, "GOG")
 	pageStack.Append(compton.FICenter(p, appNavLinks))
 
 	headingRow := compton.FlexItems(p, direction.Column).RowGap(size.XSmall)
