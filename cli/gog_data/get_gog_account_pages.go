@@ -97,19 +97,23 @@ func reduceGogAccountPage(page string, kvGogAccountPages kevlar.KeyValues, piv s
 			case vangogh_integration.GogTagNameProperty:
 				// tag names are reduced at the page level, avoid resetting it here by skipping this property
 				continue
+			case vangogh_integration.GogImageProperty:
+				values = []string{gog_integration.ImageId(ap.GetImage())}
 			case vangogh_integration.GogSlugProperty:
 				values = []string{ap.Slug}
 			case vangogh_integration.GogAccountProductPageProperty:
 				values = []string{page}
-			case vangogh_integration.GogImageProperty:
-				values = []string{gog_integration.ImageId(ap.GetImage())}
 			case vangogh_integration.GogIsAccountProductProperty:
-				values = []string{vangogh_integration.TrueValue}
-			case vangogh_integration.GogOwnedProperty:
 				values = []string{vangogh_integration.TrueValue}
 			case vangogh_integration.GogAccountProductOrderProperty:
 				order := accountProductOrder(ii, &accountPage)
 				values = []string{fmt.Sprintf("%06d", order)}
+			case vangogh_integration.GogOwnedProperty:
+				values = []string{vangogh_integration.TrueValue}
+			case vangogh_integration.GogTitleProperty:
+				values = []string{ap.Title}
+			case vangogh_integration.GogOperatingSystemsProperty:
+				values = ap.GetOperatingSystems()
 			}
 
 			if shared_data.IsNotEmpty(values...) {
