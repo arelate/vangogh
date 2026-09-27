@@ -97,7 +97,7 @@ func reduceGogAccountPage(page string, kvGogAccountPages kevlar.KeyValues, piv s
 			case vangogh_integration.GogTagNameProperty:
 				// tag names are reduced at the page level, avoid resetting it here by skipping this property
 				continue
-			case vangogh_integration.GogImageProperty:
+			case vangogh_integration.GogHorizontalImageProperty:
 				values = []string{gog_integration.ImageId(ap.GetImage())}
 			case vangogh_integration.GogSlugProperty:
 				values = []string{ap.Slug}

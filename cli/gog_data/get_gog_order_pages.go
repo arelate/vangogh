@@ -101,9 +101,9 @@ func reduceGogOrderPage(page string, kvGogOrderPages kevlar.KeyValues, piv share
 					}
 				case vangogh_integration.GogOrderPageProductsProperty:
 					piv[property][id] = []string{page}
-				case vangogh_integration.GogImageProperty:
+				case vangogh_integration.GogHorizontalImageProperty:
 					// order image should be used only when not sourced from primary type (e.g. catalog)
-					if !rdx.HasKey(vangogh_integration.GogImageProperty, id) {
+					if !rdx.HasKey(vangogh_integration.GogHorizontalImageProperty, id) {
 						piv[property][id] = []string{gog_integration.ImageId(orderProduct.GetImage())}
 					}
 				}

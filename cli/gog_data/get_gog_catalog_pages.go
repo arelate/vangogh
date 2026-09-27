@@ -109,7 +109,7 @@ func reduceGogCatalogPageProperties(page string, catalogPage *gog_integration.Ca
 				values = cp.GetDevelopers()
 			case vangogh_integration.GogPublishersProperty:
 				values = cp.GetPublishers()
-			case vangogh_integration.GogImageProperty:
+			case vangogh_integration.GogHorizontalImageProperty:
 				values = []string{gog_integration.ImageId(cp.GetImage())}
 			case vangogh_integration.GogVerticalImageProperty:
 				values = []string{gog_integration.ImageId(cp.GetVerticalImage())}

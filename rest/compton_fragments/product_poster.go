@@ -10,7 +10,7 @@ import (
 )
 
 func GogProductPoster(id string, rdx redux.Readable) compton.Element {
-	if imgSrc, ok := rdx.GetLastVal(vangogh_integration.GogImageProperty, id); ok && imgSrc != "" {
+	if imgSrc, ok := rdx.GetLastVal(vangogh_integration.GogHorizontalImageProperty, id); ok && imgSrc != "" {
 		relImgSrc := path.Join("/gog/image", imgSrc)
 
 		imgEager := compton.ImageEager(relImgSrc)

@@ -130,7 +130,7 @@ func reduceGogApiProductProperties(id string, ap *gog_integration.ApiProduct, pi
 			values = ap.GetDevelopers()
 		case vangogh_integration.GogPublishersProperty:
 			values = ap.GetPublishers()
-		case vangogh_integration.GogImageProperty:
+		case vangogh_integration.GogHorizontalImageProperty:
 			values = []string{gog_integration.ImageId(ap.GetImage())}
 		case vangogh_integration.GogVerticalImageProperty:
 			values = []string{gog_integration.ImageId(ap.GetVerticalImage())}
