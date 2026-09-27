@@ -23,6 +23,7 @@ var PropertyTitles = map[string]string{
 	vangogh_integration.GogGameModesProperty:           "Game Modes",
 	vangogh_integration.GogLanguageCodeProperty:        "Language",
 	vangogh_integration.GogIsAccountProductProperty:    "Is Account Product",
+	vangogh_integration.GogIsLicenceProductProperty:    "Is Licence Product",
 	vangogh_integration.GogAccountProductOrderProperty: "Account Page Order",
 
 	vangogh_integration.GogIsIncludedByGamesProperty: "Editions",

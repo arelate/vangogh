@@ -84,17 +84,24 @@ func gogFormatProperty(id, property string, rdx redux.Readable) formattedPropert
 		values:  make(map[string]string),
 	}
 
-	gogIsAccountProduct := false
-	if lp, ok := rdx.GetLastVal(vangogh_integration.GogIsAccountProductProperty, id); ok {
-		gogIsAccountProduct = lp == vangogh_integration.TrueValue
+	var gogIsAccountProduct bool
+	if giap, ok := rdx.GetLastVal(vangogh_integration.GogIsAccountProductProperty, id); ok {
+		gogIsAccountProduct = giap == vangogh_integration.TrueValue
 	}
-	isFree := false
+
+	var gogIsLicenceProduct bool
+	if gilp, ok := rdx.GetLastVal(vangogh_integration.GogIsLicenceProductProperty, id); ok {
+		gogIsLicenceProduct = gilp == vangogh_integration.TrueValue
+	}
+
+	var gogIsFree bool
 	if ifp, ok := rdx.GetLastVal(vangogh_integration.GogIsFreeProperty, id); ok {
-		isFree = ifp == vangogh_integration.TrueValue
+		gogIsFree = ifp == vangogh_integration.TrueValue
 	}
-	isDiscounted := false
+
+	var gogIsDiscounted bool
 	if idp, ok := rdx.GetLastVal(vangogh_integration.GogIsDiscountedProperty, id); ok {
-		isDiscounted = idp == vangogh_integration.TrueValue
+		gogIsDiscounted = idp == vangogh_integration.TrueValue
 	}
 
 	var hltbId string
@@ -165,8 +172,8 @@ func gogFormatProperty(id, property string, rdx redux.Readable) formattedPropert
 		}
 	case vangogh_integration.GogPriceProperty:
 		for _, value := range values {
-			if !isFree {
-				if isDiscounted && !gogIsAccountProduct {
+			if !gogIsFree {
+				if gogIsDiscounted && !gogIsAccountProduct && !gogIsLicenceProduct {
 					if bpp, ok := rdx.GetLastVal(vangogh_integration.GogBasePriceProperty, id); ok {
 						fmtProperty.values["Base: "+bpp] = hrefEmpty()
 					}
@@ -301,7 +308,7 @@ func gogFormatProperty(id, property string, rdx redux.Readable) formattedPropert
 			fmtProperty.class = res
 		}
 	case vangogh_integration.GogUserWishlistProperty:
-		if !gogIsAccountProduct || firstValue == vangogh_integration.TrueValue {
+		if !(gogIsAccountProduct || gogIsLicenceProduct) || firstValue == vangogh_integration.TrueValue {
 			switch firstValue {
 			case vangogh_integration.TrueValue:
 				fmtProperty.actions["Remove"] = path.Join("/gog/wishlist/remove", id)

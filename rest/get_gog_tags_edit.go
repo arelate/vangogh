@@ -38,10 +38,17 @@ func GetGogTagsEdit(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	gogIsAccountProduct := false
-	if op, ok := rdx.GetLastVal(vangogh_integration.GogIsAccountProductProperty, id); ok {
-		gogIsAccountProduct = op == vangogh_integration.TrueValue
+	var gogIsAccountProduct bool
+	if giap, ok := rdx.GetLastVal(vangogh_integration.GogIsAccountProductProperty, id); ok {
+		gogIsAccountProduct = giap == vangogh_integration.TrueValue
 	}
+
+	//var gogIsLicenceProduct bool
+	//if gilp, ok := rdx.GetLastVal(vangogh_integration.GogIsLicenceProductProperty, id); ok {
+	//	gogIsLicenceProduct = gilp == vangogh_integration.TrueValue
+	//}
+	//
+	//gogIsOwned := gogIsAccountProduct || gogIsLicenceProduct
 
 	ltePage := compton_pages.GogTagsEditor(id, gogIsAccountProduct, vangogh_integration.GogTagIdProperty, tagNames, selectedValues, rdx)
 	if err := ltePage.Write(w); err != nil {

@@ -38,9 +38,14 @@ func gogFormatBadge(id, property string, rdx redux.Readable) *compton.FormattedB
 	productDownloadStatus := productDvs.DownloadStatus()
 	productValidationStatus := productDvs.ValidationStatus()
 
-	gogIsAccountProduct := false
-	if lp, ok := rdx.GetLastVal(vangogh_integration.GogIsAccountProductProperty, id); ok {
-		gogIsAccountProduct = lp == vangogh_integration.TrueValue
+	var gogIsAccountProduct bool
+	if giap, ok := rdx.GetLastVal(vangogh_integration.GogIsAccountProductProperty, id); ok {
+		gogIsAccountProduct = giap == vangogh_integration.TrueValue
+	}
+
+	var gogIsLicenceProduct bool
+	if gilp, ok := rdx.GetLastVal(vangogh_integration.GogIsLicenceProductProperty, id); ok {
+		gogIsLicenceProduct = gilp == vangogh_integration.TrueValue
 	}
 
 	var productType string
@@ -49,20 +54,13 @@ func gogFormatBadge(id, property string, rdx redux.Readable) *compton.FormattedB
 	}
 
 	switch property {
+	case vangogh_integration.GogIsLicenceProductProperty:
+		if gogIsLicenceProduct && !gogIsAccountProduct {
+			gogFmtOwnedBadge(fmtBadge, productType, productDownloadStatus, productValidationStatus)
+		}
 	case vangogh_integration.GogIsAccountProductProperty:
 		if gogIsAccountProduct {
-			switch productType {
-			case gog_integration.ProductTypeGame:
-				if productDownloadStatus == vangogh_integration.DownloadStatusUnknown &&
-					productValidationStatus == vangogh_integration.ValidationStatusUnknown {
-					fmtBadge.Icon = compton.CircleDashed
-				} else if productDownloadStatus == vangogh_integration.DownloadStatusDownloaded ||
-					productDownloadStatus == vangogh_integration.DownloadStatusValidated {
-					fmtBadge.Icon = compton.CircleCompactDisk
-				}
-			default:
-				fmtBadge.Icon = compton.CircleCompactDisk
-			}
+			gogFmtOwnedBadge(fmtBadge, productType, productDownloadStatus, productValidationStatus)
 		}
 	case vangogh_integration.VangoghDownloadQueuedProperty:
 		if productDownloadStatus == vangogh_integration.DownloadStatusQueued {
@@ -161,4 +159,19 @@ func gogFormatBadge(id, property string, rdx redux.Readable) *compton.FormattedB
 		}
 	}
 	return fmtBadge
+}
+
+func gogFmtOwnedBadge(fmtBadge *compton.FormattedBadge, productType string, productDownloadStatus vangogh_integration.DownloadStatus, productValidationStatus vangogh_integration.ValidationStatus) {
+	switch productType {
+	case gog_integration.ProductTypeGame:
+		if productDownloadStatus == vangogh_integration.DownloadStatusUnknown &&
+			productValidationStatus == vangogh_integration.ValidationStatusUnknown {
+			fmtBadge.Icon = compton.CircleDashed
+		} else if productDownloadStatus == vangogh_integration.DownloadStatusDownloaded ||
+			productDownloadStatus == vangogh_integration.DownloadStatusValidated {
+			fmtBadge.Icon = compton.CircleCompactDisk
+		}
+	default:
+		fmtBadge.Icon = compton.CircleCompactDisk
+	}
 }

@@ -200,8 +200,6 @@ func reduceGogApiProductProperties(id string, ap *gog_integration.ApiProduct, pi
 			values = []string{strconv.FormatBool(ap.GetPreOrder())}
 		case vangogh_integration.GogScreenshotsProperty:
 			values = gog_integration.ImageIds(ap.GetScreenshots()...)
-		case vangogh_integration.GogLicencesProperty:
-			continue
 		}
 
 		if shared_data.IsNotEmpty(values...) {

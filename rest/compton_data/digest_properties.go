@@ -30,4 +30,5 @@ var BinaryDigestProperties = []string{
 	vangogh_integration.GogIsModProperty,
 	vangogh_integration.GogProductGeneratedChecksumProperty,
 	vangogh_integration.GogIsAccountProductProperty,
+	vangogh_integration.GogIsLicenceProductProperty,
 }

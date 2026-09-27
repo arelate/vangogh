@@ -40,9 +40,10 @@ import (
 // 22. rename os, lang-code, download-type
 // 23. rename vangogh properties
 // 24. rename gog-image -> gog-horizontal-image
+// 25. rename gog-licences -> gog-is-licence-product
 
 const (
-	latestDataSchema = 25
+	latestDataSchema = 26
 )
 
 func MigrateDataHandler(u *url.URL) error {
@@ -116,6 +117,10 @@ func MigrateData(force bool) error {
 			}
 		case 24:
 			if err = renameGogImage(); err != nil {
+				return err
+			}
+		case 25:
+			if err = renameGogLicences(); err != nil {
 				return err
 			}
 		}
@@ -258,6 +263,12 @@ func renameVangoghProperties() error {
 func renameGogImage() error {
 	return migrateFromToProperties(map[string]string{
 		"gog-image": vangogh_integration.GogHorizontalImageProperty,
+	})
+}
+
+func renameGogLicences() error {
+	return migrateFromToProperties(map[string]string{
+		"gog-licences": vangogh_integration.GogIsLicenceProductProperty,
 	})
 }
 

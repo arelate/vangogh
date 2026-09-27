@@ -10,6 +10,7 @@ var SearchProperties = []string{
 	vangogh_integration.GogPublishersProperty,
 
 	vangogh_integration.GogIsAccountProductProperty,
+	vangogh_integration.GogIsLicenceProductProperty,
 
 	vangogh_integration.GogTagIdProperty,
 	vangogh_integration.VangoghLocalTagsProperty,

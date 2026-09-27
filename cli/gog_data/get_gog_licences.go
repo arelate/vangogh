@@ -67,7 +67,7 @@ func ReduceGogLicences(kvGogLicences kevlar.KeyValues) error {
 		return err
 	}
 
-	key := vangogh_integration.GogLicencesProperty
+	key := vangogh_integration.GogIsLicenceProductProperty
 	if err = rdx.MustHave(key); err != nil {
 		return err
 	}

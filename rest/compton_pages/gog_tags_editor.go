@@ -59,7 +59,7 @@ func GogTagsEditor(
 	/* Ownership notice */
 
 	if !owned {
-		ownershipNotice := compton.Fspan(p, "Tags modifications require product ownership").
+		ownershipNotice := compton.Fspan(p, "Account tags modifications require product to be Account Product").
 			ForegroundColor(color.Yellow).FontWeight(font_weight.Bolder)
 
 		pageStack.Append(compton.FICenter(p, ownershipNotice))
