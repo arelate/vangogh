@@ -120,7 +120,9 @@ func GogSearch(sectionUrl string, sortBy string, query url.Values, rdx redux.Rea
 				queryFrow.PropVal(compton_data.PropertyTitles[prop], fq[prop]...)
 			}
 			queryFrow.LinkColor("Clear", "/gog/search", color.Red)
-			queryFrow.LinkColor("Next page", nextPageUrl, color.Foreground)
+			if to < len(ids) {
+				queryFrow.LinkColor("Next page", nextPageUrl, color.Foreground)
+			}
 		}
 
 		filterSearchDetails.Append(compton_fragments.GogSearchForm(p, query, queryFrow, rdx, permissions...))
