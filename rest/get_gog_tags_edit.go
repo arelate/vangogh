@@ -38,12 +38,12 @@ func GetGogTagsEdit(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	owned := false
-	if op, ok := rdx.GetLastVal(vangogh_integration.GogOwnedProperty, id); ok && op == vangogh_integration.TrueValue {
-		owned = true
+	gogIsAccountProduct := false
+	if op, ok := rdx.GetLastVal(vangogh_integration.GogIsAccountProductProperty, id); ok {
+		gogIsAccountProduct = op == vangogh_integration.TrueValue
 	}
 
-	ltePage := compton_pages.GogTagsEditor(id, owned, vangogh_integration.GogTagIdProperty, tagNames, selectedValues, rdx)
+	ltePage := compton_pages.GogTagsEditor(id, gogIsAccountProduct, vangogh_integration.GogTagIdProperty, tagNames, selectedValues, rdx)
 	if err := ltePage.Write(w); err != nil {
 		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
 		return

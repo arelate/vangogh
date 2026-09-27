@@ -10,10 +10,10 @@ import (
 )
 
 var PropertyPermissions = map[string]author.Permission{
-	vangogh_integration.GogTagIdProperty:         perm.ReadTagId,
-	vangogh_integration.VangoghLocalTagsProperty: perm.ReadLocalTags,
-	vangogh_integration.GogOwnedProperty:         perm.ReadOwned,
-	vangogh_integration.GogUserWishlistProperty:  perm.ReadWishlist,
+	vangogh_integration.GogTagIdProperty:            perm.ReadTagId,
+	vangogh_integration.VangoghLocalTagsProperty:    perm.ReadLocalTags,
+	vangogh_integration.GogIsAccountProductProperty: perm.ReadAccountProducts,
+	vangogh_integration.GogUserWishlistProperty:     perm.ReadWishlist,
 }
 
 var PropertyActionPermissions = map[string]author.Permission{

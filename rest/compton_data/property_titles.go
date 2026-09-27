@@ -22,7 +22,7 @@ var PropertyTitles = map[string]string{
 	vangogh_integration.GogFeaturesProperty:            "Features",
 	vangogh_integration.GogGameModesProperty:           "Game Modes",
 	vangogh_integration.GogLanguageCodeProperty:        "Language",
-	vangogh_integration.GogIsAccountProductProperty:    "Account Product",
+	vangogh_integration.GogIsAccountProductProperty:    "Is Account Product",
 	vangogh_integration.GogAccountProductOrderProperty: "Account Page Order",
 
 	vangogh_integration.GogIsIncludedByGamesProperty: "Editions",
@@ -35,7 +35,6 @@ var PropertyTitles = map[string]string{
 	vangogh_integration.GogProductTypeProperty: "Product Type",
 
 	vangogh_integration.GogUserWishlistProperty: "Wishlisted",
-	vangogh_integration.GogOwnedProperty:        "Owned",
 
 	vangogh_integration.GogIsFreeProperty:                            "Free",
 	vangogh_integration.GogIsDemoProperty:                            "Demo",

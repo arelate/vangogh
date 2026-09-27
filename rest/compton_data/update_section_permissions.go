@@ -7,5 +7,5 @@ import (
 )
 
 var UpdateSectionPermissions = map[string]author.Permission{
-	vangogh_integration.UpdatesInstallers: perm.ReadOwned,
+	vangogh_integration.UpdatesInstallers: perm.ReadAccountProducts,
 }

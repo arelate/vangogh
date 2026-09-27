@@ -32,7 +32,7 @@ func HandleFuncs() {
 		"GET /gog/search": AuthCookie(sb, Log(http.HandlerFunc(GetGogSearch)), perm.ReadSearch),
 
 		"GET /gog/owned":          Redirect(path.Join("/gog/owned", compton_data.SortByPurchaseDate), http.StatusTemporaryRedirect),
-		"GET /gog/owned/{sortBy}": AuthCookie(sb, Log(http.HandlerFunc(GetGogOwned)), perm.ReadOwned),
+		"GET /gog/owned/{sortBy}": AuthCookie(sb, Log(http.HandlerFunc(GetGogOwned)), perm.ReadAccountProducts),
 
 		"GET /gog/catalog":          Redirect(path.Join("/gog/catalog", compton_data.SortByGogReleaseDate), http.StatusPermanentRedirect),
 		"GET /gog/catalog/{sortBy}": AuthCookie(sb, Log(http.HandlerFunc(GetGogCatalog)), perm.ReadProductData),

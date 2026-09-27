@@ -108,8 +108,6 @@ func reduceGogAccountPage(page string, kvGogAccountPages kevlar.KeyValues, piv s
 			case vangogh_integration.GogAccountProductOrderProperty:
 				order := accountProductOrder(ii, &accountPage)
 				values = []string{fmt.Sprintf("%06d", order)}
-			case vangogh_integration.GogOwnedProperty:
-				values = []string{vangogh_integration.TrueValue}
 			case vangogh_integration.GogTitleProperty:
 				values = []string{ap.Title}
 			case vangogh_integration.GogOperatingSystemsProperty:

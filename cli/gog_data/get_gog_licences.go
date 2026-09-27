@@ -92,9 +92,5 @@ func ReduceGogLicences(kvGogLicences kevlar.KeyValues) error {
 		return err
 	}
 
-	if err = rdx.BatchAddValues(vangogh_integration.GogOwnedProperty, licencesMap); err != nil {
-		return err
-	}
-
 	return rdx.BatchAddValues(key, licencesMap)
 }

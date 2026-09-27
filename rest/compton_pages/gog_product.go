@@ -359,7 +359,7 @@ func GogProduct(id string, rdx redux.Readable, permissions ...author.Permission)
 
 	}
 
-	if owned, ok := rdx.GetLastVal(vangogh_integration.GogOwnedProperty, id); ok && owned == vangogh_integration.TrueValue {
+	if gogIsAccountProduct, ok := rdx.GetLastVal(vangogh_integration.GogIsAccountProductProperty, id); ok && gogIsAccountProduct == vangogh_integration.TrueValue {
 
 		var hintSentences []string
 

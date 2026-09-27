@@ -77,7 +77,7 @@ func getGogAvailableProducts(rdx redux.Readable) ([]vangogh_integration.Availabl
 
 			if isRequiredByGames, ok := rdx.GetAllValues(vangogh_integration.GogIsRequiredByGamesProperty, strconv.Itoa(ap.Id)); ok {
 				for _, rbgId := range isRequiredByGames {
-					if owned, sure := rdx.GetLastVal(vangogh_integration.GogOwnedProperty, rbgId); !sure || owned != vangogh_integration.TrueValue {
+					if gogIsAccountProduct, sure := rdx.GetLastVal(vangogh_integration.GogIsAccountProductProperty, rbgId); !sure || gogIsAccountProduct != vangogh_integration.TrueValue {
 						continue
 					}
 					if title, sure := rdx.GetLastVal(vangogh_integration.GogTitleProperty, rbgId); sure {

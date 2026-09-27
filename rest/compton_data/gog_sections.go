@@ -52,7 +52,7 @@ func GogSectionSearchQuery(sectionUrl string) url.Values {
 	case GogSectionOwnedUrl:
 		q.Set(vangogh_integration.GogIsAccountProductProperty, vangogh_integration.TrueValue)
 	case GogSectionSaleUrl:
-		q.Set(vangogh_integration.GogOwnedProperty, vangogh_integration.FalseValue)
+		q.Set(vangogh_integration.GogIsAccountProductProperty, vangogh_integration.FalseValue)
 		q.Set(vangogh_integration.GogIsDiscountedProperty, vangogh_integration.TrueValue)
 	case GogSectionWishlistUrl:
 		q.Set(vangogh_integration.GogUserWishlistProperty, vangogh_integration.TrueValue)

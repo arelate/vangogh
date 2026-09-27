@@ -34,7 +34,7 @@ func ProductProperties(r compton.Registrar, id string, rdx redux.Readable, prope
 
 	for property := range ppo {
 
-		fmtProperty := formatProperty(id, property, rdx)
+		fmtProperty := gogFormatProperty(id, property, rdx)
 		if tv := propertyTitleValues(r, property, fmtProperty, permissions...); tv != nil {
 			productProperties = append(productProperties, tv)
 		}
@@ -77,16 +77,16 @@ func hrefEmpty() string {
 	return ""
 }
 
-func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
+func gogFormatProperty(id, property string, rdx redux.Readable) formattedProperty {
 
 	fmtProperty := formattedProperty{
 		actions: make(map[string]string),
 		values:  make(map[string]string),
 	}
 
-	owned := false
-	if lp, ok := rdx.GetLastVal(vangogh_integration.GogOwnedProperty, id); ok {
-		owned = lp == vangogh_integration.TrueValue
+	gogIsAccountProduct := false
+	if lp, ok := rdx.GetLastVal(vangogh_integration.GogIsAccountProductProperty, id); ok {
+		gogIsAccountProduct = lp == vangogh_integration.TrueValue
 	}
 	isFree := false
 	if ifp, ok := rdx.GetLastVal(vangogh_integration.GogIsFreeProperty, id); ok {
@@ -130,7 +130,7 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 
 	switch property {
 	case vangogh_integration.GogUserWishlistProperty:
-		if owned && firstValue != vangogh_integration.TrueValue {
+		if gogIsAccountProduct && firstValue != vangogh_integration.TrueValue {
 			break
 		}
 		title := "No"
@@ -166,7 +166,7 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 	case vangogh_integration.GogPriceProperty:
 		for _, value := range values {
 			if !isFree {
-				if isDiscounted && !owned {
+				if isDiscounted && !gogIsAccountProduct {
 					if bpp, ok := rdx.GetLastVal(vangogh_integration.GogBasePriceProperty, id); ok {
 						fmtProperty.values["Base: "+bpp] = hrefEmpty()
 					}
@@ -296,12 +296,12 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 
 	// format actions, class
 	switch property {
-	case vangogh_integration.GogOwnedProperty:
+	case vangogh_integration.GogIsAccountProductProperty:
 		if res, ok := rdx.GetLastVal(vangogh_integration.GogProductValidationResultProperty, id); ok {
 			fmtProperty.class = res
 		}
 	case vangogh_integration.GogUserWishlistProperty:
-		if !owned || firstValue == vangogh_integration.TrueValue {
+		if !gogIsAccountProduct || firstValue == vangogh_integration.TrueValue {
 			switch firstValue {
 			case vangogh_integration.TrueValue:
 				fmtProperty.actions["Remove"] = path.Join("/gog/wishlist/remove", id)
@@ -312,7 +312,7 @@ func formatProperty(id, property string, rdx redux.Readable) formattedProperty {
 			}
 		}
 	case vangogh_integration.GogTagIdProperty:
-		if owned {
+		if gogIsAccountProduct {
 			fmtProperty.actions["Edit"] = path.Join("/gog/tags/edit", id)
 		}
 	case vangogh_integration.VangoghLocalTagsProperty:

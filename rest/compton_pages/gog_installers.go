@@ -89,7 +89,7 @@ func GogInstallers(id string, messages []string, dls vangogh_integration.Downloa
 		pageStack.Append(compton.FICenter(s, dvRow))
 	}
 
-	if owned, ok := rdx.GetLastVal(vangogh_integration.GogOwnedProperty, id); ok && owned == vangogh_integration.FalseValue {
+	if gogIsAccountProduct, ok := rdx.GetLastVal(vangogh_integration.GogIsAccountProductProperty, id); ok && gogIsAccountProduct != vangogh_integration.TrueValue {
 		ownershipRequiredNotice := compton.Fspan(s, "Installers are available for owned products only").
 			ForegroundColor(color.Gray)
 		pageStack.Append(ownershipRequiredNotice)

@@ -20,7 +20,7 @@ func FormatBadges(id string, rdx redux.Readable, badgeProperties []string, permi
 	ppo := compton_data.PermittedProperties(badgeProperties, permissions...)
 
 	for p := range ppo {
-		if fmtBadge := formatBadge(id, p, rdx); fmtBadge.Title != "" || fmtBadge.Icon != compton.NoSymbol {
+		if fmtBadge := gogFormatBadge(id, p, rdx); fmtBadge.Title != "" || fmtBadge.Icon != compton.NoSymbol {
 			fmtBadges = append(fmtBadges, fmtBadge)
 		}
 	}
@@ -28,7 +28,7 @@ func FormatBadges(id string, rdx redux.Readable, badgeProperties []string, permi
 	return fmtBadges
 }
 
-func formatBadge(id, property string, rdx redux.Readable) *compton.FormattedBadge {
+func gogFormatBadge(id, property string, rdx redux.Readable) *compton.FormattedBadge {
 
 	fmtBadge := &compton.FormattedBadge{
 		Color: color.Gray,
@@ -38,9 +38,9 @@ func formatBadge(id, property string, rdx redux.Readable) *compton.FormattedBadg
 	productDownloadStatus := productDvs.DownloadStatus()
 	productValidationStatus := productDvs.ValidationStatus()
 
-	owned := false
-	if lp, ok := rdx.GetLastVal(vangogh_integration.GogOwnedProperty, id); ok {
-		owned = lp == vangogh_integration.TrueValue
+	gogIsAccountProduct := false
+	if lp, ok := rdx.GetLastVal(vangogh_integration.GogIsAccountProductProperty, id); ok {
+		gogIsAccountProduct = lp == vangogh_integration.TrueValue
 	}
 
 	var productType string
@@ -49,8 +49,8 @@ func formatBadge(id, property string, rdx redux.Readable) *compton.FormattedBadg
 	}
 
 	switch property {
-	case vangogh_integration.GogOwnedProperty:
-		if owned {
+	case vangogh_integration.GogIsAccountProductProperty:
+		if gogIsAccountProduct {
 			switch productType {
 			case gog_integration.ProductTypeGame:
 				if productDownloadStatus == vangogh_integration.DownloadStatusUnknown &&
@@ -73,7 +73,7 @@ func formatBadge(id, property string, rdx redux.Readable) *compton.FormattedBadg
 			fmtBadge.Icon = compton.CircleDownwardArrow
 		}
 	case vangogh_integration.GogProductValidationResultProperty:
-		if owned && productType != gog_integration.ProductTypeDlc && productType != gog_integration.ProductTypePack {
+		if gogIsAccountProduct && productType != gog_integration.ProductTypeDlc && productType != gog_integration.ProductTypePack {
 			if vrSymbol, ok := compton_data.ValidationStatusSymbols[productValidationStatus]; ok {
 				fmtBadge.Icon = vrSymbol
 
@@ -121,7 +121,7 @@ func formatBadge(id, property string, rdx redux.Readable) *compton.FormattedBadg
 			fmtBadge.Title = "FREE"
 		}
 	case vangogh_integration.GogComingSoonProperty:
-		if owned {
+		if gogIsAccountProduct {
 			fmtBadge.Title = ""
 		} else if soon, ok := rdx.GetLastVal(vangogh_integration.GogComingSoonProperty, id); ok && soon == vangogh_integration.TrueValue {
 			fmtBadge.Title = "SOON"
@@ -136,7 +136,7 @@ func formatBadge(id, property string, rdx redux.Readable) *compton.FormattedBadg
 			}
 		}
 	case vangogh_integration.GogDiscountPercentageProperty:
-		if owned {
+		if gogIsAccountProduct {
 			fmtBadge.Title = ""
 		} else if dp, ok := rdx.GetLastVal(vangogh_integration.GogDiscountPercentageProperty, id); ok && dp != "0" {
 			fmtBadge.Title = "-" + dp + "%"

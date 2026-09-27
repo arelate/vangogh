@@ -11,7 +11,7 @@ const (
 const (
 	ReadUpdates author.Permission = iota
 	ReadSearch
-	ReadOwned
+	ReadAccountProducts
 	ReadProductData
 	ReadImages
 	ReadFiles
@@ -29,7 +29,7 @@ const (
 
 var (
 	browsePermissions  = []author.Permission{ReadUpdates, ReadSearch, ReadProductData, ReadImages}
-	ownedPermissions   = []author.Permission{ReadOwned, ReadFiles, ReadApi}
+	ownedPermissions   = []author.Permission{ReadAccountProducts, ReadFiles, ReadApi}
 	accountPermissions = []author.Permission{ReadWishlist, WriteWishlist, ReadTagId, WriteTagId, ReadLocalTags, WriteLocalTags, WriteCookies}
 	debugPermissions   = []author.Permission{ReadLogs, ReadDebug}
 )

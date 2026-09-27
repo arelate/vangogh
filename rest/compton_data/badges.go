@@ -6,7 +6,7 @@ import (
 
 var InformationBadgeProperties = []string{
 	// symbols
-	vangogh_integration.GogOwnedProperty,
+	vangogh_integration.GogIsAccountProductProperty,
 	vangogh_integration.VangoghDownloadQueuedProperty,
 	vangogh_integration.VangoghDownloadStartedProperty,
 	vangogh_integration.GogProductValidationResultProperty,
