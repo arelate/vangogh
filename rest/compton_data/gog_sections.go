@@ -14,35 +14,31 @@ const (
 const (
 	GogSectionSearchUrl   = "/gog/search"
 	GogSectionOwnedUrl    = "/gog/owned"
-	GogSectionCatalogUrl  = "/gog/catalog"
 	GogSectionWishlistUrl = "/gog/wishlist"
-	GogSectionSaleUrl     = "/gog/sale"
+	GogSectionCatalogUrl  = "/gog/catalog"
 )
 
 func AllGogSectionUrls() []string {
 	return []string{
 		GogSectionSearchUrl,
 		GogSectionOwnedUrl,
-		GogSectionCatalogUrl,
 		GogSectionWishlistUrl,
-		GogSectionSaleUrl,
+		GogSectionCatalogUrl,
 	}
 }
 
 var GogSectionTitles = map[string]string{
 	GogSectionSearchUrl:   "Search",
 	GogSectionOwnedUrl:    "Owned",
-	GogSectionCatalogUrl:  "Catalog",
 	GogSectionWishlistUrl: "Wishlist",
-	GogSectionSaleUrl:     "Sale",
+	GogSectionCatalogUrl:  "Catalog",
 }
 
 var GogSectionSymbols = map[string]compton.Symbol{
 	GogSectionSearchUrl:   compton.Search,
 	GogSectionOwnedUrl:    compton.CircleCompactDisk,
-	GogSectionCatalogUrl:  compton.ShoppingLabel,
 	GogSectionWishlistUrl: compton.Heart,
-	GogSectionSaleUrl:     compton.Percent,
+	GogSectionCatalogUrl:  compton.ShoppingLabel,
 }
 
 func GogSectionSearchQuery(sectionUrl string) url.Values {
@@ -51,9 +47,6 @@ func GogSectionSearchQuery(sectionUrl string) url.Values {
 	switch sectionUrl {
 	case GogSectionOwnedUrl:
 		q.Set(vangogh_integration.GogIsAccountProductProperty, vangogh_integration.TrueValue)
-	case GogSectionSaleUrl:
-		q.Set(vangogh_integration.GogIsAccountProductProperty, vangogh_integration.FalseValue)
-		q.Set(vangogh_integration.GogIsDiscountedProperty, vangogh_integration.TrueValue)
 	case GogSectionWishlistUrl:
 		q.Set(vangogh_integration.GogUserWishlistProperty, vangogh_integration.TrueValue)
 	case GogSectionCatalogUrl:
@@ -75,7 +68,6 @@ var GogSectionSortBy = map[string][]string{
 	GogSectionOwnedUrl:    {SortByPurchaseDate, SortByDownloadUpdated},
 	GogSectionCatalogUrl:  {SortByGogReleaseDate, SortBySteamCommunityUpdate},
 	GogSectionWishlistUrl: {SortByGogReleaseDate, SortByDiscount},
-	GogSectionSaleUrl:     {SortByDiscount, SortByGogRating},
 }
 
 var SortByParameters = map[string]map[string]string{
