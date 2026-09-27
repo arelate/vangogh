@@ -71,8 +71,7 @@ func Validate(
 	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, noDlcs, noExtras, noPatches)
 
 	properties := append(vangogh_integration.DownloadsLifecycleProperties(),
-		vangogh_integration.GogSlugProperty,
-		vangogh_integration.GogProductTypeProperty)
+		vangogh_integration.GogSlugProperty)
 
 	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(), properties...)
 	if err != nil {

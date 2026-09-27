@@ -3,7 +3,6 @@ package compton_fragments
 import (
 	"slices"
 
-	"github.com/arelate/southern_light/gog_integration"
 	"github.com/arelate/southern_light/vangogh_integration"
 	"github.com/arelate/vangogh/perm"
 	"github.com/arelate/vangogh/rest/compton_data"
@@ -68,15 +67,8 @@ func ProductSections(id string, rdx redux.Readable, permissions ...author.Permis
 	}
 
 	if slices.Contains(permissions, perm.ReadFiles) {
-		if val, ok := rdx.GetLastVal(vangogh_integration.GogOwnedProperty, id); ok && val == vangogh_integration.TrueValue {
-			if productType, _ := rdx.GetLastVal(vangogh_integration.GogProductTypeProperty, id); productType != gog_integration.ProductTypeDlc &&
-				productType != gog_integration.ProductTypePack {
-				if preorder, yeah := rdx.GetLastVal(vangogh_integration.GogPreOrderProperty, id); yeah && preorder == vangogh_integration.TrueValue {
-					// do nothing
-				} else {
-					hasSections = append(hasSections, compton_data.GogInstallersSection)
-				}
-			}
+		if gogIsAccountProduct, ok := rdx.GetLastVal(vangogh_integration.GogIsAccountProductProperty, id); ok && gogIsAccountProduct == vangogh_integration.TrueValue {
+			hasSections = append(hasSections, compton_data.GogInstallersSection)
 		}
 	}
 

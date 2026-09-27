@@ -21,42 +21,26 @@ func GetGogInstallers(w http.ResponseWriter, r *http.Request) {
 
 	id := r.PathValue(vangogh_integration.UrlIdParameter)
 
-	if owned, ok := rdx.GetLastVal(vangogh_integration.GogOwnedProperty, id); !ok || owned != vangogh_integration.TrueValue {
+	if gogIsAccountProduct, ok := rdx.GetLastVal(vangogh_integration.GogIsAccountProductProperty, id); !ok || gogIsAccountProduct != vangogh_integration.TrueValue {
 		w.WriteHeader(http.StatusNoContent)
-		if _, err := w.Write([]byte("not owned")); err != nil {
-			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-			return
-		}
 		return
 	}
 
-	// do not check existance in case of products that are Owned (see above) but don't have a product type
-	pt, _ := rdx.GetLastVal(vangogh_integration.GogProductTypeProperty, id)
+	det, err := getGogDetails(id)
+	if err != nil {
+		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+		return
+	}
 
-	switch pt {
-	case gog_integration.ProductTypePack:
-		// do nothing
-	case gog_integration.ProductTypeDlc:
-		// do nothing
-	case gog_integration.ProductTypeGame:
-		fallthrough
-	default:
-		det, err := getGogDetails(id)
-		if err != nil {
-			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-			return
-		}
-
-		dls, err := getDownloadsList(det, operatingSystems, langCodes, noPatches)
-		if err != nil {
-			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-			return
-		}
-		gameInstallersPage := compton_pages.GogInstallers(id, det.Messages, dls, rdx)
-		if err = gameInstallersPage.WriteResponse(w); err != nil {
-			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
-			return
-		}
+	dls, err := getDownloadsList(det, operatingSystems, langCodes, noPatches)
+	if err != nil {
+		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+		return
+	}
+	gameInstallersPage := compton_pages.GogInstallers(id, det.Messages, dls, rdx)
+	if err = gameInstallersPage.WriteResponse(w); err != nil {
+		http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+		return
 	}
 
 }

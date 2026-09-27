@@ -63,8 +63,7 @@ func RelayoutDownloads(
 	}
 
 	rdx, err := redux.NewWriter(vangogh_integration.AbsReduxDir(),
-		vangogh_integration.GogSlugProperty,
-		vangogh_integration.GogProductTypeProperty)
+		vangogh_integration.GogSlugProperty)
 	if err != nil {
 		return err
 	}

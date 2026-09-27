@@ -50,7 +50,6 @@ func Size(
 
 	rdx, err := redux.NewReader(vangogh_integration.AbsReduxDir(),
 		vangogh_integration.GogSlugProperty,
-		vangogh_integration.GogProductTypeProperty,
 		vangogh_integration.GogManualUrlFilenameProperty,
 		vangogh_integration.VangoghDownloadStatusErrorProperty)
 	if err != nil {

@@ -106,7 +106,6 @@ func GetDownloads(
 			vangogh_integration.DownloadsLifecycleProperties(),
 			vangogh_integration.GogTitleProperty,
 			vangogh_integration.GogSlugProperty,
-			vangogh_integration.GogProductTypeProperty,
 			vangogh_integration.GogOrderDateProperty,
 			// for optional validations
 			vangogh_integration.GogManualUrlFilenameProperty,

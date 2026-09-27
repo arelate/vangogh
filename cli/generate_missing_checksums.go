@@ -38,7 +38,6 @@ func GenerateMissingChecksums(operatingSystems []vangogh_integration.OperatingSy
 
 	properties := append(
 		vangogh_integration.DownloadsLifecycleProperties(),
-		vangogh_integration.GogProductTypeProperty,
 		vangogh_integration.GogSlugProperty)
 
 	rdx, err := redux.NewWriter(reduxDir, properties...)
