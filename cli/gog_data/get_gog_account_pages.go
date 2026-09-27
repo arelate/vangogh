@@ -114,6 +114,10 @@ func reduceGogAccountPage(page string, kvGogAccountPages kevlar.KeyValues, piv s
 				values = []string{ap.Title}
 			case vangogh_integration.GogOperatingSystemsProperty:
 				values = ap.GetOperatingSystems()
+			case vangogh_integration.GogProductTypeProperty:
+				// as of 2026 all, but 4 gog-is-account-product products have
+				// gog-product-type == GAME, setting this for all account products
+				values = []string{gog_integration.ProductTypeGame}
 			}
 
 			if shared_data.IsNotEmpty(values...) {

@@ -79,11 +79,11 @@ func GetDataHandler(u *url.URL) error {
 	additionalData := q.Has(vangogh_integration.UrlAdditionalDataParameter)
 
 	if accountData {
-		productTypes = append(productTypes, vangogh_integration.GogPurchaseProductTypes()...)
+		productTypes = append(productTypes, vangogh_integration.GogAccountProductTypes()...)
 	}
 
 	if additionalData {
-		productTypes = append(productTypes, slices.Collect(vangogh_integration.AdditionalProductTypes())...)
+		productTypes = append(productTypes, slices.Collect(vangogh_integration.GogAdditionalProductTypes())...)
 	}
 
 	since, err := vangogh_integration.SinceHouseAgoFromUrl(u)
@@ -96,18 +96,20 @@ func GetDataHandler(u *url.URL) error {
 	return GetData(ids, productTypes, since, force)
 }
 
-func getAccountData(since int64, force bool) error {
-	return GetData(nil, vangogh_integration.GogPurchaseProductTypes(), since, force)
+func getGogAccountData(since int64, force bool) error {
+	return GetData(nil, vangogh_integration.GogAccountProductTypes(), since, force)
 }
 
-func getAdditionalData(since int64, force bool) error {
-	additionalProductTypes := slices.Collect(vangogh_integration.AdditionalProductTypes())
-	return GetData(nil, additionalProductTypes, since, force)
+func getGogAdditionalData(since int64, force bool) error {
+	gogAdditionalProductTypes := slices.Collect(vangogh_integration.GogAdditionalProductTypes())
+	return GetData(nil, gogAdditionalProductTypes, since, force)
 }
 
-func getDownloadsData(ids ...string) error {
-	downloadsProductTypes := []vangogh_integration.ProductType{vangogh_integration.GogDetails}
-	return GetData(ids, downloadsProductTypes, -1, true)
+func getGogDownloadsData(ids ...string) error {
+	gogDownloadsProductTypes := []vangogh_integration.ProductType{
+		vangogh_integration.GogDetails,
+		vangogh_integration.GogApiProducts}
+	return GetData(ids, gogDownloadsProductTypes, -1, true)
 }
 
 func GetData(ids []string, productTypes []vangogh_integration.ProductType, since int64, force bool) error {

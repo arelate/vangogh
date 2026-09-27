@@ -165,7 +165,7 @@ func GetDownloads(
 	}
 
 	if options.updateData {
-		if err = getDownloadsData(ids...); err != nil {
+		if err = getGogDownloadsData(ids...); err != nil {
 			return err
 		}
 	}

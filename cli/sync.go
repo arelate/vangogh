@@ -91,7 +91,7 @@ func Sync(
 	}
 
 	// 1
-	if err = getAccountData(since, force); err != nil {
+	if err = getGogAccountData(since, force); err != nil {
 		return setSyncInterrupted(err, syncEventsRdx)
 	} else {
 		if err = setSyncEvent(vangogh_integration.SyncAccountDataKey, syncEventsRdx); err != nil {
@@ -185,7 +185,7 @@ func Sync(
 	// 8
 	if additionalData {
 
-		if err = getAdditionalData(since, force); err != nil {
+		if err = getGogAdditionalData(since, force); err != nil {
 			return setSyncInterrupted(err, syncEventsRdx)
 		} else {
 			if err = setSyncEvent(vangogh_integration.SyncAdditionalData, syncEventsRdx); err != nil {
