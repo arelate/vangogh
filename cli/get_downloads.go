@@ -90,6 +90,8 @@ func GetDownloads(
 	gda := nod.NewProgress("downloading product files...")
 	defer gda.Done()
 
+	start := time.Now().UTC().Unix()
+
 	vangogh_integration.PrintParams(ids, operatingSystems, langCodes, noDlcs, noExtras, noPatches)
 
 	hc, err := gogAuthHttpClient()
@@ -164,7 +166,7 @@ func GetDownloads(
 	}
 
 	if options.updateData {
-		if err = getGogDownloadsData(ids...); err != nil {
+		if err = getGogDownloadsData(start, ids...); err != nil {
 			return err
 		}
 	}
