@@ -196,7 +196,7 @@ func searchResults(query url.Values, rdx redux.Readable) (ids []string, from int
 		found = slices.Collect(rdx.Match(query))
 	}
 
-	ids, err = rdx.Sort(found, desc, sort, vangogh_integration.GogTitleProperty, vangogh_integration.GogProductTypeProperty)
+	ids, err = rdx.Sort(found, desc, sort, vangogh_integration.GogTitleProperty)
 	if err != nil {
 		return nil, 0, 0, err
 	}
