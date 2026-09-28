@@ -88,7 +88,7 @@ func ReduceGogApiProducts(kvGogApiProducts kevlar.KeyValues, since int64, force 
 
 		var ap *gog_integration.ApiProduct
 		if ap, err = unmarshallGogApiProduct(id, kvGogApiProducts); err != nil {
-
+			return err
 		}
 
 		if err = reduceGogApiProductProperties(id, ap, apiProductReductions); err != nil {

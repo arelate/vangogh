@@ -105,11 +105,10 @@ func getGogAdditionalData(since int64, force bool) error {
 	return GetData(nil, gogAdditionalProductTypes, since, force)
 }
 
-func getGogDownloadsData(since int64, ids ...string) error {
+func getGogDownloadsData(ids ...string) error {
 	gogDownloadsProductTypes := []vangogh_integration.ProductType{
-		vangogh_integration.GogDetails,
-		vangogh_integration.GogApiProducts}
-	return GetData(ids, gogDownloadsProductTypes, since, true)
+		vangogh_integration.GogDetails}
+	return GetData(ids, gogDownloadsProductTypes, -1, true)
 }
 
 func GetData(ids []string, productTypes []vangogh_integration.ProductType, since int64, force bool) error {
