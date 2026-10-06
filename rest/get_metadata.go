@@ -3,8 +3,11 @@ package rest
 import (
 	"io"
 	"net/http"
+	"slices"
 
 	"github.com/arelate/southern_light/vangogh_integration"
+	"github.com/arelate/vangogh/perm"
+	"github.com/arelate/vangogh/rest/compton_data"
 	"github.com/boggydigital/kevlar"
 	"github.com/boggydigital/nod"
 )
@@ -21,6 +24,19 @@ func GetMetadata(w http.ResponseWriter, r *http.Request) {
 	if productType == vangogh_integration.UnknownProductType {
 		http.Error(w, "unknown product type "+productTypeStr, http.StatusBadRequest)
 		return
+	}
+
+	if slices.Contains(compton_data.AccessTokenProductTypes, productType) {
+		permissions, err := sb.GetBearerPermissions(r)
+		if err != nil {
+			http.Error(w, nod.Error(err).Error(), http.StatusInternalServerError)
+			return
+		}
+
+		if !slices.Contains(permissions, perm.ReadAccessTokens) {
+			http.Error(w, "product-type requires access token read permission", http.StatusUnauthorized)
+			return
+		}
 	}
 
 	productTypeDir := vangogh_integration.AbsProductTypeDir(productType)
