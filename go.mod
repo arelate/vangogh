@@ -1,9 +1,9 @@
 module github.com/arelate/vangogh
 
-go 1.27.1
+go 1.27.3
 
 require (
-	github.com/arelate/southern_light v0.5.43
+	github.com/arelate/southern_light v0.5.44
 	github.com/boggydigital/author v0.1.33
 	github.com/boggydigital/camino v0.2.20
 	github.com/boggydigital/clo v1.0.8
@@ -14,10 +14,10 @@ require (
 	github.com/boggydigital/nod v0.1.30
 	github.com/boggydigital/redux v0.1.12
 	github.com/boggydigital/yet_urls v0.1.66
-	golang.org/x/net v0.59.0
+	golang.org/x/net v0.61.0
 )
 
 require (
 	github.com/boggydigital/wits v0.2.3 // indirect
-	golang.org/x/crypto v0.57.0 // indirect
+	golang.org/x/crypto v0.58.0 // indirect
 )
